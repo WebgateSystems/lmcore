@@ -1,0 +1,46 @@
+.swiped-list {
+  overflow: hidden; }
+  .swiped-list.uk-list.uk-list-large.uk-list-divider > li:nth-child(n+2) {
+    padding-top: 0 !important; }
+  .swiped-list.uk-list.uk-list-large.uk-list-divider > li:last-child .swiped-element {
+    padding-bottom: 16px; }
+  .swiped-list.uk-list.uk-list-large.uk-list-divider > li .swiped-element {
+    padding: 16px 16px 8px; }
+  .swiped-list.uk-list.uk-list-large .swiped-element {
+    padding: 16px; }
+  .swiped-list > li {
+    -ms-touch-action: none;
+    touch-action: none;
+    position: relative;
+    padding: 0 !important; }
+    .swiped-list > li .swiped-element {
+      width: 100%;
+      padding: 8px;
+      background: #fff;
+      position: relative;
+      z-index: 10;
+      display: block; }
+  .swiped-list .actions {
+    position: absolute;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    z-index: 5; }
+    .swiped-list .actions a {
+      width: 40px;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center; }
+    .swiped-list .actions-left {
+      left: 0;
+      margin-left: 8px; }
+    .swiped-list .actions-right {
+      right: 0;
+      margin-right: 8px; }

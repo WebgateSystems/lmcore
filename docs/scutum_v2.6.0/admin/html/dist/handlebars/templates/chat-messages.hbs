@@ -1,0 +1,25 @@
+{{#each messages }}
+	<div class="sc-chat-messages-wrapper{{#if own}} my{{/if}}{{#if ../delayed}} sc-sequence-show{{/if}}">
+		{{#if own }}
+			<a href="#" class="sc-chat-message-avatar">
+				<img class="sc-avatar" src="assets/img/avatars/avatar_04_sm.png" alt="">
+			</a>
+		{{else if user.avatar }}
+			<a href="#" class="sc-chat-message-avatar">
+				<img class="sc-avatar" src="{{ user.avatar }}" alt="">
+			</a>
+		{{/if}}
+		{{#if user.name }}
+		<div>
+			<div class="sc-chat-message-username"><a href="#">{{ user.name }}</a></div>
+		{{/if}}
+		<ul class="sc-chat-messages">
+			{{#each messages }}
+				{{> chat-message parent=..}}
+			{{/each}}
+		</ul>
+		{{#if user.name }}
+		</div>
+		{{/if}}
+	</div>
+{{/each}}

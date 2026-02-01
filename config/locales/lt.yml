@@ -1,0 +1,105 @@
+lt:
+  app_name: "LibreMedia"
+  tagline: "Tavo balsas, tavo platforma"
+
+  # Common
+  common:
+    save: "Išsaugoti"
+    cancel: "Atšaukti"
+    delete: "Ištrinti"
+    edit: "Redaguoti"
+    create: "Sukurti"
+    update: "Atnaujinti"
+    back: "Atgal"
+    next: "Toliau"
+    previous: "Atgal"
+    search: "Ieškoti"
+    loading: "Kraunama..."
+    no_results: "Rezultatų nerasta"
+    confirm_delete: "Ar tikrai norite tai ištrinti?"
+    yes: "Taip"
+    no: "Ne"
+    or: "arba"
+    and: "ir"
+
+  # Navigation
+  nav:
+    home: "Pradžia"
+    blog: "Blogas"
+    videos: "Video"
+    photos: "Nuotraukos"
+    about: "Apie"
+    contact: "Kontaktai"
+    login: "Prisijungti"
+    logout: "Atsijungti"
+    register: "Registruotis"
+    profile: "Profilis"
+    settings: "Nustatymai"
+    dashboard: "Valdymo skydas"
+
+  # Authentication
+  auth:
+    sign_in: "Prisijungti"
+    sign_up: "Registruotis"
+    sign_out: "Atsijungti"
+    forgot_password: "Pamiršote slaptažodį?"
+    reset_password: "Atstatyti slaptažodį"
+    email: "El. paštas"
+    password: "Slaptažodis"
+    password_confirmation: "Patvirtinkite slaptažodį"
+    remember_me: "Prisiminti mane"
+    no_account: "Neturite paskyros?"
+    have_account: "Jau turite paskyrą?"
+
+  # User
+  users:
+    profile: "Profilis"
+    edit_profile: "Redaguoti profilį"
+    followers: "Sekėjai"
+    following: "Sekama"
+    posts: "Įrašai"
+    videos: "Video"
+    photos: "Nuotraukos"
+    settings: "Nustatymai"
+    notifications: "Pranešimai"
+
+  # Posts
+  posts:
+    title: "Pavadinimas"
+    content: "Turinys"
+    category: "Kategorija"
+    tags: "Žymos"
+    status: "Būsena"
+    published_at: "Paskelbta"
+    draft: "Juodraštis"
+    pending: "Laukia patvirtinimo"
+    published: "Paskelbta"
+    archived: "Archyvuota"
+    featured: "Išskirta"
+    reading_time: "%{minutes} min skaitymo"
+    views: "%{count} peržiūrų"
+    comments: "%{count} komentarų"
+    related_posts: "Susiję įrašai"
+    no_posts: "Įrašų dar nėra"
+    create_post: "Sukurti įrašą"
+    edit_post: "Redaguoti įrašą"
+
+  # Errors
+  errors:
+    not_found: "Puslapis nerastas"
+    unauthorized: "Neturite teisių atlikti šį veiksmą"
+    forbidden: "Prieiga uždrausta"
+    internal_error: "Kažkas nepavyko"
+    validation_failed: "Tikrinimas nepavyko"
+
+  # ActiveRecord
+  activerecord:
+    models:
+      user: "Vartotojas"
+      post: "Įrašas"
+      video: "Video"
+      photo: "Nuotrauka"
+      comment: "Komentaras"
+      category: "Kategorija"
+      tag: "Žyma"
+      page: "Puslapis"

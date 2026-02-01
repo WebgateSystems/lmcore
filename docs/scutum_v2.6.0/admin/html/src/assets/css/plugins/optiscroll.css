@@ -1,0 +1,130 @@
+/* Set these values before importing optiscroll.scss
+ * to override the defaults
+ */
+/**************************************
+*  Optiscroll container base style
+*/
+.optiscroll {
+  position: relative !important;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  left: 0; }
+  .optiscroll.is-enabled {
+    overflow: hidden !important; }
+
+.optiscroll.is-enabled > .optiscroll-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch; }
+
+/**************************************
+*  Optiscroll scrollbars base style
+*/
+.optiscroll-v,
+.optiscroll-h {
+  position: absolute;
+  visibility: hidden;
+  z-index: 2;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+.optiscroll-v {
+  right: 0; }
+
+.optiscroll-h {
+  bottom: 0; }
+
+.optiscroll.has-vtrack > .optiscroll-v,
+.optiscroll.has-htrack > .optiscroll-h {
+  visibility: visible; }
+
+.optiscroll.is-rtl > .optiscroll-v {
+  left: 0;
+  right: auto; }
+
+/**************************************
+*  Optiscroll tracks base style
+*/
+.optiscroll-vtrack,
+.optiscroll-htrack {
+  display: block;
+  position: absolute;
+  opacity: 1;
+  -webkit-transform: translate(0%, 0%);
+  transform: translate(0%, 0%);
+  -webkit-transition: height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s;
+  transition: height 0.2s ease 0s, width 0.2s ease 0s, opacity 0.2s ease 0s;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box; }
+
+/**************************************
+*  Prevent parent scroll
+*  even when content is not longer enough.
+*/
+/**************************************
+  *  DEFAULT STYLE
+  **************************************/
+/***
+	***  Scrollbars style  ***/
+.optiscroll-v {
+  top: 4px;
+  bottom: 4px;
+  width: 0; }
+
+.optiscroll-h {
+  left: 4px;
+  right: 4px;
+  height: 0; }
+
+/* Avoid overapping while both scrollbars are enabled */
+.optiscroll.has-vtrack.has-htrack > .optiscroll-v {
+  bottom: 8px; }
+
+.optiscroll.has-vtrack.has-htrack > .optiscroll-h {
+  right: 8px; }
+
+/***
+	***  Tracks style  ***/
+.optiscroll-vtrack,
+.optiscroll-htrack {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 2px;
+  -webkit-box-shadow: 0 0 1px #FFF;
+  box-shadow: 0 0 1px #FFF;
+  opacity: 0; }
+
+.optiscroll-vtrack {
+  width: 4px;
+  right: 4px; }
+
+.optiscroll-htrack {
+  height: 3px;
+  bottom: 4px; }
+
+.optiscroll:hover > .optiscroll-v .optiscroll-vtrack,
+.optiscroll:hover > .optiscroll-h .optiscroll-htrack {
+  opacity: 1; }
+
+.optiscroll-always-visible-v > .optiscroll-v .optiscroll-vtrack {
+  opacity: 0.6; }
+
+.optiscroll-always-visible-v:hover > .optiscroll-v .optiscroll-vtrack {
+  width: 12px; }
+
+.optiscroll.has-vtrack.has-htrack.is-rtl > .optiscroll-h {
+  right: 4px;
+  left: 8px; }
+
+.optiscroll.is-rtl > .optiscroll-v .optiscroll-vtrack {
+  right: auto;
+  left: 4px; }
+
+.optiscroll.uk-card-body:not([class*="sc-padding"]) > .optiscroll-content {
+  padding: 24px 24px 0; }

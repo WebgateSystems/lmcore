@@ -1,0 +1,2619 @@
+<!doctype html>
+<html lang="en" dir="rtl">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Scutum Admin Template</title>
+    <meta name="description" content="Scutum Admin Template" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/fav/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="assets/img/fav/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/img/fav/favicon-16x16.png">
+	<link rel="mask-icon" href="assets/img/fav/safari-pinned-tab.svg" color="#5bbad5">
+
+	<link rel="manifest" href="manifest.json">
+	<meta name="theme-color" content="#00838f">
+
+
+	<!-- polyfills -->
+	<script src="assets/js/vendor/polyfills.min.js"></script>
+
+	<!-- UIKit js -->
+    <script src="assets/js/uikit.min.js"></script>
+
+</head>
+<body>
+<script>
+	// prevent FOUC
+	var html = document.getElementsByTagName('html')[0];
+	html.style.backgroundColor = '#f5f5f5';
+	document.body.style.visibility = 'hidden';
+	document.body.style.overflow = 'hidden';
+	document.body.style.apacity = '0';
+	document.body.style.maxHeight = "100%";
+</script>
+
+<header id="sc-header">
+	<nav class="uk-navbar uk-navbar-container" data-uk-navbar="mode: click; duration: 360">
+		<div class="uk-navbar-right nav-overlay-small uk-margin-left uk-navbar-aside">
+            			<a href="#" id="sc-sidebar-main-toggle"><i class="mdi mdi-backburger sc-menu-close"></i><i class="mdi mdi-menu sc-menu-open"></i></a>
+            			<div class="sc-brand uk-visible@s">
+				<a href="dashboard-v1.html"><img src="assets/img/logo.png" alt=""></a>
+			</div>
+		</div>
+    		<div class="uk-navbar-right nav-overlay uk-margin-left uk-visible@m">
+			<ul class="uk-navbar-nav">
+				<li>
+					<a href="javascript:void(0)" class="md-color-white sc-padding-remove-left"><i class="mdi mdi-view-grid"></i></a>
+					<div class="uk-navbar-dropdown sc-padding-medium">
+						<div class="uk-child-width-1-2 uk-child-width-1-3@s uk-grid uk-grid-small" data-uk-grid>
+							<div>
+								<a href="pages-mailbox.html" class="uk-flex uk-flex-column uk-flex-middle uk-box-shadow-hover-small sc-round sc-padding-small">
+									<i class="mdi mdi-email-outline sc-icon-32 sc-text-lh-1 md-color-green-700"></i>
+									<span class="uk-text-medium sc-color-primary">Mailbox</span>
+								</a>
+							</div>
+							<div>
+								<a href="pages-poi_listing.html" class="uk-flex uk-flex-column uk-flex-middle uk-box-shadow-hover-small sc-round sc-padding-small">
+									<i class="mdi mdi-map-marker sc-icon-32 sc-text-lh-1 md-color-red-700"></i>
+									<span class="uk-text-medium sc-color-primary">POI</span>
+								</a>
+							</div>
+							<div>
+								<a href="pages-chat.html" class="uk-flex uk-flex-column uk-flex-middle uk-box-shadow-hover-small sc-round sc-padding-small">
+									<i class="mdi mdi-message-outline sc-icon-32 sc-text-lh-1 md-color-purple-700"></i>
+									<span class="uk-text-medium sc-color-primary">Chat</span>
+								</a>
+							</div>
+							<div>
+								<a href="plugins-calendar.html" class="uk-flex uk-flex-column uk-flex-middle uk-box-shadow-hover-small sc-round sc-padding-small">
+									<i class="mdi mdi-calendar sc-icon-32 sc-text-lh-1 md-color-light-blue-700"></i>
+									<span class="uk-text-medium sc-color-primary">Calendar</span>
+								</a>
+							</div>
+							<div>
+								<a href="pages-user_profile.html" class="uk-flex uk-flex-column uk-flex-middle uk-box-shadow-hover-small sc-round sc-padding-small">
+									<i class="mdi mdi-account sc-icon-32 sc-text-lh-1 md-color-blue-grey-700"></i>
+									<span class="uk-text-medium sc-color-primary">Profile</span>
+								</a>
+							</div>
+							<div>
+								<a href="plugins-charts.html" class="uk-flex uk-flex-column uk-flex-middle uk-box-shadow-hover-small sc-round sc-padding-small">
+									<i class="mdi mdi-chart-multiline sc-icon-32 sc-text-lh-1 md-color-amber-700"></i>
+									<span class="uk-text-medium sc-color-primary">Charts</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+    		<div class="nav-overlay nav-overlay-small uk-navbar-left uk-flex-1" hidden>
+			<a class="uk-navbar-toggle uk-visible@m" data-uk-toggle="target: .nav-overlay; animation: uk-animation-slide-top" href="#">
+				<i class="mdi mdi-close sc-icon-24"></i>
+			</a>
+			<a class="uk-navbar-toggle uk-hidden@m uk-padding-remove-right" data-uk-toggle="target: .nav-overlay-small; animation: uk-animation-slide-top" href="#">
+				<i class="mdi mdi-close sc-icon-24"></i>
+			</a>
+			<div class="uk-navbar-item uk-width-expand uk-padding-remove-left">
+				<form class="uk-search uk-search-navbar uk-width-1-1 uk-flex">
+                    <div class="uk-flex-1 uk-position-relative">
+                        <a class="uk-form-icon uk-form-icon-flip" href="javascript:void(0)" data-uk-icon="icon: close" data-sc-clear-input></a>
+                        <input class="uk-search-input" type="search" placeholder="Search..." autofocus>
+                    </div>
+					<button class="sc-button sc-button-default sc-button-small sc-button-icon sc-button-flat uk-margin-small-right" type="button"><i class="mdi mdi-magnify sc-icon-24 md-color-white"></i></button>
+				</form>
+			</div>
+		</div>
+		<div class="nav-overlay nav-overlay-small uk-navbar-left">
+			<ul class="uk-navbar-nav">
+				<li>
+					<a class="uk-navbar-toggle uk-visible@m" href="#" data-uk-toggle="target: .nav-overlay; animation: uk-animation-slide-top"><i class="mdi mdi-magnify"></i></a>
+                    <a class="uk-navbar-toggle uk-hidden@m" href="#" id="sc-search-main-toggle-mobile" data-uk-toggle="target: .nav-overlay-small; animation: uk-animation-slide-top"><i class="mdi mdi-magnify"></i></a>
+				</li>
+				<li class="uk-visible@l">
+					<a href="#" id="sc-js-fullscreen-toggle"><i class="mdi mdi-fullscreen sc-js-el-hide"></i><i class="mdi mdi-fullscreen-exit sc-js-el-show"></i></a>
+				</li>
+				<li class="uk-visible@s">
+					<a href="#" class="sc-text-semibold">
+						EN
+					</a>
+					<div class="uk-navbar-dropdown uk-dropdown-small">
+						<ul class="uk-nav uk-navbar-dropdown-nav">
+							<li><a href="#">Deutsch</a></li>
+							<li><a href="#">Español</a></li>
+							<li><a href="#">Français</a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#">
+						<span class="mdi mdi-email"></span>
+					</a>
+					<div class="uk-navbar-dropdown sc-padding-remove">
+						<div class="uk-panel uk-panel-scrollable uk-height-medium">
+							<ul class="uk-list uk-list-divider sc-js-edge-fix">
+								<li class="sc-list-group">
+									<div class="sc-list-addon">
+										<span class="sc-avatar-initials md-color-white md-bg-red-500" title="ashley.bergstrom">MO</span>
+									</div>
+									<a href="#" class="sc-list-body uk-display-block">
+										<span class="uk-text-small uk-text-muted uk-width-expand">08:42 AM</span>
+										<span class="uk-display-block uk-text-truncate">Consequuntur est aspernatur culpa autem iste ratione.</span>
+									</a>
+								</li>
+								<li class="sc-list-group">
+									<div class="sc-list-addon">
+										<img src="assets/img/avatars/avatar_05_sm.png" class="sc-avatar " alt="ondricka.sebastian"/>
+									</div>
+									<a href="#" class="sc-list-body uk-display-block">
+										<div class="uk-text-small uk-text-muted uk-width-expand">Jun 19, 2021</div>
+										<span class="uk-display-block uk-text-truncate">Deleniti fuga vitae quis minus.</span>
+									</a>
+								</li>
+								<li class="sc-list-group">
+									<div class="sc-list-addon">
+										<span class="sc-avatar-initials md-color-white md-bg-light-green-500" title="ashtyn.medhurst">KS</span>
+									</div>
+									<a href="#" class="sc-list-body uk-display-block">
+										<span class="uk-text-small uk-text-muted uk-width-expand">06:42 AM</span>
+										<span class="uk-display-block uk-text-truncate">Consequatur aut sed delectus est et qui hic sunt nihil assumenda.</span>
+									</a>
+								</li>
+								<li class="sc-list-group">
+									<div class="sc-list-addon">
+										<img src="assets/img/avatars/avatar_06_sm.png" class="sc-avatar " alt="stokes.royce"/>
+									</div>
+									<a href="#" class="sc-list-body uk-display-block">
+										<span class="uk-text-small uk-text-muted uk-width-expand">Jun 18, 2021</span>
+										<span class="uk-display-block uk-text-truncate">Qui vitae labore est animi odit consectetur quia molestiae repellat quod illum.</span>
+									</a>
+								</li>
+								<li class="sc-list-group">
+									<div class="sc-list-addon">
+										<img src="assets/img/avatars/avatar_02_sm.png" class="sc-avatar " alt="faye45"/>
+									</div>
+									<a href="#" class="sc-list-body uk-display-block">
+										<span class="uk-text-small uk-text-muted uk-width-expand">Jun 16, 2021</span>
+										<span class="uk-display-block uk-text-truncate">Magnam nam dolorem autem aut et est eaque.</span>
+									</a>
+								</li>
+								<li class="sc-list-group">
+									<div class="sc-list-addon">
+										<span class="sc-avatar-initials md-color-white md-bg-purple-500" title="franecki.cesar">FA</span>
+									</div>
+									<a href="#" class="sc-list-body uk-display-block">
+										<span class="uk-text-small uk-text-muted uk-width-expand">Jun 14, 2021</span>
+										<span class="uk-display-block uk-text-truncate">Nemo architecto sed qui voluptas repudiandae sequi autem inventore impedit amet aut.</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<a href="pages-mailbox.html" class="uk-flex uk-text-small sc-padding-small-ends sc-padding-medium">Show all in mailbox</a>
+					</div>
+				</li>
+				<li class="uk-visible@s">
+					<a href="#">
+						<span class="mdi mdi-bell uk-display-inline-block">
+							<span class="sc-indicator md-bg-color-red-600"></span>
+						</span>
+					</a>
+					<div class="uk-navbar-dropdown md-bg-grey-100">
+                        <div class="sc-padding-medium sc-padding-small-ends">
+                            <div class="uk-text-right uk-margin-medium-bottom">
+                                <button class="sc-button sc-button-default sc-button-outline sc-button-mini sc-js-clear-alerts">Clear all</button>
+                            </div>
+                            <ul class="uk-list uk-margin-remove" id="sc-header-alerts">
+                                <li class="sc-border sc-round md-bg-white">
+                                    <div class="uk-margin-left uk-margin-small-right"><i class="mdi mdi-alert-outline md-color-red-600"></i></div>
+                                    <div class="uk-flex-1 uk-text-small">
+                                        Information Page Not Found!
+                                    </div>
+                                </li>
+                                <li class="uk-margin-small-top sc-border sc-round md-bg-white">
+                                    <div class="uk-margin-left uk-margin-small-right"><i class="mdi mdi-email-check-outline md-color-blue-600"></i></div>
+                                    <div class="uk-flex-1 uk-text-small">
+                                        A new password has been sent to your e-mail address.
+                                    </div>
+                                </li>
+                                <li class="uk-margin-small-top sc-border sc-round md-bg-white">
+                                    <div class="uk-margin-left uk-margin-small-right"><i class="mdi mdi-alert-outline md-color-red-600"></i></div>
+                                    <div class="uk-flex-1 uk-text-small">
+                                        You do not have permission to access the API!
+                                    </div>
+                                </li>
+                                <li class="uk-margin-small-top sc-border sc-round md-bg-white">
+                                    <div class="uk-margin-left uk-margin-small-right"><i class="mdi mdi-check-all md-color-light-green-600"></i></div>
+                                    <div class="uk-flex-1 uk-text-small">
+                                        Your enquiry has been successfully sent.
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="uk-text-medium uk-text-center sc-js-empty-message sc-text-semibold sc-padding-ends" style="display: none">No alerts!</div>
+                        </div>
+					</div>
+				</li>
+				<li>
+					<a href="#"><img src="assets/img/avatars/avatar_default_sm.png" alt=""></a>
+					<div class="uk-navbar-dropdown uk-dropdown-small">
+						<ul class="uk-nav uk-nav-navbar">
+							<li><a href="pages-user_profile.html">Profile</a></li>
+							<li><a href="pages-settings.html">Settings</a></li>
+							<li><a href="login_page.html">Log Out</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+            <a href="#" class="sc-js-offcanvas-toggle md-color-white uk-margin-right uk-hidden@l">
+	            <i class="mdi mdi-menu sc-offcanvas-open"></i>
+	            <i class="mdi mdi-arrow-right sc-offcanvas-close"></i>
+            </a>
+		</div>
+	</nav>
+</header>
+
+
+<aside id="sc-sidebar-main" class="sc-sidebar-info-fixed">
+    <div class="uk-offcanvas-bar">
+	    <div class="sc-sidebar-main-scrollable" data-sc-scrollbar="visible-y">
+	        <ul class="sc-sidebar-menu uk-nav">
+	        
+	            
+	                <li class="sc-sidebar-menu-heading"><span>Applications</span></li>
+	                
+	            	        
+	            	            <li title="Chat">
+	                <a href="pages-chat.html">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-message-outline"></i>
+	                    
+	                    </span><span class="uk-nav-title">Chat</span>
+	                </a>
+	                	            </li>
+	            	        
+	            	            <li title="Invoices">
+	                <a href="pages-invoices.html">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-receipt"></i>
+	                    
+	                    </span><span class="uk-nav-title">Invoices</span>
+	                </a>
+	                	            </li>
+	            	        
+	            	            <li title="Mailbox">
+	                <a href="pages-mailbox.html">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-email-outline"></i>
+	                    
+	                    </span><span class="uk-nav-title">Mailbox</span>
+	                </a>
+	                	            </li>
+	            	        
+	            	            <li title="Task Board">
+	                <a href="pages-task_board.html">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-calendar-text"></i>
+	                    
+	                    </span><span class="uk-nav-title">Task Board</span>
+	                </a>
+	                	            </li>
+	            	        
+	            	            <li title="Notes">
+	                <a href="pages-notes.html">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-note-outline"></i>
+	                    
+	                    </span><span class="uk-nav-title">Notes</span>
+	                </a>
+	                	            </li>
+	            	        
+	            
+	                <li class="sc-sidebar-menu-heading"><span>Menu</span></li>
+	                
+	            	        
+	            	            <li title="Dashboards">
+	                <a href="#">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-view-dashboard-variant"></i>
+	                    
+	                    </span><span class="uk-nav-title">Dashboards</span>
+	                </a>
+	                
+	                    <ul class="sc-sidebar-menu-sub">
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="dashboard-v1.html">		                                		                                Dashboard 1	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="dashboard-v2.html">		                                		                                Dashboard 2	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    
+	                    </ul>
+	                	            </li>
+	            	        
+	            	            <li title="Forms">
+	                <a href="#">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-format-line-style"></i>
+	                    
+	                    </span><span class="uk-nav-title">Forms</span>
+	                </a>
+	                
+	                    <ul class="sc-sidebar-menu-sub">
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="forms-regular_elements.html">		                                		                                Regular Elements	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li class="sc-page-active">
+	                            
+	                                <a href="forms-advanced_elements.html">		                                		                                Advanced Elements	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="forms-dynamic_fields.html">		                                		                                Dynamic Fields	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="forms-validation.html">		                                		                                Validation	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        	                            	                                <li>
+	                                    <a href="#">Form Examples</a>	                                    <ul>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-advertising_evaluation_form.html">		                                            		                                            Advertising Evaluation Form	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-booking_form.html">		                                            		                                            Booking Form	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-car_rental_form.html">		                                            		                                            Car Rental Form	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-checkout_form.html">		                                            		                                            Checkout Form	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-contact_forms.html">		                                            		                                            Contact Forms	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-job_application_form.html">		                                            		                                            Job Application Form	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-medical_history_form.html">		                                            		                                            Medical History Form	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-registration_form.html">		                                            		                                            Registration Form	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-rental_application_form.html">		                                            		                                            Rental Application Form	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_examples-transaction_feedback_form.html">		                                            		                                            Transaction Feedback Form	                                            </a>
+	                                        </li>
+	                                    
+	                                    </ul>
+	                                </li>
+	                            
+	                        
+	                        
+	                    	                        	                            	                                <li>
+	                                    <a href="#">Wizard</a>	                                    <ul>
+	                                    	                                        <li>
+	                                            <a href="forms_wizard-horizontal.html">		                                            		                                            Horizontal	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_wizard-horizontal_minimal.html">		                                            		                                            Horizontal Minimal	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_wizard-vertical.html">		                                            		                                            Vertical	                                            </a>
+	                                        </li>
+	                                    	                                        <li>
+	                                            <a href="forms_wizard-vertical_minimal.html">		                                            		                                            Vertical Minimal	                                            </a>
+	                                        </li>
+	                                    
+	                                    </ul>
+	                                </li>
+	                            
+	                        
+	                        
+	                    	                        	                            	                                <li class="sc-sidebar-menu-heading"><span>WYSIWYG Editors</span></li>
+	                                	                                    <li>
+	                                    	                                        <a href="forms_wysiwyg-ckeditor.html">		                                        		                                        CKEditor	                                        </a>
+	                                    	                                    </li>
+	                                	                                    <li>
+	                                    	                                        <a href="forms_wysiwyg-tinymce.html">		                                        		                                        TinyMCE	                                        </a>
+	                                    	                                    </li>
+	                                
+	                            
+	                        
+	                        
+	                    
+	                    </ul>
+	                	            </li>
+	            	        
+	            	            <li title="Components">
+	                <a href="#">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-puzzle"></i>
+	                    
+	                    </span><span class="uk-nav-title">Components</span>
+	                </a>
+	                
+	                    <ul class="sc-sidebar-menu-sub">
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-accordion.html">		                                		                                Accordion	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-alert.html">		                                		                                Alert	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-animations.html">		                                		                                Animations	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-avatars.html">		                                		                                Avatars	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-badge_label.html">		                                		                                Badge, Label	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-base.html">		                                		                                Base	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-breadcrumb.html">		                                		                                Breadcrumb	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-buttons.html">		                                		                                Buttons	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-fab_buttons.html">		                                			                                <span class="uk-label">new</span>
+		                                		                                FAB Buttons	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-cards.html">		                                		                                Cards	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-color_palette.html">		                                		                                Color Palette	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-drop_dropdowns.html">		                                		                                Drop/Dropdowns	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-filters.html">		                                		                                Filters	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-footer.html">		                                		                                Footer	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-fancy_footer.html">		                                		                                Fancy Footer	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-fancy_toolbar.html">		                                			                                <span class="uk-label">new</span>
+		                                		                                Fancy Toolbar	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-grid.html">		                                		                                Grid	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-icons.html">		                                		                                Icons	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-lists.html">		                                		                                Lists	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-masonry.html">		                                		                                Masonry	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-modals_dialogs.html">		                                		                                Modals/Dialogs	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-notifications.html">		                                		                                Notifications	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-overlay.html">		                                		                                Overlay	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-pagination.html">		                                		                                Pagination	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-progress_spinners.html">		                                		                                Progress/Spinners	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-scrollable.html">		                                		                                Scrollable	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-slider.html">		                                		                                Slider	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-sortable.html">		                                		                                Sortable	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-swiped_list.html">		                                		                                Swiped List	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-tables.html">		                                		                                Tables	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-tabs.html">		                                		                                Tabs	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-timeline.html">		                                		                                Timeline	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-toolbar.html">		                                		                                Toolbar	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="components-tooltips.html">		                                		                                Tooltips	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    
+	                    </ul>
+	                	            </li>
+	            	        
+	            	            <li title="Pages">
+	                <a href="#">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-application"></i>
+	                    
+	                    </span><span class="uk-nav-title">Pages</span>
+	                </a>
+	                
+	                    <ul class="sc-sidebar-menu-sub">
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-blank.html">		                                		                                Blank	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-blank_header_expanded.html">		                                		                                Blank (expanded header)	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-contact_list.html">		                                		                                Contact List	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-contact_list_single.html">		                                		                                Contact List (single)	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-data_visualization.html">		                                		                                Data visualization	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        	                            	                                <li class="sc-sidebar-menu-heading"><span>Error Pages</span></li>
+	                                	                                    <li>
+	                                    	                                        <a href="error_404.html">		                                        		                                        Error 404	                                        </a>
+	                                    	                                    </li>
+	                                	                                    <li>
+	                                    	                                        <a href="error_500.html">		                                        		                                        Error 500	                                        </a>
+	                                    	                                    </li>
+	                                
+	                            
+	                        
+	                        	                            <li class="sc-sidebar-menu-separator"></li>
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-gallery.html">		                                		                                Gallery	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-help_faq.html">		                                		                                Help/Faq	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-invoice_create.html">		                                		                                Invoice (new)	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        	                            	                                <li class="sc-sidebar-menu-heading"><span>Issue Tracker</span></li>
+	                                	                                    <li>
+	                                    	                                        <a href="pages-issues_list.html">		                                        		                                        List View	                                        </a>
+	                                    	                                    </li>
+	                                	                                    <li>
+	                                    	                                        <a href="pages-issue_details.html">		                                        		                                        Issue Details	                                        </a>
+	                                    	                                    </li>
+	                                
+	                            
+	                        
+	                        	                            <li class="sc-sidebar-menu-separator"></li>
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="login_page.html">		                                		                                Login Page	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-poi_listing.html">		                                		                                POI listing	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-pricing_tables.html">		                                		                                Pricing Tables	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-settings.html">		                                		                                Settings	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="pages-user_profile.html">		                                		                                User Profile	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    
+	                    </ul>
+	                	            </li>
+	            	        
+	            	            <li title="Plugins">
+	                <a href="#">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-power-plug"></i>
+	                    
+	                    </span><span class="uk-nav-title">Plugins</span>
+	                </a>
+	                
+	                    <ul class="sc-sidebar-menu-sub">
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-ajax.html">		                                		                                Ajax	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-calendar.html">		                                		                                Calendar	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-calendar_events.html">		                                		                                Calendar/Events	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-charts.html">		                                		                                Charts	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-code_editor.html">		                                		                                Code Editor	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-data_grid.html">		                                		                                Data Grid	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-datatables.html">		                                		                                Datatables	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-diff_tool.html">		                                		                                Diff Tool	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-gantt_chart.html">		                                		                                Gantt Chart	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-google_maps.html">		                                		                                Google Maps	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-idle_timeout.html">		                                		                                Idle Timeout	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-image_cropper.html">		                                		                                Image Cropper	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-push_notifications.html">		                                		                                Push Notifications	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-tour.html">		                                		                                Tour	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-tree.html">		                                		                                Tree	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="plugins-vector_maps.html">		                                		                                Vector Maps	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    
+	                    </ul>
+	                	            </li>
+	            	        
+	            	            <li title="Layout">
+	                <a href="#">
+	                    	                        <span class="uk-nav-icon"><i class="mdi mdi-view-compact-outline"></i>
+	                    
+	                    </span><span class="uk-nav-title">Layout</span>
+	                </a>
+	                
+	                    <ul class="sc-sidebar-menu-sub">
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="layout-boxed.html">		                                			                                <span class="uk-label">new</span>
+		                                		                                Boxed	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="layout-top_menu.html">		                                		                                Top Menu	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="layout-mini_sidebar.html">		                                		                                Mini Sidebar	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    	                        
+	                        <li>
+	                            
+	                                <a href="layout-offcanvas_sidebar.html">		                                		                                Offcanvas Sidebar	                                </a>
+	                            
+	                        </li>
+	                        
+	                        
+	                    
+	                    </ul>
+	                	            </li>
+	            	        	            <li title="Multi-level">
+	                <a href="#">
+	                    <span class="uk-nav-icon"><i class="mdi mdi-format-line-weight"></i></span><span class="uk-nav-title">Multi level</span>
+	                </a>
+	                <ul class="sc-sidebar-menu-sub">
+	                    <li><a href="#">Submenu 1</a></li>
+	                    <li class="sc-js-submenu-trigger sc-has-submenu">
+	                        <a href="#">Submenu 2</a>
+	                        <ul>
+	                            <li><a href="#">Submenu 2.1</a></li>
+	                            <li>
+	                                <a href="#">Submenu 2.2</a>
+	                                <ul>
+	                                    <li><a href="#">Submenu 2.2.1</a></li>
+	                                    <li><a href="#">Submenu 2.2.2</a></li>
+	                                    <li><a href="#">Submenu 2.2.3</a></li>
+	                                </ul>
+	                            </li>
+	                            <li><a href="#">Submenu 2.3</a></li>
+	                            <li><a href="#">Submenu 2.4</a></li>
+	                        </ul>
+	                    </li>
+	                    <li><a href="#">Submenu 3</a></li>
+	                    <li>
+	                        <a href="#">Submenu 4</a>
+	                        <ul>
+	                            <li>
+	                                <a href="#">Submenu 4.1</a>
+	                                <ul>
+	                                    <li><a href="#">Submenu 4.1.1</a></li>
+	                                    <li><a href="#">Submenu 4.1.2</a></li>
+	                                    <li><a href="#">Submenu 4.1.3</a></li>
+	                                </ul>
+	                            </li>
+	                            <li><a href="#">Submenu 4.2</a></li>
+	                            <li><a href="#">Submenu 4.3</a></li>
+	                        </ul>
+	                    </li>
+	                </ul>
+	            </li>
+	        </ul>
+
+	    </div>
+        <div class="sc-sidebar-info">
+            version: 2.6.0
+        </div>
+    </div>
+</aside>
+
+<div id="sc-page-wrapper">
+	<div id="sc-page-content">
+		<div class="uk-card uk-margin">
+			<h3 class="uk-card-title">Select/Tagging</h3>
+			<div class="uk-card-body">
+				<div class="uk-child-width-1-2@m uk-flex-bottom" data-uk-grid>
+					<div>
+						<select name="select-basic" id="select-basic" class="uk-select">
+													<option value="AL">Alabama</option>
+													<option value="AK">Alaska</option>
+													<option value="AS">American Samoa</option>
+													<option value="AZ">Arizona</option>
+													<option value="AR">Arkansas</option>
+													<option value="CA">California</option>
+													<option value="CO">Colorado</option>
+													<option value="CT">Connecticut</option>
+													<option value="DE">Delaware</option>
+													<option value="DC">District Of Columbia</option>
+													<option value="FM">Federated States Of Micronesia</option>
+													<option value="FL">Florida</option>
+													<option value="GA">Georgia</option>
+													<option value="GU">Guam</option>
+													<option value="HI">Hawaii</option>
+													<option value="ID">Idaho</option>
+													<option value="IL">Illinois</option>
+													<option value="IN">Indiana</option>
+													<option value="IA">Iowa</option>
+													<option value="KS">Kansas</option>
+													<option value="KY">Kentucky</option>
+													<option value="LA">Louisiana</option>
+													<option value="ME">Maine</option>
+													<option value="MH">Marshall Islands</option>
+													<option value="MD">Maryland</option>
+													<option value="MA">Massachusetts</option>
+													<option value="MI">Michigan</option>
+													<option value="MN">Minnesota</option>
+													<option value="MS">Mississippi</option>
+													<option value="MO">Missouri</option>
+													<option value="MT">Montana</option>
+													<option value="NE">Nebraska</option>
+													<option value="NV">Nevada</option>
+													<option value="NH">New Hampshire</option>
+													<option value="NJ">New Jersey</option>
+													<option value="NM">New Mexico</option>
+													<option value="NY">New York</option>
+													<option value="NC">North Carolina</option>
+													<option value="ND">North Dakota</option>
+													<option value="MP">Northern Mariana Islands</option>
+													<option value="OH">Ohio</option>
+													<option value="OK">Oklahoma</option>
+													<option value="OR">Oregon</option>
+													<option value="PW">Palau</option>
+													<option value="PA">Pennsylvania</option>
+													<option value="PR">Puerto Rico</option>
+													<option value="RI">Rhode Island</option>
+													<option value="SC">South Carolina</option>
+													<option value="SD">South Dakota</option>
+													<option value="TN">Tennessee</option>
+													<option value="TX">Texas</option>
+													<option value="UT">Utah</option>
+													<option value="VT">Vermont</option>
+													<option value="VI">Virgin Islands</option>
+													<option value="VA">Virginia</option>
+													<option value="WA">Washington</option>
+													<option value="WV">West Virginia</option>
+													<option value="WI">Wisconsin</option>
+													<option value="WY">Wyoming</option>
+												</select>
+					</div>
+					<div>
+						<select name="select-multiple" id="select-multiple" class="uk-select" multiple>
+															<option value="1">New York</option>
+															<option value="2">Los Angeles</option>
+															<option value="3">Chicago</option>
+															<option value="4">Houston</option>
+															<option value="5">Philadelphia</option>
+															<option value="6">Phoenix</option>
+															<option value="7">San Antonio</option>
+															<option value="8">San Diego</option>
+															<option value="9">Dallas</option>
+															<option value="10">San Jose</option>
+															<option value="11">Austin</option>
+															<option value="12">Indianapolis</option>
+															<option value="13">Jacksonville</option>
+															<option value="14">San Francisco</option>
+															<option value="15">Columbus</option>
+															<option value="16">Charlotte</option>
+															<option value="17">Fort Worth</option>
+															<option value="18">Detroit</option>
+															<option value="19">El Paso</option>
+															<option value="20">Memphis</option>
+															<option value="21">Seattle</option>
+															<option value="22">Denver</option>
+															<option value="23">Washington</option>
+															<option value="24">Boston</option>
+															<option value="25">Nashville-Davidson</option>
+															<option value="26">Baltimore</option>
+															<option value="27">Oklahoma City</option>
+															<option value="28">Louisville/Jefferson County</option>
+															<option value="29">Portland</option>
+															<option value="30">Las Vegas</option>
+															<option value="31">Milwaukee</option>
+															<option value="32">Albuquerque</option>
+															<option value="33">Tucson</option>
+															<option value="34">Fresno</option>
+															<option value="35">Sacramento</option>
+															<option value="36">Long Beach</option>
+															<option value="37">Kansas City</option>
+															<option value="38">Mesa</option>
+															<option value="39">Virginia Beach</option>
+															<option value="40">Atlanta</option>
+															<option value="41">Colorado Springs</option>
+															<option value="42">Omaha</option>
+															<option value="43">Raleigh</option>
+															<option value="44">Miami</option>
+															<option value="45">Oakland</option>
+															<option value="46">Minneapolis</option>
+															<option value="47">Tulsa</option>
+															<option value="48">Cleveland</option>
+															<option value="49">Wichita</option>
+															<option value="50">Arlington</option>
+															<option value="51">New Orleans</option>
+															<option value="52">Bakersfield</option>
+															<option value="53">Tampa</option>
+															<option value="54">Honolulu</option>
+															<option value="55">Aurora</option>
+															<option value="56">Anaheim</option>
+															<option value="57">Santa Ana</option>
+															<option value="58">St. Louis</option>
+															<option value="59">Riverside</option>
+															<option value="60">Corpus Christi</option>
+															<option value="61">Lexington-Fayette</option>
+															<option value="62">Pittsburgh</option>
+															<option value="63">Anchorage</option>
+															<option value="64">Stockton</option>
+															<option value="65">Cincinnati</option>
+															<option value="66">St. Paul</option>
+															<option value="67">Toledo</option>
+															<option value="68">Greensboro</option>
+															<option value="69">Newark</option>
+															<option value="70">Plano</option>
+															<option value="71">Henderson</option>
+															<option value="72">Lincoln</option>
+															<option value="73">Buffalo</option>
+															<option value="74">Jersey City</option>
+															<option value="75">Chula Vista</option>
+															<option value="76">Fort Wayne</option>
+															<option value="77">Orlando</option>
+															<option value="78">St. Petersburg</option>
+															<option value="79">Chandler</option>
+															<option value="80">Laredo</option>
+															<option value="81">Norfolk</option>
+															<option value="82">Durham</option>
+															<option value="83">Madison</option>
+															<option value="84">Lubbock</option>
+															<option value="85">Irvine</option>
+															<option value="86">Winston-Salem</option>
+															<option value="87">Glendale</option>
+															<option value="88">Garland</option>
+															<option value="89">Hialeah</option>
+															<option value="90">Reno</option>
+															<option value="91">Chesapeake</option>
+															<option value="92">Gilbert</option>
+															<option value="93">Baton Rouge</option>
+															<option value="94">Irving</option>
+															<option value="95">Scottsdale</option>
+															<option value="96">North Las Vegas</option>
+															<option value="97">Fremont</option>
+															<option value="98">Boise City</option>
+															<option value="99">Richmond</option>
+															<option value="100">San Bernardino</option>
+															<option value="101">Birmingham</option>
+															<option value="102">Spokane</option>
+															<option value="103">Rochester</option>
+															<option value="104">Des Moines</option>
+															<option value="105">Modesto</option>
+															<option value="106">Fayetteville</option>
+															<option value="107">Tacoma</option>
+															<option value="108">Oxnard</option>
+															<option value="109">Fontana</option>
+															<option value="110">Columbus</option>
+															<option value="111">Montgomery</option>
+															<option value="112">Moreno Valley</option>
+															<option value="113">Shreveport</option>
+															<option value="114">Aurora</option>
+															<option value="115">Yonkers</option>
+															<option value="116">Akron</option>
+															<option value="117">Huntington Beach</option>
+															<option value="118">Little Rock</option>
+															<option value="119">Augusta-Richmond County</option>
+															<option value="120">Amarillo</option>
+															<option value="121">Glendale</option>
+															<option value="122">Mobile</option>
+															<option value="123">Grand Rapids</option>
+															<option value="124">Salt Lake City</option>
+															<option value="125">Tallahassee</option>
+															<option value="126">Huntsville</option>
+															<option value="127">Grand Prairie</option>
+															<option value="128">Knoxville</option>
+															<option value="129">Worcester</option>
+															<option value="130">Newport News</option>
+															<option value="131">Brownsville</option>
+															<option value="132">Overland Park</option>
+															<option value="133">Santa Clarita</option>
+															<option value="134">Providence</option>
+															<option value="135">Garden Grove</option>
+															<option value="136">Chattanooga</option>
+															<option value="137">Oceanside</option>
+															<option value="138">Jackson</option>
+															<option value="139">Fort Lauderdale</option>
+															<option value="140">Santa Rosa</option>
+															<option value="141">Rancho Cucamonga</option>
+															<option value="142">Port St. Lucie</option>
+															<option value="143">Tempe</option>
+															<option value="144">Ontario</option>
+															<option value="145">Vancouver</option>
+															<option value="146">Cape Coral</option>
+															<option value="147">Sioux Falls</option>
+															<option value="148">Springfield</option>
+															<option value="149">Peoria</option>
+															<option value="150">Pembroke Pines</option>
+													</select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="uk-card uk-margin">
+			<h3 class="uk-card-title">Datepicker</h3>
+			<div class="uk-card-body">
+				<div class="uk-child-width-1-4@l uk-child-width-1-2@m" data-uk-grid>
+					<div>
+						<input type="text" class="uk-input" data-sc-flatpickr placeholder="Pick a date...">
+						<p class="uk-form-help-block">Basic</p>
+					</div>
+					<div>
+						<input type="text" class="uk-input" data-sc-flatpickr='{ "altInput": true, "altFormat": "F j, Y" }' placeholder="Pick a date...">
+						<p class="uk-form-help-block">Human-readable date</p>
+					</div>
+					<div>
+						<input type="text" class="uk-input" id="dp-time" placeholder="Pick a date and time...">
+						<p class="uk-form-help-block">Datetime picker</p>
+					</div>
+					<div>
+						<input type="text" class="uk-input" data-sc-flatpickr='{ "mode": "range" }' placeholder="Pick a date range...">
+						<p class="uk-form-help-block">Selecting a Range of Dates</p>
+					</div>
+				</div>
+				<div data-uk-grid>
+					<div class="uk-width-1-4@l uk-width-1-2@m">
+						<div class="uk-position-relative" id="dp-multiple">
+							<a class="uk-form-icon uk-form-icon-flip" href="#" data-uk-icon="icon: close" data-clear></a>
+							<input type="text" class="uk-input" placeholder="Pick a multiple dates..." data-input>
+						</div>
+					</div>
+					<div class="uk-width-1-4@l uk-width-1-2@m">
+						<div class="uk-position-relative" data-sc-flatpickr='{ "wrap": true, "clickOpens": false}'>
+							<a class="uk-form-icon uk-form-icon-flip" href="#" data-uk-icon="icon: close" data-clear></a>
+							<a class="uk-form-icon uk-form-icon-flip" href="#" data-uk-icon="icon: calendar" data-toggle></a>
+							<input class="uk-input" type="text" placeholder="Pick a date..." data-input>
+						</div>
+					</div>
+					<div class="uk-width-1-2@l  uk-width-1-1@m">
+						<input type="hidden" class="uk-input uk-hidden" id="dp-inline">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="uk-card uk-margin">
+			<h3 class="uk-card-title">Timepicker</h3>
+			<div class="uk-card-body">
+				<div class="uk-child-width-1-3@m" data-uk-grid>
+					<div>
+						<div class="uk-position-relative">
+							<input type="text" class="uk-input" data-sc-flatpickr='{ "enableTime": true, "noCalendar": true, "dateFormat": "H:i" }' placeholder="Pick a time..." data-input>
+						</div>
+					</div>
+					<div>
+						<div class="uk-position-relative">
+							<input type="text" class="uk-input" id="dp-timepicker-24" placeholder="Pick a time..." data-input>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="uk-card uk-margin">
+			<h3 class="uk-card-title">DateRangePicker</h3>
+			<div class="uk-card-body">
+				<div class="uk-child-width-1-3@m" data-uk-grid>
+					<div>
+						<input type="text" class="uk-input" id="drp-default" data-sc-input>
+						<p class="uk-form-help-block">Default</p>
+					</div>
+					<div>
+						<input type="text" class="uk-input" id="drp-timeEnabled" data-sc-input>
+						<p class="uk-form-help-block">Time Enabled</p>
+					</div>
+					<div>
+						<input type="text" class="uk-input" id="drp-shortcuts" data-sc-input>
+						<p class="uk-form-help-block">Future date shortcuts</p>
+					</div>
+					<div>
+						<input type="text" class="uk-input" id="drp-extra-content" data-sc-input>
+						<p class="uk-form-help-block">Extra content</p>
+					</div>
+				</div>
+			</div>
+		</div>
+        <div class="uk-card uk-margin">
+            <h3 class="uk-card-title">Colorpicker</h3>
+            <div class="uk-card-body">
+                <div class="uk-grid-small" data-uk-grid>
+                    <div class="uk-width-1-4@m">
+                        <label>Default</label>
+	                    <div>
+                            <input type="text" data-sc-colorpicker id="cp123">
+	                    </div>
+                    </div>
+                    <div class="uk-width-1-4@m">
+                        <label>Default (right aligned)</label>
+                        <div class="uk-flex uk-flex-right">
+                            <input type="text" data-sc-colorpicker>
+                        </div>
+                    </div>
+                    <div class="uk-width-1-4@m">
+                        <label>Selected color</label>
+	                    <div>
+                            <input type="text" value="#039be5" data-sc-colorpicker>
+	                    </div>
+                    </div>
+                    <div class="uk-width-1-2@m">
+                        <label>Inline</label>
+	                    <div>
+                            <input type="text" data-sc-colorpicker='{"inline": true}'>
+	                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<div class="uk-card uk-margin">
+			<h3 class="uk-card-title">Range Slider</h3>
+			<div class="uk-card-body">
+				<div class="uk-child-width-1-3@l uk-child-width-1-2@m" data-uk-grid>
+					<div>
+						<input type="text" class="uk-input" id="range-01">
+					</div>
+					<div>
+						<input type="text" class="uk-input" id="range-02">
+					</div>
+					<div>
+						<input type="text" class="uk-input" id="range-03">
+					</div>
+				</div>
+				<div class="uk-child-width-1-3@l uk-child-width-1-2@m" data-uk-grid>
+					<div>
+						<input type="text" class="uk-input" id="range-04">
+					</div>
+					<div>
+						<input type="text" class="uk-input" id="range-05">
+					</div>
+					<div>
+						<input type="text" class="uk-input" id="range-06">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="uk-card">
+			<h3 class="uk-card-title">Multiselect</h3>
+			<div class="uk-card-body">
+				<div class="uk-child-width-1-2@l" data-uk-grid>
+					<div>
+						<p class="uk-margin-small sc-color-secondary">Default</p>
+						<select multiple id="ms-pre-selected-options" class="multiselect" name="pre-selected-options[]">
+															<option value="elem_1">orutherford</option>
+															<option value="elem_2">deckow.ariane</option>
+															<option value="elem_3">hassan32</option>
+															<option value="elem_4" selected>vfay</option>
+															<option value="elem_5">brooklyn17</option>
+															<option value="elem_6" disabled>dwillms</option>
+															<option value="elem_7">keyshawn60</option>
+															<option value="elem_8">darrell.yost</option>
+															<option value="elem_9">akerluke</option>
+															<option value="elem_10">alex46</option>
+															<option value="elem_11">inolan</option>
+															<option value="elem_12">boehm.ron</option>
+															<option value="elem_13">gmayert</option>
+															<option value="elem_14">dwight29</option>
+															<option value="elem_15">hermiston.mekhi</option>
+															<option value="elem_16">olockman</option>
+															<option value="elem_17">ryleigh22</option>
+															<option value="elem_18">runte.keshawn</option>
+															<option value="elem_19">kuphal.enoch</option>
+															<option value="elem_20">kihn.jerry</option>
+															<option value="elem_21">jacky.lindgren</option>
+															<option value="elem_22">schamberger.adrain</option>
+															<option value="elem_23">franecki.dereck</option>
+															<option value="elem_24">ciara.yundt</option>
+															<option value="elem_25">schinner.ahmed</option>
+															<option value="elem_26" selected>klocko.landen</option>
+															<option value="elem_27">kjacobi</option>
+															<option value="elem_28">rowe.carmine</option>
+															<option value="elem_29">jacobson.kiera</option>
+															<option value="elem_30">gunner89</option>
+															<option value="elem_31">myrtis.flatley</option>
+															<option value="elem_32">urban55</option>
+															<option value="elem_33">imohr</option>
+															<option value="elem_34">idietrich</option>
+															<option value="elem_35">xbosco</option>
+															<option value="elem_36">chasity10</option>
+															<option value="elem_37">colten54</option>
+															<option value="elem_38">vrohan</option>
+															<option value="elem_39">rrowe</option>
+															<option value="elem_40">nikolaus.dashawn</option>
+															<option value="elem_41">laron71</option>
+															<option value="elem_42">eschmitt</option>
+															<option value="elem_43">taryn98</option>
+															<option value="elem_44">casper.jo</option>
+															<option value="elem_45">clementina.purdy</option>
+															<option value="elem_46">rod08</option>
+															<option value="elem_47">piper.koelpin</option>
+															<option value="elem_48">jberge</option>
+															<option value="elem_49">marks.malika</option>
+															<option value="elem_50">lindsey.quigley</option>
+															<option value="elem_51">bo57</option>
+															<option value="elem_52">golda73</option>
+															<option value="elem_53">jlemke</option>
+															<option value="elem_54">herman.gordon</option>
+															<option value="elem_55">marilyne38</option>
+															<option value="elem_56">velda89</option>
+															<option value="elem_57">joy.zemlak</option>
+															<option value="elem_58">domenic.sawayn</option>
+															<option value="elem_59">bernier.cecil</option>
+															<option value="elem_60">hoppe.archibald</option>
+															<option value="elem_61">conroy.cole</option>
+															<option value="elem_62">kcorwin</option>
+															<option value="elem_63">julio.bechtelar</option>
+															<option value="elem_64">leola.goyette</option>
+															<option value="elem_65">kuphal.casandra</option>
+															<option value="elem_66">padberg.monty</option>
+															<option value="elem_67">rubie23</option>
+															<option value="elem_68">uhauck</option>
+															<option value="elem_69">stark.karson</option>
+															<option value="elem_70">sreynolds</option>
+															<option value="elem_71">lauren72</option>
+															<option value="elem_72">petra.morissette</option>
+															<option value="elem_73">joany88</option>
+															<option value="elem_74">boyer.abdul</option>
+															<option value="elem_75">emmerich.florida</option>
+															<option value="elem_76">wmarquardt</option>
+															<option value="elem_77">zmann</option>
+															<option value="elem_78">aileen60</option>
+															<option value="elem_79">antonina49</option>
+															<option value="elem_80">joey80</option>
+															<option value="elem_81">brisa79</option>
+															<option value="elem_82">darien.bayer</option>
+															<option value="elem_83">hartmann.ashlee</option>
+															<option value="elem_84">wsawayn</option>
+															<option value="elem_85">lafayette20</option>
+															<option value="elem_86">aryanna.larson</option>
+															<option value="elem_87">gerardo30</option>
+															<option value="elem_88">nmills</option>
+															<option value="elem_89">ubergstrom</option>
+															<option value="elem_90">wilderman.jazmyne</option>
+															<option value="elem_91">austen.schowalter</option>
+															<option value="elem_92">koch.dana</option>
+															<option value="elem_93">fidel.brekke</option>
+															<option value="elem_94">lbogisich</option>
+															<option value="elem_95">bartell.hester</option>
+															<option value="elem_96">terry.stehr</option>
+															<option value="elem_97">smith.marta</option>
+															<option value="elem_98">fae.bode</option>
+															<option value="elem_99">kuphal.alphonso</option>
+															<option value="elem_100">wanda15</option>
+													</select>
+					</div>
+					<div>
+						<p class="uk-margin-small sc-color-secondary">Optgroups</p>
+						<select id="ms-optgroup" multiple>
+							<optgroup label="Friends">
+								<option value="1">Yoda</option>
+								<option value="2">Luke Skywalker</option>
+								<option value="3">Han Solo</option>
+								<option value="4" selected>Obi Wan Kenobi</option>
+							</optgroup>
+							<optgroup label="Enemies">
+								<option value="5">Emperor Palpatine</option>
+								<option value="6">Darth Maul</option>
+								<option value="7" disabled>Darth Vader</option>
+								<option value="8">Count Dooku</option>
+							</optgroup>
+						</select>
+					</div>
+				</div>
+				<hr>
+				<div class="uk-child-width-1-2@l" data-uk-grid>
+					<div>
+						<p class="uk-margin-small sc-color-secondary">Custom header/footer</p>
+						<select id="ms-custom-headers" multiple>
+															<option value="elem_1">leonie.oconnell</option>
+															<option value="elem_2">deontae26</option>
+															<option value="elem_3">adickens</option>
+															<option value="elem_4" selected>lmante</option>
+															<option value="elem_5">josue83</option>
+															<option value="elem_6">jennifer.lynch</option>
+															<option value="elem_7">modesto.stamm</option>
+															<option value="elem_8">pat.gislason</option>
+															<option value="elem_9">zmonahan</option>
+															<option value="elem_10">pablo62</option>
+															<option value="elem_11">annie95</option>
+															<option value="elem_12">zdooley</option>
+															<option value="elem_13">earline93</option>
+															<option value="elem_14">jaqueline25</option>
+															<option value="elem_15">rosalia.zieme</option>
+															<option value="elem_16">grath</option>
+															<option value="elem_17">elesch</option>
+															<option value="elem_18">qcasper</option>
+															<option value="elem_19">ellis02</option>
+															<option value="elem_20">feest.stacey</option>
+													</select>
+					</div>
+					<div>
+						<p class="uk-margin-small sc-color-secondary">Searchable</p>
+						<select id="ms-searchable" multiple>
+								<option value="1">New York</option>
+								<option value="2">Los Angeles</option>
+								<option value="3">Chicago</option>
+								<option value="4">Houston</option>
+								<option value="5">Philadelphia</option>
+								<option value="6">Phoenix</option>
+								<option value="7">San Antonio</option>
+								<option value="8">San Diego</option>
+								<option value="9">Dallas</option>
+								<option value="10" selected>San Jose</option>
+								<option value="11" selected>Austin</option>
+								<option value="12" selected>Indianapolis</option>
+								<option value="13" selected>Jacksonville</option>
+								<option value="14" selected>San Francisco</option>
+								<option value="15" selected>Columbus</option>
+								<option value="16" selected>Charlotte</option>
+								<option value="17" selected>Fort Worth</option>
+								<option value="18" selected>Detroit</option>
+								<option value="19" selected>El Paso</option>
+								<option value="20" selected>Memphis</option>
+								<option value="21">Seattle</option>
+								<option value="22">Denver</option>
+								<option value="23">Washington</option>
+								<option value="24">Boston</option>
+								<option value="25">Nashville-Davidson</option>
+								<option value="26">Baltimore</option>
+								<option value="27">Oklahoma City</option>
+								<option value="28">Louisville/Jefferson County</option>
+								<option value="29">Portland</option>
+								<option value="30">Las Vegas</option>
+								<option value="31">Milwaukee</option>
+								<option value="32">Albuquerque</option>
+								<option value="33">Tucson</option>
+								<option value="34">Fresno</option>
+								<option value="35">Sacramento</option>
+								<option value="36">Long Beach</option>
+								<option value="37">Kansas City</option>
+								<option value="38">Mesa</option>
+								<option value="39">Virginia Beach</option>
+								<option value="40">Atlanta</option>
+								<option value="41">Colorado Springs</option>
+								<option value="42">Omaha</option>
+								<option value="43">Raleigh</option>
+								<option value="44">Miami</option>
+								<option value="45">Oakland</option>
+								<option value="46">Minneapolis</option>
+								<option value="47">Tulsa</option>
+								<option value="48">Cleveland</option>
+								<option value="49">Wichita</option>
+								<option value="50">Arlington</option>
+								<option value="51">New Orleans</option>
+								<option value="52">Bakersfield</option>
+								<option value="53">Tampa</option>
+								<option value="54">Honolulu</option>
+								<option value="55">Aurora</option>
+								<option value="56">Anaheim</option>
+								<option value="57">Santa Ana</option>
+								<option value="58">St. Louis</option>
+								<option value="59">Riverside</option>
+								<option value="60">Corpus Christi</option>
+								<option value="61">Lexington-Fayette</option>
+								<option value="62">Pittsburgh</option>
+								<option value="63">Anchorage</option>
+								<option value="64">Stockton</option>
+								<option value="65">Cincinnati</option>
+								<option value="66">St. Paul</option>
+								<option value="67">Toledo</option>
+								<option value="68">Greensboro</option>
+								<option value="69">Newark</option>
+								<option value="70">Plano</option>
+								<option value="71">Henderson</option>
+								<option value="72">Lincoln</option>
+								<option value="73">Buffalo</option>
+								<option value="74">Jersey City</option>
+								<option value="75">Chula Vista</option>
+								<option value="76">Fort Wayne</option>
+								<option value="77">Orlando</option>
+								<option value="78">St. Petersburg</option>
+								<option value="79">Chandler</option>
+								<option value="80">Laredo</option>
+								<option value="81">Norfolk</option>
+								<option value="82">Durham</option>
+								<option value="83">Madison</option>
+								<option value="84">Lubbock</option>
+								<option value="85">Irvine</option>
+								<option value="86">Winston-Salem</option>
+								<option value="87">Glendale</option>
+								<option value="88">Garland</option>
+								<option value="89">Hialeah</option>
+								<option value="90">Reno</option>
+								<option value="91">Chesapeake</option>
+								<option value="92">Gilbert</option>
+								<option value="93">Baton Rouge</option>
+								<option value="94">Irving</option>
+								<option value="95">Scottsdale</option>
+								<option value="96">North Las Vegas</option>
+								<option value="97">Fremont</option>
+								<option value="98">Boise City</option>
+								<option value="99">Richmond</option>
+								<option value="100">San Bernardino</option>
+								<option value="101">Birmingham</option>
+								<option value="102">Spokane</option>
+								<option value="103">Rochester</option>
+								<option value="104">Des Moines</option>
+								<option value="105">Modesto</option>
+								<option value="106">Fayetteville</option>
+								<option value="107">Tacoma</option>
+								<option value="108">Oxnard</option>
+								<option value="109">Fontana</option>
+								<option value="110">Columbus</option>
+								<option value="111">Montgomery</option>
+								<option value="112">Moreno Valley</option>
+								<option value="113">Shreveport</option>
+								<option value="114">Aurora</option>
+								<option value="115">Yonkers</option>
+								<option value="116">Akron</option>
+								<option value="117">Huntington Beach</option>
+								<option value="118">Little Rock</option>
+								<option value="119">Augusta-Richmond County</option>
+								<option value="120">Amarillo</option>
+								<option value="121">Glendale</option>
+								<option value="122">Mobile</option>
+								<option value="123">Grand Rapids</option>
+								<option value="124">Salt Lake City</option>
+								<option value="125">Tallahassee</option>
+								<option value="126">Huntsville</option>
+								<option value="127">Grand Prairie</option>
+								<option value="128">Knoxville</option>
+								<option value="129">Worcester</option>
+								<option value="130">Newport News</option>
+								<option value="131">Brownsville</option>
+								<option value="132">Overland Park</option>
+								<option value="133">Santa Clarita</option>
+								<option value="134">Providence</option>
+								<option value="135">Garden Grove</option>
+								<option value="136">Chattanooga</option>
+								<option value="137">Oceanside</option>
+								<option value="138">Jackson</option>
+								<option value="139">Fort Lauderdale</option>
+								<option value="140">Santa Rosa</option>
+								<option value="141">Rancho Cucamonga</option>
+								<option value="142">Port St. Lucie</option>
+								<option value="143">Tempe</option>
+								<option value="144">Ontario</option>
+								<option value="145">Vancouver</option>
+								<option value="146">Cape Coral</option>
+								<option value="147">Sioux Falls</option>
+								<option value="148">Springfield</option>
+								<option value="149">Peoria</option>
+								<option value="150">Pembroke Pines</option>
+						</select>
+					</div>
+				</div>
+				<hr>
+				<div class="uk-child-width-1-2@l" data-uk-grid>
+					<div>
+						<p class="uk-margin-small sc-color-secondary">Public methods</p>
+						<select multiple id="ms-public-methods" class="multiselect" name="public-methods[]">
+															<option value="elem_1">Chadrickburgh</option>
+															<option value="elem_2">North Tom</option>
+															<option value="elem_3">New Edwin</option>
+															<option value="elem_4">Wildermanchester</option>
+															<option value="elem_5">West Teagan</option>
+															<option value="elem_6">New Eddieborough</option>
+															<option value="elem_7">Ziemehaven</option>
+															<option value="elem_8" disabled>Lake Rebecaside</option>
+															<option value="elem_9">South Deanna</option>
+															<option value="elem_10">Hartmannchester</option>
+															<option value="elem_11">Satterfieldside</option>
+															<option value="elem_12">New Arnaldo</option>
+															<option value="elem_13">West Jasen</option>
+															<option value="elem_14">Beahanmouth</option>
+															<option value="elem_15">West Leonor</option>
+															<option value="elem_16">Jermaintown</option>
+															<option value="elem_17">East Clement</option>
+															<option value="elem_18">Hackettville</option>
+															<option value="elem_19">South Lonniefurt</option>
+															<option value="elem_20">Lake Dexterville</option>
+															<option value="elem_21">Lockmanview</option>
+															<option value="elem_22">Sporerburgh</option>
+															<option value="elem_23">East Corinetown</option>
+															<option value="elem_24">Mayertview</option>
+															<option value="elem_25">Lake Lorenzville</option>
+															<option value="elem_26">East Katelynn</option>
+															<option value="elem_27">Ardellaburgh</option>
+															<option value="elem_28">Alverafurt</option>
+															<option value="elem_29">Modestoborough</option>
+															<option value="elem_30">Naomiechester</option>
+															<option value="elem_31">Rhodaville</option>
+															<option value="elem_32">Zelmabury</option>
+															<option value="elem_33">Strosinmouth</option>
+															<option value="elem_34">Port Evalyn</option>
+															<option value="elem_35">Lake Crystelton</option>
+															<option value="elem_36">New Kelly</option>
+															<option value="elem_37">West Lacyside</option>
+															<option value="elem_38">North Linniebury</option>
+															<option value="elem_39">South Rexview</option>
+															<option value="elem_40">Port Branson</option>
+															<option value="elem_41">East Jasper</option>
+															<option value="elem_42">New Ludwig</option>
+															<option value="elem_43">Starkmouth</option>
+															<option value="elem_44">Bettyefurt</option>
+															<option value="elem_45">New Earnestine</option>
+															<option value="elem_46">South Normamouth</option>
+															<option value="elem_47">North Madelyn</option>
+															<option value="elem_48">North Merlinberg</option>
+															<option value="elem_49">East Lottiemouth</option>
+															<option value="elem_50">Port Alva</option>
+															<option value="elem_51">West Heloise</option>
+															<option value="elem_52">West Mauriceburgh</option>
+															<option value="elem_53">Morarbury</option>
+															<option value="elem_54">Uptonview</option>
+															<option value="elem_55">West Ulises</option>
+															<option value="elem_56">South Donshire</option>
+															<option value="elem_57">Wilhelmineport</option>
+															<option value="elem_58">Greenbury</option>
+															<option value="elem_59">New Okey</option>
+															<option value="elem_60">Port Princessside</option>
+															<option value="elem_61">Lindgrenmouth</option>
+															<option value="elem_62">New Anneberg</option>
+															<option value="elem_63">West Christopher</option>
+															<option value="elem_64">New Destiniton</option>
+															<option value="elem_65">Stoltenbergbury</option>
+															<option value="elem_66">Stiedemannmouth</option>
+															<option value="elem_67">North Tierra</option>
+															<option value="elem_68">Cummerataton</option>
+															<option value="elem_69">North Celineshire</option>
+															<option value="elem_70">Traceland</option>
+															<option value="elem_71">North Rosinaland</option>
+															<option value="elem_72">Sammychester</option>
+															<option value="elem_73">Beattyshire</option>
+															<option value="elem_74">New Josephmouth</option>
+															<option value="elem_75">Jeannefort</option>
+															<option value="elem_76">Mireilleshire</option>
+															<option value="elem_77">Howellshire</option>
+															<option value="elem_78">Botsfordhaven</option>
+															<option value="elem_79">North Mossie</option>
+															<option value="elem_80">Lyricfort</option>
+															<option value="elem_81">Emmanuelleside</option>
+															<option value="elem_82">North Geovannymouth</option>
+															<option value="elem_83">Courtneychester</option>
+															<option value="elem_84">East Benedictport</option>
+															<option value="elem_85">Klingland</option>
+															<option value="elem_86">Stanleyshire</option>
+															<option value="elem_87">East Ismaelland</option>
+															<option value="elem_88">Hilpertmouth</option>
+															<option value="elem_89">Beahanfurt</option>
+															<option value="elem_90">West Kasandraside</option>
+															<option value="elem_91">Marquischester</option>
+															<option value="elem_92">Aileenside</option>
+															<option value="elem_93">North Raquel</option>
+															<option value="elem_94">South Addison</option>
+															<option value="elem_95">Lake Vita</option>
+															<option value="elem_96">Jacobsonshire</option>
+															<option value="elem_97">Emeryhaven</option>
+															<option value="elem_98">South Ellsworthfort</option>
+															<option value="elem_99">South Louvenia</option>
+															<option value="elem_100">Kihnville</option>
+															<option value="elem_101">New Alisha</option>
+															<option value="elem_102">Gerlachside</option>
+															<option value="elem_103">Daughertyland</option>
+															<option value="elem_104">New Flossie</option>
+															<option value="elem_105">Mitchelltown</option>
+															<option value="elem_106">East Vaughnshire</option>
+															<option value="elem_107">Vladimirshire</option>
+															<option value="elem_108">East Thaddeusberg</option>
+															<option value="elem_109">South Bud</option>
+															<option value="elem_110">Brandohaven</option>
+															<option value="elem_111">West Arlie</option>
+															<option value="elem_112">Lake Garnet</option>
+															<option value="elem_113">Ziemannshire</option>
+															<option value="elem_114">Littleburgh</option>
+															<option value="elem_115">Ignatiusborough</option>
+															<option value="elem_116">Port Deonchester</option>
+															<option value="elem_117">Skileston</option>
+															<option value="elem_118">North Karianemouth</option>
+															<option value="elem_119">Groverview</option>
+															<option value="elem_120">Morissetteberg</option>
+															<option value="elem_121">South Kobemouth</option>
+															<option value="elem_122">Port Jovanyside</option>
+															<option value="elem_123">East Marques</option>
+															<option value="elem_124">East Abdullahfort</option>
+															<option value="elem_125">New Sistermouth</option>
+															<option value="elem_126">Port Desiree</option>
+															<option value="elem_127">Jordanemouth</option>
+															<option value="elem_128">Hailiemouth</option>
+															<option value="elem_129">South Joanie</option>
+															<option value="elem_130">New Mariano</option>
+															<option value="elem_131">Shawnashire</option>
+															<option value="elem_132">South Quincyburgh</option>
+															<option value="elem_133">Laurettashire</option>
+															<option value="elem_134">Derrickshire</option>
+															<option value="elem_135">Lynchborough</option>
+															<option value="elem_136">Tracymouth</option>
+															<option value="elem_137">Morissettehaven</option>
+															<option value="elem_138">West Reinaberg</option>
+															<option value="elem_139">East Don</option>
+															<option value="elem_140">Ellsworthview</option>
+															<option value="elem_141">Zemlakside</option>
+															<option value="elem_142">Lake Lupe</option>
+															<option value="elem_143">Nikkoview</option>
+															<option value="elem_144">East Bartville</option>
+															<option value="elem_145">West Julianaport</option>
+															<option value="elem_146">East Jewelltown</option>
+															<option value="elem_147">Zulaufport</option>
+															<option value="elem_148">Jedidiahmouth</option>
+															<option value="elem_149">Sipestown</option>
+															<option value="elem_150">East Deshawn</option>
+															<option value="elem_151">Randallborough</option>
+															<option value="elem_152">Cartwrightfurt</option>
+															<option value="elem_153">Port Margarete</option>
+															<option value="elem_154">Wymanshire</option>
+															<option value="elem_155">South Rhoda</option>
+															<option value="elem_156">West Zechariahberg</option>
+															<option value="elem_157">Lynchview</option>
+															<option value="elem_158">Cruickshankborough</option>
+															<option value="elem_159">Port Rebeccachester</option>
+															<option value="elem_160">Wiegandview</option>
+															<option value="elem_161">Adalbertoland</option>
+															<option value="elem_162">New Brooksfurt</option>
+															<option value="elem_163">Kristofferbury</option>
+															<option value="elem_164">Vaughnview</option>
+															<option value="elem_165">Macejkovicmouth</option>
+															<option value="elem_166">Lebsackmouth</option>
+															<option value="elem_167">Friesenshire</option>
+															<option value="elem_168">Maraside</option>
+															<option value="elem_169">Brekkeborough</option>
+															<option value="elem_170">New Kelton</option>
+															<option value="elem_171">Nitzschechester</option>
+															<option value="elem_172">East Immanuel</option>
+															<option value="elem_173">Handborough</option>
+															<option value="elem_174">East Emory</option>
+															<option value="elem_175">West Lessieton</option>
+															<option value="elem_176">Roymouth</option>
+															<option value="elem_177">West General</option>
+															<option value="elem_178">Croninside</option>
+															<option value="elem_179">Reillyberg</option>
+															<option value="elem_180">McLaughlinview</option>
+															<option value="elem_181">New Julian</option>
+															<option value="elem_182">Flossiemouth</option>
+															<option value="elem_183">Casperborough</option>
+															<option value="elem_184">Port Rachael</option>
+															<option value="elem_185">South Muhammadville</option>
+															<option value="elem_186">Lake Judy</option>
+															<option value="elem_187">Kassandrafurt</option>
+															<option value="elem_188">Greenholtton</option>
+															<option value="elem_189">Kaylinmouth</option>
+															<option value="elem_190">North Leonorside</option>
+															<option value="elem_191">Port Charley</option>
+															<option value="elem_192">Lake Harmonland</option>
+															<option value="elem_193">Port Olentown</option>
+															<option value="elem_194">South Jedidiahstad</option>
+															<option value="elem_195">New Gordontown</option>
+															<option value="elem_196">Julietview</option>
+															<option value="elem_197">Wolffburgh</option>
+															<option value="elem_198">North Madelynn</option>
+															<option value="elem_199">Mustafaview</option>
+															<option value="elem_200">East Salvatore</option>
+															<option value="elem_201">New Millie</option>
+															<option value="elem_202">Jaleelville</option>
+															<option value="elem_203">West Vito</option>
+															<option value="elem_204">New Rashad</option>
+															<option value="elem_205">Elvaberg</option>
+															<option value="elem_206">New Reystad</option>
+															<option value="elem_207">Lake Haven</option>
+															<option value="elem_208">Lake Dorristown</option>
+															<option value="elem_209">North Elwynborough</option>
+															<option value="elem_210">North Aronchester</option>
+															<option value="elem_211">Port Margetown</option>
+															<option value="elem_212">East Hesterside</option>
+															<option value="elem_213">South Ruthie</option>
+															<option value="elem_214">Schmittborough</option>
+															<option value="elem_215">East Savanahburgh</option>
+															<option value="elem_216">Considineshire</option>
+															<option value="elem_217">South Orin</option>
+															<option value="elem_218">Bernicemouth</option>
+															<option value="elem_219">Faychester</option>
+															<option value="elem_220">West Virgil</option>
+															<option value="elem_221">Port Nikki</option>
+															<option value="elem_222">New Deliaview</option>
+															<option value="elem_223">North Dinostad</option>
+															<option value="elem_224">New Houstonshire</option>
+															<option value="elem_225">Wardstad</option>
+															<option value="elem_226">East Taureanville</option>
+															<option value="elem_227">New Cordiaberg</option>
+															<option value="elem_228">East Adele</option>
+															<option value="elem_229">Jerdeberg</option>
+															<option value="elem_230">Ferryview</option>
+															<option value="elem_231">West Myleneland</option>
+															<option value="elem_232">Port Moiseschester</option>
+															<option value="elem_233">East Justina</option>
+															<option value="elem_234">East Charlesville</option>
+															<option value="elem_235">South Richard</option>
+															<option value="elem_236">Port Traceberg</option>
+															<option value="elem_237">Ankundingview</option>
+															<option value="elem_238">Budberg</option>
+															<option value="elem_239">Port Janis</option>
+															<option value="elem_240">Glenland</option>
+															<option value="elem_241">Lednertown</option>
+															<option value="elem_242">East Oswaldville</option>
+															<option value="elem_243">Cummingsburgh</option>
+															<option value="elem_244">East Frederickburgh</option>
+															<option value="elem_245">Kenmouth</option>
+															<option value="elem_246">New Nathanial</option>
+															<option value="elem_247">South Rhodatown</option>
+															<option value="elem_248">New Anitaland</option>
+															<option value="elem_249">Denamouth</option>
+															<option value="elem_250">North Ruben</option>
+															<option value="elem_251">Mollyborough</option>
+															<option value="elem_252">South Adelle</option>
+															<option value="elem_253">Lake Shaynaview</option>
+															<option value="elem_254">Lake Lucieville</option>
+															<option value="elem_255">South Neal</option>
+															<option value="elem_256">South Janelle</option>
+															<option value="elem_257">Lake Ivah</option>
+															<option value="elem_258">New Shannon</option>
+															<option value="elem_259">North Orieshire</option>
+															<option value="elem_260">Sanfordview</option>
+															<option value="elem_261">Colliertown</option>
+															<option value="elem_262">Simoneville</option>
+															<option value="elem_263">West Arnulfomouth</option>
+															<option value="elem_264">Lefflerview</option>
+															<option value="elem_265">Port Brionna</option>
+															<option value="elem_266">Hardyborough</option>
+															<option value="elem_267">Adamshire</option>
+															<option value="elem_268">North Rick</option>
+															<option value="elem_269">Schusterport</option>
+															<option value="elem_270">Lake Sonya</option>
+															<option value="elem_271">Rahsaanmouth</option>
+															<option value="elem_272">Bernierview</option>
+															<option value="elem_273">New Samir</option>
+															<option value="elem_274">North Christine</option>
+															<option value="elem_275">North Cedrick</option>
+															<option value="elem_276">Goyetteburgh</option>
+															<option value="elem_277">Frederickchester</option>
+															<option value="elem_278">Baumbachport</option>
+															<option value="elem_279">East Hilmabury</option>
+															<option value="elem_280">Maurineport</option>
+															<option value="elem_281">East Carlotta</option>
+															<option value="elem_282">North Glenna</option>
+															<option value="elem_283">New Jayceshire</option>
+															<option value="elem_284">Nikolaustown</option>
+															<option value="elem_285">West Laney</option>
+															<option value="elem_286">East Fredy</option>
+															<option value="elem_287">Larsonmouth</option>
+															<option value="elem_288">Kiehnborough</option>
+															<option value="elem_289">Uriahtown</option>
+															<option value="elem_290">Port Nia</option>
+															<option value="elem_291">South Lucinda</option>
+															<option value="elem_292">West Hershel</option>
+															<option value="elem_293">Keelingburgh</option>
+															<option value="elem_294">New Santinaborough</option>
+															<option value="elem_295">New Brooke</option>
+															<option value="elem_296">Keelingfort</option>
+															<option value="elem_297">Lacyville</option>
+															<option value="elem_298">Rauburgh</option>
+															<option value="elem_299">Nitzschefurt</option>
+															<option value="elem_300">Port Elliot</option>
+															<option value="elem_301">Lake Babychester</option>
+															<option value="elem_302">New Waynechester</option>
+															<option value="elem_303">South Nikochester</option>
+															<option value="elem_304">South Nicolaside</option>
+															<option value="elem_305">Satterfieldstad</option>
+															<option value="elem_306">Luettgenville</option>
+															<option value="elem_307">Abbottborough</option>
+															<option value="elem_308">Nikitaton</option>
+															<option value="elem_309">South Loma</option>
+															<option value="elem_310">North Lew</option>
+															<option value="elem_311">New Taya</option>
+															<option value="elem_312">Moorebury</option>
+															<option value="elem_313">Dougmouth</option>
+															<option value="elem_314">North Letha</option>
+															<option value="elem_315">Leetown</option>
+															<option value="elem_316">East Jalen</option>
+															<option value="elem_317">Donatoburgh</option>
+															<option value="elem_318">Schillerville</option>
+															<option value="elem_319">Trantowside</option>
+															<option value="elem_320">New Alphonsoshire</option>
+															<option value="elem_321">South Jerryport</option>
+															<option value="elem_322">East Donnaborough</option>
+															<option value="elem_323">New Jayson</option>
+															<option value="elem_324">Muellerhaven</option>
+															<option value="elem_325">Port Krystel</option>
+															<option value="elem_326">North Elliott</option>
+															<option value="elem_327">Raynorshire</option>
+															<option value="elem_328">Hettieberg</option>
+															<option value="elem_329">Larryfort</option>
+															<option value="elem_330">Zboncakland</option>
+															<option value="elem_331">Lake Francis</option>
+															<option value="elem_332">Port Rafael</option>
+															<option value="elem_333">Schuppemouth</option>
+															<option value="elem_334">West Traceyton</option>
+															<option value="elem_335">West Matildebury</option>
+															<option value="elem_336">South Pearline</option>
+															<option value="elem_337">Kaitlynhaven</option>
+															<option value="elem_338">North Eulaburgh</option>
+															<option value="elem_339">West Norwoodview</option>
+															<option value="elem_340">Howellburgh</option>
+															<option value="elem_341">Brodyville</option>
+															<option value="elem_342">Jayceshire</option>
+															<option value="elem_343">Santinashire</option>
+															<option value="elem_344">Whiteside</option>
+															<option value="elem_345">Legrostown</option>
+															<option value="elem_346">O'Harafurt</option>
+															<option value="elem_347">West Lennamouth</option>
+															<option value="elem_348">Treuteltown</option>
+															<option value="elem_349">Vancemouth</option>
+															<option value="elem_350">Shakiraberg</option>
+															<option value="elem_351">East Gina</option>
+															<option value="elem_352">Broderickton</option>
+															<option value="elem_353">Lake Verliefort</option>
+															<option value="elem_354">North Marysemouth</option>
+															<option value="elem_355">North Henry</option>
+															<option value="elem_356">Kevinfurt</option>
+															<option value="elem_357">North Vitabury</option>
+															<option value="elem_358">Ilaberg</option>
+															<option value="elem_359">Coralietown</option>
+															<option value="elem_360">Reichelfort</option>
+															<option value="elem_361">Wadebury</option>
+															<option value="elem_362">Lewisburgh</option>
+															<option value="elem_363">South Alexandreberg</option>
+															<option value="elem_364">Madilynshire</option>
+															<option value="elem_365">Crystelview</option>
+															<option value="elem_366">Gretaside</option>
+															<option value="elem_367">North Karina</option>
+															<option value="elem_368">North Vernieshire</option>
+															<option value="elem_369">Pollichberg</option>
+															<option value="elem_370">West Ardenmouth</option>
+															<option value="elem_371">New Kendrick</option>
+															<option value="elem_372">Katrinemouth</option>
+															<option value="elem_373">Greenstad</option>
+															<option value="elem_374">New Phoebe</option>
+															<option value="elem_375">Friesenfort</option>
+															<option value="elem_376">Russelburgh</option>
+															<option value="elem_377">Port Juddton</option>
+															<option value="elem_378">East Mohamedside</option>
+															<option value="elem_379">North Jadyn</option>
+															<option value="elem_380">North Brooksmouth</option>
+															<option value="elem_381">Lake Sammieville</option>
+															<option value="elem_382">Bartolettibury</option>
+															<option value="elem_383">Piperstad</option>
+															<option value="elem_384">Port Myah</option>
+															<option value="elem_385">Mullershire</option>
+															<option value="elem_386">South Mattfurt</option>
+															<option value="elem_387">Katelinhaven</option>
+															<option value="elem_388">Port Jamel</option>
+															<option value="elem_389">North Raymond</option>
+															<option value="elem_390">Jerdeside</option>
+															<option value="elem_391">South Vanessahaven</option>
+															<option value="elem_392">West Annamarieview</option>
+															<option value="elem_393">South Aditya</option>
+															<option value="elem_394">New Connor</option>
+															<option value="elem_395">North Providenci</option>
+															<option value="elem_396">Port Janiya</option>
+															<option value="elem_397">New Erling</option>
+															<option value="elem_398">South Jamarburgh</option>
+															<option value="elem_399">Lake Brannon</option>
+															<option value="elem_400">Tyrashire</option>
+															<option value="elem_401">Port Cliffordland</option>
+															<option value="elem_402">Armandoberg</option>
+															<option value="elem_403">East Freddy</option>
+															<option value="elem_404">Wizaville</option>
+															<option value="elem_405">Schmidtside</option>
+															<option value="elem_406">Jaskolskiport</option>
+															<option value="elem_407">East Jerrell</option>
+															<option value="elem_408">Kelsiebury</option>
+															<option value="elem_409">Lynchview</option>
+															<option value="elem_410">Port Floview</option>
+															<option value="elem_411">New Theron</option>
+															<option value="elem_412">West Reed</option>
+															<option value="elem_413">Hermistonville</option>
+															<option value="elem_414">West Mylene</option>
+															<option value="elem_415">Casimerfurt</option>
+															<option value="elem_416">Port Evalynburgh</option>
+															<option value="elem_417">Brooksmouth</option>
+															<option value="elem_418">Violastad</option>
+															<option value="elem_419">Irvingberg</option>
+															<option value="elem_420">New Kira</option>
+															<option value="elem_421">East Hailie</option>
+															<option value="elem_422">Madisenburgh</option>
+															<option value="elem_423">Zemlakmouth</option>
+															<option value="elem_424">Port Gabrielle</option>
+															<option value="elem_425">Damarismouth</option>
+															<option value="elem_426">West Kaiaside</option>
+															<option value="elem_427">East Carolynebury</option>
+															<option value="elem_428">West Coopermouth</option>
+															<option value="elem_429">Considineburgh</option>
+															<option value="elem_430">North Orval</option>
+															<option value="elem_431">Tyshawnstad</option>
+															<option value="elem_432">South Hosea</option>
+															<option value="elem_433">Port Jaqueline</option>
+															<option value="elem_434">Lake Wandahaven</option>
+															<option value="elem_435">West Dedrick</option>
+															<option value="elem_436">Johathanhaven</option>
+															<option value="elem_437">North Agnes</option>
+															<option value="elem_438">Abbeymouth</option>
+															<option value="elem_439">Lockmanfurt</option>
+															<option value="elem_440">Willmsbury</option>
+															<option value="elem_441">East Taurean</option>
+															<option value="elem_442">South Guiseppe</option>
+															<option value="elem_443">Watsonhaven</option>
+															<option value="elem_444">Mannburgh</option>
+															<option value="elem_445">New Esthertown</option>
+															<option value="elem_446">Johnsonchester</option>
+															<option value="elem_447">Port Bretmouth</option>
+															<option value="elem_448">Larsonbury</option>
+															<option value="elem_449">Rempelland</option>
+															<option value="elem_450">Langview</option>
+															<option value="elem_451">Abbiemouth</option>
+															<option value="elem_452">Port Veda</option>
+															<option value="elem_453">Lake Andrew</option>
+															<option value="elem_454">South Rita</option>
+															<option value="elem_455">Hillview</option>
+															<option value="elem_456">Lake Willieville</option>
+															<option value="elem_457">Hauckville</option>
+															<option value="elem_458">Colefort</option>
+															<option value="elem_459">Gottliebbury</option>
+															<option value="elem_460">West Macyburgh</option>
+															<option value="elem_461">Dejahburgh</option>
+															<option value="elem_462">New Asia</option>
+															<option value="elem_463">Jeramyborough</option>
+															<option value="elem_464">Lomaside</option>
+															<option value="elem_465">North Caleigh</option>
+															<option value="elem_466">Lake Pamela</option>
+															<option value="elem_467">Joshmouth</option>
+															<option value="elem_468">Cyrusville</option>
+															<option value="elem_469">Armstrongland</option>
+															<option value="elem_470">East Celiahaven</option>
+															<option value="elem_471">Tyriquemouth</option>
+															<option value="elem_472">Port Octaviafurt</option>
+															<option value="elem_473">West Sven</option>
+															<option value="elem_474">Koelpinport</option>
+															<option value="elem_475">New Pamelamouth</option>
+															<option value="elem_476">Jordiview</option>
+															<option value="elem_477">South Dariana</option>
+															<option value="elem_478">South Grayce</option>
+															<option value="elem_479">South Kyla</option>
+															<option value="elem_480">Reynoldsmouth</option>
+															<option value="elem_481">Lake Efrain</option>
+															<option value="elem_482">Felipeland</option>
+															<option value="elem_483">Prosaccoshire</option>
+															<option value="elem_484">New Hank</option>
+															<option value="elem_485">Robelmouth</option>
+															<option value="elem_486">Wolffmouth</option>
+															<option value="elem_487">Maddisonburgh</option>
+															<option value="elem_488">Gayton</option>
+															<option value="elem_489">Gavinburgh</option>
+															<option value="elem_490">New Fernando</option>
+															<option value="elem_491">Lake Austen</option>
+															<option value="elem_492">Roweview</option>
+															<option value="elem_493">Quitzontown</option>
+															<option value="elem_494">Funkland</option>
+															<option value="elem_495">New Jake</option>
+															<option value="elem_496">East Christianton</option>
+															<option value="elem_497">New Marquisehaven</option>
+															<option value="elem_498">Ericborough</option>
+															<option value="elem_499">Monahanmouth</option>
+															<option value="elem_500">Port Elyseland</option>
+													</select>
+					</div>
+					<div data-uk-margin>
+						<a class="sc-button sc-button-default sc-button-small sc-button-outline" href="#" id="ms-select-all">select all</a>
+						<a class="sc-button sc-button-default sc-button-small sc-button-outline" href="#" id="ms-deselect-all">deselect all</a>
+						<br>
+						<a class="sc-button sc-button-default sc-button-small sc-button-outline" href="#" id="ms-select-10">select 10 elems</a>
+						<a class="sc-button sc-button-default sc-button-small sc-button-outline" href="#" id="ms-deselect-10">deselect 10 elems</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="uk-margin" data-uk-grid>
+			<div class="uk-width-1-2@l">
+				<div class="uk-card">
+					<h3 class="uk-card-title">Checkbox, radio</h3>
+					<div class="uk-card-body">
+						<div class="uk-child-width-1-2@s uk-child-width-1-3@m" data-uk-grid>
+							<div>
+								<ul class="uk-list">
+									<li>
+										<input type="checkbox" id="square-checkbox-1" data-sc-icheck>
+										<label for="square-checkbox-1">Checkbox 1</label>
+									</li>
+									<li>
+										<input type="checkbox" id="square-checkbox-2" checked data-sc-icheck>
+										<label for="square-checkbox-2">Checkbox 2</label>
+									</li>
+									<li>
+										<input type="checkbox" id="square-checkbox-disabled" disabled data-sc-icheck>
+										<label for="square-checkbox-disabled">Disabled</label>
+									</li>
+									<li>
+										<input type="checkbox" id="square-checkbox-disabled-checked" checked disabled data-sc-icheck>
+										<label for="square-checkbox-disabled-checked">Disabled &amp; checked</label>
+									</li>
+								</ul>
+							</div>
+							<div>
+								<ul class="uk-list">
+									<li>
+										<input type="radio" id="square-radio-1" name="square-radio" data-sc-icheck>
+										<label for="square-radio-1">Radio button 1</label>
+									</li>
+									<li>
+										<input type="radio" id="square-radio-2" name="square-radio" checked data-sc-icheck>
+										<label for="square-radio-2">Radio button 2</label>
+									</li>
+									<li>
+										<input type="radio" id="square-radio-disabled" disabled data-sc-icheck>
+										<label for="square-radio-disabled">Disabled</label>
+									</li>
+									<li>
+										<input type="radio" id="square-radio-disabled-checked" checked disabled data-sc-icheck>
+										<label for="square-radio-disabled-checked">Disabled &amp; checked</label>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="uk-card uk-margin">
+					<h3 class="uk-card-title">Switches</h3>
+					<div class="uk-card-body">
+						<div class="uk-child-width-1-3@s" data-uk-grid>
+							<div>
+								<input type="checkbox" id="sw-a" data-sc-switchery checked /><label for="sw-a" class="uk-margin-small-right">Checked</label>
+							</div>
+							<div>
+								<input type="checkbox" id="sw-b" data-sc-switchery disabled /><label for="sw-b" class="uk-margin-small-right">Disabled</label>
+							</div>
+						</div>
+						<p class="uk-margin uk-margin-medium-top uk-heading-line"><span>Sizes</span></p>
+						<div class="uk-child-width-1-3@s" data-uk-grid>
+							<div>
+								<input type="checkbox" id="sw-c" data-sc-switchery data-switchery-size="small" /><label for="sw-c" class="uk-margin-small-right">Small</label>
+							</div>
+							<div>
+								<input type="checkbox" id="sw-d" data-sc-switchery checked /><label for="sw-d" class="uk-margin-small-right">Regular</label>
+							</div>
+							<div>
+								<input type="checkbox" id="sw-e" data-sc-switchery data-switchery-size="large" /><label for="sw-e" class="uk-margin-small-right">large</label>
+							</div>
+						</div>
+						<p class="uk-margin uk-margin-medium-top uk-heading-line"><span>Colors</span></p>
+						<div class="uk-child-width-1-3@s" data-uk-grid>
+							<div>
+								<input type="checkbox" id="sw-f" data-sc-switchery data-switchery-color="#0277BD" data-switchery-secondary-color="#D84315" /><label for="sw-f" class="uk-margin-small-right">Label</label>
+							</div>
+							<div>
+								<input type="checkbox" id="sw-g" data-sc-switchery checked data-switchery-color="#546E7A" data-switchery-secondary-color="#6A1B9A"/><label for="sw-g" class="uk-margin-small-right">Label</label>
+							</div>
+						</div>
+						<p class="uk-margin uk-margin-medium-top uk-heading-line"><span>Manual Toggle</span></p>
+						<div class="uk-child-width-1-4@s" data-uk-grid>
+							<div>
+								<input type="checkbox" id="sw-toggle" data-sc-switchery/>
+							</div>
+							<div>
+								<button class="sc-button sc-button-small" id="sw-toggle-btn">Toggle</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="uk-width-1-2@l">
+				<div class="uk-card">
+					<h3 class="uk-card-title">Rating</h3>
+					<div class="uk-card-body">
+						<div class="uk-child-width-1-2@m" data-uk-grid>
+							<div>
+								<div data-sc-raty></div>
+								<span class="uk-form-help-block">Default</span>
+							</div>
+							<div>
+								<div class="raty-small" data-sc-raty></div>
+								<span class="uk-form-help-block">small</span>
+							</div>
+							<div>
+								<div class="raty-large" data-sc-raty></div>
+								<span class="uk-form-help-block">Large</span>
+							</div>
+						</div>
+						<div class="uk-child-width-1-2@m" data-uk-grid>
+							<div>
+								<div data-sc-raty='{ "half": true }'></div>
+								<span class="uk-form-help-block">Half Star</span>
+							</div>
+							<div>
+								<div data-sc-raty='{ "cancel": true }'></div>
+								<span class="uk-form-help-block">Cancel Button</span>
+							</div>
+						</div>
+						<div class="uk-child-width-1-2@m" data-uk-grid>
+							<div>
+								<div data-sc-raty='{ "score": 4 }'></div>
+								<span class="uk-form-help-block">Saved Score</span>
+							</div>
+							<div>
+								<div data-sc-raty='{ "score": 2, "readOnly": true }'></div>
+								<span class="uk-form-help-block">Read Only</span>
+							</div>
+						</div>
+						<div class="uk-margin-medium-top">
+							<div data-sc-raty='{ "number": 10 }'></div>
+							<span class="uk-form-help-block">10 Stars</span>
+						</div>
+					</div>
+				</div>
+				<div class="uk-card uk-margin">
+					<h3 class="uk-card-title">Inputmasks</h3>
+					<div class="uk-card-body">
+						<form>
+							<div class="uk-margin-small">
+								<input class="uk-input" data-inputmask="'alias': 'datetime', 'inputformat' : 'dd/mm/yyyy'" data-sc-input />
+                                <div class="uk-overflow-auto">
+								    <p class="uk-form-help-block"><code>'alias': 'datetime', 'inputformat' : 'dd/mm/yyyy'</code></p>
+                                </div>
+							</div>
+							<div class="uk-margin-small">
+								<input class="uk-input" data-inputmask="'mask': '9', 'repeat': 10, 'greedy' : false" data-sc-input />
+                                <div class="uk-overflow-auto">
+								    <p class="uk-form-help-block"><code>'mask': '9', 'repeat': 10, 'greedy' : false</code></p>
+                                </div>
+							</div>
+							<div class="uk-margin-small">
+								<input class="uk-input" data-inputmask="'mask': '99-9999999'" data-sc-input />
+                                <div class="uk-overflow-auto">
+								    <p class="uk-form-help-block"><code>'mask': '99-9999999'</code></p>
+                                </div>
+							</div>
+							<div class="uk-margin-small">
+								<input class="uk-input" data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'" data-sc-input />
+								<div class="uk-overflow-auto"><p class="uk-form-help-block"><code>'alias': 'numeric', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'</code></p></div>
+							</div>
+							<div class="uk-margin-small">
+								<input class="uk-input" data-inputmask="'alias': 'email'" data-sc-input />
+								<p class="uk-form-help-block"><code>'alias': 'email'</code></p>
+							</div>
+							<div class="uk-margin-small">
+								<input class="uk-input" data-inputmask="'alias': 'ip'" data-sc-input />
+								<p class="uk-form-help-block"><code>'alias': 'ip'</code></p>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- async assets-->
+<script src="assets/js/vendor/loadjs.min.js"></script>
+<script>
+	var html = document.getElementsByTagName('html')[0];
+	// ----------- CSS
+	// md icons
+	loadjs('assets/css/materialdesignicons.min.css', {
+        preload: true
+	});
+    // UIkit
+        loadjs('node_modules/uikit/dist/css/uikit-rtl.min.css', {
+        preload: true
+    });
+    	// themes
+	loadjs('assets/css/themes/themes_combined.min.css', {
+        preload: true
+    });
+	// mdi icons (base64) & google fonts (base64)
+	loadjs([
+	    'assets/css/fonts/mdi_fonts.css',
+        'assets/css/fonts/roboto_base64.css',
+        'assets/css/fonts/sourceCodePro_base64.css'
+    ], {
+        preload: true
+    });
+	// main stylesheet
+        loadjs(['assets/css/main-rtl.min.css'], function() {});
+    	// vendor
+	loadjs('assets/js/vendor.min.js', function () {
+        // scutum common functions/helpers
+        loadjs('assets/js/scutum_common.min.js', function() {
+            scutum.init();
+            loadjs('assets/js/views/forms/forms.min.js', { success: function() { $(function(){scutum.forms.controls.init()}); } })
+            // show page
+            setTimeout(function () {
+                // clear styles (FOUC)
+                $(html).css({
+                    'backgroundColor': '',
+                });
+                $('body').css({
+                    'visibility': '',
+                    'overflow': '',
+                    'apacity': '',
+                    'maxHeight': ''
+                });
+            }, 100);
+            // style switcher
+            loadjs([
+                'assets/js/style_switcher.min.js',
+                'assets/css/plugins/style_switcher.min.css'
+            ], {
+                success: function() {
+                    $(function(){
+                        scutum.styleSwitcher();
+                    });
+                }
+            });
+        });
+	});
+</script>
+
+<div id="sc-style-switcher">
+	<a href="#" class="sc-sSw-toggle"><i class="mdi mdi-tune"></i></a>
+	<p class="sc-text-semibold uk-margin-top-remove uk-margin-bottom">Themes</p>
+	<ul class="sc-sSw-theme-switcher">
+		<li class="active">
+			<a href="#" class="sc-sSw-theme-switch sc-sW-theme-default" data-theme="">
+				<span class="sc-sSw-theme-switch-color-1"></span>
+				<span class="sc-sSw-theme-switch-color-2"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" class="sc-sSw-theme-switch sc-sW-theme-a" data-theme="sc-theme-a">
+				<span class="sc-sSw-theme-switch-color-1"></span>
+				<span class="sc-sSw-theme-switch-color-2"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" class="sc-sSw-theme-switch sc-sW-theme-b" data-theme="sc-theme-b">
+				<span class="sc-sSw-theme-switch-color-1"></span>
+				<span class="sc-sSw-theme-switch-color-2"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" class="sc-sSw-theme-switch sc-sW-theme-c" data-theme="sc-theme-c">
+				<span class="sc-sSw-theme-switch-color-1"></span>
+				<span class="sc-sSw-theme-switch-color-2"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" class="sc-sSw-theme-switch sc-sW-theme-d" data-theme="sc-theme-d">
+				<span class="sc-sSw-theme-switch-color-1"></span>
+				<span class="sc-sSw-theme-switch-color-2"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" class="sc-sSw-theme-switch sc-sW-theme-e" data-theme="sc-theme-e">
+				<span class="sc-sSw-theme-switch-color-1"></span>
+				<span class="sc-sSw-theme-switch-color-2"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" class="sc-sSw-theme-switch sc-sW-theme-f" data-theme="sc-theme-f">
+				<span class="sc-sSw-theme-switch-color-1"></span>
+				<span class="sc-sSw-theme-switch-color-2"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" class="sc-sSw-theme-switch sc-sW-theme-g" data-theme="sc-theme-g">
+				<span class="sc-sSw-theme-switch-color-1"></span>
+				<span class="sc-sSw-theme-switch-color-2"></span>
+			</a>
+		</li>
+		<li>
+			<a href="#" class="sc-sSw-theme-switch sc-sW-theme-h" data-theme="sc-theme-h">
+				<span class="sc-sSw-theme-switch-color-1"></span>
+				<span class="sc-sSw-theme-switch-color-2"></span>
+			</a>
+		</li>
+        <li>
+            <a href="#" class="sc-sSw-theme-switch sc-sW-theme-dark" data-theme="sc-theme-dark">
+                <span class="sc-sSw-theme-switch-color-1"></span>
+                <span class="sc-sSw-theme-switch-color-2"></span>
+            </a>
+        </li>
+	</ul>
+	<p class="sc-text-semibold uk-margin-large-top uk-margin-bottom">Main Menu</p>
+	<div class="uk-flex uk-flex-middle uk-margin-small-bottom">
+		<input type="checkbox" id="sc-menu-scroll-to-active" data-sc-icheck><label for="sc-menu-scroll-to-active">Scroll to active</label>
+	</div>
+    <div class="uk-flex uk-flex-middle">
+        <input type="checkbox" id="sc-menu-accordion-mode" data-sc-icheck><label for="sc-menu-accordion-mode">Accordion mode</label>
+    </div>
+</div>
+
+</body>
+</html>

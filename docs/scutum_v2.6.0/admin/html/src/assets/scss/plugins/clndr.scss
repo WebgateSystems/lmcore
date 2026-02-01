@@ -1,0 +1,220 @@
+/* clndr */
+@import "../common/md_colors";
+@import "../common/variables_mixins";
+
+.clndr {
+  box-sizing: border-box;
+  position: relative;
+  &.clndr-small {
+    .clndr-days {
+      .clndr-days-grid {
+        flex-wrap: nowrap;
+      }
+    }
+  }
+  .clndr-toolbar {
+    display: flex;
+    padding: 16px;
+    align-items: center;
+  }
+  .clndr-toolbar-heading {
+    flex: 1;
+    margin: 0;
+    @include font-size(20px);
+  }
+  .clndr-toolbar-actions {
+    display: flex;
+  }
+  .clndr-days {
+    transition: all 140ms $easing;
+    padding: 16px;
+    transform: translateY(0);
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    .clndr-days-names {
+      display: flex;
+      .day-header {
+        width: calc(100% / 7);
+        text-align: center;
+        padding: 8px 0;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 700;
+      }
+    }
+    .clndr-days-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      .day {
+        box-sizing: border-box;
+        width: calc(100% / 7);
+        padding: 6px;
+        text-align: center;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        &.next-month,
+        &.last-month {
+          color: $muted-color;
+        }
+        > span {
+          display: flex;
+          justify-content: center;
+          font-size: 15px;
+          height: 38px;
+          width: 38px;
+          line-height: 38px;
+          border-radius: 50%;
+          position: relative;
+          @include respond-below('small') {
+            font-size: 14px;
+            line-height: 31px;
+            height: 32px;
+            width: 32px;
+            border-radius: 16px;
+          }
+        }
+        &.today {
+          > span {
+            background: #FFECB3;
+          }
+        }
+        &.event {
+          cursor: pointer;
+          > span {
+            &:after {
+              display: none;
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 50%;
+              margin-left: -3px;
+              width: 6px;
+              height: 6px;
+              border-radius: 50%;
+              background: material-color('blue', '600');
+            }
+            .events-indicator {
+              display: flex;
+              position: absolute;
+              bottom: 1px;
+              left: 0;
+              width: 100%;
+              justify-content: center;
+              max-width: 100%;
+              overflow: hidden;
+              > span {
+                display: block;
+                border-radius: 50%;
+                width: 6px;
+                height: 6px;
+                background: rgba(0,0,0,.1);
+                border: 1px solid #fff;
+              }
+            }
+          }
+          &.today {
+            > span {
+            }
+          }
+          &.day-active {
+            > span {
+              // background: material-color('blue', '600');
+              // color: $white;
+              background-color: rgba(0,0,0,.06);
+              &:after {
+                // background: $white;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .clndr-days-names {
+    padding-top: 0;
+    .swiper-container {
+      padding-top: 28px;
+    }
+    .event-day-name {
+      position: absolute;
+      top: -24px;
+      left: 0;
+      width: 100%;
+      line-height: 1;
+      font-weight: 500;
+    }
+  }
+  .clndr-events {
+    // overflow-x: hidden;
+    // overflow-y: auto;
+    // max-height: 320px;
+    padding: 8px 16px;
+    .clndr-event {
+      padding: 8px;
+      background: rgba(0,0,0,.05);
+      border-radius: $border-radius;
+      display: none;
+      background: var(--event-color);
+      margin: 8px 0 ;
+      > a {
+        display: inline-block;
+        color: $text-color-primary;
+      }
+      .clndr-event-more-info,
+      .clndr-event-title {
+        display: block;
+      }
+      .clndr-event-more-info {
+        margin: 0;
+        font-size: 12px;
+        color: #999;
+      }
+      .clndr-event-title {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.clndr-wrapper {
+  &.animated-change {
+    .clndr-days {
+      transform: translateY(10%);
+      opacity: 0;
+    }
+  }
+}
+.events-visible {
+  .clndr {
+    .clndr-days {
+      margin-right: 240px;
+      .day-active {
+        > span {
+          border-color: $text-color-primary !important;
+          box-shadow: 0 0 0 1px $text-color-primary;
+        }
+      }
+    }
+    .clndr-events {
+      margin-right: 0;
+    }
+  }
+}
+.events-over {
+  &.events-visible  {
+    .clndr {
+      .clndr-days {
+        margin-right: 0;
+      }
+    }
+    .clndr-events {
+      @include box-shadow-left();
+      z-index: 5;
+      border-left-color: transparent;
+    }
+  }
+}

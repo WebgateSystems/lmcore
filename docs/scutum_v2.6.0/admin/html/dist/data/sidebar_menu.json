@@ -1,0 +1,561 @@
+[
+	{
+		"section_title": "Applications"
+	},
+	{
+		"title": "Chat",
+		"icon": "mdi mdi-message-outline",
+		"dir": "pages",
+		"url": "chat"
+	},
+	{
+		"title": "Invoices",
+		"icon": "mdi mdi-receipt",
+		"dir": "pages",
+		"url": "invoices"
+	},
+	{
+		"title": "Mailbox",
+		"icon": "mdi mdi-email-outline",
+		"dir": "pages",
+		"url": "mailbox"
+	},
+	{
+		"title": "Task Board",
+		"icon": "mdi mdi-calendar-text",
+		"dir": "pages",
+		"url": "task_board"
+	},
+	{
+		"title": "Notes",
+		"icon": "mdi mdi-note-outline",
+		"dir": "pages",
+		"url": "notes"
+	},
+	{
+		"section_title": "Menu"
+	},
+	{
+		"title": "Dashboards",
+		"url": "#",
+		"icon": "mdi mdi-view-dashboard-variant",
+		"submenu": [
+			{
+				"title": "Dashboard 1",
+				"page": "v1",
+				"dir": "dashboard"
+			},
+			{
+				"title": "Dashboard 2",
+				"page": "v2",
+				"dir": "dashboard"
+			}
+		]
+	},
+	{
+		"title": "Forms",
+		"url": "#",
+		"icon": "mdi mdi-format-line-style",
+		"submenu": [
+			{
+				"title": "Regular Elements",
+				"page": "regular_elements",
+				"dir": "forms"
+			},
+			{
+				"title": "Advanced Elements",
+				"page": "advanced_elements",
+				"dir": "forms"
+			},
+			{
+				"title": "Dynamic Fields",
+				"page": "dynamic_fields",
+				"dir": "forms"
+			},
+			{
+				"title": "Validation",
+				"page": "validation",
+				"dir": "forms"
+			},
+			{
+				"title": "Form Examples",
+				"dir": "forms",
+				"subdir": "examples",
+				"items": [
+					{
+						"title": "Advertising Evaluation Form",
+						"page": "advertising_evaluation_form"
+					},
+					{
+						"title": "Booking Form",
+						"page": "booking_form"
+					},
+					{
+						"title": "Car Rental Form",
+						"page": "car_rental_form"
+					},
+					{
+						"title": "Checkout Form",
+						"page": "checkout_form"
+					},
+					{
+						"title": "Contact Forms",
+						"page": "contact_forms"
+					},
+					{
+						"title": "Job Application Form",
+						"page": "job_application_form"
+					},
+					{
+						"title": "Medical History Form",
+						"page": "medical_history_form"
+					},
+					{
+						"title": "Registration Form",
+						"page": "registration_form"
+					},
+					{
+						"title": "Rental Application Form",
+						"page": "rental_application_form"
+					},
+					{
+						"title": "Transaction Feedback Form",
+						"page": "transaction_feedback_form"
+					}
+				]
+			},
+			{
+				"title": "Wizard",
+				"dir": "forms",
+				"subdir": "wizard",
+				"items": [
+					{
+						"title": "Horizontal",
+						"page": "horizontal"
+					},
+					{
+						"title": "Horizontal Minimal",
+						"page": "horizontal_minimal"
+					},
+					{
+						"title": "Vertical",
+						"page": "vertical"
+					},
+					{
+						"title": "Vertical Minimal",
+						"page": "vertical_minimal"
+					}
+				]
+			},
+			{
+				"section_title": "WYSIWYG Editors",
+				"dir": "forms",
+				"subdir": "wysiwyg",
+				"items": [
+					{
+						"title": "CKEditor",
+						"page": "ckeditor"
+					},
+					{
+						"title": "TinyMCE",
+						"page": "tinymce"
+					}
+				]
+			}
+		]
+	},
+	{
+		"title": "Components",
+		"url": "#",
+		"icon": "mdi mdi-puzzle",
+		"submenu": [
+			{
+				"title": "Accordion",
+				"page": "accordion",
+				"dir": "components"
+			},
+			{
+				"title": "Alert",
+				"page": "alert",
+				"dir": "components"
+			},
+			{
+				"title": "Animations",
+				"page": "animations",
+				"dir": "components"
+			},
+			{
+				"title": "Avatars",
+				"page": "avatars",
+				"dir": "components"
+			},
+			{
+				"title": "Badge, Label",
+				"page": "badge_label",
+				"dir": "components"
+			},
+			{
+				"title": "Base",
+				"page": "base",
+				"dir": "components"
+			},
+			{
+				"title": "Breadcrumb",
+				"page": "breadcrumb",
+				"dir": "components"
+			},
+			{
+				"title": "Buttons",
+				"page": "buttons",
+				"dir": "components"
+			},
+			{
+				"title": "FAB Buttons",
+				"page": "fab_buttons",
+				"dir": "components",
+				"tag": "new"
+			},
+			{
+				"title": "Cards",
+				"page": "cards",
+				"dir": "components"
+			},
+			{
+				"title": "Color Palette",
+				"page": "color_palette",
+				"dir": "components"
+			},
+			{
+				"title": "Drop/Dropdowns",
+				"page": "drop_dropdowns",
+				"dir": "components"
+			},
+			{
+				"title": "Filters",
+				"page": "filters",
+				"dir": "components"
+			},
+			{
+				"title": "Footer",
+				"page": "footer",
+				"dir": "components"
+			},
+			{
+				"title": "Fancy Footer",
+				"page": "fancy_footer",
+				"dir": "components"
+			},
+			{
+				"title": "Fancy Toolbar",
+				"page": "fancy_toolbar",
+				"dir": "components",
+				"tag": "new"
+			},
+			{
+				"title": "Grid",
+				"page": "grid",
+				"dir": "components"
+			},
+			{
+				"title": "Icons",
+				"page": "icons",
+				"dir": "components"
+			},
+			{
+				"title": "Lists",
+				"page": "lists",
+				"dir": "components"
+			},
+			{
+				"title": "Masonry",
+				"page": "masonry",
+				"dir": "components"
+			},
+			{
+				"title": "Modals/Dialogs",
+				"page": "modals_dialogs",
+				"dir": "components"
+			},
+			{
+				"title": "Notifications",
+				"page": "notifications",
+				"dir": "components"
+			},
+			{
+				"title": "Overlay",
+				"page": "overlay",
+				"dir": "components"
+			},
+			{
+				"title": "Pagination",
+				"page": "pagination",
+				"dir": "components"
+			},
+			{
+				"title": "Progress/Spinners",
+				"page": "progress_spinners",
+				"dir": "components"
+			},
+			{
+				"title": "Scrollable",
+				"page": "scrollable",
+				"dir": "components"
+			},
+			{
+				"title": "Slider",
+				"page": "slider",
+				"dir": "components"
+			},
+			{
+				"title": "Sortable",
+				"page": "sortable",
+				"dir": "components"
+			},
+			{
+				"title": "Swiped List",
+				"page": "swiped_list",
+				"dir": "components"
+			},
+			{
+				"title": "Tables",
+				"page": "tables",
+				"dir": "components"
+			},
+			{
+				"title": "Tabs",
+				"page": "tabs",
+				"dir": "components"
+			},
+			{
+				"title": "Timeline",
+				"page": "timeline",
+				"dir": "components"
+			},
+			{
+				"title": "Toolbar",
+				"page": "toolbar",
+				"dir": "components"
+			},
+			{
+				"title": "Tooltips",
+				"page": "tooltips",
+				"dir": "components"
+			}
+		]
+	},
+	{
+		"title": "Pages",
+		"url": "#",
+		"icon": "mdi mdi-application",
+		"submenu": [
+			{
+				"title": "Blank",
+				"page": "blank",
+				"dir": "pages"
+			},
+			{
+				"title": "Blank (expanded header)",
+				"page": "blank_header_expanded",
+				"dir": "pages"
+			},
+			{
+				"title": "Contact List",
+				"page": "contact_list",
+				"dir": "pages"
+			},
+			{
+				"title": "Contact List (single)",
+				"page": "contact_list_single",
+				"dir": "pages"
+			},
+			{
+				"title": "Data visualization",
+				"page": "data_visualization",
+				"dir": "pages"
+			},
+			{
+				"section_title": "Error Pages",
+				"separator": true,
+				"items": [
+					{
+						"title": "Error 404",
+						"page": "error_404"
+					},
+					{
+						"title": "Error 500",
+						"page": "error_500"
+					}
+				]
+			},
+			{
+				"title": "Gallery",
+				"page": "gallery",
+				"dir": "pages"
+			},
+			{
+				"title": "Help/Faq",
+				"page": "help_faq",
+				"dir": "pages"
+			},
+			{
+				"title": "Invoice (new)",
+				"page": "invoice_create",
+				"dir": "pages"
+			},
+			{
+				"section_title": "Issue Tracker",
+				"dir": "pages",
+				"separator": true,
+				"items": [
+					{
+						"title": "List View",
+						"page": "issues_list"
+					},
+					{
+						"title": "Issue Details",
+						"page": "issue_details"
+					}
+				]
+			},
+			{
+				"title": "Login Page",
+				"page": "login_page"
+			},
+			{
+				"title": "POI listing",
+				"page": "poi_listing",
+				"dir": "pages"
+			},
+			{
+				"title": "Pricing Tables",
+				"page": "pricing_tables",
+				"dir": "pages"
+			},
+			{
+				"title": "Settings",
+				"page": "settings",
+				"dir": "pages"
+			},
+			{
+				"title": "User Profile",
+				"page": "user_profile",
+				"dir": "pages"
+			}
+		]
+	},
+	{
+		"title": "Plugins",
+		"url": "#",
+		"icon": "mdi mdi-power-plug",
+		"submenu": [
+			{
+				"title": "Ajax",
+				"page": "ajax",
+				"dir": "plugins"
+			},
+			{
+				"title": "Calendar",
+				"page": "calendar",
+				"dir": "plugins"
+			},
+			{
+				"title": "Calendar/Events",
+				"page": "calendar_events",
+				"dir": "plugins"
+			},
+			{
+				"title": "Charts",
+				"page": "charts",
+				"dir": "plugins"
+			},
+			{
+				"title": "Code Editor",
+				"page": "code_editor",
+				"dir": "plugins"
+			},
+			{
+				"title": "Data Grid",
+				"page": "data_grid",
+				"dir": "plugins"
+			},
+			{
+				"title": "Datatables",
+				"page": "datatables",
+				"dir": "plugins"
+			},
+			{
+				"title": "Diff Tool",
+				"page": "diff_tool",
+				"dir": "plugins"
+			},
+			{
+				"title": "Gantt Chart",
+				"page": "gantt_chart",
+				"dir": "plugins"
+			},
+			{
+				"title": "Google Maps",
+				"page": "google_maps",
+				"dir": "plugins"
+			},
+			{
+				"title": "Idle Timeout",
+				"page": "idle_timeout",
+				"dir": "plugins"
+			},
+			{
+				"title": "Image Cropper",
+				"page": "image_cropper",
+				"dir": "plugins"
+			},
+			{
+				"title": "Push Notifications",
+				"page": "push_notifications",
+				"dir": "plugins"
+			},
+			{
+				"title": "Tour",
+				"page": "tour",
+				"dir": "plugins"
+			},
+			{
+				"title": "Tree",
+				"page": "tree",
+				"dir": "plugins"
+			},
+			{
+				"title": "Vector Maps",
+				"page": "vector_maps",
+				"dir": "plugins"
+			}
+		]
+	},
+	{
+		"title": "Layout",
+		"url": "#",
+		"icon": "mdi mdi-view-compact-outline",
+		"submenu": [
+			{
+				"title": "Boxed",
+				"page": "boxed",
+				"dir": "layout",
+				"tag": "new"
+			},
+			{
+				"title": "Top Menu",
+				"page": "top_menu",
+				"dir": "layout"
+			},
+			{
+				"title": "Mini Sidebar",
+				"page": "mini_sidebar",
+				"dir": "layout"
+			},
+			{
+				"title": "Offcanvas Sidebar",
+				"page": "offcanvas_sidebar",
+				"dir": "layout"
+			}
+		]
+	}
+]

@@ -1,0 +1,80 @@
+{{#each messages }}
+	{{#if tag}}
+		{{#ifCond tag '==' 'Work'}}
+			{{#if unreaded}}
+				<li class="sc-message-unreaded sc-js-tag-work" data-id="{{ id }}">
+			{{else}}
+				<li class="sc-js-tag-work" data-id="{{ id }}">
+			{{/if}}
+		{{/ifCond}}
+		{{#ifCond tag '==' 'To Do'}}
+			{{#if unreaded}}
+				<li class="sc-message-unreaded sc-js-tag-todo" data-id="{{ id }}">
+			{{else}}
+				<li class="sc-js-tag-todo" data-id="{{ id }}">
+			{{/if}}
+		{{/ifCond}}
+		{{#ifCond tag '==' 'Important'}}
+				{{#if unreaded}}
+				<li class="sc-message-unreaded sc-js-tag-important" data-id="{{ id }}">
+			{{else}}
+				<li class="sc-js-tag-important" data-id="{{ id }}">
+			{{/if}}
+		{{/ifCond}}
+		{{#ifCond tag '==' 'Personal'}}
+				{{#if unreaded}}
+				<li class="sc-message-unreaded sc-js-tag-personal" data-id="{{ id }}">
+			{{else}}
+				<li class="sc-js-tag-personal" data-id="{{ id }}">
+			{{/if}}
+		{{/ifCond}}
+	{{else }}
+		{{#if unreaded}}
+			<li class="sc-message-unreaded" data-id="{{ id }}">
+		{{else}}
+			<li data-id="{{ id }}">
+		{{/if}}
+	{{/if }}
+		<div class="sc-message-card">
+			<div class="uk-flex uk-flex-middle sc-message-head uk-grid-collapse" data-uk-grid>
+				<div class="uk-flex uk-flex-middle {{#if_isRTL}}uk-margin-left{{ else }}uk-margin-right{{/if_isRTL}}">
+					<input type="checkbox" id="mailbox-check-message_{{ id }}" class="sc-js-item-check sc-js-group-1" data-sc-icheck>
+				</div>
+				<div class="uk-flex-1 uk-text-truncate">
+					<h2 class="sc-message-title uk-text-truncate" title="{{ title }}">{{ title }}</h2>
+					{{#if tag}}
+						{{#ifCond tag '==' 'Work'}}
+							<span class="uk-label {{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}} md-bg-blue-400">
+								{{ tag }}
+							</span>
+						{{/ifCond}}
+						{{#ifCond tag '==' 'To Do'}}
+							<span class="uk-label {{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}} md-bg-grey-400">
+								{{ tag }}
+							</span>
+						{{/ifCond}}
+						{{#ifCond tag '==' 'Important'}}
+							<span class="uk-label {{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}} md-bg-amber-400">
+								{{ tag }}
+							</span>
+						{{/ifCond}}
+						{{#ifCond tag '==' 'Personal'}}
+							<span class="uk-label {{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}} md-bg-red-400">
+								{{ tag }}
+							</span>
+						{{/ifCond}}
+					{{/if }}
+					<span class="uk-text-small uk-text-muted">{{ sender }}</span>
+				</div>
+				<div class="uk-visible@m">
+					<div class="sc-message-date">{{ date }}</div>
+					<div class="sc-message-actions">
+						<a href="#" class="mdi mdi-delete sc-js-message-remove" data-uk-tooltip title="Remove"></a>
+						<a href="#" class="mdi mdi-archive" data-uk-tooltip title="Archive"></a>
+						<a href="#" class="mdi mdi-email-open" data-uk-tooltip title="Mark as read"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</li>
+{{/each}}

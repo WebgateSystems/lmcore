@@ -1,0 +1,38 @@
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
+  list-style: none; }
+  .gu-mirror.sc-mirror-el {
+    -webkit-transform: rotate(3deg);
+    transform: rotate(3deg); }
+
+.gu-hide {
+  display: none !important; }
+
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important; }
+
+.gu-transit {
+  opacity: 1; }
+  .gu-transit,
+  .gu-transit > * {
+    background: rgba(0, 0, 0, 0.1); }
+    .gu-transit > *,
+    .gu-transit > * > * {
+      visibility: hidden; }
+
+.dragula:not(.dragula-handle) > * {
+  cursor: move; }
+
+.dragula-vertical {
+  height: 100%; }
+  .dragula-vertical > * + * {
+    margin-top: 4px; }
+
+.dragula-handle-el {
+  cursor: move; }

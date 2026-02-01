@@ -1,0 +1,33 @@
+<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical md-bg-{{ cardColor }}-50">
+	<button class="uk-modal-close-default" type="button" data-uk-close></button>
+	<h2 class="uk-modal-title uk-margin-remove">{{ title }}</h2>
+	{{#if dueDate }}
+		<span class="uk-text-muted uk-text-small">{{ dueDate }}</span>
+	{{/if}}
+	{{#if labels }}
+		<div class="uk-flex uk-flex-middle">
+			{{#each labels }}
+				{{#ifCond this '==' 'tag1'}}
+					<span class="mdi mdi-label md-color-blue-400 sc-icon-24"></span>
+				{{/ifCond }}
+				{{#ifCond this '==' 'tag2'}}
+					<span class="mdi mdi-label md-color-grey-400 sc-icon-24"></span>
+				{{/ifCond }}
+				{{#ifCond this '==' 'tag3'}}
+					<span class="mdi mdi-label md-color-amber-400 sc-icon-24"></span>
+				{{/ifCond }}
+				{{#ifCond this '==' 'tag4'}}
+					<span class="mdi mdi-label md-color-red-400 sc-icon-24"></span>
+				{{/ifCond }}
+			{{/each}}
+		</div>
+	{{/if}}
+	<p class="uk-margin-top">{{{ body }}}</p>
+	{{#if checklist }}
+		<ul class="uk-margin-top uk-list">
+			{{#each checklist }}
+				{{> checklist }}
+			{{/each}}
+		</ul>
+	{{/if}}
+</div>

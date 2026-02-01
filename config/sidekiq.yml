@@ -1,0 +1,30 @@
+# frozen_string_literal: true
+
+---
+:concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY', 10) %>
+:timeout: 25
+:max_retries: 3
+
+:queues:
+  - [critical, 5]
+  - [default, 3]
+  - [mailers, 2]
+  - [low, 1]
+
+# Cron jobs (requires sidekiq-cron gem if you want scheduled jobs)
+# :schedule:
+#   expire_subscriptions:
+#     cron: '0 0 * * *'
+#     class: ExpireSubscriptionsWorker
+#   cleanup_old_audit_logs:
+#     cron: '0 2 * * 0'
+#     class: CleanupAuditLogsWorker
+
+development:
+  :concurrency: 5
+
+test:
+  :concurrency: 1
+
+production:
+  :concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY', 20) %>

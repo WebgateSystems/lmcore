@@ -1,0 +1,192 @@
+div#driver-popover-item {
+  display: none;
+  position: absolute;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  margin: 0;
+  padding: 16px;
+  border-radius: 4px;
+  min-width: 240px;
+  max-width: 300px;
+  -webkit-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+  z-index: 1000000000; }
+  div#driver-popover-item .driver-popover-tip {
+    border: 5px solid #fff;
+    content: '';
+    position: absolute; }
+    div#driver-popover-item .driver-popover-tip.bottom {
+      bottom: -10px;
+      border-top-color: #fff;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-left-color: transparent; }
+      div#driver-popover-item .driver-popover-tip.bottom.position-center {
+        left: 49%; }
+      div#driver-popover-item .driver-popover-tip.bottom.position-right {
+        right: 20px; }
+    div#driver-popover-item .driver-popover-tip.left {
+      left: -10px;
+      top: 10px;
+      border-top-color: transparent;
+      border-right-color: #fff;
+      border-bottom-color: transparent;
+      border-left-color: transparent; }
+      div#driver-popover-item .driver-popover-tip.left.position-center {
+        top: 46%; }
+      div#driver-popover-item .driver-popover-tip.left.position-bottom {
+        top: auto;
+        bottom: 20px; }
+    div#driver-popover-item .driver-popover-tip.right {
+      right: -10px;
+      top: 10px;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-left-color: #fff; }
+      div#driver-popover-item .driver-popover-tip.right.position-center {
+        top: 46%; }
+      div#driver-popover-item .driver-popover-tip.right.position-bottom {
+        top: auto;
+        bottom: 20px; }
+    div#driver-popover-item .driver-popover-tip.top {
+      top: -10px;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: #fff;
+      border-left-color: transparent; }
+      div#driver-popover-item .driver-popover-tip.top.position-center {
+        left: 49%; }
+      div#driver-popover-item .driver-popover-tip.top.position-right {
+        right: 20px; }
+  div#driver-popover-item .driver-popover-footer {
+    display: block;
+    clear: both;
+    padding-top: 16px; }
+    div#driver-popover-item .driver-popover-footer button {
+      display: inline-block;
+      padding: 6px 8px 5px;
+      border: none;
+      text-decoration: none;
+      color: #fff;
+      font-size: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      font-family: "Roboto", sans-serif;
+      cursor: pointer;
+      outline: 0;
+      background-color: #00838f;
+      border-radius: 3px;
+      zoom: 1;
+      text-transform: uppercase;
+      -webkit-transition: all 140ms cubic-bezier(0.55, 0, 0.1, 1);
+      transition: all 140ms cubic-bezier(0.55, 0, 0.1, 1);
+      text-shadow: none;
+      margin: 0;
+      -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); }
+      div#driver-popover-item .driver-popover-footer button:hover {
+        -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); }
+      div#driver-popover-item .driver-popover-footer button + button {
+        margin-left: 4px; }
+    div#driver-popover-item .driver-popover-footer button.driver-disabled {
+      color: rgba(0, 0, 0, 0.26);
+      background: rgba(0, 0, 0, 0.06);
+      cursor: default;
+      pointer-events: none;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important; }
+    div#driver-popover-item .driver-popover-footer .driver-close-btn {
+      float: left;
+      background-color: transparent;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      color: rgba(0, 0, 0, 0.54);
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0; }
+      div#driver-popover-item .driver-popover-footer .driver-close-btn:hover {
+        color: rgba(0, 0, 0, 0.87); }
+      div#driver-popover-item .driver-popover-footer .driver-close-btn:before {
+        content: '\F156';
+        font-family: "Material Design Icons";
+        font-size: 20px;
+        font-size: 1.25rem; }
+    div#driver-popover-item .driver-popover-footer .driver-btn-group {
+      float: right; }
+  div#driver-popover-item .driver-popover-title {
+    margin: 0 0 4px;
+    font-weight: 700;
+    font-size: 18px;
+    font-size: 1.125rem;
+    font-family: "Roboto", sans-serif;
+    display: block;
+    position: relative;
+    line-height: 1.5;
+    zoom: 1;
+    padding-right: 16px; }
+  div#driver-popover-item .driver-popover-description {
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Roboto", sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    zoom: 1; }
+
+.driver-stage-no-animation {
+  -webkit-transition: none !important;
+  transition: none !important;
+  background: transparent !important;
+  outline: 5000px solid rgba(0, 0, 0, 0.75); }
+
+div#driver-page-overlay {
+  background: black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  zoom: 1;
+  filter: alpha(opacity=75);
+  opacity: 0.75;
+  z-index: 100002 !important;
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s; }
+
+div#driver-highlighted-element-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 50px;
+  width: 300px;
+  background: #fff;
+  z-index: 100003 !important;
+  display: none;
+  border-radius: 2px;
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s; }
+
+.driver-highlighted-element {
+  z-index: 100004 !important; }
+
+.driver-position-relative {
+  position: relative !important; }
+
+.driver-fix-stacking {
+  z-index: auto !important;
+  opacity: 1.0 !important;
+  -webkit-transform: none !important;
+  transform: none !important;
+  -webkit-filter: none !important;
+  filter: none !important;
+  -webkit-perspective: none !important;
+  perspective: none !important;
+  -webkit-transform-style: flat !important;
+  transform-style: flat !important;
+  transform-box: border-box !important;
+  will-change: unset !important; }

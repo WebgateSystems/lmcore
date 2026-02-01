@@ -1,0 +1,9 @@
+# Production-specific settings
+# Override values from settings.yml here
+
+elasticsearch:
+  enabled: true
+
+sidekiq:
+  user: <%= ENV.fetch('SIDEKIQ_USER', 'admin') %>
+  password: <%= ENV.fetch('SIDEKIQ_PASSWORD') { raise 'SIDEKIQ_PASSWORD must be set in production' } %>

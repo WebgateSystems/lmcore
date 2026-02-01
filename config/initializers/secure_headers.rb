@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+SecureHeaders::Configuration.default do |config|
+  config.cookies = {
+    secure: true,
+    httponly: true,
+    samesite: {
+      lax: true
+    }
+  }
+
+  config.x_frame_options = "SAMEORIGIN"
+  config.x_content_type_options = "nosniff"
+  config.x_xss_protection = "1; mode=block"
+  config.x_download_options = "noopen"
+  config.x_permitted_cross_domain_policies = "none"
+  config.referrer_policy = %w[strict-origin-when-cross-origin]
+
+  config.csp = {
+    default_src: %w['self'],
+    script_src: %w['self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://player.vimeo.com https://cloud.umami.is],
+    style_src: %w['self' 'unsafe-inline' https://fonts.googleapis.com],
+    img_src: %w['self' data: https: blob:],
+    font_src: %w['self' https://fonts.gstatic.com],
+    connect_src: %w['self' wss: https://cloud.umami.is],
+    frame_src: %w['self' https://www.youtube.com https://player.vimeo.com],
+    media_src: %w['self' https: blob:],
+    object_src: %w['none'],
+    base_uri: %w['self'],
+    form_action: %w['self'],
+    frame_ancestors: %w['self'],
+    upgrade_insecure_requests: !Rails.env.development?
+  }
+end

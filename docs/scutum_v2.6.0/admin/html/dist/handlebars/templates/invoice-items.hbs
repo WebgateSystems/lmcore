@@ -1,0 +1,12 @@
+<tr>
+	<td class="uk-text-nowrap sc-print-text-wrap">
+		<p class="uk-margin-remove sc-text-semibold">{{ name }}</p>
+		<span class="sc-color-secondary">{{ description }}</span>
+	</td>
+	{{#intl locales=parent.invoice.locales }}
+	<td {{#unless_isRTL}}class="uk-text-right"{{/unless_isRTL}}>{{ formatNumber price style="currency" currency=parent.invoice.currency }}</td>
+	<td class="uk-text-center">{{ quantity }}</td>
+	<td class="uk-text-center">{{ VAT }}%</td>
+	<td {{#unless_isRTL}}class="uk-text-right"{{/unless_isRTL}}><span class="sc-text-semibold">{{ formatNumber total style="currency" currency=parent.invoice.currency }}</span></td>
+	{{/intl}}
+</tr>

@@ -1,0 +1,4 @@
+db:
+  name: lmcore_development
+secret_key_base: '47d290647a54949ca15dbc76251926e5459de2ae668f75d9e16d9af9ee0727a5bb3d4fc3ad165a8379313e274309289ac0435d8fec1e446ab0e18ca08503837b'
+redis_url: <%= ENV['REDIS_URL'] || 'redis://localhost:6379/7' %>

@@ -1,0 +1,190 @@
+/* clndr */
+.clndr {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative; }
+  .clndr.clndr-small .clndr-days .clndr-days-grid {
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap; }
+  .clndr .clndr-toolbar {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 16px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center; }
+  .clndr .clndr-toolbar-heading {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    margin: 0;
+    font-size: 20px;
+    font-size: 1.25rem; }
+  .clndr .clndr-toolbar-actions {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; }
+  .clndr .clndr-days {
+    -webkit-transition: all 140ms cubic-bezier(0.55, 0, 0.1, 1);
+    transition: all 140ms cubic-bezier(0.55, 0, 0.1, 1);
+    padding: 16px;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column; }
+    .clndr .clndr-days .clndr-days-names {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex; }
+      .clndr .clndr-days .clndr-days-names .day-header {
+        width: calc(100% / 7);
+        text-align: center;
+        padding: 8px 0;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 700; }
+    .clndr .clndr-days .clndr-days-grid {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center; }
+      .clndr .clndr-days .clndr-days-grid .day {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: calc(100% / 7);
+        padding: 6px;
+        text-align: center;
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center; }
+        .clndr .clndr-days .clndr-days-grid .day.next-month, .clndr .clndr-days .clndr-days-grid .day.last-month {
+          color: rgba(0, 0, 0, 0.4); }
+        .clndr .clndr-days .clndr-days-grid .day > span {
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-box-pack: center;
+          -ms-flex-pack: center;
+          justify-content: center;
+          font-size: 15px;
+          height: 38px;
+          width: 38px;
+          line-height: 38px;
+          border-radius: 50%;
+          position: relative; }
+          @media (max-width: 639px) {
+            .clndr .clndr-days .clndr-days-grid .day > span {
+              font-size: 14px;
+              line-height: 31px;
+              height: 32px;
+              width: 32px;
+              border-radius: 16px; } }
+        .clndr .clndr-days .clndr-days-grid .day.today > span {
+          background: #FFECB3; }
+        .clndr .clndr-days .clndr-days-grid .day.event {
+          cursor: pointer; }
+          .clndr .clndr-days .clndr-days-grid .day.event > span:after {
+            display: none;
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #1e88e5; }
+          .clndr .clndr-days .clndr-days-grid .day.event > span .events-indicator {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            position: absolute;
+            bottom: 1px;
+            left: 0;
+            width: 100%;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            max-width: 100%;
+            overflow: hidden; }
+            .clndr .clndr-days .clndr-days-grid .day.event > span .events-indicator > span {
+              display: block;
+              border-radius: 50%;
+              width: 6px;
+              height: 6px;
+              background: rgba(0, 0, 0, 0.1);
+              border: 1px solid #fff; }
+          .clndr .clndr-days .clndr-days-grid .day.event.day-active > span {
+            background-color: rgba(0, 0, 0, 0.06); }
+  .clndr .clndr-days-names {
+    padding-top: 0; }
+    .clndr .clndr-days-names .swiper-container {
+      padding-top: 28px; }
+    .clndr .clndr-days-names .event-day-name {
+      position: absolute;
+      top: -24px;
+      left: 0;
+      width: 100%;
+      line-height: 1;
+      font-weight: 500; }
+  .clndr .clndr-events {
+    padding: 8px 16px; }
+    .clndr .clndr-events .clndr-event {
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 3px;
+      display: none;
+      background: var(--event-color);
+      margin: 8px 0; }
+      .clndr .clndr-events .clndr-event > a {
+        display: inline-block;
+        color: rgba(0, 0, 0, 0.87); }
+      .clndr .clndr-events .clndr-event .clndr-event-more-info,
+      .clndr .clndr-events .clndr-event .clndr-event-title {
+        display: block; }
+      .clndr .clndr-events .clndr-event .clndr-event-more-info {
+        margin: 0;
+        font-size: 12px;
+        color: #999; }
+      .clndr .clndr-events .clndr-event .clndr-event-title {
+        font-size: 14px;
+        font-weight: 500; }
+
+.clndr-wrapper.animated-change .clndr-days {
+  -webkit-transform: translateY(10%);
+  transform: translateY(10%);
+  opacity: 0; }
+
+.events-visible .clndr .clndr-days {
+  margin-right: 240px; }
+  .events-visible .clndr .clndr-days .day-active > span {
+    border-color: rgba(0, 0, 0, 0.87) !important;
+    -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.87);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.87); }
+
+.events-visible .clndr .clndr-events {
+  margin-right: 0; }
+
+.events-over.events-visible .clndr .clndr-days {
+  margin-right: 0; }
+
+.events-over.events-visible .clndr-events {
+  -webkit-box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.23);
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.23);
+  z-index: 5;
+  border-left-color: transparent; }

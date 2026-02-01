@@ -1,0 +1,66 @@
+<div class="sc-message-card">
+	<div class="sc-js-el-show">
+		<div class="uk-flex-important uk-flex-middle sc-message-head uk-grid-collapse">
+			<div class="uk-flex-1 uk-text-truncate">
+				<h2 class="sc-message-title uk-text-truncate" title="{{ message.title }}">{{ message.title }}</h2>
+				{{#if tag}}
+					{{#ifCond message.tag '==' 'Work'}}
+						<span class="uk-label {{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}} md-bg-blue-400">
+							{{ message.tag }}
+						</span>
+					{{/ifCond}}
+					{{#ifCond message.tag '==' 'To Do'}}
+						<span class="uk-label {{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}} md-bg-grey-400">
+							{{ message.tag }}
+						</span>
+					{{/ifCond}}
+					{{#ifCond message.tag '==' 'Important'}}
+						<span class="uk-label {{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}} md-bg-amber-400">
+							{{ message.tag }}
+						</span>
+					{{/ifCond}}
+					{{#ifCond message.tag '==' 'Personal'}}
+						<span class="uk-label {{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}} md-bg-red-400">
+							{{ message.tag }}
+						</span>
+					{{/ifCond}}
+				{{/if }}
+				<span class="uk-text-small uk-text-muted">
+					{{ message.sender }}
+				</span>
+			</div>
+			<div class="uk-visible@m">
+				<div class="sc-message-date">{{ message.date }}</div>
+				<div class="sc-message-actions">
+					<a href="#" class="mdi mdi-delete sc-js-message-remove" data-uk-tooltip title="Remove"></a>
+					<a href="#" class="mdi mdi-archive" data-uk-tooltip title="Archive"></a>
+					<a href="#" class="mdi mdi-email-open" data-uk-tooltip title="Mark as read"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="sc-message-content sc-js-el-show">
+		{{ message.content }}
+	</div>
+	<div class="sc-message-footer">
+		<div class="sc-js-el-show uk-margin-top">
+			<ul class="sc-message-attachments">
+				<li class="sc-flex-no-shrink"><div class="sc-attachment"><a href="#">file1.png <span>(241KB)</span></a><a href="#" class="mdi mdi-close sc-attachment-remove"></a></div></li>
+				<li class="sc-flex-no-shrink"><div class="sc-attachment"><a href="#">file2.pdf <span>(1240KB)</span></a><a href="#" class="mdi mdi-close sc-attachment-remove"></a></div></li>
+			</ul>
+		</div>
+		<div class="sc-message-reply sc-js-el-show uk-visible@m">
+			<div>
+				<select name="send_to" id="send_to" data-sc-select2='{ "tags": true, "tokenSeparators": [","," "], "createTag": "tag_emailAddress", "placeholder": "Insert valid email address..." }' multiple>
+					<option value="email_1" selected>{{ message.sender }}</option>
+					<option value="email_2" data-select2-id="68">frederic99@white.com</option>
+					<option value="email_3" data-select2-id="69">heller.nella@pagac.biz</option>
+				</select>
+			</div>
+			<textarea name="message-repy" id="message-reply" data-sc-input class="uk-textarea uk-margin-top" rows="4" placeholder="Reply message..."></textarea>
+			<div class="uk-margin-small-top">
+				<button class="sc-button sc-button-primary">Send</button>
+			</div>
+		</div>
+	</div>
+</div>

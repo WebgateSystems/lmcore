@@ -1,0 +1,222 @@
+pl:
+  app_name: "LibreMedia"
+  tagline: "Twój głos, Twoja platforma"
+
+  # Common
+  common:
+    save: "Zapisz"
+    cancel: "Anuluj"
+    delete: "Usuń"
+    edit: "Edytuj"
+    create: "Utwórz"
+    update: "Aktualizuj"
+    back: "Wstecz"
+    next: "Dalej"
+    previous: "Wstecz"
+    search: "Szukaj"
+    loading: "Ładowanie..."
+    no_results: "Brak wyników"
+    confirm_delete: "Czy na pewno chcesz to usunąć?"
+    yes: "Tak"
+    no: "Nie"
+    or: "lub"
+    and: "i"
+
+  # Navigation
+  nav:
+    home: "Strona główna"
+    blog: "Blog"
+    videos: "Wideo"
+    photos: "Zdjęcia"
+    about: "O nas"
+    contact: "Kontakt"
+    login: "Zaloguj się"
+    logout: "Wyloguj się"
+    register: "Zarejestruj się"
+    profile: "Profil"
+    settings: "Ustawienia"
+    dashboard: "Panel"
+
+  # Authentication
+  auth:
+    sign_in: "Zaloguj się"
+    sign_up: "Zarejestruj się"
+    sign_out: "Wyloguj się"
+    forgot_password: "Zapomniałeś hasła?"
+    reset_password: "Zresetuj hasło"
+    email: "Email"
+    password: "Hasło"
+    password_confirmation: "Potwierdź hasło"
+    remember_me: "Zapamiętaj mnie"
+    no_account: "Nie masz konta?"
+    have_account: "Masz już konto?"
+
+  # User
+  users:
+    profile: "Profil"
+    edit_profile: "Edytuj profil"
+    followers: "Obserwujący"
+    following: "Obserwowani"
+    posts: "Posty"
+    videos: "Wideo"
+    photos: "Zdjęcia"
+    settings: "Ustawienia"
+    notifications: "Powiadomienia"
+
+  # Posts
+  posts:
+    title: "Tytuł"
+    content: "Treść"
+    category: "Kategoria"
+    tags: "Tagi"
+    status: "Status"
+    published_at: "Opublikowano"
+    draft: "Szkic"
+    pending: "Oczekuje na akceptację"
+    published: "Opublikowany"
+    archived: "Zarchiwizowany"
+    featured: "Wyróżniony"
+    reading_time: "%{minutes} min czytania"
+    views: "%{count} wyświetleń"
+    comments: "%{count} komentarzy"
+    related_posts: "Powiązane posty"
+    no_posts: "Brak postów"
+    create_post: "Utwórz post"
+    edit_post: "Edytuj post"
+
+  # Videos
+  videos:
+    title: "Tytuł"
+    description: "Opis"
+    duration: "Czas trwania"
+    provider: "Źródło"
+    self_hosted: "Własny hosting"
+    no_videos: "Brak wideo"
+    create_video: "Dodaj wideo"
+
+  # Photos
+  photos:
+    title: "Tytuł"
+    description: "Opis"
+    no_photos: "Brak zdjęć"
+    upload_photo: "Dodaj zdjęcie"
+
+  # Comments
+  comments:
+    add_comment: "Dodaj komentarz"
+    your_comment: "Twój komentarz"
+    guest_name: "Twoje imię"
+    guest_email: "Twój email"
+    reply: "Odpowiedz"
+    replies: "%{count} odpowiedzi"
+    pending_approval: "Twój komentarz oczekuje na akceptację"
+    no_comments: "Brak komentarzy. Bądź pierwszym komentującym!"
+
+  # Notifications
+  notifications:
+    title: "Powiadomienia"
+    mark_all_read: "Oznacz wszystkie jako przeczytane"
+    no_notifications: "Brak powiadomień"
+    new_comment:
+      title: "Nowy komentarz"
+      message: "%{actor} skomentował Twój %{content_type}"
+    comment_reply:
+      title: "Nowa odpowiedź"
+      message: "%{actor} odpowiedział na Twój komentarz"
+    new_follower:
+      title: "Nowy obserwujący"
+      message: "%{actor} zaczął Cię obserwować"
+    new_donation:
+      title: "Nowa darowizna"
+      message: "Otrzymałeś darowiznę w wysokości %{amount}"
+    post_published:
+      title: "Post opublikowany"
+      message: "Twój post został opublikowany"
+
+  # Subscriptions
+  subscriptions:
+    current_plan: "Aktualny plan"
+    upgrade: "Ulepsz"
+    downgrade: "Obniż"
+    cancel: "Anuluj subskrypcję"
+    expires_at: "Wygasa"
+    days_remaining: "Pozostało %{count} dni"
+    features: "Funkcje"
+
+  # Price plans
+  price_plans:
+    free: "Darmowy"
+    basic: "Podstawowy"
+    professional: "Profesjonalny"
+    enterprise: "Enterprise"
+    per_month: "/miesiąc"
+    per_year: "/rok"
+    posts_limit: "%{count} postów/miesiąc"
+    unlimited_posts: "Nieograniczona liczba postów"
+    disk_space: "%{size} przestrzeni"
+    features:
+      basic_themes: "Podstawowe motywy"
+      premium_themes: "Premium motywy"
+      custom_theme: "Własny motyw"
+      external_video: "Zewnętrzne wideo (YouTube, Vimeo)"
+      self_hosted_video: "Własne wideo"
+      vanity_domain: "Własna domena"
+      analytics: "Podstawowa analityka"
+      google_analytics: "Integracja z Google Analytics"
+      export_data: "Eksport danych"
+      remove_branding: "Usuń branding"
+      priority_support: "Priorytetowe wsparcie"
+
+  # Errors
+  errors:
+    not_found: "Strona nie znaleziona"
+    unauthorized: "Nie masz uprawnień do wykonania tej akcji"
+    forbidden: "Dostęp zabroniony"
+    internal_error: "Coś poszło nie tak"
+    validation_failed: "Walidacja nie powiodła się"
+
+  # Time
+  time:
+    formats:
+      short: "%d %b %Y"
+      long: "%d %B %Y o %H:%M"
+      date_only: "%d %B %Y"
+
+  # Date
+  date:
+    formats:
+      short: "%d %b %Y"
+      long: "%d %B %Y"
+
+  # ActiveRecord
+  activerecord:
+    models:
+      user: "Użytkownik"
+      post: "Post"
+      video: "Wideo"
+      photo: "Zdjęcie"
+      comment: "Komentarz"
+      category: "Kategoria"
+      tag: "Tag"
+      page: "Strona"
+    attributes:
+      user:
+        email: "Email"
+        password: "Hasło"
+        username: "Nazwa użytkownika"
+        first_name: "Imię"
+        last_name: "Nazwisko"
+        bio: "Biogram"
+      post:
+        title: "Tytuł"
+        content: "Treść"
+        slug: "Slug"
+        status: "Status"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: "jest już zarejestrowany"
+            username:
+              taken: "jest już zajęta"

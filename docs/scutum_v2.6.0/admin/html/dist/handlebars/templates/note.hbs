@@ -1,0 +1,46 @@
+<li data-folder="{{ folder }}" class="sc-filter-label {{#each labels }}sc-filter-label-{{ this }} {{/each}}">
+	<div class="uk-card sc-js-note-preview sc-el-clickable md-bg-{{ cardColor }}-50 sc-theme-dark-inverse" data-note-id="{{ id }}">
+		<div class="uk-card-header">
+			<div class="uk-flex uk-flex-top">
+				<div class="uk-flex-1">
+					<h2 class="uk-card-title">{{ title }}</h2>
+					{{#if dueDate }}
+						<span class="uk-text-muted uk-text-small">{{ dueDate }}</span>
+					{{/if}}
+				</div>
+				<div class="sc-actions {{#if_isRTL}}uk-margin-right{{ else }}uk-margin-left{{/if_isRTL}}">
+					<a href="#" class="sc-actions-icon mdi mdi-pencil sc-icon-22"></a>
+					<a href="#" class="sc-actions-icon mdi mdi-close sc-js-card-close" data-card-close-remove="li"></a>
+				</div>
+			</div>
+		</div>
+		<div class="uk-card-body">
+			<p class="uk-margin-remove">{{ truncate body 100 true }}</p>
+			{{#if checklist }}
+				<ul class="uk-margin-top uk-list">
+				{{#each checklist }}
+					{{> checklist }}
+				{{/each}}
+				</ul>
+			{{/if}}
+			{{#if labels }}
+				<div class="uk-flex uk-flex-middle">
+				{{#each labels }}
+					{{#ifCond this '==' 'tag1'}}
+						<span class="mdi mdi-label md-color-blue-400 sc-icon-24"></span>
+					{{/ifCond }}
+					{{#ifCond this '==' 'tag2'}}
+						<span class="mdi mdi-label md-color-grey-400 sc-icon-24"></span>
+					{{/ifCond }}
+					{{#ifCond this '==' 'tag3'}}
+						<span class="mdi mdi-label md-color-amber-400 sc-icon-24"></span>
+					{{/ifCond }}
+					{{#ifCond this '==' 'tag4'}}
+						<span class="mdi mdi-label md-color-red-400 sc-icon-24"></span>
+					{{/ifCond }}
+				{{/each}}
+				</div>
+			{{/if}}
+		</div>
+	</div>
+</li>

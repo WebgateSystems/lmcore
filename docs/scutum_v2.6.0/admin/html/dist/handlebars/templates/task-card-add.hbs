@@ -1,0 +1,40 @@
+<li>
+    <div class="sc-task-card" data-task-id="{{ id }}">
+        {{#if title }}
+        <h2 class="sc-task-card-title">{{ title }}</h2>
+        {{/if}}
+        {{#if tags }}
+            <div class="uk-flex uk-margin-small-top uk-flex-wrap" data-uk-margin>
+            {{#each tags}}
+                {{#ifCond this '==' 'Integrations'}}
+                    <span class="uk-badge {{#if_isRTL}}uk-margin-mini-left{{ else }}uk-margin-mini-right{{/if_isRTL}} md-bg-blue-400">{{ this }}</span>
+                {{/ifCond}}
+                {{#ifCond this '==' 'Bug'}}
+                    <span class="uk-badge {{#if_isRTL}}uk-margin-mini-left{{ else }}uk-margin-mini-right{{/if_isRTL}} md-bg-red-400">{{ this }}</span>
+                {{/ifCond}}
+                {{#ifCond this '==' 'Feature'}}
+                    <span class="uk-badge {{#if_isRTL}}uk-margin-mini-left{{ else }}uk-margin-mini-right{{/if_isRTL}} md-bg-purple-400">{{ this }}</span>
+                {{/ifCond}}
+                {{#ifCond this '==' 'Idea'}}
+                    <span class="uk-badge {{#if_isRTL}}uk-margin-mini-left{{ else }}uk-margin-mini-right{{/if_isRTL}} md-bg-amber-400">{{ this }}</span>
+                {{/ifCond}}
+            {{/each}}
+            </div>
+        {{/if}}
+        {{#if assignee }}
+            <div class="sc-task-card-assignee">
+                {{#each assignee}}
+                    {{#ifCond this '==' 'user_1'}}
+                        <a href="#" title="keara.gleason" class="{{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}}"><img src="assets/img/avatars/avatar_01_sm.png" class="uk-border-circle" alt=""></a>
+                    {{/ifCond}}
+                    {{#ifCond this '==' 'user_2'}}
+                        <a href="#" title="effertz.dashawn" class="{{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}}"><img src="assets/img/avatars/avatar_04_sm.png" class="uk-border-circle" alt=""></a>
+                    {{/ifCond}}
+                    {{#ifCond this '==' 'user_3'}}
+                        <a href="#" title="millie99" class="{{#if_isRTL}}uk-margin-small-left{{ else }}uk-margin-small-right{{/if_isRTL}}"><img src="assets/img/avatars/avatar_07_sm.png" class="uk-border-circle" alt=""></a>
+                    {{/ifCond}}
+                {{/each}}
+            </div>
+        {{/if}}
+    </div>
+</li>

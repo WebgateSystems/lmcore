@@ -1,0 +1,1598 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Scutum Admin Documentation</title>
+    <link href="./favicon.ico" rel="icon" />
+    <link rel="stylesheet" href="assets/uikit/css/uikit.min.css">
+    <link rel="stylesheet" href="assets/css/doc.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+    <script src="assets/uikit/js/uikit.min.js"></script>
+    <script src="assets/uikit/js/uikit-icons.min.js"></script>
+    <script src="assets/common.min.js"></script>
+</head>
+<body>
+    <div id="sc-doc-topbar">
+        <div class="uk-flex uk-flex-middle">
+            <p class="uk-flex-1">
+                Scutum Admin Documentation
+            </p>
+            <div class="uk-text-small">v2.6.0</div>
+        </div>
+    </div>
+    <div id="sc-doc-sidebar">
+        <div id="sc-doc-toc" class="sc-doc-sidebar-wrapper"></div>
+    </div>
+    <div id="sc-doc-main">
+        <section>
+            <p class="uk-text-small"><span class="uk-text-muted">Author:</span> <a href="https://themeforest.net/user/tzd">tzd</a></p>
+            <p class="uk-text-small"><span class="uk-text-muted">Release Date:</span> 09 April 2019</p>
+            <p class="uk-text-small"><span class="uk-text-muted">Modified:</span> 21 June 2021</p>
+            <p class="uk-text-small"><span class="uk-text-muted">Email support:</span> <a href="mailto:tzdthemes+scutum@gmail.com">tzdthemes@gmail.com</a></p>
+            <hr>
+            <p>
+                Thank You for purchasing Scutum Template.<br>If you have any questions regarding this template and are beyond the scope of this help file, please feel free to send me a message via
+                <a href="https://themeforest.com">support page</a> or <a href="mailto:tzdthemes+scutum@gmail.com">email</a>.
+            </p>
+        </section>
+        <section>
+            <h1 id="tc-introduction">Introduction</h1>
+            <p>Scutum Admin is a professional HTML5/CSS3 Material Design template based on UIkit Framework (v3).</p>
+            <p>It comes with 2 main versions: <strong>HTML</strong> and <strong>VueJS</strong> that can be used to build any backend application: shop backend, anylytics backend, CMS, CRM etc.</p>
+            <p class="uk-margin-top">
+                HTML version source code is build with the help of PHP language (includes, simple functions and helpers).
+                <br>
+                VueJS version is based on Nuxt.js framework, universal mode (SSR + SPA) is set as default but can easily be switched to SPA mode.
+            </p>
+            <p class="uk-margin-top">This template has been built with the help of the following tools</p>
+            <ul class="uk-margin-small-top">
+                <li><a href="https://nodejs.org">Node.js</a> open-source, cross-platform JavaScript run-time environment that executes JavaScript code outside of a browser</li>
+                <li><a href="https://yarnpkg.com">Yarn</a> dependency manager</li>
+                <li><a href="https://gulpjs.com/">Gulp 4</a> streaming build tool - mainly HTML version</li>
+            </ul>
+            <h2 id="tc-introduction-features"><span>Main Features</span></h2>
+            <ul>
+                <li>Material Design/Material Design 2</li>
+                <li>HTML and VueJS version</li>
+                <li>Laravel integration (Nuxt.js)</li>
+                <li>Laravel Sanctum integration (Nuxt.js)</li>
+                <li>Based on UIkit 3 framework</li>
+                <li>VueJS version based on Nuxt.js (integrated vuex, axios, ssr, i18n etc.)</li>
+                <li>RTL support</li>
+                <li>Responsive layout</li>
+                <li>Easily customizable (SCSS files)</li>
+                <li>Async loader (CSS/JS) in HTML version</li>
+                <li>More than 90 pages</li>
+                <li>
+                    Custom Pages
+                    <ul>
+                        <li>Mailbox</li>
+                        <li>Notes</li>
+                        <li>Task Board</li>
+                        <li>Chat</li>
+                        <li>POI Listing</li>
+                        <li>Contact List</li>
+                        <li>and more...</li>
+                    </ul>
+                </li>
+                <li>
+                    Custom Components
+                    <ul>
+                        <li>Accordions</li>
+                        <li>Dropdowns</li>
+                        <li>Dynamic Grid</li>
+                        <li>Filters</li>
+                        <li>Lightbox/Modal</li>
+                        <li>Sortable</li>
+                        <li>Notifications</li>
+                        <li>Preloaders</li>
+                        <li>Tabs</li>
+                        <li>Timeline</li>
+                        <li>and many more...</li>
+                    </ul>
+                </li>
+                <li>
+                    Integrated charting libraries:
+                    <ul>
+                        <li>Billboard.js</li>
+                        <li>Chart.js</li>
+                    </ul>
+                </li>
+                <li>
+                    Integrated plugins:
+                    <ul>
+                        <li>Calendar</li>
+                        <li>Data Grid</li>
+                        <li>Datatables</li>
+                        <li>Gantt Chart</li>
+                        <li>Image Croper</li>
+                        <li>Google Maps</li>
+                        <li>Vector Maps</li>
+                        <li>and many more...</li>
+                    </ul>
+                </li>
+            </ul>
+            <h2><span>What's included?</span></h2>
+            <table class="uk-table uk-table-divider">
+                <tr>
+                    <td colspan="2"><strong>HTML version</strong></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink"><code>/admin/HTML/src</code></td>
+                    <td>HTML version with all the unminified/uncompiled source files (scss, js, json, PHP) that cen be used to customize template.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink"><code>/admin/HTML/dist</code></td>
+                    <td>HTML version with minified/compiled files (css, js, HTML) that can be used on production.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink"><code>/admin/HTML/dist-rtl</code></td>
+                    <td>HTML version with minified/compiled files (css, js, HTML) that can be used on production (RTL version).</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>VueJS version</strong></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink"><code>/admin/vuejs/src</code></td>
+                    <td>VueJS version with all the unminified/uncompiled source files (scss, js, json, VUE) that can be used to customize template.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink"><code>/admin/vuejs/src-rtl</code></td>
+                    <td>VueJS version with all the unminified/uncompiled source files (scss, js, json, VUE) that can be used to customize template (RTL version).</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink"><code>/admin/vuejs/laraval-nuxt</code></td>
+                    <td>Nuxt.js Laravel integration.</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>Landing Page</strong></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink"><code>/landing_page</code></td>
+                    <td>Landing Page for the Scutum Admin Template.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink"><code>/landing_page_rtl</code></td>
+                    <td>Landing Page for the Scutum Admin Template (RTL version).</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>Documentation</strong></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink"><code>/documentation</code></td>
+                    <td>This documentation.</td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h1 id="tc-ver-html">HTML version</h1>
+            <h2 id="tc-html-intro"><span>Introduction</span></h2>
+            <p>HTML version can be easily integrated with any servers side language (PHP, asp.net, python etc.), it can be also used as a base template for any front-end framework (React, Angular etc.)</p>
+            <p>Dynamic async loading library (LoadJS) has been used to improve performance and to load assets only when they are needed.</p>
+            <h2 id="tc-html-structure"><span>Structure</span></h2>
+            <table class="uk-table uk-table-small">
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>/</code></td>
+                    <td>Scutum Admin root</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/assets</code></span></td>
+                    <td>Assets (js, css, scss, images)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 30px"><code>/css</code></span></td>
+                    <td>Stylesheets (main, plugins, fonts, themes)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 30px"><code>/icons</code></span></td>
+                    <td>Icons (flags, payment icons)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 30px"><code>/img</code></span></td>
+                    <td>Images (avatars, photos, logos, textures)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 30px"><code>/js</code></span></td>
+                    <td>JS files (common functions/helpers, custom uikit, vendor and style switcher)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 45px"><code>/vendor</code></span></td>
+                    <td>Vendor JS files (plugins not managed by Yarn)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 45px"><code>/views</code></span></td>
+                    <td>Scripts used in plugins, pages, forms, components and dashboard</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 30px"><code>/scss</code></span></td>
+                    <td>SCSS files</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/build</code></span></td>
+                    <td>Build scripts (gulp tasks, generate HTML)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/data</code></span></td>
+                    <td>Data files (JSONs)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/handlebars</code></span></td>
+                    <td>Handlebars helpers and templates</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/php</code></span></td>
+                    <td>PHP views and helpers</td>
+                </tr>
+            </table>
+            <h2 id="sc-html-config"><span>Config</span></h2>
+            <p>In <code>scutum.config</code> (/assets/js/scutum_common.js) you can change this settings:</p>
+            <p><code>gmapsKey</code> - api key for Google Maps (https://developers.google.com/maps/documentation/javascript/get-api-key)</p>
+            <p><code>customScrollbar</code> - set it to true to replace default scrollbars with styled scrollbars.</p>
+            <h2 id="sc-html-loadjs"><span>Async loader</span></h2>
+            <blockquote>LoadJS is a tiny async loading library for modern browsers (IE9+).<br>It has a simple yet powerful dependency management system that lets you fetch JavaScript, CSS and image files in parallel and execute code after the dependencies have been met.</blockquote>
+            <p>To improve the performance and to load assets only when they are needed <a href="https://github.com/muicss/loadjs">LoadJS</a> plugin has been used.</p>
+            <p>There is a require-like dependency manger implemented in Scutum Admin</p>
+<pre><code class="language-js">/**
+ * Require-like dependency manager
+ * @param {array} 		bundleIds	bundle names (defined in scutum.bundles)
+ * @param {function} 	successFn	function to run after all assets has been successfully loaded
+ * @param {boolean} 	async		load files synchronously or asynchronously
+ */
+ scutum.require(bundleIds, successFn, async);
+</code></pre>
+            <p>By default all assets are loaded asynchronously but you can load them in series, to do that set <code>async</code> option to false.</p>
+            <p class="uk-margin-top">In <code>assets/js/scutum_common.js</code> you can find predefined bundles that are used in Scutum Admin.</p>
+<pre><code class="language-js">scutum.bundles = {
+    'bundle name': ['path to js file', 'path to css file'],
+    ...
+}</code></pre>
+            <h3>How to use it?</h3>
+            <p>Below you can find some examples how to use async loader.</p>
+<pre><code class="language-js">// datepicker
+scutum.require(['flatpickr'], function () {
+    // initialize datepicker
+})
+
+// billboard.js charts (d3 must be loaded before billboard.js)
+scutum.require(['d3', 'billboard'], function () {
+    // initialize chart
+}, false)
+
+// calendar (plugins must be loaded synchronously)
+scutum.require(['tui-snippets', 'tui-timepicker', 'tui-datepicker', 'tui-calendar', 'handlebars'], function () {
+    // initialize calendar
+}, false)
+</code></pre>
+            <h2 id="sc-html-get-started"><span>Get Started</span></h2>
+            <p>Before you can start to customize Scutum Admin template you must download and install <a href="https://nodejs.org">Node.js</a> (cross-platform runtime environment), <a href="https://yarnpkg.com/en/docs/install">Yarn</a>/<a href="https://www.npmjs.com/get-npm">NPM</a> (dependency manager) and<a
+                    href="https://gulpjs.com/"> Gulp 4</a> (automated tasks).</p>
+            <p>If this tools are installed and working correctly you can run this command from Scutum root directory (/admin/html/src) to install all dependencies and regenerate css/js files:</p>
+<pre><code class="language-bash">$ yarn sc-setup
+// or
+$ npm run sc-setup:npm</code></pre>
+            <p>Now if dependencies and plugins were installed without errors you can use various gulp tasks to customize Scutum Admin template.</p>
+            <h2 id="tc-html-gulp-tasks"><span>Gulp Tasks</span></h2>
+            <p>Scutum Admin uses Gulp 4 to automate tasks like compiling SCSS to CSS, minifing JS files, live reloading assets and HTML.</p>
+            <div class="uk-alert-warning" data-uk-alert>
+                <p>
+                    If you don't have Gulp 4 installed globally you can use locally installed gulp.
+                    <br>
+                    To do that use <code>yarn gulp 'task name' / npm run gulp 'task name'</code> command eg. <code>yarn gulp sass:main / npm run gulp sass:main</code>
+                </p>
+            </div>
+<pre id="sc-gulp-tasks"><code class="language-html">Available tasks (/build/gulp-tasks/*.js)
+
+SASS (sass.js)
+    gulp sass:main - compile main stylesheet (assets/css/scutum.css|scutum.min.css)
+    gulp sass:plugins - compile stylesheets for plugins
+    gulp sass:error_page - compile error page stylesheet (error_page.css/error_page.min.css)
+    gulp sass:login_page - compile login page stylesheet (login_page.css/login_page.min.css)
+    gulp sass:themes - compile themes (assets/css/themes/theme_*.css) and concatenate all themes (themes_combined.min.css)
+    gulp sass:style_switcher - compile style switcher stylesheet (style_switcher.css/style_switcher.min.css)
+
+JS (js.js)
+    gulp js:vendor - common plugins used in Scutum template
+    gulp js:uikit - custom build of UIkit components
+    gulp js:minify - minify custom/common scripts
+
+SERVE (serve.js)
+    gulp serve - synchronised browser testing - https://www.browsersync.io/docs/
+
+BUILD (build.js)
+    gulp build - build dist folder (minified js/css/json and HTML files, require PHP and some customization in build/generate_html.php)
+</code></pre>
+            <h2 id="sc-html-gulp-serve"><span>Development server (Browsersync)</span></h2>
+            <div class="uk-alert-warning" data-uk-alert>
+                <p>Web server with installed PHP is required to run Browsersync.</p>
+            </div>
+            <p>To help with the live reload assets/HTML content, automated testing and auto compiling Sass <a href="https://www.browsersync.io/">Browsersync</a> plugin has been used.</p>
+            <p>Before you can run Browsersync you need to change <code>host</code> and <code>proxy</code> settings in <code>/build/gulp-tasks/serve.js</code></p>
+            <p><code>proxy</code> option is required because Scutum Admin use PHP (it needs to be installed on web server).</p>
+            <p><code>host</code> option can be deleted/commented out if your web server is installed locally.</p>
+            <p>Now you can run following command to start Browsersync:</p>
+<pre><code class="lang-bash">$ yarn sc-dev
+// or
+$ npm run sc-dev:npm</code></pre>
+            <h2 id="tc-html-commands"><span>Commands</span></h2>
+            <table class="uk-table uk-table-small">
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn sc-setup</code><br><code>npm run sc-setup:npm</code></td>
+                    <td>Install all dependencies and process sass/js files.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn sc-dev</code><br><code>npm run sc-dev:npm</code></td>
+                    <td>Launch development server (live reload assets/HTML, auto compile sass etc.) on 192.168.1.188:3101</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn sc-update</code><br><code>npm run sc-update:npm</code></td>
+                    <td>Remove <code>node_modules</code> directory and update dependencies.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn sc-cleanup</code><br><code>npm run sc-cleanup</code></td>
+                    <td>Remove <code>node_modules</code>.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn gulp</code><br><code>npm run gulp</code></td>
+                    <td>Run locally installed Gulp 4.</td>
+                </tr>
+            </table>
+            <h2 id="tc-html-plugins"><span>Plugins</span></h2>
+            <h3 id="tc-html-plugins-ckeditor"><span>CKEditor</span></h3>
+            <p>Here you can find a guide how to configure CKEditor: <a href="https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/configuration.html">configuration</a></p>
+	        <br>
+            <p>Custom build of CKEditor is located in <code>assets/js/vendor/ckeditor</code>, if you want to customize this build you need to follow these steps:</p>
+	        <ol>
+		        <li>
+			        Open <code>assets/js/vendor/ckeditor</code> directory in terminal and install dependencies
+<pre><code class="lang-bash">yarn install</code></pre>
+		        </li>
+		        <li>
+			        Install <a href="https://ckeditor.com/docs/ckeditor5/latest/api/module_core_plugin-Plugin.html">plugins</a>
+<pre><code class="lang-bash">yarn add @ckeditor/ckeditor5-alignment --save</code></pre>
+		        </li>
+		        <li>
+			        Edit the <code>src/ckeditor.js</code>
+<pre><code class="lang-bash">// The editor creator to use.
+...
+import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';     // <--- ADDED
+
+...
+
+// Plugins to include in the build.
+ClassicEditor.builtinPlugins = [
+    ...,
+    Alignment                                                            // <--- ADDED
+];</code></pre>
+		        </li>
+		        <li>
+			        Bundle the build
+<pre><code class="lang-bash">yarn build</code></pre>
+		        </li>
+	        </ol>
+	        <p>Here you can find the extended documentation about <a href="https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/installing-plugins.html">installing plugins</a></p>
+        </section>
+        <section>
+            <h1 id="tc-vuejs">VueJS version</h1>
+            <h2 id="tc-vuejs-intro"><span>Introduction</span></h2>
+            <p>Scutum Admin Vue.js version is based on <strong>Nuxt.js</strong> framework.</p>
+            <p>Nuxt.js is a framework for creating Vue.js applications, you can choose between Universal, Static Generated or Single Page application.</p>
+            <p>Default mode used in Scutum Admin is 'universal' but can be easily changed to 'spa' or you can generate static pages that you can host on any static hosting.</p>
+            <h2 id="tc-vuejs-structure"><span>Structure</span></h2>
+            <p>Scutum Admin utilize default folder structure recomended by Nuxt.js</p>
+            <table class="uk-table uk-table-small">
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>/</code></td>
+                    <td>Scutum Admin root</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/assets</code></span></td>
+                    <td>The assets directory contains your un-compiled assets (Sass files, images, fonts etc.)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/build</code></span></td>
+                    <td>The build directory contains gulp tasks that you can use to create custom version of UIkit JS or to minify js files.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/components</code></span></td>
+                    <td>The components directory contains your Vue.js Components.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/data</code></span></td>
+                    <td>The data directory contains json files used in applcation (sidebar menu, fake data etc.).</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/lang</code></span></td>
+                    <td>The lang directory includes your application translations.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/layouts</code></span></td>
+                    <td>The layouts directory includes your application layouts.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/middleware</code></span></td>
+                    <td>The middleware directory contains your Application Middleware. Middleware lets you define custom functions that can be run before rendering either a page or a group of pages (layouts).</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/pages</code></span></td>
+                    <td>The pages directory contains your Application Views and Routes.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/plugins</code></span></td>
+                    <td>The plugins directory contains your Javascript plugins that can be run before instantiating the root Vue.js application.<br>You can also import them directly in pages/components.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/static</code></span></td>
+                    <td>The static directory is directly mapped to the server root and contains files that likely won't be changed (i.e. the favicon)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/store</code></span></td>
+                    <td>The store directory contains your Vuex Store files.</td>
+                </tr>
+            </table>
+            <h2 id="tc-vuejs-get-started"><span>Get Started</span></h2>
+            <p>Before you can start working with this version you need to install <a href="https://nodejs.org">Node.js</a> and <a href="https://yarnpkg.com/en/docs/install">Yarn</a> (dependency manager)</p>
+            <p>If this tools are installed and working fine you can run this command from Scutum root directory (/admin/vuejs/src) to install all dependencies:</p>
+<pre><code class="lang-bash">$ yarn sc-setup</code></pre>
+            <p>Now if there were no errors you can start customizing Scutum Admin template.</p>
+            <h2 id="tc-vuejs-modes"><span>Configuration</span></h2>
+            <p>As mentioned before, Scutum Admin Vue.js version is based on Nuxt.js framework, all configuration options you can change/adjust in <code>nuxt.config.js</code>.</p>
+            <p>Here you can find a configuration guide: <a href="https://nuxtjs.org/guide/configuration">Nuxt.js configuration</a></p>
+            <h3>Modes</h3>
+            <p>To change mode property open <code>/nuxt.config.js</code> and set desired mode. <br>Available modes: '<strong>universal</strong>' (default) and '<strong>spa</strong>'.<p>
+            <p>Here you can find more info about modes:</p>
+            <p>
+                <a href="https://nuxtjs.org/api/configuration-mode/">The mode Property</a><br>
+                <a href="https://nuxtjs.org/guide#server-rendered-universal-ssr-">Server Rendered (Universal SSR)</a><br>
+                <a href="https://nuxtjs.org/guide#single-page-applications-spa-">Single Page Applications (SPA)</a>
+            </p>
+            <h2 id="tc-vuejs-static-generated"><span>Static Generated (Pre Rendering)</span></h2>
+            <p>Scutum Admin offers static site generator out of the box (thanks to Nuxt.js framework), you can easily pre-render static site using a single command:</p>
+<pre><code class="language-bash">$ yarn generate
+// or
+$ npm run generate</code></pre>
+            <p class="uk-margin-top">When you run this command Nuxt.js will generate web application that you can host on any static hosting.</p>
+            <p>Default directory name (<code>dist</code>) for static generated web aplication is <code>scutum-universal</code> (when mode is set to <code>universal</code>)
+                <br> you can change that directory name in nuxt.config.js</p>
+            <p class="uk-margin-top">Application generated by this command must be served from <code>/root</code> directory,
+                <br> if you want to serve it from subfolder (<code>dist</code>) you need to set <code>serveFromSubFolder</code> to
+                <code>true</code> in nuxt.config.js </p>
+            <h2 id="tc-vuejs-commands"><span>Commands</span></h2>
+            <table class="uk-table uk-table-small">
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn dev</code><br><code>npm run dev</code></td>
+                    <td>Launch a development server on localhost:3000 with hot-reloading. (Nuxt.js command)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn build</code><br><code>npm run build</code></td>
+                    <td>Build your application with webpack and minify the JS & CSS (for production). (Nuxt.js command)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn start</code><br><code>npm run start</code></td>
+                    <td>Start the server in production mode (after running <code>yarn build</code>). (Nuxt.js command)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn generate</code><br><code>npm run generate</code></td>
+                    <td>Build the application and generate every route as a HTML file (used for static hosting). (Nuxt.js command)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn sc-dev</code><br><code>npm run sc-dev:npm</code></td>
+                    <td>Launch a http:// development server on 192.168.1.188:3103 (custom hostname and port)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn sc-install</code><br><code>npm run sc-install:npm</code></td>
+                    <td>Install all dependencies.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn sc-setup</code><br><code>npm run sc-setup:npm</code></td>
+                    <td>Remove <code>/node_modules</code> and install all dependencies.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn sc-update</code><br><code>npm run sc-update:npm</code></td>
+                    <td>Remove <code>/node_modules</code> and update dependencies.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn sc-cleanup</code><br><code>npm run sc-cleanup</code></td>
+                    <td>Remove <code>/node_modules</code>.</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>yarn gulp</code><br><code>npm run gulp</code></td>
+                    <td>Run locally installed Gulp 4.</td>
+                </tr>
+            </table>
+            <h2 id="tc-vuejs-laravel"><span>Laravel integration</span></h2>
+            <p>In <code>admin/vuejs/laravel-nuxt/</code> you can find files that will help you integrate Nuxt.js with Laravel. In that integration Laravel will work as an API and Nuxt.js as a Single Page Application.</p>
+            <p>Here are the steps to install Laravel and integrate Nuxt.js with it:</p>
+            <div class="uk-margin-top">
+                <p>1. Create Laravel project ('laravel' is the default project name but you can use any name, just replace laravel with your project name)</p>
+                <pre><code class="language-bash">composer create-project laravel/laravel laravel 5.8 --prefer-dist</code></pre>
+                <p>2. Go inside your new project</p>
+                <pre><code class="language-bash">cd laravel/</code></pre>
+                <p>3. Install laravel-nuxt (for PHP) </p>
+                <pre><code class="language-bash">composer require pallares/laravel-nuxt</code></pre>
+                <p>4. Create <code>nuxt</code> folder in <code>laravel/resources/</code> and copy <code>assets, components, data, lang, layouts, middleware, pages, plugins, static, store</code> folders from <code>scutum/admin/vuejs/src/</code> to <code>laravel/resources/nuxt/</code></p>
+                <p>5. Copy files from <code>scutum/admin/vuejs/laravel-nuxt/</code> to <code>laravel/</code> (replace files)</p>
+                <p>6. Install all dependencies</p>
+                <pre><code class="language-bash">yarn sc-install</code></pre>
+                <p>7. Run dev server (local)</p>
+                <pre><code class="language-bash">yarn start</code></pre>
+                <p>7a. Run dev server (remote)</p>
+                <pre><code class="language-bash">yarn start --hostname remote-server-ip</code></pre>
+                <p>Deploy application </p>
+                <pre><code class="language-bash">yarn build</code></pre>
+                <p>After build copy files/folder from <code>laravel/resources/nuxt/static/</code> to <code>laravel/public/</code> </p>
+            </div>
+            <p class="uk-margin-top">When you run dev server you can go to <code>/api</code> route to check simple API call from Laravel.</p>
+            <small class="uk-margin-top uk-display-block">Integration based on <a href="https://dev.to/skyrpex/create-a-spa-with-laravel-and-nuxt--54k">Create a SPA with Laravel and Nuxt</a></small>
+            <h2 id="tc-vuejs-sanctum"><span>Laravel Sanctum integration</span></h2>
+            <p class="uk-margin-bottom">In <code>admin/vuejs/sanctum-nuxt/</code> you can find files that will help you integrate Nuxt.js with Laravel Sanctum.</p>
+            <h4>Backend installation (Laravel, Laravel Sanctum, Laravel Breeze):</h4>
+            <div class="uk-margin-top">
+                <p>1. Create Laravel project ('sanctum-nuxt-api' is the default project name but you can use any name, just replace sanctum-nuxt-api with your project name)</p>
+                <pre><code class="language-bash">composer create-project --prefer-dist laravel/laravel sanctum-nuxt-api</code></pre>
+                <p>2. Go to your new project and configure DB</p>
+                <pre><code class="language-bash">cd sanctum-nuxt-api</code></pre>
+                <p>Open <code>.env</code> file and update following fields</p>
+                <pre><code class="language-php">DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=</code></pre>
+
+                <p>3. Install Laravel Sanctum</p>
+                <pre><code class="language-bash">composer require laravel/sanctum
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+php artisan migrate</code></pre>
+                <p>4. Install Laravel Breeze (login, register etc. endpoints)</p>
+                <pre><code class="language-bash">composer require laravel/breeze --dev
+php artisan breeze:install
+npm install
+npm run dev</code></pre>
+                <p>5. Configure Laravel Sanctum</p>
+                <p>Open <code>app/Http/Kernel.php</code> and add Sanctum middleware <code>\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class</code> to api middleware</p>
+                <pre><code class="language-php">protected $middlewareGroups = [
+	...
+
+	'api' => [
+		\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class // here
+		'throttle:60,1',
+		\Illuminate\Routing\Middleware\SubstituteBindings::class,
+	],
+];</code></pre>
+                <p>Open <code>config/cors.php</code> and change following variables</p>
+                <pre><code class="language-php">'paths' => ['*']
+'supports_credentials' => true</code></pre>
+                <p>Open <code>routes/api.php</code> and add Sanctum auth middleware</p>
+                <pre><code class="language-php">Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+	return $request->user();
+});</code></pre>
+                <p>Open <code>.env</code> file and set following variables</p>
+                <pre><code class="language-php">SESSION_DRIVER=cookie
+SESSION_DOMAIN=.example.com // api and front app domain (api.example.com;front.example.com), remember to add . before domain
+SANCTUM_STATEFUL_DOMAINS=front.example.com // nuxt.js app subdomain</code></pre>
+                <h4>Frontend installation (Nuxt.js):</h4>
+                <div class="uk-margin-top">
+                    <p>1. Create new directory eg. <code>sanctum-nuxt</code></p>
+                    <p>2. Copy all files/folders from <code>admin/vuejs/src</code> to <code>sanctum-nuxt</code></p>
+                    <p>2. Copy all files/folders from <code>admin/vuejs/sanctum-nuxt/front</code> to <code>sanctum-nuxt</code> (replace files)</p>
+                    <p>3. Go to <code>sanctum-nuxt</code> and install all dependencies</p>
+                    <pre><code class="language-bash">cd sanctum-nuxt
+yarn sc-setup</code></pre>
+                    <p>4. Open <code>.env</code> file and update following variables</p>
+                    <pre><code class="language-bash">BASE_URL=http://api.example.com
+API_URL=http://front.example.com</code></pre>
+                    <p class="uk-margin-top"><strong>Development</strong></p>
+                    <p>To launch Nuxt in development mode use <code>yarn dev</code> command, don't forget to set reverse proxy if you want to access your application from outside (<a href="https://nuxtjs.org/docs/2.x/deployment/nginx-proxy">Using NGINX as a reverse proxy</a>).</p>
+
+                    <p class="uk-margin-top"><strong>Production Deployment</strong></p>
+                    <p>To deploy an SSR app use <code>yarn build</code> and <code>yarn start</code> commands, don't forget to set reverse proxy if you want to access your application from outside (<a href="https://nuxtjs.org/docs/2.x/deployment/nginx-proxy">Using NGINX as a reverse proxy</a>).</p>
+
+                    <p class="uk-margin-top"><strong>Static Deployment</strong></p>
+                    <p>Use <code>yarn sc-generate</code> to generate your app and upload it to web server (dist/)</p>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h1 id="tc-scss">Sass</h1>
+            <p>In Scutum Admin Sass has been used to ease the process of building/customization.<br>With the help of this files you can easily change colors, typography, components styles, plugins styles and other elements.</p>
+            <h2><span>Folder/files structure</span></h2>
+            <table class="uk-table uk-table-small">
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><code>/assets/scss</code></td>
+                    <td>SCSS files</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/common</code></span></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 30px"><code>_common.scss</code></span></td>
+                    <td>Comon styles</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 30px"><code>_md_colors.scss</code></span></td>
+                    <td>Material design colors</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 30px"><code>_uikit_custom.scss</code></span></td>
+                    <td>Custom styles for UIkit components/plugins</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 30px"><code>_variables_mixins.scss</code></span></td>
+                    <td>Variables/mixins</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/components</code></span></td>
+                    <td>Styles for components (buttons, cards, icons, forms etc.)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/pages</code></span></td>
+                    <td>Styles for pages (mailbox, chat, task board etc.)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/partials</code></span></td>
+                    <td>Styles for partials (header, sidebar, topbar etc.)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/plugins</code></span></td>
+                    <td>Styles for plugins (calendar, datatables, multiselect etc.)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/standalone</code></span></td>
+                    <td>Styles for standalone pages (error page, login page)</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/themes</code></span></td>
+                    <td>Scutum themes</td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><span style="padding-left: 15px"><code>/vue</code></span></td>
+                    <td>Styles for vuejs app (common, transitions, plugins)</td>
+                </tr>
+            </table>
+            <p>After customizations you can use gulp tasks to compile SCSS files to CSS (HTML version), <a href="#sc-gulp-tasks" class="internal-link">check available SASS tasks</a></p>
+        </section>
+        <section>
+            <h1 id="tc-themes">Themes</h1>
+	        <p>In <code>/assets/scss/themes</code> folder you can find few predefined themes (theme_a...theme_h) and two themes that can be used as a base:</p>
+            <p><code>user_theme_md.scss</code> - material design colors</p>
+            <p><code>user_themes.scss</code> - hex colors</p>
+            <h3>HTML version</h3>
+            <p>After customization you need to run <code>yarn gulp sass:themes</code> to compile your theme to CSS (<code>assets/css/themes/user_theme.css</code> and <code>assets/css/themes/user_theme_md.css</code>)</p>
+            <p>Now when you have yor custom theme you need to include it in your app, to do that open <code>index.php</code>, paste <code>loadjs('assets/css/themes/theme_user.css', {});</code> after main stylesheet and add class <code>sc-theme-user</code> to <code>&lt;html&gt;</code> element.</p>
+            <h3>Vue.js version</h3>
+            <p>To activate your theme, open <code>/layouts/default.vue</code> file and uncomment code in <code>mounted</code> hook.</p>
+        </section>
+        <section>
+            <h1 id="tc-sidebar">Sidebar</h1>
+            <h3>Accordion mode</h3>
+            <p>By default there is no limitation to opened sidebar menu sections. When this option is active only one section can be opened at the same time.</p>
+            <p class="uk-margin-remove-bottom uk-margin-top uk-text-semibold">HTML version</p>
+            <p class="uk-margin-remove-bottom">To activate it add <code>sc-js-accordion-mode</code> class to <code>#sc-sidebar-main</code></p>
+<pre class="uk-margin-remove"><code class="language-html">&lt;aside id=&quot;sc-sidebar-main&quot; class=&quot;sc-js-accordion-mode&quot;&gt;...&lt;/aside&gt;</code></pre>
+            <p class="uk-margin-remove-bottom uk-margin-top uk-text-semibold">Vue.js version</p>
+            <p class="uk-margin-remove-bottom">To activate it change set <code>vxSidebarMainAccordionMode</code> state to <code>true</code> or use <code>this.$store.commit('sidebarMainAccordionModeToggle', true)</code> mutation.</p>
+<pre class="uk-margin-remove"><code class="language-js">// store/index.js
+export const state = () => ({
+    ...
+	vxSidebarMainAccordionMode: true
+    ...
+})
+
+// mutation
+export default {
+	...
+	mounted () {
+        this.$store.commit('sidebarMainScrollToActiveToggle', true);
+    }
+}
+
+</code></pre>
+            <hr>
+            <h3>Scroll to active</h3>
+            <p>When this option is enabled clicked menu section will be scrolled to the top off the page.</p>
+            <p class="uk-margin-remove-bottom uk-margin-top uk-text-semibold">HTML version</p>
+            <p class="uk-margin-remove-bottom">To activate it add <code>sc-js-scroll-to-active</code> class to <code>#sc-sidebar-main</code></p>
+<pre class="uk-margin-remove"><code class="language-html">&lt;aside id=&quot;sc-sidebar-main&quot; class=&quot;sc-js-scroll-to-active&quot;&gt;...&lt;/aside&gt;</code></pre>
+            <p class="uk-margin-remove-bottom uk-margin-top uk-text-semibold">Vue.js version</p>
+            <p class="uk-margin-remove-bottom">To activate it change set <code>vxSidebarMainScrollToActive</code> state to <code>true</code> or use <code>this.$store.commit('sidebarMainScrollToActiveToggle', true)</code> mutation.</p>
+            <pre class="uk-margin-remove"><code class="language-js">// store/index.js
+export const state = () => ({
+    ...
+	vxSidebarMainScrollToActive: true
+    ...
+})
+
+// mutation
+export default {
+	...
+	mounted () {
+        this.$store.commit('sidebarMainScrollToActiveToggle', true);
+    }
+}
+
+</code></pre>
+        </section>
+        <section>
+            <h1 id="tc-rtl">RTL</h1>
+            <p>Scutum Admin <code>v2.4.0</code> introduces RTL support in HTML and Vue.js version.</p>
+            <p class="uk-margin-top">
+                HTML RTL version is located in <code>/admin/html/dist-rtl</code>, and <code>/admin/html/src</code>.
+                <br> To activate it in <code>/src</code> open <code>/src/php/variables.php</code> and set <code>$enableRTL</code> variable to <code>true</code>
+            </p>
+            <hr>
+            <p>Vue.js RTL version is located in <code>/admin/vuejs/src-rtl</code></p>
+        </section>
+        <section>
+            <h1 id="tc-plugins">Plugins</h1>
+            <p>Scutum Admin Template utilizes many third-party plugins and components, some of them are very complex, have a lot of options and are regulary updated so I decided not to copy documentations for this plugins/components (it would be almost impossible to sync this documentation with the original documentations).</p>
+            <p>In following table you can find links to original documentations.</p>
+            <table class="uk-table uk-table-small uk-table-hover">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Description</td>
+                        <td>Documentation</td>
+                    </tr>
+                </thead>
+                <tr>
+                    <td colspan="3" style="background: #f5f5f5;">
+                        <strong style="margin: 0;">HTML/Vue.js</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/venables/accounting-big">accounting-big</a></td>
+                    <td>A lightweight JavaScript library for arbitrary-precision number, money and currency formatting - fully localisable.</td>
+                    <td class="uk-text-center"><a href="http://openexchangerates.github.io/accounting.js/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href=""><a href="https://naver.github.io/billboard.js/">billboard.js</a></a></td>
+                    <td>Re-usable, easy interface JavaScript chart library, based on D3 v4+.</td>
+                    <td class="uk-text-center"><a href="https://naver.github.io/billboard.js/release/latest/doc/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://www.chartjs.org/">Chart.js</a></td>
+                    <td>Simple yet flexible JavaScript charting for designers & developers</td>
+                    <td class="uk-text-center"><a href="https://www.chartjs.org/docs/latest/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://ckeditor.com/ckeditor-5/">CKEditor</a></td>
+                    <td>Rich text editor of tomorrow, available today.</td>
+                    <td class="uk-text-center"><a href="https://ckeditor.com/docs/ckeditor5/latest/builds/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://clipboardjs.com/">clipboard.js</a></td>
+                    <td>A modern approach to copy text to clipboard</td>
+                    <td class="uk-text-center"><a href="https://clipboardjs.com/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://codemirror.net/">codemirror</a></td>
+                    <td>CodeMirror is a versatile text editor implemented in JavaScript for the browser. It is specialized for editing code, and comes with a number of language modes and addons that implement more advanced editing functionality.</td>
+                    <td class="uk-text-center"><a href="https://codemirror.net/doc/manual.html" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://fengyuanchen.github.io/cropper/">Cropper</a></td>
+                    <td>A simple jQuery image cropping plugin.</td>
+                    <td class="uk-text-center"><a href="https://github.com/fengyuanchen/cropper/blob/master/README.md" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://datatables.net/">DataTables</a></td>
+                    <td>DataTables is a plug-in for the jQuery Javascript library. It is a highly flexible tool, build upon the foundations of progressive enhancement, that adds all of these advanced features to any HTML table.</td>
+                    <td class="uk-text-center"><a href="https://datatables.net/manual/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/kpdecker/jsdiff">jsdiff</a></td>
+                    <td>A javascript text differencing implementation.</td>
+                    <td class="uk-text-center"><a href="https://github.com/kpdecker/jsdiff#api" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://kamranahmed.info/driver.js/">Driver.js</a></td>
+                    <td>A lightweight (~4kb gzipped) yet powerful JavaScript engine that helps you drive the user's focus on page.</td>
+                    <td class="uk-text-center"><a href="https://kamranahmed.info/driver.js/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/ftlabs/fastclick">fastclick</a></td>
+                    <td>Polyfill to remove click delays on browsers with touch UIs</td>
+                    <td class="uk-text-center"><a href="https://github.com/ftlabs/fastclick#usage" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://flatpickr.js.org/">flatpickr</a></td>
+                    <td>flatpickr is a lightweight and powerful datetime picker.</td>
+                    <td class="uk-text-center"><a href="https://flatpickr.js.org/getting-started/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://hpneo.github.io/gmaps/">gmaps.js</a></td>
+                    <td>gmaps.js allows you to use the potential of Google Maps in a simple way.</td>
+                    <td class="uk-text-center"><a href="https://hpneo.github.io/gmaps/documentation.html" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://imagesloaded.desandro.com/">imagesloaded</a></td>
+                    <td>Detect when images have been loaded.</td>
+                    <td class="uk-text-center"><a href="https://imagesloaded.desandro.com/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/RobinHerbots/Inputmask">Inputmask</a></td>
+                    <td>Inputmask is a javascript library which creates an input mask. Inputmask can run against vanilla javascript, jQuery and jqlite.</td>
+                    <td class="uk-text-center"><a href="https://github.com/RobinHerbots/Inputmask#setup" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://ionden.com/a/plugins/ion.rangeSlider/index.html">ion.rangeSlider</a></td>
+                    <td>Easy to use, flexible and responsive range slider with skin support</td>
+                    <td class="uk-text-center"><a href="http://ionden.com/a/plugins/ion.rangeSlider/start.html" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/PawelDecowski/jquery-creditcardvalidator">jQuery Credit Card Validator</a></td>
+                    <td>jQuery Credit Card Validator detects and validates credit card numbers. It’ll tell you the detected credit card type and whether the number length and Luhn checksum are valid for the type of card.</td>
+                    <td class="uk-text-center"><a href="https://jquerycreditcardvalidator.com/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://jquery.com/">jQuery</a></td>
+                    <td>jQuery is a fast, small, and feature-rich JavaScript library.</td>
+                    <td class="uk-text-center"><a href="https://api.jquery.com/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/longbill/jquery-date-range-picker">jQuery Date Range Picker Plugin</a></td>
+                    <td>jQuery Date Range Picker is a jQuery plugin that allows a user to select a date range.</td>
+                    <td class="uk-text-center"><a href="https://longbill.github.io/jquery-date-range-picker/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/mar10/fancytree">Fancytree</a></td>
+                    <td>Fancytree (sequel of DynaTree 1.x) is a JavaScript tree view / tree grid plugin with support for keyboard, inline editing, filtering, checkboxes, drag'n'drop, and lazy loading.</td>
+                    <td class="uk-text-center"><a href="https://github.com/mar10/fancytree/wiki" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://stuk.github.io/jszip/">JSZip</a></td>
+                    <td>JSZip is a javascript library for creating, reading and editing .zip files, with a lovely and simple API. (Datatables Buttons extension)</td>
+                    <td class="uk-text-center"><a href="https://datatables.net/extensions/buttons/examples/html5/simple.html" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://materialdesignicons.com/">Material Design Icons</a></td>
+                    <td>Material Design Icons' growing icon collection allows designers and developers targeting various platforms to download icons in the format, color and size they need for any project.</td>
+                    <td class="uk-text-center"><a href="https://dev.materialdesignicons.com/getting-started" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://loudev.com/">Multiselect</a></td>
+                    <td>User-friendlier drop-in replacement for the standard &lt;select&gt; with multiple attribute activated</td>
+                    <td class="uk-text-center"><a href="http://loudev.com/#usage" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://momentjs.com/">Moment.js</a></td>
+                    <td>Parse, validate, manipulate, and display dates and times in JavaScript.</td>
+                    <td class="uk-text-center"><a href="https://momentjs.com/docs/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://pdfmake.org">pdfmake</a></td>
+                    <td>Client/server side PDF printing in pure JavaScrip (Datatables Buttons extension)</td>
+                    <td class="uk-text-center"><a href=http://pdfmake.org" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/mdbootstrap/perfect-scrollbar">perfect-scrollbar</a></td>
+                    <td>Minimalistic but perfect custom scrollbar plugin</td>
+                    <td class="uk-text-center"><a href="https://github.com/mdbootstrap/perfect-scrollbar#table-of-contents" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://pushjs.org/">push.js</a></td>
+                    <td>The world's most versatile desktop notifications framework</td>
+                    <td class="uk-text-center"><a href="https://pushjs.org/docs/introduction" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/wbotelhos/raty">Raty</a></td>
+                    <td>A Star Rating Plugin</td>
+                    <td class="uk-text-center"><a href="https://github.com/wbotelhos/raty#options" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://sindresorhus.com/screenfull.js/">screenfull</a></td>
+                    <td>Simple wrapper for cross-browser usage of the JavaScript Fullscreen API</td>
+                    <td class="uk-text-center"><a href="https://github.com/sindresorhus/screenfull.js/#why" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://select2.org/">Select 2</a></td>
+                    <td>The jQuery replacement for select boxes</td>
+                    <td class="uk-text-center"><a href="https://select2.org/options" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/atmist/snazzy-info-window">Snazzy Info Window</a></td>
+                    <td>Snazzy Info Window is a plugin for customizable info windows using the Google Maps JavaScript API</td>
+                    <td class="uk-text-center"><a href="https://github.com/atmist/snazzy-info-window#quick-start" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://ui.toast.com/tui-calendar/">tui.calendar</a></td>
+                    <td>TOAST UI Calendar is a full-featured calendar. Experience various view types, default popups, dragging or resizing schedules and customizable theme which is easy to use.</td>
+                    <td class="uk-text-center"><a href="https://nhnent.github.io/tui.calendar/latest/Calendar.html" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://ui.toast.com/tui-grid/">tui.grid</a></td>
+                    <td>TOAST UI Grid is a powerful widget which allows you to visualize and edit data via its table representation.</td>
+                    <td class="uk-text-center"><a href="https://nhnent.github.io/tui.grid/api/Grid.html" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://getuikit.com/">UIkit</a></td>
+                    <td>A lightweight and modular front-end framework for developing fast and powerful web interfaces.</td>
+                    <td class="uk-text-center"><a href="https://getuikit.com/docs/introduction" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://velocityjs.org/">Velocity.js</a></td>
+                    <td>Accelerated JavaScript animation.</td>
+                    <td class="uk-text-center"><a href="http://velocityjs.org/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://fian.my.id/Waves/">Waves</a></td>
+                    <td>Click effect inspired by Google's Material Design</td>
+                    <td class="uk-text-center"><a href="http://fian.my.id/Waves/#start" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="background: #f5f5f5">
+                        <strong style="margin: 0;">HTML</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://bevacqua.github.io/dragula/">dragula</a></td>
+                    <td>Drag and drop so simple it hurts</td>
+                    <td class="uk-text-center"><a href="https://github.com/bevacqua/dragula#usage" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://handlebarsjs.com/">handlebars</a></td>
+                    <td>Handlebars provides the power necessary to let you build semantic templates effectively with no frustration.</td>
+                    <td class="uk-text-center"><a href="https://handlebarsjs.com/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/yahoo/handlebars-intl">handlebars-intl</a></td>
+                    <td>Handlebars helpers for internationalization.</td>
+                    <td class="uk-text-center"><a href="https://formatjs.io/handlebars/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/fronteed/icheck">icheck</a></td>
+                    <td>Highly customizable checkboxes and radio buttons for jQuery and Zepto.</td>
+                    <td class="uk-text-center"><a href="https://github.com/fronteed/icheck#how-it-works" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/rdallasgray/bez">jquery-bez</a></td>
+                    <td>Bez is a small plugin for jQuery which allows you to specify jQuery easing functions as cubic-bezier co-ordinates.</td>
+                    <td class="uk-text-center"><a href="https://github.com/rdallasgray/bez#short-version" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/jakerella/jquery-mockjax">jQuery Mockjax</a></td>
+                    <td>The jQuery Mockjax Plugin provides a simple and extremely flexible interface for mocking or simulating ajax requests and responses</td>
+                    <td class="uk-text-center"><a href="https://github.com/jakerella/jquery-mockjax#basic-documentation" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://www.jquery-steps.com/">jQuery Steps</a></td>
+                    <td>An all-in-one wizard plugin that is extremely flexible, compact and feature-rich.</td>
+                    <td class="uk-text-center"><a href="https://github.com/rstaib/jquery-steps/wiki" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/dreamerslab/jquery.actual">jQuery Actual</a></td>
+                    <td>Get the actual width/height of invisible DOM elements with jQuery.</td>
+                    <td class="uk-text-center"><a href="http://dreamerslab.com/blog/en/get-hidden-elements-width-and-height-with-jquery/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://listjs.com/">List.js</a></td>
+                    <td>Tiny, invisible and simple, yet powerful and incredibly fast vanilla JavaScript that adds search, sort, filters and flexibility to plain HTML lists, tables, or anything.</td>
+                    <td class="uk-text-center"><a href="https://listjs.com/docs/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://listjs.com/">LoadJS</a></td>
+                    <td>A tiny async loader / dependency manager for modern browsers.</td>
+                    <td class="uk-text-center"><a href="https://github.com/muicss/loadjs#documentation" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://parsleyjs.org">Parsley</a></td>
+                    <td>The ultimate JavaScript form validation library</td>
+                    <td class="uk-text-center"><a href="http://parsleyjs.org/doc/index.html" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://abpetkov.github.io/switchery/">Switchery</a></td>
+                    <td>iOS 7 style switches for your checkboxes</td>
+                    <td class="uk-text-center"><a href="http://abpetkov.github.io/switchery/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://www.tiny.cloud/">TinyMCE</a></td>
+                    <td>The rich text editing platform that helped launch Atlassian, Medium, Evernote, and more.</td>
+                    <td class="uk-text-center"><a href="https://www.tiny.cloud/docs/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="background: #f5f5f5">
+                        <strong style="margin: 0;">Vue.js</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/nuxt-community/axios-module">Axios Module</a></td>
+                    <td>Secure and Easy Axios integration with Nuxt.js.</td>
+                    <td class="uk-text-center"><a href="https://axios.nuxtjs.org/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://www.jacklmoore.com/autosize/">autosize</a></td>
+                    <td>A small, stand-alone script to automatically adjust textarea height.</td>
+                    <td class="uk-text-center"><a href="http://www.jacklmoore.com/autosize/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://chancejs.com/index.html">Chance</a></td>
+                    <td>Chance is a minimalist generator of random strings, numbers, etc. to help reduce some monotony particularly while writing automated tests or anywhere else you need anything random.</td>
+                    <td class="uk-text-center"><a href="https://chancejs.com/index.html" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/kentcdodds/cross-env">cross-env</a></td>
+                    <td>Cross platform setting of environment scripts</td>
+                    <td class="uk-text-center"><a href="https://github.com/kentcdodds/cross-env#usage" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/soixantecircuits/idle-vue">idle-vue</a></td>
+                    <td>idle-vue is a Vue.js plug-in, that detects when the user hasn't interacted with your app for a while. idle-vue is meant to be used with Vue, Vuex and either Webpack or Browserify.</td>
+                    <td class="uk-text-center"><a href="https://github.com/soixantecircuits/idle-vue#wave-usage" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://lodash.com/">lodash</a></td>
+                    <td>A modern JavaScript utility library delivering modularity, performance & extras.</td>
+                    <td class="uk-text-center"><a href="https://lodash.com/docs/4.17.11" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/sass/node-sass">node-sass</a></td>
+                    <td>Node.js bindings to libsass</td>
+                    <td class="uk-text-center"><a href="https://github.com/sass/node-sass" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="http://numeraljs.com/">Numeral.js</a></td>
+                    <td>A javascript library for formatting and manipulating numbers.</td>
+                    <td class="uk-text-center"><a href="http://numeraljs.com/#create" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://nuxtjs.org/">Nuxt.js</a></td>
+                    <td>Nuxt.js is a framework for creating Vue.js applications, you can choose between Universal, Static Generated or Single Page application.</td>
+                    <td class="uk-text-center"><a href="https://nuxtjs.org/guide/installation" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/hamed-ehtesham/pretty-checkbox-vue">PrettyCheckbox Vue</a></td>
+                    <td>Quickly integrate pretty checkbox components with Vue.js</td>
+                    <td class="uk-text-center"><a href="https://hamed-ehtesham.github.io/pretty-checkbox-vue/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/webpack-contrib/sass-loader">Sass Loader</a></td>
+                    <td>Loads a Sass/SCSS file and compiles it to CSS.</td>
+                    <td class="uk-text-center"><a href="https://github.com/webpack-contrib/sass-loader#install" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://quilljs.com/">Quill</a></td>
+                    <td>Quill is a modern WYSIWYG editor built for compatibility and extensibility.</td>
+                    <td class="uk-text-center"><a href="https://github.com/quilljs/quill" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://vuejs.org/">Vue.js</a></td>
+                    <td>The Progressive JavaScript Framework</td>
+                    <td class="uk-text-center"><a href="https://vuejs.org/v2/guide/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://vue-chartjs.org/">vue-chartjs</a></td>
+                    <td>Easy and beautiful charts with Chart.js and Vue.js</td>
+                    <td class="uk-text-center"><a href="https://vue-chartjs.org/guide/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/Agontuk/vue-cropperjs">vue-cropperjs</a></td>
+                    <td>A Vue wrapper component for cropperjs</td>
+                    <td class="uk-text-center"><a href="https://github.com/Agontuk/vue-cropperjs#usage" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://binarcode.github.io/vue-form-wizard">Vue form wizard</a></td>
+                    <td>Vue.js 2 wizard</td>
+                    <td class="uk-text-center"><a href="https://binarcode.github.io/vue-form-wizard/#/?id=usage" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://gluons.github.io/vue-highlight.js/">Vue Highlight.js</a></td>
+                    <td>Highlight.js syntax highlighter component for Vue</td>
+                    <td class="uk-text-center"><a href="https://gluons.github.io/vue-highlight.js/" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/brockpetrie/vue-moment">vue-moment</a></td>
+                    <td>Handy Moment.js filters for your Vue.js project.</td>
+                    <td class="uk-text-center"><a href="https://github.com/brockpetrie/vue-moment#usage" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/xkjyeah/vue-google-maps">vue-google-maps</a></td>
+                    <td>Google maps component for vue with 2-way data binding</td>
+                    <td class="uk-text-center"><a href="https://github.com/xkjyeah/vue-google-maps#vue-2-port-of-vue-google-maps" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/SortableJS/Vue.Draggable">Vue.Draggable</a></td>
+                    <td>Vue component allowing drag-and-drop sorting in sync with View-Model. Based on Sortable.js</td>
+                    <td class="uk-text-center"><a href="https://github.com/SortableJS/Vue.Draggable#installation" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://vuelidate.js.org/">Vuelidate</a></td>
+                    <td>Simple, lightweight model-based validation for Vue.js 2.0</td>
+                    <td class="uk-text-center"><a href="https://monterail.github.io/vuelidate/#getting-started" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/surmon-china/vue-quill-editor">Vue-Quill-Editor</a></td>
+                    <td>@quilljs editor component for @vuejs</td>
+                    <td class="uk-text-center"><a href="https://github.com/surmon-china/vue-quill-editor#install" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/javisperez/vue-visible">VueVisible</a></td>
+                    <td>v-visible directive for VueJS</td>
+                    <td class="uk-text-center"><a href="https://github.com/javisperez/vue-visible#install" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/skyrpex/laravel-nuxt">laravel-nuxt</a></td>
+                    <td>Build a SPA with Laravel and Nuxt (PHP)</td>
+                    <td class="uk-text-center"><a href="https://github.com/skyrpex/laravel-nuxt" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-shrink uk-text-nowrap"><a href="https://github.com/skyrpex/laravel-nuxt-js">laravel-nuxt-js</a></td>
+                    <td>Build a SPA with Laravel and Nuxt (JS)</td>
+                    <td class="uk-text-center"><a href="https://github.com/skyrpex/laravel-nuxt-js" class="no-ext-icon"><span data-uk-icon="icon: file-text"></span></a></td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h1 id="tc-credits">Credits</h1>
+            <div class="uk-padding-small">
+                <ul class="uk-list">
+                    <li><a href="https://getuikit.com/">UIkit</a> - A lightweight and modular front-end framework for developing fast and powerful web interfaces.</li>
+                    <li><a href="https://vuejs.org/">Vue.js</a> - The Progressive JavaScript Framework</li>
+                    <li><a href="https://nuxtjs.org/">Nuxt.js</a> - Framework for creating Vue.js applications</li>
+                    <li><a href="https://jquery.com/">jQuery</a> - Fast, small, and feature-rich JavaScript library</li>
+                    <li><a href="#tc-plugins" class="internal-link">plugins/components</a> used in Scutum Admin</li>
+                    <li><a href="https://fonts.google.com/">Google Fonts</a> - Roboto, Montserrat, Source Code Pro</li>
+                    <li><a href="https://materialdesignicons.com/">Material Design Icons</a> - 3500+ Material Design Icons from the Community</li>
+                    <li><a href="https://github.com/gosquared/flags">Flags Icons</a></li>
+                    <li><a href="https://www.getbowtied.com/free-payment-method-credit-card-icons-for-your-ecommerce-site/">Payment Icons</a></li>
+                    <li><a href="https://unsplash.com/">Photos</a></li>
+                    <li><a href="https://photodune.net/item/smiles/2359510">Avatars</a> - not included in Scutum Admin package.</li>
+                </ul>
+            </div>
+        </section>
+        <section>
+            <h1 id="tc-license">License</h1>
+            <p>Scutum Admin is covered by the <strong>standard Envato license</strong>.</p>
+            <p>Short comparision between <a href="https://themeforest.net/licenses/terms/regular">Regular</a> and <a href="https://themeforest.net/licenses/terms/extended">Extended</a> license -  <a href="https://themeforest.net/licenses/standard">https://themeforest.net/licenses/standard</a></p>
+            <p>Faq regarding licenses <a href="https://themeforest.net/licenses/faq">https://themeforest.net/licenses/faq</a></p>
+        </section>
+        <section>
+            <h1 id="tc-changelog">Changelog</h1>
+            <h3 class="sc-changelog-heading">v2.6.0 (21.06.2021)</h3>
+            <pre class="sc-changelog-pre"><code>== New Features
+  [new][html/vue] Boxed Layout
+  [new][html/vue] FAB Single Sheet
+  [new][html/vue] Fancy Toolbar
+
+== Components/Pages Update
+  [update][html] Added few features for the events calendar plugin
+  [update][html] Added check if the sidebar is present before initializing touch gestures
+
+== Bugs
+  [bug][html/vue] Added missing toggle icon to responsive datatables
+  [bug][html] Fixed click event for swiped list
+  [bug][vue] Fixed stucked modal for idle timeout plugin
+  [bug][vue] Fixed calendar swipper 'go to today' button
+  [bug][html/vue] Added orientation change event for fancy footer component (recalculating active el position)
+  [bug][html/vue] Minor css/js fixes
+
+== Dependency Upgrades
+  [dependency][html/vue] "uikit": "^3.6.22"
+  [dependency][html/vue] "clipboard": "^2.0.8"
+  [dependency][html/vue] "codemirror": "^5.61.1"
+  [dependency][html/vue] "datatables.net": "^1.10.25"
+  [dependency][html/vue] "datatables.net-buttons": "^1.7.1"
+  [dependency][html/vue] "datatables.net-responsive": "^2.2.9"
+  [dependency][html/vue] "highlight.js": "^10.6.0"
+  [dependency][html/vue] "jquery": "^3.6.0"
+  [dependency][html/vue] "jquery.fancytree": "^2.38.0"
+  [dependency][html/vue] "tui-grid": "^4.17.3"
+  [dependency][html] "datatables.net-scroller": "^2.0.4"
+  [dependency][html] "handlebars": "^4.7.7"
+  [dependency][html] "perfect-scrollbar": "^1.5.1"
+  [dependency][html] "swiper": "^6.7.0"
+  [dependency][vue] "@babel/plugin-transform-spread": "^7.14.6"
+  [dependency][vue] "@nuxtjs/axios": "^5.13.6"
+  [dependency][vue] "datatables.net-select": "^1.3.3"
+  [dependency][vue] "lodash": "^4.17.21"
+  [dependency][vue] "nuxt": "^2.15.7"
+  [dependency][vue] "nuxt-i18n": "^6.27.1"
+  [dependency][vue] "v-calendar": "^2.3.0"
+  [dependency][vue] "vue": "2.6.14"
+  [dependency][vue] "vue-good-table": "^2.21.10"
+  [dependency][vue] "vue-server-renderer": "^2.6.14"
+  [dependency][vue] "vue-template-compiler": "^2.6.14"
+  [dependency][vue] "vue2-touch-events": "^3.2.2"
+  [devDependency][html/vue] "chalk": "^4.1.1"
+  [devDependency][html] "browser-sync": "^2.26.14"
+  [devDependency][html] "glob": "^7.1.7"
+  [devDependency][html] "gulp-changed": "^4.0.3"
+  [devDependency][html] "gulp-load-plugins": "^2.0.7"
+  [devDependency][html] "gulp-rtlcss": "^1.4.2"
+  [devDependency][vue] "eslint": "^7.28.0"
+  [devDependency][vue] "eslint-plugin-prettier": "3.4.0"
+  [devDependency][vue] "eslint-plugin-vue": "^7.11.1"
+</code></pre>
+            <h3 class="sc-changelog-heading">v2.5.0 (09.02.2021)</h3>
+            <pre class="sc-changelog-pre"><code>== New Features
+  [new][html/vue] Calendar/Events plugin
+  [new][html/vue] Fancy Footer
+  [new][html/vue] Swipe List
+  [new][html/vue] Sidebar swipe to close event
+  [new][html/vue] Offcanvas sidebar
+  [new][html/vue] Invoice Print
+  [new][vue] Laravel Sanctum integration
+
+== Components/Pages Update
+  [update][html/vue] Added speed dial to footer
+  [update][vue] New example for card fullscreen
+  [update][documentation] Added section regarding Laravel Sanctum integration
+
+== Bugs
+  [bug][html/vue] Fixed alt fieldset in MS Edge
+  [bug][html/vue] Minor css/js fixes
+
+== Dependency Upgrades
+  [dependency][html/vue] "chart.js": "^2.9.4"
+  [dependency][html/vue] "codemirror": "^5.59.2"
+  [dependency][html/vue] "datatables.net": "^1.10.23"
+  [dependency][html/vue] "datatables.net-buttons": "^1.6.5"
+  [dependency][html/vue] "datatables.net-responsive": "^2.2.7"
+  [dependency][html/vue] "flatpickr": "^4.6.9"
+  [dependency][html/vue] "tui-calendar": "^1.13.0"
+  [dependency][html/vue] "tui-grid": "^4.16.1"
+  [dependency][html/vue] "uikit": "^3.6.13"
+  [dependency][html] "moment": "^2.29.1"
+  [dependency][html] "screenfull": "^5.1.0"
+  [dependency][vue] "@babel/plugin-transform-spread": "^7.12.13"
+  [dependency][vue] "@ckeditor/ckeditor5-build-classic": "^25.0.0"
+  [dependency][vue] "@nuxtjs/axios": "^5.13.0"
+  [dependency][vue] "cross-env": "^7.0.3"
+  [dependency][vue] "node-sass": "^5.0.0"
+  [dependency][vue] "nuxt": "^2.14.12"
+  [dependency][vue] "nuxt-i18n": "^6.20.0"
+  [dependency][vue] "sass-loader": "^10.1.1"
+  [dependency][vue] "vue-swipe-actions": "^2.0.0-beta.20"
+  [dependency][vue] "vue2-touch-events": "^3.1.1"
+  [dependency][vue] "vuedraggable": "^2.24.3"
+  [dependency][vue] "vuelidate": "^0.7.6"
+  [dependency][vue] "v-calendar": "^2.2.3"
+  [devDependency][html] "browser-sync": "^2.26.13"
+  [devDependency][html] "gulp-load-plugins": "^2.0.6"
+  [devDependency][vue] "@node-minify/core": "^6.2.0"
+  [devDependency][vue] "@node-minify/uglify-es": "^6.2.0"
+  [devDependency][vue] "eslint": "^7.19.0"
+  [devDependency][vue] "eslint-config-prettier": "^7.2.0"
+  [devDependency][vue] "eslint-plugin-prettier": "3.3.1"
+  [devDependency][vue] "eslint-plugin-vue": "^7.5.0"
+</code></pre>
+            <h3 class="sc-changelog-heading">v2.4.0 (05.10.2020)</h3>
+            <pre class="sc-changelog-pre"><code>== New Features
+  [new][html/vue] RTL Support
+  [new][html/vue] Create Invoice Page
+  [new][html/vue] Data visualization Page
+  [new][html] Header search input clear button (scutum.forms.common.clearInput())
+
+== Components/Pages Update
+  [update][vue] Added name property to all pages
+  [update][vue] Updated nuxt.config.js (target, ssr property)
+  [update][documentation] Added section regarding sidebar options
+
+== Bugs
+  [bug][html/vue] Sidebar menu scroll to active fixed
+  [bug][html/vue] Minor css/js fixes
+
+== Dependency Upgrades
+  [dependency][html/vue] "billboard.js": "1.11"
+  [dependency][html/vue] "codemirror": "^5.58.1"
+  [dependency][html/vue] "datatables.net": "^1.10.22"
+  [dependency][html/vue] "datatables.net-buttons": "^1.6.4"
+  [dependency][html/vue] "datatables.net-responsive": "^2.2.6"
+  [dependency][html/vue] "dragula": "^3.7.3"
+  [dependency][html/vue] "flatpickr": "^4.6.6"
+  [dependency][html/vue] "jquery.fancytree": "^2.37.0"
+  [dependency][html/vue] "tui-calendar": "^1.12.14"
+  [dependency][html/vue] "tui-grid": "^4.15.1"
+  [dependency][html/vue] "uikit": "^3.5.8"
+  [dependency][html] "datatables.net-scroller": "^2.0.3"
+  [dependency][html] "moment": "^2.29.0"
+  [dependency][html] "jquery-mockjax": "^2.6.0"
+  [dependency][vue] "@babel/plugin-transform-spread": "^7.11.0"
+  [dependency][vue] "@ckeditor/ckeditor5-build-classic": "^23.0.0"
+  [dependency][vue] "@ckeditor/ckeditor5-vue": "^1.0.3"
+  [dependency][vue] "@nuxtjs/axios": "^5.12.2"
+  [dependency][vue] "@nuxtjs/google-analytics": "^2.4.0"
+  [dependency][vue] "chance": "^1.1.7"
+  [dependency][vue] "jquery.steps": "^1.1.1"
+  [dependency][vue] "lodash": "^4.17.20"
+  [dependency][vue] "nuxt": "^2.14.6"
+  [dependency][vue] "nuxt-i18n": "^6.15.1"
+  [dependency][vue] "sass-loader": "^10.0.2"
+  [dependency][vue] "vue": "2.6.12"
+  [dependency][vue] "vue-chartjs": "^3.5.1"
+  [dependency][vue] "vue-good-table": "^2.21.0"
+  [dependency][vue] "vue-server-renderer": "^2.6.12"
+  [dependency][vue] "vue-template-compiler": "^2.6.12"
+  [dependency][vue] "vuedraggable": "^2.24.1"
+  [devDependency][html] "browser-sync": "^2.26.12"
+  [devDependency][html] "del": "^6.0.0"
+  [devDependency][html] "gulp-rtlcss": "^1.4.1"
+  [devDependency][vue] "@node-minify/core": "^6.1.0"
+  [devDependency][vue] "@node-minify/uglify-es": "^6.1.0"
+  [devDependency][vue] "eslint": "^7.10.0"
+  [devDependency][vue] "eslint-config-prettier": "^6.12.0"
+</code></pre>
+            <h3 class="sc-changelog-heading">v2.3.0 (01.07.2020)</h3>
+            <pre class="sc-changelog-pre"><code>== New Features
+  [new][html/vue] Overlay component
+  [new][html/vue] Dark theme
+  [new][html/vue] NPM support
+  [new][html/vue] Image upload preview (user profile)
+
+== Components/Pages Update
+  [update][html/vue] Updated Material Design Icons
+  [update][html/vue] Added example for minimized card (page load)
+  [update][html/vue] Added class to hide element when card is in full screen
+  [update][html/vue] Added automatic dropdown position flip for colorpicker
+  [update][html] Unified chat user list (sidebar/offcanvas)
+
+== Bugs
+  [bug][html/vue] Fixed dateRangePicker z-index issue
+  [bug][vue] Fixed Scrum Board rendering issue (universal mode)
+  [bug][html/vue] Minor css/js fixes
+
+== Dependency Upgrades
+  [dependency][html/vue] "@mdi/font": "^4.9.95"
+  [dependency][html/vue] "clipboard": "^2.0.6"
+  [dependency][html/vue] "codemirror": "^5.55.0"
+  [dependency][html/vue] "datatables.net": "^1.10.21"
+  [dependency][html/vue] "datatables.net-buttons": "^1.6.2"
+  [dependency][html/vue] "datatables.net-responsive": "^2.2.5"
+  [dependency][html/vue] "jquery": "^3.5.1"
+  [dependency][html/vue] "jquery.fancytree": "^2.35.0"
+  [dependency][html/vue] "select2": "^4.0.13"
+  [dependency][html/vue] "tui-calendar": "^1.12.13"
+  [dependency][html/vue] "tui-grid": "^4.13.0"
+  [dependency][html/vue] "uikit": "^3.5.4"
+  [dependency][html] "gmaps": "^0.4.25"
+  [dependency][html] "handlebars": "^4.7.6"
+  [dependency][html] "jquery-mockjax": "^2.5.1"
+  [dependency][html] "moment": "^2.26.0"
+  [dependency][html] "perfect-scrollbar": "^1.5.0"
+  [dependency][html] "screenfull": "^5.0.2"
+  [dependency][html] "tablesorter": "^2.31.3"
+  [dependency][html] "tinymce": "^5.3.2"
+  [dependency][vue] "@babel/plugin-transform-spread": "^7.10.1"
+  [dependency][vue] "cross-env": "^7.0.2"
+  [dependency][vue] "nuxt": "^2.13.1"
+  [dependency][vue] "nuxt-i18n": "^6.12.2"
+  [dependency][vue] "vue-cropperjs": "^4.1.0"
+  [dependency][vue] "vue-good-table": "^2.19.5"
+  [dependency][vue] "vue2-perfect-scrollbar": "^1.5.0"
+  [devDependency][html/vue] "chalk": "^4.1.0"
+  [devDependency][html] "gulp-clean-css": "^4.3.0"
+  [devDependency][html] "gulp-load-plugins": "^2.0.3"
+  [devDependency][html] "gulp-sass": "^4.1.0"
+  [devDependency][vue] "@node-minify/core": "^6.0.0"
+  [devDependency][vue] "@node-minify/uglify-es": "^6.0.0"
+  [devDependency][vue] "babel-eslint": "^10.1.0"
+  [devDependency][vue] "eslint": "^7.3.1"
+  [devDependency][vue] "eslint-config-prettier": "^6.11.0"
+  [devDependency][vue] "eslint-loader": "^4.0.2"
+  [devDependency][vue] "eslint-plugin-prettier": "3.1.4"
+  [devDependency][vue] "eslint-plugin-vue": "^6.2.2"
+              </code></pre>
+            <h3 class="sc-changelog-heading">v2.2.0 (19.01.2020)</h3>
+            <pre class="sc-changelog-pre"><code>== New Features
+  [new][html/vue] Top Menu Layout
+  [new][html/vue] Mini Sidebar Layout
+  [new][html/vue] Fab Speed Dial
+  [new][html/vue] Add new task function in Task Board
+  [new][vue] i18n integration
+
+== Components/Pages Update
+  [update][html/vue] Updated Material Design Icons
+  [update][html/vue] Updated Screenfull fullscreen availability
+  [update][vue] Added reactivity to DateRangePicker
+  [update][vue] Removed Gulp (replaced by node.js cli plugins)
+  [update][html] Added event to update autosize ( $('textarea').trigger('autosize.change') )
+  [update][html] Added class to automatically close dropdown when clicked nav link ( 'sc-uk-dropdown-close' )
+
+== Bugs
+  [bug][html/vue] Fixed issues with the page fixed layout on mobile devices
+  [bug][html/vue] Fixed tour plugin on touch devices
+  [bug][html/vue] Minor css/js fixes
+
+== Dependency Upgrades
+  [dep_update][html/vue] "@mdi/font": "^4.7.95"
+  [dep_update][html/vue] "chart.js": "^2.9.3"
+  [dep_update][html/vue] "codemirror": "^5.50.2"
+  [dep_update][html/vue] "cropper": "^4.1.0"
+  [dep_update][html/vue] "d3": "^5.15.0"
+  [dep_update][html/vue] "datatables.net": "^1.10.20"
+  [dep_update][html/vue] "datatables.net-buttons": "^1.6.1"
+  [dep_update][html/vue] "diff": "^4.0.2"
+  [dep_update][html/vue] "driver.js": "^0.9.8"
+  [dep_update][html/vue] "flatpickr": "^4.6.3"
+  [dep_update][html/vue] "handlebars": "^4.7.2"
+  [dep_update][html/vue] "ion-rangeslider": "^2.3.1"
+  [dep_update][html/vue] "jquery.fancytree": "^2.34.0"
+  [dep_update][html/vue] "screenfull": "^5.0.0"
+  [dep_update][html/vue] "select2": "^4.0.12"
+  [dep_update][html/vue] "tablesorter": "^2.31.2"
+  [dep_update][html/vue] "tui-calendar": "^1.12.9"
+  [dep_update][html/vue] "tui-grid": "^4.8.1"
+  [dep_update][html/vue] "uikit": "^3.2.7"
+  [dep_update][html] "parsleyjs": "^2.9.2"
+  [dep_update][html] "tinymce": "^5.1.5"
+  [dep_update][vue] "@babel/plugin-syntax-dynamic-import": "^7.8.3"
+  [dep_update][vue] "@babel/plugin-transform-spread": "^7.8.3"
+  [dep_update][vue] "@ckeditor/ckeditor5-build-classic": "^16.0.0"
+  [dep_update][vue] "@ckeditor/ckeditor5-vue": "^1.0.1"
+  [dep_update][vue] "@nuxtjs/axios": "^5.9.3"
+  [dep_update][vue] "@nuxtjs/google-analytics": "^2.2.3"
+  [dep_update][vue] "chance": "^1.1.4"
+  [dep_update][vue] "cross-env": "^6.0.3"
+  [dep_update][vue] "datatables.net-select": "^1.3.1"
+  [dep_update][vue] "node-sass": "^4.13.0"
+  [dep_update][vue] "nuxt": "^2.11.0"
+  [dep_update][vue] "sass-loader": "^8.0.2"
+  [dep_update][vue] "vue": "2.6.11"
+  [dep_update][vue] "vue-chartjs": "^3.5.0"
+  [dep_update][vue] "vue-cropperjs": "^4.0.1"
+  [dep_update][vue] "vue-good-table": "^2.18.1"
+  [dep_update][vue] "vue-moment": "^4.1.0"
+  [dep_update][vue] "vue-server-renderer": "^2.6.11"
+  [dep_update][vue] "vue-template-compiler": "^2.6.11"
+  [dep_update][vue] "vue2-perfect-scrollbar": "^1.3.0"
+  [dep_update][vue] "vuedraggable": "^2.23.2"
+  [dep_update][vue] "vuelidate": "^0.7.5"
+  [dep_update][laravel-nuxt] "laravel-nuxt: ^2.0.0"
+              </code></pre>
+            <h3 class="sc-changelog-heading">v2.1.0 (18.09.2019)</h3>
+            <pre class="sc-changelog-pre"><code>== New Features
+  [new][html/vue] Landing Page
+  [new][html/vue] Issues List Page
+  [new][html/vue] Single Issue Page
+  [new][html/vue] Breadcrumbs Component
+  [new][html/vue] Pagination Component
+  [new][html/vue] Form Custom Controls
+
+== Components/Pages Update
+  [update][html/vue] Updated Material Design Icons
+  [update][html/vue] Added example how to show menu on hover (users list on Chat page)
+  [update][vue] Added reactivity to Range Slider
+  [update][html] Options can now be passed to data-sc-raty as json object (Raty plugin)
+  [update][html] Options can now be passed to data-sc-flatpickr as json object (DatePicker plugin)
+  [update][html] Added Input Mask plugin to common form elements
+  [update][html] Added option to disable select2 auto initialization (add .sc-regular-select class to select element)
+
+== Bugs
+  [bug][html/vue] Fixed month dropdown in DatePicker plugin
+  [bug][vue] Fixed Laravel Integration build bug in windows enviroment
+  [bug][html] Fixed Search Form in Header on mobile devices
+  [bug][html] Fixed TinyMce WYSIWYG editor initialization
+  [bug] Minor css/js fixes
+
+== Dependency Upgrades
+  [dep_update][html/vue] "@mdi/font": "^4.4.95"
+  [dep_update][html/vue] "billboard.js": "^1.10.2"
+  [dep_update][html/vue] "codemirror": "^5.48.4"
+  [dep_update][html/vue] "flatpickr": "^4.6.2"
+  [dep_update][html/vue] "jquery.fancytree": "^2.32.0"
+  [dep_update][html/vue] "push.js": "^1.0.12"
+  [dep_update][html/vue] "screenfull": "^4.2.1"
+  [dep_update][html/vue] "select2": "^4.0.10"
+  [dep_update][html/vue] "tui-calendar": "^1.12.5"
+  [dep_update][html/vue] "tui-grid": "^4.5.2"
+  [dep_update][html/vue] "uikit": "^3.2.0"
+  [dep_update][html] "handlebars": "^4.2.0"
+  [dep_update][vue] "nuxt": "^2.9.2"
+  [dep_update][vue] "@ckeditor/ckeditor5-build-classic": "^12.4.0"
+  [dep_update][vue] "@nuxtjs/axios": "^5.6.0"
+  [dep_update][vue] "chance": "^1.1.0"
+  [dep_update][vue] "chartjs-plugin-datalabels": "^0.7.0"
+  [dep_update][vue] "jquery.steps": "^1.0.2"
+  [dep_update][vue] "lodash": "^4.17.15"
+  [dep_update][vue] "vue2-google-maps": "^0.10.7"
+
+== Other
+  [html/vue] Base font size can now be changed in html element (default - 16px)
+  [vue] Changed 'no-ssr' component to 'client-only' component (https://nuxtjs.org/api/components-client-only/)
+  [html] Added option to disable hires images (scutum_common.js - scutum.config.hiResImages)
+            </code></pre>
+            <h3 class="sc-changelog-heading">v2.0.0 (04.07.2019)</h3>
+            <pre class="sc-changelog-pre"><code>== New Features
+  [new][html/vue] CKEditor WYSIWYG editor
+  [new][html] TinyMCE WYSIWYG editor
+  [new][html/vue] Footer component
+  [new][html/vue] Scrollable component
+  [new][html/vue] Grid menu component
+  [new][html/vue] Labels in side menu
+  [new][vue] Laravel integration
+  [new][vue] Quill WYSIWYG editor
+  [new][vue] Card component (ScCard, ScCardHeader, ScCardBody, ...)
+  [new][vue] Transition component (ScTransition)
+  [new][vue] Progress component (ScProgress, ScProgressCircular)
+  [new][vue] v-visible directive
+  [new][vue] es6 utils (scDom, scColors, ScHelpers, ScMq etc.;'~/assets/js/utils')
+
+== Components/Pages Update
+  [update][html/vue] UIkit Icons
+  [update][html] Mailbox page (added handlebars templates, fixed single message)
+  [update][vue][BREAKING] Removed jQuery from code and components (vue way)
+  [update][vue][BREAKING] added 'vx' prefix for Vuex states
+  [update][vue][BREAKING] added 'Sc' prefix for Photo, Avatar, AvatarInitials, Colorpicker components
+  [update][vue] added '~scss' alias (scss @import)
+
+== Bugs
+  [bug][html/vue] Fixed select2 in modal
+  [bug] Minor css/js fixes
+
+== Dependency Upgrades
+  [dep_update][html/vue] "@mdi/font": "^3.7.95"
+  [dep_update][html/vue] "billboard.js": "^1.9.5"
+  [dep_update][html/vue] "codemirror": "^5.48.0"
+  [dep_update][html/vue] "driver.js": "^0.9.7"
+  [dep_update][html/vue] "flatpickr": "^4.6.1"
+  [dep_update][html/vue] "inputmask": "^4.0.8"
+  [dep_update][html/vue] "jquery": "^3.4.1"
+  [dep_update][html/vue] "jquery.fancytree": "^2.31.0"
+  [dep_update][html/vue] "perfect-scrollbar": "^1.4.0"
+  [dep_update][html/vue] "select2": "^4.0.7"
+  [dep_update][html/vue] "tui-calendar": "^1.12.1"
+  [dep_update][html/vue][BREAKING] "tui-grid": "^4.0.2" (removed Backbone and jQuery dependencies)
+  [dep_update][html/vue] "uikit": "^3.1.6"
+  [dep_update][html] "handlebars": "^4.1.2"
+  [dep_update][html] "parsleyjs": "^2.9.1"
+  [dep_update][vue] "@nuxtjs/axios": "^5.5.4"
+  [dep_update][vue] "node-sass": "^4.12.0"
+  [dep_update][vue] "nuxt": "^2.8.1"
+  [dep_update][vue] "vue-cropperjs": "^4.0.0"
+
+  [devDep_update][html/vue] "gulp-load-plugins": "^2.0.0"
+  [devDep_update][html] "browser-sync": "^2.26.7"
+  [devDep_update][html] "del": "^5.0.0"
+  [devDep_update][html] "glob": "^7.1.4"
+  [devDep_update][html] "gulp-autoprefixer": "^6.1.0"
+  [devDep_update][html] "gulp-changed": "^4.0.0"
+  [devDep_update][html] "gulp-clean-css": "^4.2.0"
+  [devDep_update][html] "gulp-inline-fonts": "^1.2.1"
+  [devDep_update][vue] "babel-eslint": "^10.0.2"
+  [devDep_update][vue] "eslint-config-prettier": "^5.0.0"
+  [devDep_update][vue] "eslint-plugin-prettier": "3.1.0"
+  [devDep_update][vue] "eslint-plugin-vue": "^5.2.3"
+  [devDep_update][vue] "gulp-inline-fonts": "^1.2.1"
+  [devDep_update][vue] "gulp-rename": "^1.4.0"
+
+== Other
+[vue] Removed 'scutum-spa' and 'scutum-universal' pregenerated aps from package
+            </code></pre>
+            <h3 class="sc-changelog-heading">v1.0.1 (10.04.2019)</h3>
+            <pre class="sc-changelog-pre"><code>[bug] Fixed Vue.js build folders
+[bug] Added missing manifest.json
+[bug] Minor css/js fixes</code></pre>
+            <h3 class="sc-changelog-heading">v1.0.0 (09.04.2019)</h3>
+<pre class="sc-changelog-pre"><code>Initial release</code></pre>
+        </section>
+    </div>
+    <script>
+        $(function() {
+            // table of content
+            $("#sc-doc-toc").tocify({
+                theme: 'none',
+                scrollHistory: true,
+                selectors: "h1, h2, h3"
+            });
+
+            // open links in new window
+            $("a[href^='http']").each(function () {
+                $(this).attr('target','_blank');
+                if(!$(this).hasClass('no-ext-icon')) {
+                    $(this).addClass('external_link')
+                }
+            });
+
+            // internal links
+            $(".internal-link").click(function(e) {
+                e.preventDefault();
+                var $el = $(this).attr('href') ? $($(this).attr('href')) : $($(this).attr('data-el'));
+                console.log($el);
+                $('html, body').animate({
+                    scrollTop: $el.offset().top - 10
+                }, 280);
+            });
+
+        });
+    </script>
+</body>
+</html>

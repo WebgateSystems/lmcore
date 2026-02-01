@@ -1,0 +1,52 @@
+devise_jwt_secret_key: <%= ENV.fetch('DEVISE_JWT_SECRET_KEY') { '4105dsakajasdfkljasdf90239sdf23sc1' } %>
+
+db:
+  host: localhost
+  user:
+  pass:
+  port: 5432
+  # Pool size should be >= Sidekiq concurrency (20 in production)
+  pool: <%= ENV.fetch('DB_POOL') { ENV.fetch('RAILS_MAX_THREADS') { 25 } } %>
+
+# Used by Sidekiq and Redis session store. Empty = CookieStore for session; Sidekiq falls back to localhost.
+redis_url: <%= ENV.fetch('REDIS_URL', '') %>
+
+elasticsearch:
+  url: http://localhost:9200
+  index_prefix: lmcore
+  enabled: true # set to false in test environment or when ES is not available
+  
+sidekiq:
+  user: 'admin'
+  password: 'admin'
+
+services:
+  twilio:
+    account_sid: <%= ENV.fetch('TWILIO_ACCOUNT_SID') { '' } %>
+    auth_token: <%= ENV.fetch('TWILIO_AUTH_TOKEN') { '' } %>
+    phone_number: <%= ENV.fetch('TWILIO_PHONE_NUMBER') { '' } %>
+    whatsapp_number: <%= ENV.fetch('TWILIO_WHATSAPP_NUMBER') { '' } %>
+    whatsapp_from_number: <%= ENV.fetch('TWILIO_WHATSAPP_FROM_NUMBER') { '+14155238886' } %>
+    messaging_service_sid: <%= ENV.fetch('TWILIO_MESSAGING_SERVICE_SID') { '' } %>
+  smtp:
+    tls: <%= ENV['SMTP_TLS'] || true %>
+    address: <%= ENV['SMTP_ADDRESS'] || 'mx.webgate.pro' %>
+    port: <%= ENV['SMTP_PORT'] || 587 %>
+    domain: <%= ENV['SMTP_DOMAIN'] || 'akademy.edu.pl' %>
+    user: <%= ENV['SMTP_USER'] || 'bot@akademy.edu.pl' %>
+    password: <%= ENV['SMTP_PASSWORD'] || 'hard_password' %>
+    authentication: <%= ENV['SMTP_AUTH'] || 'plain' %>
+    from: 'AKAdemy 2.0 <bot@libremedia.org>'
+    reply_to: 'hello@libremedia.org'
+  youtube:
+    client_id: <%= ENV['YOUTUBE_ID'] || 'youtube_id' %>
+    client_secret: <%= ENV['YOUTUBE_CLIENT_SECRET'] || 'youtube_client_secret' %>
+    refresh_token: <%= ENV['YOUTUBE_REFRESH_TOKEN'] || 'youtube_refresh_token' %>
+    # YouTube API: "public" | "unlisted" | "private"
+    privacy_status: <%= ENV['YOUTUBE_PRIVACY_STATUS'] || 'public' %>
+  # Analytics (Umami Cloud - free Hobby tier)
+  analytics:
+    # Only enabled in production (or when UMAMI_ENABLED=true explicitly set)
+    enabled: <%= ENV.fetch('UMAMI_ENABLED') { Rails.env.production? } %>
+    script_url: https://cloud.umami.is/script.js
+    website_id: <%= ENV.fetch('UMAMI_WEBSITE_ID') { 'b2469e0d-example' } %>

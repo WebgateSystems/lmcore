@@ -1,0 +1,201 @@
+uk:
+  app_name: "LibreMedia"
+  tagline: "Твій голос, твоя платформа"
+
+  # Common
+  common:
+    save: "Зберегти"
+    cancel: "Скасувати"
+    delete: "Видалити"
+    edit: "Редагувати"
+    create: "Створити"
+    update: "Оновити"
+    back: "Назад"
+    next: "Далі"
+    previous: "Назад"
+    search: "Пошук"
+    loading: "Завантаження..."
+    no_results: "Результатів не знайдено"
+    confirm_delete: "Ви впевнені, що хочете це видалити?"
+    yes: "Так"
+    no: "Ні"
+    or: "або"
+    and: "та"
+
+  # Navigation
+  nav:
+    home: "Головна"
+    blog: "Блог"
+    videos: "Відео"
+    photos: "Фото"
+    about: "Про нас"
+    contact: "Контакти"
+    login: "Увійти"
+    logout: "Вийти"
+    register: "Реєстрація"
+    profile: "Профіль"
+    settings: "Налаштування"
+    dashboard: "Панель"
+
+  # Authentication
+  auth:
+    sign_in: "Увійти"
+    sign_up: "Зареєструватися"
+    sign_out: "Вийти"
+    forgot_password: "Забули пароль?"
+    reset_password: "Скинути пароль"
+    email: "Email"
+    password: "Пароль"
+    password_confirmation: "Підтвердіть пароль"
+    remember_me: "Запам'ятати мене"
+    no_account: "Немає акаунту?"
+    have_account: "Вже маєте акаунт?"
+
+  # User
+  users:
+    profile: "Профіль"
+    edit_profile: "Редагувати профіль"
+    followers: "Підписники"
+    following: "Підписки"
+    posts: "Пости"
+    videos: "Відео"
+    photos: "Фото"
+    settings: "Налаштування"
+    notifications: "Сповіщення"
+
+  # Posts
+  posts:
+    title: "Заголовок"
+    content: "Зміст"
+    category: "Категорія"
+    tags: "Теги"
+    status: "Статус"
+    published_at: "Опубліковано"
+    draft: "Чернетка"
+    pending: "На перевірці"
+    published: "Опубліковано"
+    archived: "В архіві"
+    featured: "Обране"
+    reading_time: "%{minutes} хв читання"
+    views: "%{count} переглядів"
+    comments: "%{count} коментарів"
+    related_posts: "Схожі пости"
+    no_posts: "Постів поки немає"
+    create_post: "Створити пост"
+    edit_post: "Редагувати пост"
+
+  # Videos
+  videos:
+    title: "Заголовок"
+    description: "Опис"
+    duration: "Тривалість"
+    provider: "Джерело"
+    self_hosted: "Власний хостинг"
+    no_videos: "Відео поки немає"
+    create_video: "Додати відео"
+
+  # Photos
+  photos:
+    title: "Заголовок"
+    description: "Опис"
+    no_photos: "Фото поки немає"
+    upload_photo: "Завантажити фото"
+
+  # Comments
+  comments:
+    add_comment: "Додати коментар"
+    your_comment: "Ваш коментар"
+    guest_name: "Ваше ім'я"
+    guest_email: "Ваш email"
+    reply: "Відповісти"
+    replies: "%{count} відповідей"
+    pending_approval: "Ваш коментар очікує на схвалення"
+    no_comments: "Коментарів поки немає. Будьте першим!"
+
+  # Notifications
+  notifications:
+    title: "Сповіщення"
+    mark_all_read: "Позначити всі як прочитані"
+    no_notifications: "Немає сповіщень"
+    new_comment:
+      title: "Новий коментар"
+      message: "%{actor} прокоментував ваш %{content_type}"
+    comment_reply:
+      title: "Нова відповідь"
+      message: "%{actor} відповів на ваш коментар"
+    new_follower:
+      title: "Новий підписник"
+      message: "%{actor} підписався на вас"
+    new_donation:
+      title: "Нова пожертва"
+      message: "Ви отримали пожертву %{amount}"
+    post_published:
+      title: "Пост опубліковано"
+      message: "Ваш пост було опубліковано"
+
+  # Subscriptions
+  subscriptions:
+    current_plan: "Поточний план"
+    upgrade: "Покращити"
+    downgrade: "Знизити"
+    cancel: "Скасувати підписку"
+    expires_at: "Закінчується"
+    days_remaining: "Залишилось %{count} днів"
+    features: "Функції"
+
+  # Price plans
+  price_plans:
+    free: "Безкоштовний"
+    basic: "Базовий"
+    professional: "Професійний"
+    enterprise: "Enterprise"
+    per_month: "/місяць"
+    per_year: "/рік"
+    posts_limit: "%{count} постів/місяць"
+    unlimited_posts: "Необмежена кількість постів"
+    disk_space: "%{size} сховища"
+    features:
+      basic_themes: "Базові теми"
+      premium_themes: "Premium теми"
+      custom_theme: "Власна тема"
+      external_video: "Зовнішнє відео (YouTube, Vimeo)"
+      self_hosted_video: "Власне відео"
+      vanity_domain: "Власний домен"
+      analytics: "Базова аналітика"
+      google_analytics: "Інтеграція з Google Analytics"
+      export_data: "Експорт даних"
+      remove_branding: "Видалити брендинг"
+      priority_support: "Пріоритетна підтримка"
+
+  # Errors
+  errors:
+    not_found: "Сторінку не знайдено"
+    unauthorized: "У вас немає прав для виконання цієї дії"
+    forbidden: "Доступ заборонено"
+    internal_error: "Щось пішло не так"
+    validation_failed: "Помилка валідації"
+
+  # ActiveRecord
+  activerecord:
+    models:
+      user: "Користувач"
+      post: "Пост"
+      video: "Відео"
+      photo: "Фото"
+      comment: "Коментар"
+      category: "Категорія"
+      tag: "Тег"
+      page: "Сторінка"
+    attributes:
+      user:
+        email: "Email"
+        password: "Пароль"
+        username: "Ім'я користувача"
+        first_name: "Ім'я"
+        last_name: "Прізвище"
+        bio: "Біографія"
+      post:
+        title: "Заголовок"
+        content: "Зміст"
+        slug: "Slug"
+        status: "Статус"
