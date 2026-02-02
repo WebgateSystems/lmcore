@@ -10,7 +10,7 @@ section.legal-page
       h1.legal-title= @page.title
 
     .legal-content
-      == @page.content
+      = sanitize(@page.content)
 
     .legal-footer
       p
