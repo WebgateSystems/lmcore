@@ -2,6 +2,220 @@ lt:
   app_name: "LibreMedia"
   tagline: "Tavo balsas, tavo platforma"
 
+  # Site metadata
+  site:
+    title: "LibreMedia — Žodžio laisvė, Laisva žiniasklaida"
+    description: "Nepriklausoma multimedijos platforma žodžio laisvei"
+
+  # Navigation
+  navigation:
+    main: "Pagrindinė navigacija"
+
+  nav:
+    home: "Pradžia"
+    features: "Funkcijos"
+    pricing: "Kainos"
+    about: "Apie mus"
+    blog: "Blogas"
+    videos: "Vaizdo įrašai"
+    photos: "Nuotraukos"
+    contact: "Kontaktai"
+    login: "Prisijungti"
+    logout: "Atsijungti"
+    register: "Pradėti"
+    profile: "Profilis"
+    settings: "Nustatymai"
+    dashboard: "Valdymo skydas"
+    menu: "Meniu"
+
+  # Theme
+  theme:
+    toggle: "Perjungti tamsų režimą"
+
+  # Hero section
+  hero:
+    title: "Tavo balsas. Tavo platforma. Tavo laisvė."
+    subtitle: "LibreMedia yra nepriklausoma publikavimo platforma, kurioje žurnalistai, veteranai ir tiesos ieškotojai gali dalintis savo istorijomis be cenzūros baimės."
+    watch_video: "Žiūrėti įvadą"
+
+  # Trust badges
+  badges:
+    open_export: "Atviras eksportas"
+    no_lockin: "Be priklausomybės"
+    e2e_optional: "E2E šifravimas"
+
+  # Call to actions
+  cta:
+    get_started: "Pradėti nemokamai"
+    join_movement: "Prisijunk prie judėjimo"
+    start_free: "Pradėti nemokamai"
+    choose_plan: "Pasirinkti planą"
+    contact_sales: "Susisiekti su pardavimais"
+
+  # Features section
+  features:
+    title: "Viskas, ko reikia tavo istorijai papasakoti"
+    subtitle: "Pilna platforma tinklaraštininkams, žurnalistams ir turinio kūrėjams, vertinantiems žodžio laisvę."
+    blog:
+      title: "Asmeninis tinklaraštis"
+      description: "Sukurk savo erdvę su pritaikomomis temomis. Importuok iš WordPress, eksportuok bet kada."
+    video:
+      title: "Vaizdo įrašų talpinimas"
+      description: "Talpink savo vaizdo įrašus arba įterpk iš YouTube ir Vimeo. Be algoritminio slopinimo."
+    forum:
+      title: "Bendruomenės forumas"
+      description: "Kurk bendruomenes aplink svarbias temas. Moderavimo įrankiai, kuriuos kontroliuoji tu."
+    chat:
+      title: "Saugus pokalbis"
+      description: "End-to-end šifruota komunikacija, paruošta postkvancinei erai."
+    live:
+      title: "Tiesioginės transliacijos"
+      description: "Transliuok gyvai su žiūrovų sąveika ir tiesioginiu monetizavimu."
+    reputation:
+      title: "Reputacijos sistema"
+      description: "Viešų asmenų ir organizacijų atskaitomybė, paremta įrodymais."
+
+  # Pricing section
+  pricing:
+    title: "Paprastos, skaidrios kainos"
+    subtitle: "Pradėk nemokamai, plėsk kai reikia. Be paslėptų mokesčių, be staigmenų."
+    per_month: "/mėn."
+    popular: "Populiariausias"
+    free:
+      name: "Nemokamas"
+      posts: "%{count} įrašų/mėn."
+      storage: "%{size} vietos"
+      themes: "Pagrindinės temos"
+      chat: "Pokalbių prieiga"
+      forum_read: "Forumo skaitymas"
+    basic:
+      name: "Bazinis"
+      posts: "%{count} įrašų/mėn."
+      storage: "%{size} vietos"
+      themes: "Visos pagrindinės temos"
+      analytics: "Pagrindinė analitika"
+      forum_write: "Pilna forumo prieiga"
+      live: "Tiesioginės transliacijos"
+    professional:
+      name: "Profesionalus"
+      posts: "%{count} įrašų/mėn."
+      storage: "%{size} vietos"
+      video: "Savas vaizdo talpinimas"
+      domain: "Sava domenė"
+      analytics: "Pilna analitika"
+      export: "Duomenų eksportas"
+      support: "Atsakymas per 3 dienas"
+    enterprise:
+      name: "Enterprise"
+      unlimited: "Neriboti įrašai"
+      storage: "%{size} vietos"
+      custom_theme: "Individualus temos dizainas"
+      delegation: "Vaidmenų delegavimas"
+      ai: "AI asistentas"
+      reputation: "Reputacijos moderatorius"
+      priority_support: "Prioritetinis palaikymas per 1 dieną"
+
+  # About section
+  about:
+    title: "Kodėl LibreMedia?"
+    description: "Tikime, kad žodžio laisvė yra demokratijos pagrindas. Algoritminės cenzūros ir platformų priklausomybės eroje mes suteikiame erdvę, kurioje tavo balsas gali būti išgirstas."
+    point1:
+      title: "Be savavališkos cenzūros"
+      description: "Skaidrios moderavimo taisyklės. Be tylių blokavimų, be algoritminio slopinimo."
+    point2:
+      title: "Globalus pasiekiamumas"
+      description: "Pilnas daugiakalbis palaikymas. Pasiekite auditoriją Lenkijoje, Ukrainoje, Lietuvoje ir toliau."
+    point3:
+      title: "Bendruomenė pirmiausiai"
+      description: "Sukurta žurnalistams, veteranams, aktyvistams ir visiems, kurie vertina tiesą ir skaidrumą."
+
+  # FAQ section
+  faq:
+    short_title: "DUK"
+    title: "Dažniausiai Užduodami Klausimai"
+    subtitle: "Atsakymai į klausimus apie LibreMedia licencijavimą ir verslo modelį."
+    q1:
+      question: "Tai nėra atviras kodas!"
+      answer: "Teisingai. LibreMedia neteigia, kad yra atviras kodas ir nenaudoja OSI patvirtintos licencijos. Kodas yra viešas dėl projektinio pasirinkimo, ne dėl teisinio įpareigojimo."
+    q2:
+      question: "Ar piktnaudžiaujate atviro kodo bendruomene?"
+      answer: "Ne. Neteisingai nežymime projekto, apgaulingai nenaudojame atviro kodo licencijų ir neatimame teisių atgaline data. Viskas aišku nuo pirmos dienos."
+    q3:
+      question: "Kodėl ne AGPL?"
+      answer: "Nes AGPL nesuderinama su tvaria SaaS plėtra ir efektyviai neužkerta kelio komerciniam parazitavimui ar paslaugų klonavimui."
+    q4:
+      question: "Kodėl negaliu pats talpinti?"
+      answer: "Nes platformos talpinimas ir valdymas YRA produktas. LibreMedia jau teikia nemokamą nekomercinį planą per oficialų SaaS. Savitalpinimas ar savos paslaugos teikimas viršija leistino naudojimo ribas."
+    q5:
+      question: "Kodėl priimat pull request'us, jei produktas komercinis?"
+      answer: "Nes skaidrumas ir kokybė naudingi visiems. Bendraautoriai teikia pakeitimus sąmoningai ir aiškiomis sąlygomis."
+    q6:
+      question: "O jei aš privatiai forksiu?"
+      answer: "Kodo forkavimas ar modifikavimas ne evailiavimo ar kontribucijos tikslais reikalauja komercinės licencijos. Neleistinas naudojimas pažeidžia licenciją ir galiojančius įstatymus."
+
+  # Partners section
+  partners:
+    title: "Partnerinė žiniasklaida ir nuomonės lyderiai"
+    subtitle: "Laisva žiniasklaida reiškia nepriklausomą žiniasklaidą. Tikra nepriklausomybė reikalauja finansinės nepriklausomybės — palaikomos sąmoningų skaitytojų."
+    join_message: "Prisijunk prie bendruomenės, kuri pati išlaiko savo žiniasklaidą — be valstybinės propagandos, be korumpuotų rėmėjų, be cenzūros."
+
+  # Carousel navigation
+  carousel:
+    prev: "Ankstesnis"
+    next: "Kitas"
+
+  # License page
+  license:
+    title: "Licencija"
+    page_title: "Licencija — LibreMedia"
+    badge: "SOURCE-AVAILABLE COMMERCIAL LICENSE (SACL-1.0)"
+    copyright_title: "Autorių teisių informacija"
+    summary_title: "Licencijos santrauka"
+    summary_text: "Ši programinė įranga teikiama pagal Source-Available Commercial License sąlygas. Šaltinio kodas yra viešas dėl projektinio pasirinkimo, bet tai NĖRA atviras kodas."
+    disclaimer: "ŠI PROGRAMINĖ ĮRANGA NĖRA ATVIRO KODO. Kodas viešas peržiūrai, bet komerciniam naudojimui reikalinga atskira licencija."
+    can_do_title: "Ką galite daryti"
+    can_view: "Peržiūrėti ir analizuoti šaltinio kodą"
+    can_evaluate: "Vykdyti lokaliai tik vertinimo ir testavimo tikslais"
+    can_audit: "Atlikti saugumo auditą ir kodo peržiūrą"
+    can_contribute: "Modifikuoti tik kontribucijos (pull request) pateikimo tikslais"
+    cannot_do_title: "Ko NEGALITE daryti"
+    cannot_commercial: "Naudoti komerciniais tikslais be licencijos"
+    cannot_saas: "Siūlyti kaip SaaS, talpinimo paslaugą ar platformą"
+    cannot_redistribute: "Platinti, sublicencijuoti ar parduoti"
+    cannot_compete: "Kurti konkuruojančių produktų ar paslaugų"
+    contributions_title: "Kontribucijos"
+    contributions_text: "Bet kokia kontribucija, pateikta projektui, licencijuojama Licenciarui išskirtinai, amžinai, neatšaukiamai, visame pasaulyje ir be autorinių atlyginimų."
+    not_opensource_title: "Tai NĖRA atviras kodas"
+    not_opensource_text: "Ši licencija nesuteikia jokių teisių pagal jokią OSI patvirtintą atviro kodo licenciją. Jokia programinės įrangos dalis nepriklauso automatiniam perlicencijavimui ar konversijai į MIT, Apache, GPL ar kitą atviro kodo licenciją."
+    warranty_title: "Garantijos atsisakymas"
+    warranty_text: 'PROGRAMINĖ ĮRANGA TEIKIAMA „TOKIA, KOKIA YRA", BE JOKIŲ GARANTIJŲ, TIESIOGINIŲ AR NUMANOMŲ, ĮSKAITANT GARANTIJAS DĖL TINKAMUMO PARDUOTI AR TINKAMUMO TAM TIKRAM TIKSLUI.'
+    jurisdiction_title: "Taikoma teisė"
+    jurisdiction_text: "Ši Licencija valdoma ir aiškinama pagal Anglijos ir Velso įstatymus. Visi ginčai priklauso išskirtinei Anglijos ir Velso teismų jurisdikcijai."
+    full_text_title: "Pilnas licencijos tekstas"
+    full_text_intro: "Pilnas licencijos tekstas prieinamas šaltinio saugykloje:"
+    view_on_github: "Žiūrėti LICENSE GitHub"
+    contact_title: "Kontaktai"
+    contact_text: "Komercinių licencijų ir teisinių klausimų:"
+
+  # Footer
+  footer:
+    tagline: "Žodžio laisvė, Laisva žiniasklaida"
+    product: "Produktas"
+    company: "Įmonė"
+    legal: "Teisinė info"
+    docs: "Dokumentacija"
+    contact: "Kontaktai"
+    careers: "Karjera"
+    careers_note: "Karjera — nėra atvirų pozicijų"
+    privacy: "Privatumo politika"
+    terms: "Naudojimosi sąlygos"
+    accessibility: "Prieinamumas"
+    rights: "Visos teisės saugomos."
+
+  # Video
+  video:
+    not_supported: "Jūsų naršyklė nepalaiko vaizdo įrašų atkūrimo."
+
   # Common
   common:
     save: "Išsaugoti"
@@ -21,21 +235,6 @@ lt:
     no: "Ne"
     or: "arba"
     and: "ir"
-
-  # Navigation
-  nav:
-    home: "Pradžia"
-    blog: "Blogas"
-    videos: "Video"
-    photos: "Nuotraukos"
-    about: "Apie"
-    contact: "Kontaktai"
-    login: "Prisijungti"
-    logout: "Atsijungti"
-    register: "Registruotis"
-    profile: "Profilis"
-    settings: "Nustatymai"
-    dashboard: "Valdymo skydas"
 
   # Authentication
   auth:
@@ -58,7 +257,7 @@ lt:
     followers: "Sekėjai"
     following: "Sekama"
     posts: "Įrašai"
-    videos: "Video"
+    videos: "Vaizdo įrašai"
     photos: "Nuotraukos"
     settings: "Nustatymai"
     notifications: "Pranešimai"
@@ -84,6 +283,89 @@ lt:
     create_post: "Sukurti įrašą"
     edit_post: "Redaguoti įrašą"
 
+  # Videos
+  videos:
+    title: "Pavadinimas"
+    description: "Aprašymas"
+    duration: "Trukmė"
+    provider: "Šaltinis"
+    self_hosted: "Savas talpinimas"
+    no_videos: "Vaizdo įrašų nėra"
+    create_video: "Pridėti vaizdo įrašą"
+
+  # Photos
+  photos:
+    title: "Pavadinimas"
+    description: "Aprašymas"
+    no_photos: "Nuotraukų nėra"
+    upload_photo: "Įkelti nuotrauką"
+
+  # Comments
+  comments:
+    add_comment: "Pridėti komentarą"
+    your_comment: "Jūsų komentaras"
+    guest_name: "Jūsų vardas"
+    guest_email: "Jūsų el. paštas"
+    reply: "Atsakyti"
+    replies: "%{count} atsakymų"
+    pending_approval: "Jūsų komentaras laukia patvirtinimo"
+    no_comments: "Komentarų nėra. Būkite pirmas!"
+
+  # Notifications
+  notifications:
+    title: "Pranešimai"
+    mark_all_read: "Pažymėti visus kaip skaitytus"
+    no_notifications: "Pranešimų nėra"
+    new_comment:
+      title: "Naujas komentaras"
+      message: "%{actor} pakomentavo jūsų %{content_type}"
+    comment_reply:
+      title: "Naujas atsakymas"
+      message: "%{actor} atsakė į jūsų komentarą"
+    new_follower:
+      title: "Naujas sekėjas"
+      message: "%{actor} pradėjo jus sekti"
+    new_donation:
+      title: "Nauja auka"
+      message: "Gavote auką: %{amount}"
+    post_published:
+      title: "Įrašas paskelbtas"
+      message: "Jūsų įrašas buvo paskelbtas"
+
+  # Subscriptions
+  subscriptions:
+    current_plan: "Dabartinis planas"
+    upgrade: "Pagerinti"
+    downgrade: "Pabloginti"
+    cancel: "Atšaukti prenumeratą"
+    expires_at: "Galiojimas baigiasi"
+    days_remaining: "Liko %{count} dienų"
+    features: "Funkcijos"
+
+  # Price plans
+  price_plans:
+    free: "Nemokamas"
+    basic: "Bazinis"
+    professional: "Profesionalus"
+    enterprise: "Enterprise"
+    per_month: "/mėnesį"
+    per_year: "/metus"
+    posts_limit: "%{count} įrašų/mėn."
+    unlimited_posts: "Neriboti įrašai"
+    disk_space: "%{size} vietos"
+    features:
+      basic_themes: "Pagrindinės temos"
+      premium_themes: "Premium temos"
+      custom_theme: "Individuali tema"
+      external_video: "Išorinis video (YouTube, Vimeo)"
+      self_hosted_video: "Savas video"
+      vanity_domain: "Sava domenė"
+      analytics: "Pagrindinė analitika"
+      google_analytics: "Google Analytics integracija"
+      export_data: "Duomenų eksportas"
+      remove_branding: "Pašalinti prekės ženklą"
+      priority_support: "Prioritetinis palaikymas"
+
   # Errors
   errors:
     not_found: "Puslapis nerastas"
@@ -92,14 +374,114 @@ lt:
     internal_error: "Kažkas nepavyko"
     validation_failed: "Tikrinimas nepavyko"
 
+  # Privacy Policy page
+  privacy:
+    title: "Privatumo politika"
+    page_title: "Privatumo politika — LibreMedia"
+    last_updated: "Paskutinis atnaujinimas: %{date}"
+    intro_title: "1. Įvadas"
+    intro_text: "LibreMedia platformą valdo Webgate Systems LTD. Ši Privatumo politika aprašo, kaip renkame, naudojame ir saugome jūsų asmens duomenis naudojant Platformą."
+    admin_title: "2. Duomenų valdytojas"
+    admin_intro: "Duomenų valdytojas yra:"
+    admin_company: "Įmonė:"
+    admin_address: "Adresas:"
+    admin_email: "El. paštas:"
+    data_scope_title: "3. Renkami duomenys"
+    data_scope_intro: "Platforma renka šiuos asmens duomenis:"
+    data_identity: "Tapatybės duomenys:"
+    data_identity_desc: "vardas, pavardė, el. pašto adresas, telefono numeris"
+    data_content: "Turinio duomenys:"
+    data_content_desc: "publikuotas turinys, komentarai, vartotojo pateikta medžiaga"
+    data_technical: "Techniniai duomenys:"
+    data_technical_desc: "IP adresas, naršyklės tipas, įrenginio informacija, sistemos žurnalai"
+    data_optional: "Neprivalomi duomenys:"
+    data_optional_desc: "gimimo data, vartotojo nuostatos"
+    purpose_title: "4. Duomenų tvarkymo tikslai"
+    purpose_intro: "Asmens duomenys tvarkomi šiais tikslais:"
+    purpose_1: "Paslaugų teikimas per Platformą"
+    purpose_2: "Vartotojų paskyrų valdymas"
+    purpose_3: "Tapatybės tikrinimas ir prieigos autorizacija"
+    purpose_4: "Komunikacija su vartotojais (pranešimai, techninė pagalba)"
+    purpose_5: "Statistinė analizė ir Platformos tobulinimas"
+    purpose_6: "Teisinių įsipareigojimų vykdymas"
+    purpose_7: "Sukčiavimo ir piktnaudžiavimo prevencija"
+    legal_basis_title: "5. Teisinis tvarkymo pagrindas"
+    legal_basis_intro: "Asmens duomenų tvarkymas grindžiamas:"
+    legal_basis_1: "Sutarties vykdymu (BDAR 6 str. 1 d. b punktas)"
+    legal_basis_2: "Vartotojo sutikimu (BDAR 6 str. 1 d. a punktas)"
+    legal_basis_3: "Teisine prievole (BDAR 6 str. 1 d. c punktas)"
+    legal_basis_4: "Teisėtais valdytojo interesais (BDAR 6 str. 1 d. f punktas)"
+    sharing_title: "6. Duomenų dalijimasis"
+    sharing_intro: "Asmens duomenys gali būti perduodami:"
+    sharing_1: "Techninių paslaugų teikėjams (prieglobos, analitikos), veikiantiems kaip duomenų tvarkytojai"
+    sharing_2: "Valstybės institucijoms pagal galiojančius įstatymus"
+    sharing_3: "Verslo partneriams tik gavus vartotojo sutikimą"
+    retention_title: "7. Duomenų saugojimas"
+    retention_intro: "Asmens duomenys saugomi:"
+    retention_1: "Aktyvaus Platformos naudojimo laikotarpiu"
+    retention_2: "Įstatymų nustatytą laikotarpį (mokesčių taisyklės, dokumentų archyvavimas)"
+    retention_3: "Iki sutikimo atšaukimo arba prieštaravimo pareiškimo (kai taikoma)"
+    rights_title: "8. Jūsų teisės"
+    rights_intro: "Jūs turite teisę:"
+    right_access: "Susipažinti su savo asmens duomenimis"
+    right_rectification: "Ištaisyti (patikslinti) duomenis"
+    right_erasure: "Ištrinti duomenis (\"teisė būti pamirštam\")"
+    right_restriction: "Apriboti tvarkymą"
+    right_portability: "Perkelti duomenis"
+    right_objection: "Nesutikti su tvarkymu"
+    right_withdraw: "Bet kada atšaukti sutikimą"
+    right_complaint: "Pateikti skundą priežiūros institucijai"
+    security_title: "9. Duomenų saugumas"
+    security_text: "Taikome tinkamas technines ir organizacines priemones duomenų saugumui užtikrinti, įskaitant ryšio šifravimą (HTTPS), reguliarias atsargines kopijas ir prieigos kontrolę."
+    cookies_title: "10. Slapukai"
+    cookies_text: "Platforma naudoja slapukus tinkamam veikimui užtikrinti, vartotojo nuostatoms įsiminti ir srautui analizuoti. Išsami informacija pateikta mūsų Slapukų politikoje."
+    changes_title: "11. Privatumo politikos pakeitimai"
+    changes_text: "Pasiliekame teisę keisti šią Privatumo politiką. Apie bet kokius pakeitimus vartotojai bus informuoti per Platformą arba el. paštu."
+    contact_title: "12. Kontaktai"
+    contact_intro: "Klausimais, susijusiais su asmens duomenų apsauga, susisiekite su mumis:"
+
+  # Time
+  time:
+    formats:
+      short: "%Y-%m-%d"
+      long: "%Y m. %B %d d. %H:%M"
+      date_only: "%Y m. %B %d d."
+
+  # Date
+  date:
+    formats:
+      short: "%Y-%m-%d"
+      long: "%Y m. %B %d d."
+
   # ActiveRecord
   activerecord:
     models:
       user: "Vartotojas"
       post: "Įrašas"
-      video: "Video"
+      video: "Vaizdo įrašas"
       photo: "Nuotrauka"
       comment: "Komentaras"
       category: "Kategorija"
       tag: "Žyma"
       page: "Puslapis"
+    attributes:
+      user:
+        email: "El. paštas"
+        password: "Slaptažodis"
+        username: "Vartotojo vardas"
+        first_name: "Vardas"
+        last_name: "Pavardė"
+        bio: "Aprašymas"
+      post:
+        title: "Pavadinimas"
+        content: "Turinys"
+        slug: "Slug"
+        status: "Būsena"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: "jau užregistruotas"
+            username:
+              taken: "jau užimtas"

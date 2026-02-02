@@ -99,10 +99,10 @@ group :development do
   gem "capistrano", "~> 3.20", require: false
   gem "capistrano-rails", "~> 1.6", require: false
   gem "capistrano-bundler", require: false
-  gem 'capistrano3-puma', github: 'seuros/capistrano-puma'
-  gem 'capistrano-hook', require: false
-  gem 'capistrano-nvm', require: false
-  gem 'capistrano-rvm'
+  gem "capistrano3-puma", github: "seuros/capistrano-puma"
+  gem "capistrano-hook", require: false
+  gem "capistrano-nvm", require: false
+  gem "capistrano-rvm"
 end
 
 group :test do

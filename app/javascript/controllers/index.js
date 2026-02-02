@@ -11,6 +11,7 @@ import MobileMenuController from "./mobile_menu_controller"
 import VideoController from "./video_controller"
 import CarouselController from "./carousel_controller"
 import AccordionController from "./accordion_controller"
+import ScrollSpyController from "./scroll_spy_controller"
 
 application.register("hello", HelloController)
 application.register("theme", ThemeController)
@@ -19,3 +20,4 @@ application.register("mobile-menu", MobileMenuController)
 application.register("video", VideoController)
 application.register("carousel", CarouselController)
 application.register("accordion", AccordionController)
+application.register("scroll-spy", ScrollSpyController)

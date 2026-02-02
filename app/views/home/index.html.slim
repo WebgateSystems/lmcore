@@ -1,59 +1,72 @@
 - content_for :title, t('site.title')
 
 /! ===== HEADER / NAVIGATION =====
-header.header role="banner"
-  .container
-    nav.nav role="navigation" aria-label=t('navigation.main')
-      /! Logo
-      a.logo href=root_path aria-label="LibreMedia Home"
-        = image_tag 'blacklogo_LibreMedia.png', class: 'logo-light', alt: 'LibreMedia', width: 160, height: 40
-        = image_tag 'whitelogo_LibreMedia.png', class: 'logo-dark', alt: 'LibreMedia', width: 160, height: 40
+.header-wrapper data-controller="mobile-menu"
+  header.header role="banner"
+    .container
+      nav.nav role="navigation" aria-label=t('navigation.main')
+        /! Logo - full on desktop, mini (clickable menu) on mobile
+        .logo-wrapper
+          /! Desktop: full logo (just a link)
+          a.logo.desktop-only href=root_path aria-label="LibreMedia Home"
+            = image_tag 'blacklogo_LibreMedia.png', class: 'logo-light', alt: 'LibreMedia', width: 160, height: 40
+            = image_tag 'whitelogo_LibreMedia.png', class: 'logo-dark', alt: 'LibreMedia', width: 160, height: 40
 
-      /! Navigation links (desktop)
-      .nav-links.desktop-only
-        a.nav-link href="#features"= t('nav.features')
-        a.nav-link href="#pricing"= t('nav.pricing')
-        a.nav-link href="#about"= t('nav.about')
+          /! Mobile: mini logo that acts as menu trigger
+          button.logo-menu-trigger.mobile-only type="button" data-action="click->mobile-menu#toggle" aria-label=t('nav.menu') aria-expanded="false"
+            .menu-icon
+              = image_tag 'minilogo_BlackBird.png', class: 'menu-logo menu-logo-light', alt: 'Menu', width: 40, height: 40
+              = image_tag 'minilogo_WhiteBird.png', class: 'menu-logo menu-logo-dark', alt: 'Menu', width: 40, height: 40
+              i.fa-solid.fa-xmark.menu-close aria-hidden="true"
 
-      /! Right side controls
-      .nav-controls
-        /! Theme Toggle (sun/moon like akademy.edu.pl)
-        button.theme-toggle type="button" data-controller="theme" data-action="click->theme#toggle" aria-label=t('theme.toggle') title=t('theme.toggle')
-          i.fa-regular.fa-sun.theme-icon-light aria-hidden="true"
-          i.fa-regular.fa-moon.theme-icon-dark aria-hidden="true"
+        /! Navigation links (desktop only)
+        .nav-links.desktop-only data-controller="scroll-spy" data-scroll-spy-offset-value="120"
+          a.nav-link href="#features" data-scroll-spy-target="link"= t('nav.features')
+          a.nav-link href="#about" data-scroll-spy-target="link"= t('nav.about')
+          a.nav-link href="#pricing" data-scroll-spy-target="link"= t('nav.pricing')
+          a.nav-link href="#faq" data-scroll-spy-target="link"= t('faq.short_title')
 
-        /! Language Switcher
-        .dropdown data-controller="dropdown"
-          button.dropdown-toggle type="button" data-action="click->dropdown#toggle" aria-expanded="false" aria-haspopup="true"
-            i.fa-solid.fa-globe aria-hidden="true"
-            span.current-lang= I18n.locale.to_s.upcase
-            i.fa-solid.fa-chevron-down.dropdown-arrow aria-hidden="true"
-          .dropdown-menu role="menu" data-dropdown-target="menu"
-            a.dropdown-item href=switch_locale_path('en') role="menuitem" lang="en"
-              | EN
-              span.lang-name English
-            a.dropdown-item href=switch_locale_path('pl') role="menuitem" lang="pl"
-              | PL
-              span.lang-name Polski
-            a.dropdown-item href=switch_locale_path('uk') role="menuitem" lang="uk"
-              | UA
-              span.lang-name Українська
+        /! Right side controls
+        .nav-controls
+          /! Theme Toggle (sun/moon like akademy.edu.pl)
+          button.theme-toggle type="button" data-controller="theme" data-action="click->theme#toggle" aria-label=t('theme.toggle') title=t('theme.toggle')
+            i.fa-regular.fa-sun.theme-icon-light aria-hidden="true"
+            i.fa-regular.fa-moon.theme-icon-dark aria-hidden="true"
 
-        /! Auth button (single)
-        .auth-buttons.desktop-only
-          = link_to t('nav.login'), new_user_session_path, class: 'btn btn-primary'
+          /! Language Switcher
+          - locale_display = { en: 'EN', pl: 'PL', uk: 'UA', lt: 'LT', de: 'DE', fr: 'FR', es: 'ES' }
+          .dropdown data-controller="dropdown"
+            button.dropdown-toggle type="button" data-action="click->dropdown#toggle" aria-expanded="false" aria-haspopup="true"
+              i.fa-solid.fa-globe aria-hidden="true"
+              span.current-lang= locale_display[I18n.locale] || I18n.locale.to_s.upcase
+              i.fa-solid.fa-chevron-down.dropdown-arrow aria-hidden="true"
+            .dropdown-menu role="menu" data-dropdown-target="menu"
+              a.dropdown-item class=(I18n.locale == :en ? 'active' : '') href=switch_locale_path('en') role="menuitem" lang="en"
+                | EN
+                span.lang-name English
+              a.dropdown-item class=(I18n.locale == :pl ? 'active' : '') href=switch_locale_path('pl') role="menuitem" lang="pl"
+                | PL
+                span.lang-name Polski
+              a.dropdown-item class=(I18n.locale == :uk ? 'active' : '') href=switch_locale_path('uk') role="menuitem" lang="uk"
+                | UA
+                span.lang-name Українська
+              a.dropdown-item class=(I18n.locale == :lt ? 'active' : '') href=switch_locale_path('lt') role="menuitem" lang="lt"
+                | LT
+                span.lang-name Lietuvių
 
-        /! Mobile menu toggle
-        button.mobile-menu-toggle.mobile-only type="button" data-controller="mobile-menu" data-action="click->mobile-menu#toggle" aria-label=t('nav.menu') aria-expanded="false"
-          i.fa-solid.fa-bars aria-hidden="true"
+          /! Auth button (visible on all screens)
+          .auth-buttons
+            = link_to t('nav.login'), new_user_session_path, class: 'btn btn-primary'
 
-    /! Mobile navigation
-    .mobile-nav.mobile-only data-mobile-menu-target="menu"
-      a.nav-link href="#features"= t('nav.features')
-      a.nav-link href="#pricing"= t('nav.pricing')
-      a.nav-link href="#about"= t('nav.about')
-      .mobile-auth
-        = link_to t('nav.login'), new_user_session_path, class: 'btn btn-primary'
+  /! Mobile navigation - full screen overlay (OUTSIDE header to avoid stacking context issues)
+  .mobile-nav-overlay.mobile-only data-mobile-menu-target="overlay" data-action="click->mobile-menu#close"
+    button.mobile-nav-close type="button" data-action="click->mobile-menu#close" aria-label="Close menu"
+      i.fa-solid.fa-xmark aria-hidden="true"
+    .mobile-nav-content
+      a.mobile-nav-link href="#features" data-action="click->mobile-menu#close"= t('nav.features')
+      a.mobile-nav-link href="#about" data-action="click->mobile-menu#close"= t('nav.about')
+      a.mobile-nav-link href="#pricing" data-action="click->mobile-menu#close"= t('nav.pricing')
+      a.mobile-nav-link href="#faq" data-action="click->mobile-menu#close"= t('faq.short_title')
 
 
 /! ===== HERO SECTION =====
@@ -376,15 +389,15 @@ footer.footer role="contentinfo"
         h4= t('footer.product')
         ul
           li= link_to t('nav.features'), '#features'
+          li= link_to t('nav.about'), '#about'
           li= link_to t('nav.pricing'), '#pricing'
-          li= link_to t('footer.docs'), '#'
+          li= link_to t('faq.short_title'), '#faq'
+          li= link_to t('footer.docs'), 'https://github.com/WebgateSystems/lmcore/blob/dev/README.md', target: '_blank', rel: 'noopener'
 
       .footer-column
         h4= t('footer.company')
         ul
-          li= link_to t('nav.about'), '#about'
-          li= link_to t('footer.contact'), '#contact'
-          li= link_to t('footer.careers'), '#'
+          li= link_to t('footer.contact'), 'https://webgate.pro/', target: '_blank'
 
       .footer-column
         h4= t('footer.legal')

@@ -1,4 +1,4 @@
-- content_for :title, t('footer.privacy')
+- content_for :title, t('privacy.page_title')
 
 section.legal-page
   .container
@@ -7,11 +7,127 @@ section.legal-page
         i.fa-solid.fa-arrow-left aria-hidden="true"
         = t('common.back')
 
-      h1.legal-title= t('footer.privacy')
+      h1.legal-title= t('privacy.title')
+      p.legal-updated= t('privacy.last_updated', date: '02.02.2026')
 
     .legal-content
-      p.text-muted
-        em= t('common.coming_soon', default: 'Coming soon...')
+      h2= t('privacy.intro_title')
+      p= t('privacy.intro_text')
+
+      h2= t('privacy.admin_title')
+      p= t('privacy.admin_intro')
+      ul.legal-list-simple
+        li
+          strong= t('privacy.admin_company')
+          |  Webgate Systems LTD
+        li
+          strong= t('privacy.admin_address')
+          |  340 West Derby Road, Liverpool, England, L13 7HG
+        li
+          strong= t('privacy.admin_email')
+          |  
+          a href="mailto:office@webgate.pro" office@webgate.pro
+
+      h2= t('privacy.data_scope_title')
+      p= t('privacy.data_scope_intro')
+      ul.legal-list-simple
+        li
+          strong= t('privacy.data_identity')
+          |  
+          = t('privacy.data_identity_desc')
+        li
+          strong= t('privacy.data_content')
+          |  
+          = t('privacy.data_content_desc')
+        li
+          strong= t('privacy.data_technical')
+          |  
+          = t('privacy.data_technical_desc')
+        li
+          strong= t('privacy.data_optional')
+          |  
+          = t('privacy.data_optional_desc')
+
+      h2= t('privacy.purpose_title')
+      p= t('privacy.purpose_intro')
+      ul.legal-list-simple
+        li= t('privacy.purpose_1')
+        li= t('privacy.purpose_2')
+        li= t('privacy.purpose_3')
+        li= t('privacy.purpose_4')
+        li= t('privacy.purpose_5')
+        li= t('privacy.purpose_6')
+        li= t('privacy.purpose_7')
+
+      h2= t('privacy.legal_basis_title')
+      p= t('privacy.legal_basis_intro')
+      ul.legal-list-simple
+        li= t('privacy.legal_basis_1')
+        li= t('privacy.legal_basis_2')
+        li= t('privacy.legal_basis_3')
+        li= t('privacy.legal_basis_4')
+
+      h2= t('privacy.sharing_title')
+      p= t('privacy.sharing_intro')
+      ul.legal-list-simple
+        li= t('privacy.sharing_1')
+        li= t('privacy.sharing_2')
+        li= t('privacy.sharing_3')
+
+      h2= t('privacy.retention_title')
+      p= t('privacy.retention_intro')
+      ul.legal-list-simple
+        li= t('privacy.retention_1')
+        li= t('privacy.retention_2')
+        li= t('privacy.retention_3')
+
+      h2= t('privacy.rights_title')
+      p= t('privacy.rights_intro')
+      ul.license-list
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('privacy.right_access')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('privacy.right_rectification')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('privacy.right_erasure')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('privacy.right_restriction')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('privacy.right_portability')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('privacy.right_objection')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('privacy.right_withdraw')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('privacy.right_complaint')
+
+      h2= t('privacy.security_title')
+      p= t('privacy.security_text')
+
+      h2= t('privacy.cookies_title')
+      p= t('privacy.cookies_text')
+
+      h2= t('privacy.changes_title')
+      p= t('privacy.changes_text')
+
+      h2= t('privacy.contact_title')
+      p= t('privacy.contact_intro')
+      ul.legal-list-simple
+        li
+          strong Email:
+          |  
+          a href="mailto:office@webgate.pro" office@webgate.pro
+        li
+          strong= t('privacy.admin_address')
+          |  340 West Derby Road, Liverpool, England, L13 7HG
 
     .legal-footer
       p

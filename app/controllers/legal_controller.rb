@@ -8,7 +8,7 @@ class LegalController < ApplicationController
   end
 
   def privacy
-    @title = t("footer.privacy")
+    @title = t("privacy.title")
   end
 
   def terms

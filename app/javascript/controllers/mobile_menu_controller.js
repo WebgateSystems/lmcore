@@ -1,14 +1,21 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Mobile menu controller
-// Manages mobile navigation menu toggle
+// Manages full-screen mobile navigation menu
+// The mini logo in header acts as the menu trigger
 export default class extends Controller {
-  static targets = ["menu"]
+  static targets = ["overlay"]
 
-  toggle() {
-    const isOpen = this.menuTarget.classList.contains("open")
+  connect() {
+    this.boundHandleEscape = this.handleEscape.bind(this)
+    this.isOpen = false
+  }
 
-    if (isOpen) {
+  toggle(event) {
+    // Find the trigger button
+    this.triggerButton = event.currentTarget
+    
+    if (this.isOpen) {
       this.close()
     } else {
       this.open()
@@ -16,28 +23,55 @@ export default class extends Controller {
   }
 
   open() {
-    this.menuTarget.classList.add("open")
-    this.element.setAttribute("aria-expanded", "true")
+    this.isOpen = true
+    
+    // Add open class to trigger button for animation
+    if (this.triggerButton) {
+      this.triggerButton.classList.add("open")
+      this.triggerButton.setAttribute("aria-expanded", "true")
+    }
+    
+    if (this.hasOverlayTarget) {
+      this.overlayTarget.classList.add("open")
+    }
+    
+    // Lock body scroll
+    document.body.style.overflow = "hidden"
 
-    // Trap focus inside menu
-    document.addEventListener("keydown", this.handleEscape.bind(this))
+    // Listen for escape key
+    document.addEventListener("keydown", this.boundHandleEscape)
   }
 
   close() {
-    this.menuTarget.classList.remove("open")
-    this.element.setAttribute("aria-expanded", "false")
+    this.isOpen = false
+    
+    // Remove open class from trigger button
+    if (this.triggerButton) {
+      this.triggerButton.classList.remove("open")
+      this.triggerButton.setAttribute("aria-expanded", "false")
+    }
+    
+    if (this.hasOverlayTarget) {
+      this.overlayTarget.classList.remove("open")
+    }
+    
+    // Restore body scroll
+    document.body.style.overflow = ""
 
-    document.removeEventListener("keydown", this.handleEscape.bind(this))
+    document.removeEventListener("keydown", this.boundHandleEscape)
   }
 
   handleEscape(event) {
     if (event.key === "Escape") {
       this.close()
-      this.element.focus()
+      if (this.triggerButton) {
+        this.triggerButton.focus()
+      }
     }
   }
 
   disconnect() {
-    document.removeEventListener("keydown", this.handleEscape.bind(this))
+    document.removeEventListener("keydown", this.boundHandleEscape)
+    document.body.style.overflow = ""
   }
 }
