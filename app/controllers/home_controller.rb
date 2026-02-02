@@ -10,6 +10,16 @@ class HomeController < ApplicationController
     @partners = Partner.active.for_locale(I18n.locale).ordered
   end
 
+  def version
+    return render(json: { version: AppIdService.version }, status: :ok) if request.format.json?
+
+    render plain: AppIdService.version, status: :ok
+  end
+
+  def spinup_status
+    render plain: "OK", status: :ok
+  end
+
   private
 
   def features_data

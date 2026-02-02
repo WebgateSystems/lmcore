@@ -3,6 +3,8 @@
 Rails.application.routes.draw do
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
+  get "health", to: "home#spinup_status"
+  get "version", to: "home#version"
 
   # PWA files
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker

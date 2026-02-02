@@ -1534,6 +1534,16 @@ a.dropdown-item .lang-name {
   border-color: var(--color-primary);
 }
 
+.footer-version {
+  width: 100%;
+  text-align: center;
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
 /* ===== Focus States for Accessibility ===== */
 :focus-visible {
   outline: 2px solid var(--color-primary);

@@ -1,0 +1,17 @@
+- content_for :title, @page.title
+
+section.legal-page
+  .container
+    .legal-header
+      = link_to root_path, class: 'back-link' do
+        i.fa-solid.fa-arrow-left aria-hidden="true"
+        = t('common.back')
+
+      h1.legal-title= @page.title
+
+    .legal-content
+      == @page.content
+
+    .legal-footer
+      p
+        | © 2026 Webgate Systems LTD
