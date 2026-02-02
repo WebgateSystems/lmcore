@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_01_000030) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_01_000031) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -245,6 +245,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_01_000030) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.jsonb "description_i18n", default: {}
+    t.string "icon_class", default: "fa-brands fa-youtube"
+    t.string "locale"
     t.text "logo_svg"
     t.string "logo_url"
     t.string "name", null: false
@@ -253,6 +255,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_01_000030) do
     t.datetime "updated_at", null: false
     t.string "url"
     t.index ["active"], name: "index_partners_on_active"
+    t.index ["locale"], name: "index_partners_on_locale"
     t.index ["position"], name: "index_partners_on_position"
     t.index ["slug"], name: "index_partners_on_slug", unique: true
   end

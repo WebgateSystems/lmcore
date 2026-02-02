@@ -1,0 +1,93 @@
+- content_for :title, t('license.page_title')
+
+section.legal-page
+  .container
+    .legal-header
+      = link_to root_path, class: 'back-link' do
+        i.fa-solid.fa-arrow-left aria-hidden="true"
+        = t('common.back')
+
+      h1.legal-title= t('license.title')
+
+    .legal-content
+      .license-badge
+        span.badge-type= t('license.badge')
+
+      h2= t('license.copyright_title')
+      p
+        | Copyright © 2026 Jerzy Sładkowski, Webgate Systems LTD
+        br
+        a href="https://webgate.pro" target="_blank" rel="noopener" https://webgate.pro
+
+      h2= t('license.summary_title')
+      p= t('license.summary_text')
+
+      .license-highlight
+        p
+          strong= t('license.disclaimer')
+
+      h2= t('license.can_do_title')
+      ul.license-list
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('license.can_view')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('license.can_evaluate')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('license.can_audit')
+        li
+          i.fa-solid.fa-check.text-success aria-hidden="true"
+          = t('license.can_contribute')
+
+      h2= t('license.cannot_do_title')
+      ul.license-list
+        li
+          i.fa-solid.fa-xmark.text-danger aria-hidden="true"
+          = t('license.cannot_commercial')
+        li
+          i.fa-solid.fa-xmark.text-danger aria-hidden="true"
+          = t('license.cannot_saas')
+        li
+          i.fa-solid.fa-xmark.text-danger aria-hidden="true"
+          = t('license.cannot_redistribute')
+        li
+          i.fa-solid.fa-xmark.text-danger aria-hidden="true"
+          = t('license.cannot_compete')
+
+      h2= t('license.contributions_title')
+      p= t('license.contributions_text')
+
+      h2= t('license.not_opensource_title')
+      p= t('license.not_opensource_text')
+
+      h2= t('license.warranty_title')
+      .license-highlight.license-warning
+        p= t('license.warranty_text')
+
+      h2= t('license.jurisdiction_title')
+      p= t('license.jurisdiction_text')
+
+      h2= t('license.full_text_title')
+      p
+        = t('license.full_text_intro')
+        br
+        a href="https://github.com/WebgateSystems/lmcore/blob/main/LICENSE.md" target="_blank" rel="noopener"
+          = t('license.view_on_github')
+
+      h2= t('license.contact_title')
+      p
+        = t('license.contact_text')
+        br
+        strong Email:
+        |  
+        a href="mailto:legal@webgate.pro" legal@webgate.pro
+        br
+        strong Web:
+        |  
+        a href="https://webgate.pro" target="_blank" rel="noopener" https://webgate.pro
+
+    .legal-footer
+      p
+        | © 2026 Webgate Systems LTD

@@ -1,0 +1,9 @@
+// LibreMedia main stylesheet
+// This file is compiled by sass and output to app/assets/builds/application.css
+
+// Font Awesome (local files)
+@use "vendor/fontawesome" as *;
+
+// Include all styles
+@use "landing" as *;
+@use "auth" as *;

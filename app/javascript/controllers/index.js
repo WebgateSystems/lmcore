@@ -5,4 +5,17 @@
 import { application } from "./application"
 
 import HelloController from "./hello_controller"
+import ThemeController from "./theme_controller"
+import DropdownController from "./dropdown_controller"
+import MobileMenuController from "./mobile_menu_controller"
+import VideoController from "./video_controller"
+import CarouselController from "./carousel_controller"
+import AccordionController from "./accordion_controller"
+
 application.register("hello", HelloController)
+application.register("theme", ThemeController)
+application.register("dropdown", DropdownController)
+application.register("mobile-menu", MobileMenuController)
+application.register("video", VideoController)
+application.register("carousel", CarouselController)
+application.register("accordion", AccordionController)

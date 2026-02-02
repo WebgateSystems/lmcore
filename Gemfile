@@ -110,4 +110,6 @@ group :test do
   gem "vcr"
   gem "timecop"
   gem "pundit-matchers"
+  gem "capybara"
+  gem "selenium-webdriver"
 end

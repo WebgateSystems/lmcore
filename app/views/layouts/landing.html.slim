@@ -1,0 +1,31 @@
+doctype html
+html lang=I18n.locale data-theme="light"
+  head
+    title= content_for(:title) || t('site.title')
+    meta name="viewport" content="width=device-width, initial-scale=1"
+    meta name="description" content=t('site.description')
+    meta name="theme-color" content="#14B8A6"
+    meta name="mobile-web-app-capable" content="yes"
+    meta name="application-name" content="LibreMedia"
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    /! Favicon
+    link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"
+    link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"
+    link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png"
+    link rel="manifest" href="/favicon/manifest.json"
+
+    /! Preconnect for fonts
+    link rel="preconnect" href="https://fonts.googleapis.com"
+    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""
+
+    /! Inter font
+    link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+
+    /! Main stylesheet (compiled from app/assets/stylesheets/application.sass.scss, includes Font Awesome)
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
+
+  body.landing-page
+    = yield

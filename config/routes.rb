@@ -102,6 +102,11 @@ Rails.application.routes.draw do
   scope "(:locale)", locale: /en|pl|uk|lt|de|fr|es/ do
     root "home#index"
 
+    # Legal pages
+    get "license", to: "legal#license", as: :license
+    get "privacy", to: "legal#privacy", as: :privacy
+    get "terms", to: "legal#terms", as: :terms
+
     resources :posts, only: %i[index show], param: :slug
     resources :videos, only: %i[index show], param: :slug
     resources :photos, only: %i[index show], param: :slug

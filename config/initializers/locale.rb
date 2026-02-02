@@ -9,5 +9,5 @@ I18n.default_locale = :en
 # Load path for locale files
 I18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
 
-# Fallback to English if translation is missing
-I18n.fallbacks = true
+# Enable fallbacks and configure them to fall back to English
+Rails.application.config.i18n.fallbacks = [ :en ]

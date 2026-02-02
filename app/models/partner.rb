@@ -19,6 +19,7 @@ class Partner < ApplicationRecord
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
   scope :ordered, -> { order(position: :asc) }
+  scope :for_locale, ->(locale) { where(locale: locale.to_s) }
 
   # Instance methods
   def activate!

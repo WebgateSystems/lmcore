@@ -11,8 +11,8 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
 
   # Pundit authorization
-  after_action :verify_authorized, except: :index, unless: :skip_authorization?
-  after_action :verify_policy_scoped, only: :index, unless: :skip_authorization?
+  after_action :verify_authorized, unless: :skip_pundit_verify?
+  after_action :verify_policy_scoped, if: :verify_policy_scope?
 
   # Handle Pundit errors
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -28,7 +28,12 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    locale = params[:locale] || current_user&.locale || extract_locale_from_header || I18n.default_locale
+    locale = params[:locale] ||
+             session[:locale] ||
+             cookies[:locale] ||
+             current_user&.locale ||
+             extract_locale_from_header ||
+             I18n.default_locale
     I18n.locale = locale if I18n.available_locales.map(&:to_s).include?(locale.to_s)
   end
 
@@ -59,7 +64,15 @@ class ApplicationController < ActionController::Base
   end
 
   def skip_authorization?
-    devise_controller? || controller_name == "health"
+    devise_controller? || controller_name.in?(%w[health home locale legal])
+  end
+
+  def skip_pundit_verify?
+    skip_authorization? || action_name == "index"
+  end
+
+  def verify_policy_scope?
+    !skip_authorization? && action_name == "index"
   end
 
   # Configure permitted parameters for Devise

@@ -1,0 +1,45 @@
+doctype html
+html lang=I18n.locale data-theme="light"
+  head
+    title= content_for(:title) || t('site.title')
+    meta name="viewport" content="width=device-width, initial-scale=1"
+    meta name="description" content=t('site.description')
+    meta name="theme-color" content="#14B8A6"
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    /! Favicon
+    link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"
+    link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"
+    link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png"
+
+    /! Fonts
+    link rel="preconnect" href="https://fonts.googleapis.com"
+    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""
+    link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+
+    /! Stylesheet (includes Font Awesome)
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
+
+  body.auth-page
+    .auth-wrapper
+      .auth-container
+        /! Header with logo and theme toggle
+        .auth-header
+          a.auth-logo href=root_path
+            = image_tag 'blacklogo_LibreMedia.png', class: 'logo-light', alt: 'LibreMedia', width: 180
+            = image_tag 'whitelogo_LibreMedia.png', class: 'logo-dark', alt: 'LibreMedia', width: 180
+
+          /! Theme Toggle
+          button.theme-toggle type="button" data-controller="theme" data-action="click->theme#toggle" aria-label=t('theme.toggle') title=t('theme.toggle')
+            i.fa-regular.fa-sun.theme-icon-light aria-hidden="true"
+            i.fa-regular.fa-moon.theme-icon-dark aria-hidden="true"
+
+        /! Card with form
+        .auth-card
+          = yield
+
+        /! Footer
+        .auth-footer
+          p © 2026 Webgate Systems LTD

@@ -1,0 +1,18 @@
+- content_for :title, t('footer.privacy')
+
+section.legal-page
+  .container
+    .legal-header
+      = link_to root_path, class: 'back-link' do
+        i.fa-solid.fa-arrow-left aria-hidden="true"
+        = t('common.back')
+
+      h1.legal-title= t('footer.privacy')
+
+    .legal-content
+      p.text-muted
+        em= t('common.coming_soon', default: 'Coming soon...')
+
+    .legal-footer
+      p
+        | © 2026 Webgate Systems LTD

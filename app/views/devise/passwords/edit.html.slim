@@ -1,0 +1,28 @@
+- content_for :title, t('auth.reset_password')
+
+h2.auth-title= t('auth.reset_password')
+
+= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: 'auth-form' }) do |f|
+  = f.hidden_field :reset_password_token
+
+  - if resource.errors.any?
+    .auth-alert.auth-alert-error
+      i.fa-solid.fa-circle-exclamation
+      span= resource.errors.full_messages.first
+
+  .form-group
+    = f.label :password, t('auth.password')
+    .input-wrapper
+      i.fa-solid.fa-lock.input-icon
+      = f.password_field :password, class: 'form-input', autofocus: true, autocomplete: 'new-password', placeholder: '••••••••'
+    - if @minimum_password_length
+      p.form-hint= t('devise.registrations.new.minimum_password_length', count: @minimum_password_length)
+
+  .form-group
+    = f.label :password_confirmation, t('auth.password_confirmation')
+    .input-wrapper
+      i.fa-solid.fa-lock.input-icon
+      = f.password_field :password_confirmation, class: 'form-input', autocomplete: 'new-password', placeholder: '••••••••'
+
+  .form-actions
+    = f.submit t('auth.reset_password'), class: 'btn btn-primary btn-lg btn-block'

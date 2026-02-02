@@ -1,0 +1,24 @@
+- content_for :title, t('auth.forgot_password')
+
+h2.auth-title= t('auth.forgot_password')
+p.auth-subtitle= t('devise.passwords.new.send_me_reset_password_instructions')
+
+= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: 'auth-form' }) do |f|
+  - if resource.errors.any?
+    .auth-alert.auth-alert-error
+      i.fa-solid.fa-circle-exclamation
+      span= resource.errors.full_messages.first
+
+  .form-group
+    = f.label :email, t('auth.email')
+    .input-wrapper
+      i.fa-solid.fa-envelope.input-icon
+      = f.email_field :email, class: 'form-input', autofocus: true, autocomplete: 'email', placeholder: 'email@example.com'
+
+  .form-actions
+    = f.submit t('auth.reset_password'), class: 'btn btn-primary btn-lg btn-block'
+
+  .auth-footer-text
+    = link_to new_session_path(resource_name), class: 'auth-link' do
+      i.fa-solid.fa-arrow-left
+      = " #{t('common.back')} #{t('auth.sign_in')}"

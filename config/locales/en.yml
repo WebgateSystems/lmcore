@@ -2,6 +2,218 @@ en:
   app_name: "LibreMedia"
   tagline: "Your voice, your platform"
 
+  # Site metadata
+  site:
+    title: "LibreMedia — Free Speech, Free Media"
+    description: "Independent multimedia publishing platform for free expression"
+
+  # Navigation
+  navigation:
+    main: "Main navigation"
+
+  nav:
+    home: "Home"
+    features: "Features"
+    pricing: "Pricing"
+    about: "About"
+    blog: "Blog"
+    videos: "Videos"
+    photos: "Photos"
+    contact: "Contact"
+    login: "Log in"
+    logout: "Log out"
+    register: "Get Started"
+    profile: "Profile"
+    settings: "Settings"
+    dashboard: "Dashboard"
+    menu: "Menu"
+
+  # Theme
+  theme:
+    toggle: "Toggle dark mode"
+
+  # Hero section
+  hero:
+    title: "Your Voice. Your Platform. Your Freedom."
+    subtitle: "LibreMedia is an independent publishing platform where journalists, veterans, and truth-seekers can share their stories without fear of censorship."
+    watch_video: "Watch Introduction"
+
+  # Trust badges
+  badges:
+    open_export: "Open Export"
+    no_lockin: "No Lock-in"
+    e2e_optional: "E2E Encryption"
+
+  # Call to actions
+  cta:
+    get_started: "Get Started Free"
+    join_movement: "Join the Movement"
+    start_free: "Start Free"
+    choose_plan: "Choose Plan"
+    contact_sales: "Contact Sales"
+
+  # Features section
+  features:
+    title: "Everything You Need to Tell Your Story"
+    subtitle: "A complete platform for bloggers, journalists, and content creators who value freedom of expression."
+    blog:
+      title: "Personal Blog"
+      description: "Create your own space with customizable themes. Import from WordPress, export anytime."
+    video:
+      title: "Video Hosting"
+      description: "Host your own videos or embed from YouTube and Vimeo. No algorithmic suppression."
+    forum:
+      title: "Community Forum"
+      description: "Build communities around topics that matter. Moderation tools you control."
+    chat:
+      title: "Secure Chat"
+      description: "End-to-end encrypted messaging ready for the post-quantum era."
+    live:
+      title: "Live Streaming"
+      description: "Broadcast live with viewer interaction and direct monetization support."
+    reputation:
+      title: "Reputation System"
+      description: "Evidence-based accountability for public figures and organizations."
+
+  # Pricing section
+  pricing:
+    title: "Simple, Transparent Pricing"
+    subtitle: "Start free, scale when you need to. No hidden fees, no surprises."
+    per_month: "/mo"
+    popular: "Most Popular"
+    free:
+      name: "Free"
+      posts: "%{count} posts/month"
+      storage: "%{size} storage"
+      themes: "Basic themes"
+      chat: "Chat access"
+      forum_read: "Forum read access"
+    basic:
+      name: "Basic"
+      posts: "%{count} posts/month"
+      storage: "%{size} storage"
+      themes: "All basic themes"
+      analytics: "Basic analytics"
+      forum_write: "Full forum access"
+      live: "Live streaming"
+    professional:
+      name: "Professional"
+      posts: "%{count} posts/month"
+      storage: "%{size} storage"
+      video: "Self-hosted video"
+      domain: "Custom domain"
+      analytics: "Full analytics"
+      export: "Data export"
+      support: "3-day support response"
+    enterprise:
+      name: "Enterprise"
+      unlimited: "Unlimited posts"
+      storage: "%{size} storage"
+      custom_theme: "Custom theme design"
+      delegation: "Role delegation"
+      ai: "AI assistant"
+      reputation: "Reputation moderator"
+      priority_support: "Priority 1-day support"
+
+  # About section
+  about:
+    title: "Why LibreMedia?"
+    description: "We believe free expression is fundamental to democracy. In an era of algorithmic censorship and platform lock-in, we provide a space where your voice can be heard."
+    point1:
+      title: "No Arbitrary Censorship"
+      description: "Clear, transparent moderation policies. No shadow bans, no algorithmic suppression."
+    point2:
+      title: "Global Reach"
+      description: "Full multilingual support. Reach audiences in Poland, Ukraine, Lithuania, and beyond."
+    point3:
+      title: "Community First"
+      description: "Built for journalists, veterans, activists, and anyone who values truth and transparency."
+
+  # FAQ section
+  faq:
+    title: "Frequently Asked Questions"
+    subtitle: "Answers to questions about LibreMedia's licensing and business model."
+    q1:
+      question: "This is not open source!"
+      answer: "Correct. LibreMedia does not claim to be open source and does not use an OSI-approved license. The code is public by design, not by obligation."
+    q2:
+      question: "You're abusing the open source community?"
+      answer: "No. We do not mislabel the project, do not use open source licenses deceptively, and do not restrict rights retroactively. Everything is explicit from day one."
+    q3:
+      question: "Why not AGPL?"
+      answer: "Because AGPL is incompatible with sustainable SaaS development and does not effectively prevent commercial parasitism or service cloning."
+    q4:
+      question: "Why can't I host this myself?"
+      answer: "Because hosting and operating the platform IS the product. LibreMedia already provides a free non-commercial tier via the official SaaS. Self-hosting or running your own service is outside the scope of permitted use."
+    q5:
+      question: "Why allow pull requests if the product is commercial?"
+      answer: "Because transparency and quality benefit everyone. Contributors submit changes knowingly and under clear terms."
+    q6:
+      question: "What if I fork it privately?"
+      answer: "Forking or modifying the code beyond evaluation or contribution purposes requires a commercial license. Unauthorized use violates the license and applicable law."
+
+  # Partners section
+  partners:
+    title: "Partner Media and Opinion Leaders"
+    subtitle: "Free media means independent media. True independence requires financial independence — supported by conscious audiences."
+    join_message: "Join a community that supports its own media — no state propaganda, no corrupt sponsors, no censorship."
+
+  # Carousel navigation
+  carousel:
+    prev: "Previous"
+    next: "Next"
+
+  # License page
+  license:
+    title: "License"
+    page_title: "License — LibreMedia"
+    badge: "SOURCE-AVAILABLE COMMERCIAL LICENSE (SACL-1.0)"
+    copyright_title: "Copyright Notice"
+    summary_title: "License Summary"
+    summary_text: "This software is made available under the terms of the Source-Available Commercial License. The source code is public by design, but this is NOT open source."
+    disclaimer: "THIS SOFTWARE IS NOT OPEN SOURCE. The code is public for viewing, but commercial use requires a separate license."
+    can_do_title: "What You Can Do"
+    can_view: "View and analyze the source code"
+    can_evaluate: "Run locally solely for evaluation and testing purposes"
+    can_audit: "Conduct security audits and code reviews"
+    can_contribute: "Modify solely for the purpose of submitting contributions (pull requests)"
+    cannot_do_title: "What You CANNOT Do"
+    cannot_commercial: "Use for commercial purposes without a license"
+    cannot_saas: "Offer as SaaS, hosted service, or platform"
+    cannot_redistribute: "Redistribute, sublicense, or sell"
+    cannot_compete: "Create competing products or services"
+    contributions_title: "Contributions"
+    contributions_text: "Any contribution submitted to the project is licensed to the Licensor on an exclusive, perpetual, irrevocable, worldwide, royalty-free basis."
+    not_opensource_title: "This is NOT Open Source"
+    not_opensource_text: "This License does not grant any rights under any OSI-approved open source license. No part of the Software is subject to automatic relicensing or conversion to MIT, Apache, GPL, or any other open source license."
+    warranty_title: "Disclaimer of Warranty"
+    warranty_text: "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT."
+    jurisdiction_title: "Governing Law"
+    jurisdiction_text: "This License shall be governed by and construed in accordance with the laws of England and Wales. Any disputes shall be subject to the exclusive jurisdiction of the courts of England and Wales."
+    full_text_title: "Full License Text"
+    full_text_intro: "The full license text is available in the source repository:"
+    view_on_github: "View LICENSE on GitHub"
+    contact_title: "Contact"
+    contact_text: "For commercial licensing and legal inquiries:"
+
+  # Footer
+  footer:
+    tagline: "Free Speech, Free Media"
+    product: "Product"
+    company: "Company"
+    legal: "Legal"
+    docs: "Documentation"
+    contact: "Contact"
+    careers: "Careers"
+    privacy: "Privacy Policy"
+    terms: "Terms of Service"
+    accessibility: "Accessibility"
+    rights: "All rights reserved."
+
+  # Video
+  video:
+    not_supported: "Your browser does not support video playback."
+
   # Common
   common:
     save: "Save"
@@ -21,21 +233,6 @@ en:
     no: "No"
     or: "or"
     and: "and"
-
-  # Navigation
-  nav:
-    home: "Home"
-    blog: "Blog"
-    videos: "Videos"
-    photos: "Photos"
-    about: "About"
-    contact: "Contact"
-    login: "Log in"
-    logout: "Log out"
-    register: "Register"
-    profile: "Profile"
-    settings: "Settings"
-    dashboard: "Dashboard"
 
   # Authentication
   auth:

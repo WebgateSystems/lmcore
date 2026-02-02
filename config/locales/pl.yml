@@ -2,6 +2,218 @@ pl:
   app_name: "LibreMedia"
   tagline: "Twój głos, Twoja platforma"
 
+  # Site metadata
+  site:
+    title: "LibreMedia — Wolność Słowa, Wolne Media"
+    description: "Niezależna platforma multimedialna dla wolności wypowiedzi"
+
+  # Navigation
+  navigation:
+    main: "Nawigacja główna"
+
+  nav:
+    home: "Strona główna"
+    features: "Funkcje"
+    pricing: "Cennik"
+    about: "O nas"
+    blog: "Blog"
+    videos: "Wideo"
+    photos: "Zdjęcia"
+    contact: "Kontakt"
+    login: "Zaloguj się"
+    logout: "Wyloguj się"
+    register: "Rozpocznij"
+    profile: "Profil"
+    settings: "Ustawienia"
+    dashboard: "Panel"
+    menu: "Menu"
+
+  # Theme
+  theme:
+    toggle: "Przełącz tryb ciemny"
+
+  # Hero section
+  hero:
+    title: "Twój Głos. Twoja Platforma. Twoja Wolność."
+    subtitle: "LibreMedia to niezależna platforma publikacyjna, gdzie dziennikarze, weterani i poszukiwacze prawdy mogą dzielić się swoimi historiami bez obawy przed cenzurą."
+    watch_video: "Obejrzyj wprowadzenie"
+
+  # Trust badges
+  badges:
+    open_export: "Otwarty eksport"
+    no_lockin: "Bez uzależnienia"
+    e2e_optional: "Szyfrowanie E2E"
+
+  # Call to actions
+  cta:
+    get_started: "Zacznij za darmo"
+    join_movement: "Dołącz do ruchu"
+    start_free: "Zacznij bezpłatnie"
+    choose_plan: "Wybierz plan"
+    contact_sales: "Kontakt ze sprzedażą"
+
+  # Features section
+  features:
+    title: "Wszystko, czego potrzebujesz by opowiedzieć swoją historię"
+    subtitle: "Kompletna platforma dla blogerów, dziennikarzy i twórców treści ceniących wolność słowa."
+    blog:
+      title: "Osobisty Blog"
+      description: "Stwórz własną przestrzeń z konfigurowalnymi motywami. Importuj z WordPressa, eksportuj w każdej chwili."
+    video:
+      title: "Hosting Wideo"
+      description: "Hostuj własne wideo lub osadzaj z YouTube i Vimeo. Bez algorytmicznego tłumienia."
+    forum:
+      title: "Forum Społeczności"
+      description: "Buduj społeczności wokół ważnych tematów. Narzędzia moderacji, które kontrolujesz."
+    chat:
+      title: "Bezpieczny Chat"
+      description: "Szyfrowana komunikacja end-to-end przygotowana na erę post-kwantową."
+    live:
+      title: "Transmisje na żywo"
+      description: "Transmituj na żywo z interakcją widzów i bezpośrednią monetyzacją."
+    reputation:
+      title: "System Reputacji"
+      description: "Odpowiedzialność osób publicznych i organizacji oparta na dowodach."
+
+  # Pricing section
+  pricing:
+    title: "Prosty, Przejrzysty Cennik"
+    subtitle: "Zacznij za darmo, skaluj gdy potrzebujesz. Bez ukrytych opłat, bez niespodzianek."
+    per_month: "/mies."
+    popular: "Najpopularniejszy"
+    free:
+      name: "Darmowy"
+      posts: "%{count} postów/miesiąc"
+      storage: "%{size} przestrzeni"
+      themes: "Podstawowe motywy"
+      chat: "Dostęp do chatu"
+      forum_read: "Czytanie forum"
+    basic:
+      name: "Podstawowy"
+      posts: "%{count} postów/miesiąc"
+      storage: "%{size} przestrzeni"
+      themes: "Wszystkie podstawowe motywy"
+      analytics: "Podstawowa analityka"
+      forum_write: "Pełny dostęp do forum"
+      live: "Transmisje na żywo"
+    professional:
+      name: "Profesjonalny"
+      posts: "%{count} postów/miesiąc"
+      storage: "%{size} przestrzeni"
+      video: "Własny hosting wideo"
+      domain: "Własna domena"
+      analytics: "Pełna analityka"
+      export: "Eksport danych"
+      support: "Odpowiedź do 3 dni"
+    enterprise:
+      name: "Enterprise"
+      unlimited: "Nieograniczone posty"
+      storage: "%{size} przestrzeni"
+      custom_theme: "Własny projekt motywu"
+      delegation: "Delegacja ról"
+      ai: "Asystent AI"
+      reputation: "Moderator reputacji"
+      priority_support: "Priorytetowe wsparcie 1 dzień"
+
+  # About section
+  about:
+    title: "Dlaczego LibreMedia?"
+    description: "Wierzymy, że wolność słowa jest fundamentem demokracji. W erze algorytmicznej cenzury i uzależnienia od platform, zapewniamy przestrzeń, gdzie Twój głos może być słyszany."
+    point1:
+      title: "Bez arbitralnej cenzury"
+      description: "Przejrzyste zasady moderacji. Bez cichych banów, bez algorytmicznego tłumienia."
+    point2:
+      title: "Globalny zasięg"
+      description: "Pełne wsparcie wielojęzyczne. Docieraj do odbiorców w Polsce, Ukrainie, Litwie i dalej."
+    point3:
+      title: "Społeczność na pierwszym miejscu"
+      description: "Stworzone dla dziennikarzy, weteranów, aktywistów i każdego, kto ceni prawdę i przejrzystość."
+
+  # FAQ section
+  faq:
+    title: "Najczęściej Zadawane Pytania"
+    subtitle: "Odpowiedzi na pytania dotyczące licencji i modelu biznesowego LibreMedia."
+    q1:
+      question: "To nie jest open source!"
+      answer: "Zgadza się. LibreMedia nie twierdzi, że jest open source i nie używa licencji zatwierdzonej przez OSI. Kod jest publiczny z założenia projektowego, nie z obowiązku prawnego."
+    q2:
+      question: "Nadużywacie społeczności open source?"
+      answer: "Nie. Nie oznaczamy projektu błędnie, nie używamy licencji open source w sposób oszukańczy i nie ograniczamy praw wstecz. Wszystko jest jasne od pierwszego dnia."
+    q3:
+      question: "Dlaczego nie AGPL?"
+      answer: "Ponieważ AGPL jest niekompatybilna ze zrównoważonym rozwojem SaaS i nie zapobiega skutecznie komercyjnemu pasożytnictwu ani klonowaniu usług."
+    q4:
+      question: "Dlaczego nie mogę hostować tego samodzielnie?"
+      answer: "Ponieważ hosting i obsługa platformy JEST produktem. LibreMedia już zapewnia bezpłatny niekomercyjny tier poprzez oficjalny SaaS. Self-hosting lub prowadzenie własnej usługi wykracza poza zakres dozwolonego użycia."
+    q5:
+      question: "Dlaczego przyjmujecie pull requesty, skoro produkt jest komercyjny?"
+      answer: "Ponieważ przejrzystość i jakość są korzystne dla wszystkich. Współtwórcy przesyłają zmiany świadomie i na jasnych warunkach."
+    q6:
+      question: "Co jeśli sforkuję to prywatnie?"
+      answer: "Forkowanie lub modyfikacja kodu poza celami ewaluacji lub współtworzenia wymaga licencji komercyjnej. Nieautoryzowane użycie narusza licencję i obowiązujące prawo."
+
+  # Partners section
+  partners:
+    title: "Współpracujące Media i Liderzy Opinii"
+    subtitle: "Wolne media oznaczają niezależne media. Prawdziwa niezależność wymaga niezależności finansowej — wspieranej przez świadomych odbiorców."
+    join_message: "Dołącz do społeczności, która sama utrzymuje swoje media — bez papki od państwa, bez skorumpowanych sponsorów, bez cenzury."
+
+  # Carousel navigation
+  carousel:
+    prev: "Poprzedni"
+    next: "Następny"
+
+  # License page
+  license:
+    title: "Licencja"
+    page_title: "Licencja — LibreMedia"
+    badge: "SOURCE-AVAILABLE COMMERCIAL LICENSE (SACL-1.0)"
+    copyright_title: "Informacja o prawach autorskich"
+    summary_title: "Streszczenie licencji"
+    summary_text: "To oprogramowanie jest udostępnione na warunkach licencji Source-Available Commercial License. Kod źródłowy jest publiczny z założenia projektowego, ale NIE jest to open source."
+    disclaimer: "TO OPROGRAMOWANIE NIE JEST OPEN SOURCE. Kod jest publiczny do wglądu, ale użycie komercyjne wymaga osobnej licencji."
+    can_do_title: "Co możesz robić"
+    can_view: "Przeglądać i analizować kod źródłowy"
+    can_evaluate: "Uruchamiać lokalnie wyłącznie do celów ewaluacji i testów"
+    can_audit: "Przeprowadzać audyt bezpieczeństwa i przegląd kodu"
+    can_contribute: "Modyfikować wyłącznie w celu przesłania wkładu (pull request)"
+    cannot_do_title: "Czego NIE możesz robić"
+    cannot_commercial: "Używać do celów komercyjnych bez licencji"
+    cannot_saas: "Oferować jako SaaS, usługę hostowaną lub platformę"
+    cannot_redistribute: "Redystrybuować, sublicencjonować lub sprzedawać"
+    cannot_compete: "Tworzyć konkurencyjnych produktów lub usług"
+    contributions_title: "Wkład (Contributions)"
+    contributions_text: "Każdy wkład przesłany do projektu jest licencjonowany na rzecz Licencjodawcy na zasadzie wyłącznej, wieczystej, nieodwołalnej, ogólnoświatowej i nieodpłatnej."
+    not_opensource_title: "To NIE jest Open Source"
+    not_opensource_text: "Ta licencja nie przyznaje żadnych praw na podstawie jakiejkolwiek licencji open source zatwierdzonej przez OSI. Żadna część oprogramowania nie podlega automatycznemu relicencjonowaniu ani konwersji do MIT, Apache, GPL lub innej licencji open source."
+    warranty_title: "Wyłączenie gwarancji"
+    warranty_text: 'OPROGRAMOWANIE JEST DOSTARCZANE „TAK JAK JEST", BEZ JAKIEJKOLWIEK GWARANCJI, WYRAŹNEJ LUB DOROZUMIANEJ, W TYM BEZ GWARANCJI PRZYDATNOŚCI HANDLOWEJ LUB PRZYDATNOŚCI DO OKREŚLONEGO CELU.'
+    jurisdiction_title: "Prawo właściwe"
+    jurisdiction_text: "Niniejsza Licencja podlega prawu Anglii i Walii i będzie interpretowana zgodnie z nim. Wszelkie spory będą rozstrzygane przez sądy Anglii i Walii."
+    full_text_title: "Pełny tekst licencji"
+    full_text_intro: "Pełny tekst licencji jest dostępny w repozytorium źródłowym:"
+    view_on_github: "Zobacz LICENSE na GitHub"
+    contact_title: "Kontakt"
+    contact_text: "W sprawach licencji komercyjnych i zapytań prawnych:"
+
+  # Footer
+  footer:
+    tagline: "Wolność Słowa, Wolne Media"
+    product: "Produkt"
+    company: "Firma"
+    legal: "Prawne"
+    docs: "Dokumentacja"
+    contact: "Kontakt"
+    careers: "Kariera"
+    privacy: "Polityka Prywatności"
+    terms: "Regulamin"
+    accessibility: "Dostępność"
+    rights: "Wszelkie prawa zastrzeżone."
+
+  # Video
+  video:
+    not_supported: "Twoja przeglądarka nie obsługuje odtwarzania wideo."
+
   # Common
   common:
     save: "Zapisz"
@@ -21,21 +233,6 @@ pl:
     no: "Nie"
     or: "lub"
     and: "i"
-
-  # Navigation
-  nav:
-    home: "Strona główna"
-    blog: "Blog"
-    videos: "Wideo"
-    photos: "Zdjęcia"
-    about: "O nas"
-    contact: "Kontakt"
-    login: "Zaloguj się"
-    logout: "Wyloguj się"
-    register: "Zarejestruj się"
-    profile: "Profil"
-    settings: "Ustawienia"
-    dashboard: "Panel"
 
   # Authentication
   auth:

@@ -1,0 +1,17 @@
+- cache ["partners", I18n.locale, partners.cache_key_with_version] do
+  .partners-carousel data-controller="carousel" data-carousel-interval-value="7000"
+    button.carousel-arrow.carousel-arrow-prev type="button" data-action="click->carousel#prev" aria-label=t('carousel.prev')
+      i.fa-solid.fa-chevron-left aria-hidden="true"
+
+    .carousel-viewport
+      .carousel-track data-carousel-target="track"
+        - partners.each do |partner|
+          a.partner-card href=partner.url target="_blank" rel="noopener"
+            .partner-logo
+              i class=partner.icon_class aria-hidden="true"
+            .partner-info
+              h4= partner.name
+              p= partner.description
+
+    button.carousel-arrow.carousel-arrow-next type="button" data-action="click->carousel#next" aria-label=t('carousel.next')
+      i.fa-solid.fa-chevron-right aria-hidden="true"

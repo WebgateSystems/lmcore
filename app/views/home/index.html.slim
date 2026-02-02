@@ -1,0 +1,405 @@
+- content_for :title, t('site.title')
+
+/! ===== HEADER / NAVIGATION =====
+header.header role="banner"
+  .container
+    nav.nav role="navigation" aria-label=t('navigation.main')
+      /! Logo
+      a.logo href=root_path aria-label="LibreMedia Home"
+        = image_tag 'blacklogo_LibreMedia.png', class: 'logo-light', alt: 'LibreMedia', width: 160, height: 40
+        = image_tag 'whitelogo_LibreMedia.png', class: 'logo-dark', alt: 'LibreMedia', width: 160, height: 40
+
+      /! Navigation links (desktop)
+      .nav-links.desktop-only
+        a.nav-link href="#features"= t('nav.features')
+        a.nav-link href="#pricing"= t('nav.pricing')
+        a.nav-link href="#about"= t('nav.about')
+
+      /! Right side controls
+      .nav-controls
+        /! Theme Toggle (sun/moon like akademy.edu.pl)
+        button.theme-toggle type="button" data-controller="theme" data-action="click->theme#toggle" aria-label=t('theme.toggle') title=t('theme.toggle')
+          i.fa-regular.fa-sun.theme-icon-light aria-hidden="true"
+          i.fa-regular.fa-moon.theme-icon-dark aria-hidden="true"
+
+        /! Language Switcher
+        .dropdown data-controller="dropdown"
+          button.dropdown-toggle type="button" data-action="click->dropdown#toggle" aria-expanded="false" aria-haspopup="true"
+            i.fa-solid.fa-globe aria-hidden="true"
+            span.current-lang= I18n.locale.to_s.upcase
+            i.fa-solid.fa-chevron-down.dropdown-arrow aria-hidden="true"
+          .dropdown-menu role="menu" data-dropdown-target="menu"
+            a.dropdown-item href=switch_locale_path('en') role="menuitem" lang="en"
+              | EN
+              span.lang-name English
+            a.dropdown-item href=switch_locale_path('pl') role="menuitem" lang="pl"
+              | PL
+              span.lang-name Polski
+            a.dropdown-item href=switch_locale_path('uk') role="menuitem" lang="uk"
+              | UA
+              span.lang-name Українська
+
+        /! Auth button (single)
+        .auth-buttons.desktop-only
+          = link_to t('nav.login'), new_user_session_path, class: 'btn btn-primary'
+
+        /! Mobile menu toggle
+        button.mobile-menu-toggle.mobile-only type="button" data-controller="mobile-menu" data-action="click->mobile-menu#toggle" aria-label=t('nav.menu') aria-expanded="false"
+          i.fa-solid.fa-bars aria-hidden="true"
+
+    /! Mobile navigation
+    .mobile-nav.mobile-only data-mobile-menu-target="menu"
+      a.nav-link href="#features"= t('nav.features')
+      a.nav-link href="#pricing"= t('nav.pricing')
+      a.nav-link href="#about"= t('nav.about')
+      .mobile-auth
+        = link_to t('nav.login'), new_user_session_path, class: 'btn btn-primary'
+
+
+/! ===== HERO SECTION =====
+section.hero#hero role="region" aria-labelledby="hero-title"
+  .container
+    .hero-content
+      .hero-text
+        h1#hero-title.hero-title= t('hero.title')
+        p.hero-subtitle= t('hero.subtitle')
+        .hero-badges
+          span.badge
+            i.fa-solid.fa-download aria-hidden="true"
+            = t('badges.open_export')
+          span.badge
+            i.fa-solid.fa-unlock aria-hidden="true"
+            = t('badges.no_lockin')
+          span.badge
+            i.fa-solid.fa-shield-halved aria-hidden="true"
+            = t('badges.e2e_optional')
+        .hero-cta
+          = link_to new_user_registration_path, class: 'btn btn-primary btn-lg' do
+            = t('cta.join_movement')
+            i.fa-solid.fa-arrow-right aria-hidden="true"
+
+      .hero-video
+        .video-container
+          /! Placeholder for opener video - will be replaced with actual video
+          .video-placeholder data-controller="video" data-video-locale-value=I18n.locale
+            .video-poster
+              i.fa-solid.fa-play-circle aria-hidden="true"
+              span.video-label= t('hero.watch_video')
+            /! Video will be loaded here based on locale
+            video.hero-video-player preload="none" controls="" poster="" data-video-target="player"
+              source data-video-target="source" src="" type="video/mp4"
+              | #{t('video.not_supported')}
+
+
+/! ===== FEATURES SECTION =====
+section.features#features role="region" aria-labelledby="features-title"
+  .container
+    .section-header
+      h2#features-title.section-title= t('features.title')
+      p.section-subtitle= t('features.subtitle')
+
+    .features-grid
+      .feature-card
+        .feature-icon
+          i.fa-solid.fa-blog aria-hidden="true"
+        h3.feature-title= t('features.blog.title')
+        p.feature-description= t('features.blog.description')
+
+      .feature-card
+        .feature-icon
+          i.fa-solid.fa-video aria-hidden="true"
+        h3.feature-title= t('features.video.title')
+        p.feature-description= t('features.video.description')
+
+      .feature-card
+        .feature-icon
+          i.fa-solid.fa-comments aria-hidden="true"
+        h3.feature-title= t('features.forum.title')
+        p.feature-description= t('features.forum.description')
+
+      .feature-card
+        .feature-icon
+          i.fa-solid.fa-lock aria-hidden="true"
+        h3.feature-title= t('features.chat.title')
+        p.feature-description= t('features.chat.description')
+
+      .feature-card
+        .feature-icon
+          i.fa-solid.fa-broadcast-tower aria-hidden="true"
+        h3.feature-title= t('features.live.title')
+        p.feature-description= t('features.live.description')
+
+      .feature-card
+        .feature-icon
+          i.fa-solid.fa-star aria-hidden="true"
+        h3.feature-title= t('features.reputation.title')
+        p.feature-description= t('features.reputation.description')
+
+
+/! ===== ABOUT SECTION =====
+section.about#about role="region" aria-labelledby="about-title"
+  .container
+    .about-content
+      .about-text
+        h2#about-title.section-title= t('about.title')
+        p.about-description= t('about.description')
+        .about-points
+          .about-point
+            i.fa-solid.fa-shield-halved aria-hidden="true"
+            div
+              h4= t('about.point1.title')
+              p= t('about.point1.description')
+          .about-point
+            i.fa-solid.fa-globe aria-hidden="true"
+            div
+              h4= t('about.point2.title')
+              p= t('about.point2.description')
+          .about-point
+            i.fa-solid.fa-users aria-hidden="true"
+            div
+              h4= t('about.point3.title')
+              p= t('about.point3.description')
+
+
+/! ===== PRICING SECTION =====
+section.pricing#pricing role="region" aria-labelledby="pricing-title"
+  .container
+    .section-header
+      h2#pricing-title.section-title= t('pricing.title')
+      p.section-subtitle= t('pricing.subtitle')
+
+    .pricing-grid
+      /! Free Plan
+      .pricing-card
+        .pricing-header
+          h3.pricing-name= t('pricing.free.name')
+          .pricing-price
+            span.price-amount 0
+            span.price-currency €
+            span.price-period= t('pricing.per_month')
+        .pricing-features
+          ul
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.free.posts', count: 30)
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.free.storage', size: '40MB')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.free.themes')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.free.chat')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.free.forum_read')
+        .pricing-cta
+          = link_to t('cta.start_free'), new_user_registration_path, class: 'btn btn-secondary btn-block'
+
+      /! Basic Plan
+      .pricing-card
+        .pricing-header
+          h3.pricing-name= t('pricing.basic.name')
+          .pricing-price
+            span.price-amount 10
+            span.price-currency €
+            span.price-period= t('pricing.per_month')
+        .pricing-features
+          ul
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.basic.posts', count: 60)
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.basic.storage', size: '100MB')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.basic.themes')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.basic.analytics')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.basic.forum_write')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.basic.live')
+        .pricing-cta
+          = link_to t('cta.choose_plan'), new_user_registration_path(plan: 'basic'), class: 'btn btn-secondary btn-block'
+
+      /! Professional Plan (Featured)
+      .pricing-card.pricing-featured
+        .pricing-badge= t('pricing.popular')
+        .pricing-header
+          h3.pricing-name= t('pricing.professional.name')
+          .pricing-price
+            span.price-amount 50
+            span.price-currency €
+            span.price-period= t('pricing.per_month')
+        .pricing-features
+          ul
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.professional.posts', count: 90)
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.professional.storage', size: '1GB')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.professional.video')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.professional.domain')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.professional.analytics')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.professional.export')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.professional.support')
+        .pricing-cta
+          = link_to t('cta.choose_plan'), new_user_registration_path(plan: 'professional'), class: 'btn btn-primary btn-block'
+
+      /! Enterprise Plan
+      .pricing-card
+        .pricing-header
+          h3.pricing-name= t('pricing.enterprise.name')
+          .pricing-price
+            span.price-amount 200
+            span.price-currency €
+            span.price-period= t('pricing.per_month')
+        .pricing-features
+          ul
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.enterprise.unlimited')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.enterprise.storage', size: '20GB')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.enterprise.custom_theme')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.enterprise.delegation')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.enterprise.ai')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.enterprise.reputation')
+            li
+              i.fa-solid.fa-check aria-hidden="true"
+              = t('pricing.enterprise.priority_support')
+        .pricing-cta
+          = link_to t('cta.contact_sales'), '#contact', class: 'btn btn-secondary btn-block'
+
+
+/! ===== FAQ SECTION =====
+section.faq#faq role="region" aria-labelledby="faq-title"
+  .container
+    .section-header
+      h2#faq-title.section-title= t('faq.title')
+      p.section-subtitle= t('faq.subtitle')
+
+    .faq-list data-controller="accordion"
+      .faq-item data-accordion-target="item"
+        button.faq-question type="button" data-action="click->accordion#toggle" aria-expanded="false"
+          span= t('faq.q1.question')
+          i.fa-solid.fa-chevron-down.faq-icon aria-hidden="true"
+        .faq-answer
+          p= t('faq.q1.answer')
+
+      .faq-item data-accordion-target="item"
+        button.faq-question type="button" data-action="click->accordion#toggle" aria-expanded="false"
+          span= t('faq.q2.question')
+          i.fa-solid.fa-chevron-down.faq-icon aria-hidden="true"
+        .faq-answer
+          p= t('faq.q2.answer')
+
+      .faq-item data-accordion-target="item"
+        button.faq-question type="button" data-action="click->accordion#toggle" aria-expanded="false"
+          span= t('faq.q3.question')
+          i.fa-solid.fa-chevron-down.faq-icon aria-hidden="true"
+        .faq-answer
+          p= t('faq.q3.answer')
+
+      .faq-item data-accordion-target="item"
+        button.faq-question type="button" data-action="click->accordion#toggle" aria-expanded="false"
+          span= t('faq.q4.question')
+          i.fa-solid.fa-chevron-down.faq-icon aria-hidden="true"
+        .faq-answer
+          p= t('faq.q4.answer')
+
+      .faq-item data-accordion-target="item"
+        button.faq-question type="button" data-action="click->accordion#toggle" aria-expanded="false"
+          span= t('faq.q5.question')
+          i.fa-solid.fa-chevron-down.faq-icon aria-hidden="true"
+        .faq-answer
+          p= t('faq.q5.answer')
+
+      .faq-item data-accordion-target="item"
+        button.faq-question type="button" data-action="click->accordion#toggle" aria-expanded="false"
+          span= t('faq.q6.question')
+          i.fa-solid.fa-chevron-down.faq-icon aria-hidden="true"
+        .faq-answer
+          p= t('faq.q6.answer')
+
+
+/! ===== PARTNERS / MEDIA SECTION =====
+section.partners#partners role="region" aria-labelledby="partners-title"
+  .container
+    .section-header
+      h2#partners-title.section-title= t('partners.title')
+      p.section-subtitle= t('partners.subtitle')
+
+    - if @partners.any?
+      == render 'partners', partners: @partners
+
+    .partners-cta
+      p.partners-message= t('partners.join_message')
+
+
+/! ===== FOOTER =====
+footer.footer role="contentinfo"
+  .container
+    .footer-content
+      .footer-brand
+        = image_tag 'blacklogo_LibreMedia.png', class: 'logo-light', alt: 'LibreMedia', width: 120, height: 30
+        = image_tag 'whitelogo_LibreMedia.png', class: 'logo-dark', alt: 'LibreMedia', width: 120, height: 30
+        p.footer-tagline= t('footer.tagline')
+
+      .footer-column
+        h4= t('footer.product')
+        ul
+          li= link_to t('nav.features'), '#features'
+          li= link_to t('nav.pricing'), '#pricing'
+          li= link_to t('footer.docs'), '#'
+
+      .footer-column
+        h4= t('footer.company')
+        ul
+          li= link_to t('nav.about'), '#about'
+          li= link_to t('footer.contact'), '#contact'
+          li= link_to t('footer.careers'), '#'
+
+      .footer-column
+        h4= t('footer.legal')
+        ul
+          li= link_to t('license.title'), license_path
+          li= link_to t('footer.privacy'), privacy_path
+          li= link_to t('footer.terms'), terms_path
+          li= link_to t('footer.accessibility'), '#'
+
+    .footer-bottom
+      p.copyright
+        | © 2026 Webgate Systems LTD. #{t('footer.rights')}
+      .footer-social
+        a href="https://t.me/sladkowski" target="_blank" rel="noopener" aria-label="Telegram"
+          i.fa-brands.fa-telegram aria-hidden="true"
+        a href="https://github.com/WebgateSystems/lmcore" target="_blank" rel="noopener" aria-label="GitHub"
+          i.fa-brands.fa-github aria-hidden="true"
+

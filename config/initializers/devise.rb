@@ -37,8 +37,11 @@ Devise.setup do |config|
     jwt.expiration_time = 24.hours.to_i
   end
 
-  # Navigational formats (for API-only, set to empty)
-  config.navigational_formats = []
+  # Navigational formats (include html for web forms)
+  config.navigational_formats = [ "*/*", :html, :turbo_stream ]
+
+  # Use parent controller for layout
+  config.parent_controller = "DeviseParentController"
 
   # Warden configuration
   config.warden do |manager|

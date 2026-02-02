@@ -1,0 +1,38 @@
+- content_for :title, t('auth.sign_in')
+
+h2.auth-title= t('auth.sign_in')
+
+= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'auth-form' }) do |f|
+  - if flash[:alert]
+    .auth-alert.auth-alert-error
+      i.fa-solid.fa-circle-exclamation
+      span= flash[:alert]
+
+  .form-group
+    = f.label :email, t('auth.email')
+    .input-wrapper
+      i.fa-solid.fa-envelope.input-icon
+      = f.email_field :email, class: 'form-input', autofocus: true, autocomplete: 'email', placeholder: 'email@example.com'
+
+  .form-group
+    = f.label :password, t('auth.password')
+    .input-wrapper
+      i.fa-solid.fa-lock.input-icon
+      = f.password_field :password, class: 'form-input', autocomplete: 'current-password', placeholder: '••••••••'
+
+  .form-row
+    .form-check
+      = f.check_box :remember_me, class: 'form-checkbox'
+      = f.label :remember_me, t('auth.remember_me'), class: 'form-check-label'
+    
+    = link_to t('auth.forgot_password'), new_password_path(resource_name), class: 'auth-link'
+
+  .form-actions
+    = f.submit t('auth.sign_in'), class: 'btn btn-primary btn-lg btn-block'
+
+  .auth-divider
+    span= t('common.or')
+
+  .auth-footer-text
+    span.text-muted= t('auth.no_account')
+    = link_to t('auth.sign_up'), new_registration_path(resource_name), class: 'auth-link auth-link-bold'
