@@ -54,7 +54,7 @@ gem "multi_json"
 gem "pgcrypto"
 
 # Pagination
-gem "pagy", "~> 9.0"
+gem "pagy", "~> 43.2"
 
 # Soft delete
 gem "discard", "~> 1.3"
