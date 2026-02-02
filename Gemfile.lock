@@ -184,11 +184,10 @@ GEM
     elastic-transport (8.4.1)
       faraday (< 3)
       multi_json
-    elasticsearch (8.19.3)
+    elasticsearch (9.2.0)
       elastic-transport (~> 8.3)
-      elasticsearch-api (= 8.19.3)
-      ostruct
-    elasticsearch-api (8.19.3)
+      elasticsearch-api (= 9.2.0)
+    elasticsearch-api (9.2.0)
       multi_json
     erb (6.0.1)
     erubi (1.13.1)
@@ -602,7 +601,7 @@ DEPENDENCIES
   devise
   devise-jwt
   discard (~> 1.3)
-  elasticsearch (~> 8.0)
+  elasticsearch (~> 9.2)
   factory_bot_rails
   faker
   faraday
@@ -704,8 +703,8 @@ CHECKSUMS
   dry-configurable (1.3.0) sha256=882d862858567fc1210d2549d4c090f34370fc1bb7c5c1933de3fe792e18afa8
   dry-core (1.2.0) sha256=0cc5a7da88df397f153947eeeae42e876e999c1e30900f3c536fb173854e96a1
   elastic-transport (8.4.1) sha256=b6300d41f26b0a9886b79e3119052ca829ef596d40a96a706d42596d23843306
-  elasticsearch (8.19.3) sha256=3fe0275073a93730778bce33ceb76dd098d2feea499d3ecf7984790c474deb98
-  elasticsearch-api (8.19.3) sha256=dc8029b596cc82f9a3a8c9dcc8a1286b4485288c8e62f5ed540eb0540ce474f2
+  elasticsearch (9.2.0) sha256=bc5938fc84645d95f6a4655f5e08c04fc8a52de9c321623c0e66d64375a6e1de
+  elasticsearch-api (9.2.0) sha256=775136055d56a3d23be13a93ba8d67c5bb0ed2895f15270ca144fbc0ae920190
   erb (6.0.1) sha256=28ecdd99c5472aebd5674d6061e3c6b0a45c049578b071e5a52c2a7f13c197e5
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   factory_bot (6.5.6) sha256=12beb373214dccc086a7a63763d6718c49769d5606f0501e0a4442676917e077
