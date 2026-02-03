@@ -1,0 +1,84 @@
+- content_for :title, "Audit Logs - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li
+    span Audit Logs
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove Audit Logs
+    p.uk-text-meta= "#{@pagy.count} log entries"
+
+/! Filters
+.uk-card.uk-margin-top
+  .uk-card-body.uk-padding-small
+    = form_tag admin_audit_logs_path, method: :get, class: 'uk-grid-small', 'data-uk-grid': '' do
+      div(class="uk-width-1-5@m")
+        select.uk-select name="action_type"
+          option value="" All actions
+          - @action_types.each do |action|
+            option(value=action selected=(params[:action_type] == action))= action.humanize
+      div(class="uk-width-1-5@m")
+        select.uk-select name="resource_type"
+          option value="" All resources
+          - @resource_types.each do |type|
+            option(value=type selected=(params[:resource_type] == type))= type
+      div(class="uk-width-1-5@m")
+        select.uk-select name="user_id"
+          option value="" All users
+          - @users.each do |user|
+            option(value=user.id selected=(params[:user_id].to_s == user.id.to_s))= user.full_name
+      div(class="uk-width-1-5@m")
+        input.uk-input type="date" name="from_date" value=params[:from_date] placeholder="From date"
+      div(class="uk-width-1-5@m")
+        input.uk-input type="date" name="to_date" value=params[:to_date] placeholder="To date"
+      .uk-width-auto
+        button.sc-button.sc-button-primary type="submit"
+          i.mdi.mdi-magnify
+        = link_to admin_audit_logs_path, class: 'sc-button sc-button-default uk-margin-small-left'
+          i.mdi.mdi-refresh
+
+/! Audit Logs Table
+.uk-card.uk-margin-top
+  .uk-card-body.uk-padding-remove
+    .uk-overflow-auto
+      table.uk-table.uk-table-hover.uk-table-middle.uk-table-divider.uk-margin-remove.uk-table-small
+        thead
+          tr
+            th Time
+            th User
+            th Action
+            th Resource
+            th IP Address
+            th.uk-text-right Details
+        tbody
+          - @audit_logs.each do |log|
+            tr
+              td
+                = log.created_at.strftime('%Y-%m-%d %H:%M:%S')
+              td
+                - if log.user
+                  = log.user.full_name
+                - else
+                  span.uk-text-muted System
+              td
+                span.uk-label(class=activity_badge_class(log.action))= log.action.humanize
+              td
+                - if log.auditable_type.present?
+                  = log.auditable_type
+                  - if log.auditable_id.present?
+                    span.uk-text-muted= " ##{log.auditable_id.to_s.first(8)}"
+                - else
+                  span.uk-text-muted -
+              td
+                code.uk-text-small= log.ip_address || '-'
+              td.uk-text-right
+                = link_to admin_audit_log_path(log), class: 'uk-icon-link', title: 'View Details'
+                  i.mdi.mdi-eye
+
+/! Pagination
+- if @pagy.pages > 1
+  .uk-flex.uk-flex-center.uk-margin-medium-top
+    == pagy_nav(@pagy)

@@ -1,0 +1,14 @@
+- content_for :title, "New Page - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Pages', admin_pages_path
+  li
+    span New Page
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove New Page
+
+== render 'form'

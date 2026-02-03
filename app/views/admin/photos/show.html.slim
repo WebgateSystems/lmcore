@@ -1,0 +1,91 @@
+- content_for :title, "#{@photo.title} - Photos - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Photos', admin_photos_path
+  li
+    span= truncate(@photo.title, length: 50)
+
+/! Header
+.uk-card.uk-margin-top
+  .uk-card-body
+    .uk-grid-small.uk-flex-middle data-uk-grid=""
+      .uk-width-expand
+        h3.uk-margin-remove= @photo.title
+        p.uk-text-meta.uk-margin-remove
+          | by #{@photo.author&.full_name || 'Unknown'}
+          |  · Created #{time_ago_in_words(@photo.created_at)} ago
+        .uk-margin-small-top
+          - case @photo.status
+          - when 'published'
+            span.uk-label.md-bg-green-500= @photo.status.capitalize
+          - when 'draft'
+            span.uk-label.md-bg-grey-500= @photo.status.capitalize
+          - else
+            span.uk-label.md-bg-amber-500= @photo.status.capitalize
+
+      .uk-width-auto
+        .uk-button-group
+          = link_to edit_admin_photo_path(@photo), class: 'sc-button sc-button-primary'
+            i.mdi.mdi-pencil.uk-margin-small-right
+            | Edit
+
+          - if @photo.status == 'draft'
+            = link_to publish_admin_photo_path(@photo), class: 'sc-button sc-button-success uk-margin-small-left', data: { turbo_method: :post }
+              i.mdi.mdi-publish.uk-margin-small-right
+              | Publish
+          - elsif @photo.status == 'published'
+            = link_to unpublish_admin_photo_path(@photo), class: 'sc-button sc-button-warning uk-margin-small-left', data: { turbo_method: :post }
+              i.mdi.mdi-eye-off.uk-margin-small-right
+              | Unpublish
+
+/! Content
+.uk-margin-medium-top data-uk-grid=""
+  div(class="uk-width-2-3@m")
+    .uk-card
+      .uk-card-body
+        - if @photo.image.present?
+          = image_tag @photo.image.url, alt: @photo.title, style: 'max-width: 100%;'
+        - else
+          .uk-text-center.uk-padding
+            i.mdi.mdi-image-off style="font-size: 64px;" class="uk-text-muted"
+            p.uk-text-muted No image
+
+        - if @photo.description.present?
+          hr
+          p= @photo.description
+
+  div(class="uk-width-1-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Details
+
+      .uk-card-body
+        dl.uk-description-list
+          dt Status
+          dd
+            - if @photo.status == 'published'
+              span.uk-label.md-bg-green-500= @photo.status.capitalize
+            - else
+              span.uk-label.md-bg-grey-500= @photo.status.capitalize
+
+          dt Author
+          dd= @photo.author&.full_name || 'Unknown'
+
+          - if @photo.alt_text.present?
+            dt Alt Text
+            dd= @photo.alt_text
+
+          dt Created
+          dd= @photo.created_at.strftime('%B %d, %Y at %H:%M')
+
+    .uk-card.uk-margin-top
+      .uk-card-header
+        h3.uk-card-title Actions
+
+      .uk-card-body
+        ul.uk-list
+          li
+            = link_to admin_photo_path(@photo), class: 'uk-flex uk-flex-middle md-color-red-500', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }
+              i.mdi.mdi-delete.uk-margin-small-right
+              | Delete Photo

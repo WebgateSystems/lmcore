@@ -1,0 +1,14 @@
+- content_for :title, "New Tag - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Tags', admin_tags_path
+  li
+    span New Tag
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove New Tag
+
+== render 'form'

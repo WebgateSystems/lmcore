@@ -1,0 +1,16 @@
+- content_for :title, "Edit #{@user.full_name} - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Users', admin_users_path
+  li= link_to @user.full_name, admin_user_path(@user)
+  li
+    span Edit
+
+/! Page Header
+.uk-flex.uk-flex-middle.uk-margin-top.uk-margin-bottom
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove Edit User
+    p.uk-text-meta= @user.email
+
+= render 'form'

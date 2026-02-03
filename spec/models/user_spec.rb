@@ -31,8 +31,9 @@ RSpec.describe User do
   end
 
   describe 'associations' do
-    it { is_expected.to belong_to(:role).optional }
     it { is_expected.to belong_to(:price_plan).optional }
+    it { is_expected.to have_many(:role_assignments).dependent(:destroy) }
+    it { is_expected.to have_many(:assigned_roles).through(:role_assignments) }
     it { is_expected.to have_many(:posts).dependent(:destroy) }
     it { is_expected.to have_many(:videos).dependent(:destroy) }
     it { is_expected.to have_many(:photos).dependent(:destroy) }
@@ -82,22 +83,19 @@ RSpec.describe User do
 
   describe 'role helpers' do
     it 'identifies super admin' do
-      role = create(:role, slug: 'super-admin', permissions: [ '*' ], priority: 100, system_role: true)
-      user = create(:user, role: role)
+      user = create(:user, :super_admin)
       expect(user.super_admin?).to be true
       expect(user.admin?).to be true
     end
 
     it 'identifies admin' do
-      role = create(:role, slug: 'admin', permissions: %w[manage_users], priority: 90, system_role: true)
-      user = create(:user, role: role)
+      user = create(:user, :admin)
       expect(user.super_admin?).to be false
       expect(user.admin?).to be true
     end
 
     it 'identifies author' do
-      role = create(:role, slug: 'author', permissions: %w[create_content], priority: 30, system_role: true)
-      user = create(:user, role: role)
+      user = create(:user, :author)
       expect(user.author?).to be true
     end
   end

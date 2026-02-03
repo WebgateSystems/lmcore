@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
+  include Pagy::Backend
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
@@ -16,6 +17,23 @@ class ApplicationController < ActionController::Base
 
   # Handle Pundit errors
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  # Stop impersonating - return to original admin user
+  def stop_impersonating
+    admin_user_id = session[:admin_user_id]
+
+    if admin_user_id.present?
+      admin_user = User.find_by(id: admin_user_id)
+      if admin_user
+        session.delete(:admin_user_id)
+        sign_in(admin_user, bypass: true)
+        redirect_to admin_users_path, notice: "Returned to your admin account."
+        return
+      end
+    end
+
+    redirect_to root_path, alert: "No impersonation session found."
+  end
 
   protected
 
@@ -64,7 +82,7 @@ class ApplicationController < ActionController::Base
   end
 
   def skip_authorization?
-    devise_controller? || controller_name.in?(%w[health home locale legal])
+    devise_controller? || controller_name.in?(%w[health home locale legal]) || action_name == "stop_impersonating"
   end
 
   def skip_pundit_verify?

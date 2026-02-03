@@ -1,0 +1,80 @@
+- content_for :title, "Audit Log - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Audit Logs', admin_audit_logs_path
+  li
+    span Log Entry
+
+/! Header
+.uk-card.uk-margin-top
+  .uk-card-body
+    h3.uk-margin-remove
+      | Audit Log Entry
+    p.uk-text-meta
+      = @audit_log.created_at.strftime('%B %d, %Y at %H:%M:%S')
+
+/! Content
+.uk-margin-medium-top data-uk-grid=""
+  div(class="uk-width-2-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Details
+
+      .uk-card-body
+        dl.uk-description-list
+          dt Action
+          dd
+            span.uk-label(class=activity_badge_class(@audit_log.action))= @audit_log.action.humanize
+
+          dt User
+          dd
+            - if @audit_log.user
+              = link_to @audit_log.user.full_name, admin_user_path(@audit_log.user)
+            - else
+              span.uk-text-muted System
+
+          dt Resource
+          dd
+            - if @audit_log.auditable_type.present?
+              = @audit_log.auditable_type
+              - if @audit_log.auditable_id.present?
+                |  ##{@audit_log.auditable_id}
+            - else
+              span.uk-text-muted -
+
+          dt Timestamp
+          dd= @audit_log.created_at.strftime('%Y-%m-%d %H:%M:%S %Z')
+
+          dt IP Address
+          dd
+            code= @audit_log.ip_address || '-'
+
+          dt User Agent
+          dd
+            small= @audit_log.user_agent || '-'
+
+          dt Request ID
+          dd
+            code.uk-text-small= @audit_log.request_id || '-'
+
+    - if @audit_log.metadata.present? && @audit_log.metadata.any?
+      .uk-card.uk-margin-top
+        .uk-card-header
+          h3.uk-card-title Metadata
+
+        .uk-card-body
+          pre.uk-background-muted.uk-padding-small
+            = JSON.pretty_generate(@audit_log.metadata)
+
+  div(class="uk-width-1-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Navigation
+
+      .uk-card-body
+        ul.uk-list
+          li
+            = link_to admin_audit_logs_path, class: 'uk-flex uk-flex-middle'
+              i.mdi.mdi-arrow-left.uk-margin-small-right
+              | Back to Audit Logs

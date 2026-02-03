@@ -1,0 +1,68 @@
+header#sc-header
+  nav.uk-navbar.uk-navbar-container data-uk-navbar="mode: click; duration: 360"
+    .uk-navbar-left.nav-overlay-small.uk-margin-right.uk-navbar-aside
+      a#sc-sidebar-main-toggle href="#"
+        i.mdi.mdi-backburger.sc-menu-close
+        i.mdi.mdi-menu.sc-menu-open
+      .sc-brand(class="uk-visible@s")
+        = link_to admin_root_path do
+          = image_tag 'minilogo_WhiteBird.png', alt: 'LibreMedia Admin', style: 'max-height: 32px;'
+
+    .uk-navbar-left.nav-overlay.uk-margin-right(class="uk-visible@m")
+      ul.uk-navbar-nav
+        li
+          = link_to admin_root_path, class: 'md-color-white sc-padding-remove-left'
+            i.mdi.mdi-view-dashboard
+            span.uk-margin-small-left(class="uk-visible@l") Dashboard
+
+    /! Search overlay
+    .nav-overlay.nav-overlay-small.uk-navbar-right.uk-flex-1 hidden=""
+      a.uk-navbar-toggle(class="uk-visible@m" data-uk-toggle="target: .nav-overlay; animation: uk-animation-slide-top" href="#")
+        i.mdi.mdi-close.sc-icon-24
+      a.uk-navbar-toggle.uk-padding-remove-left(class="uk-hidden@m" data-uk-toggle="target: .nav-overlay-small; animation: uk-animation-slide-top" href="#")
+        i.mdi.mdi-close.sc-icon-24
+      .uk-navbar-item.uk-width-expand.uk-padding-remove-right
+        form.uk-search.uk-search-navbar.uk-width-1-1.uk-flex action=admin_users_path method="get"
+          .uk-flex-1.uk-position-relative
+            a.uk-form-icon.uk-form-icon-flip href="javascript:void(0)" data-uk-icon="icon: close" data-sc-clear-input=""
+            input.uk-search-input type="search" name="q" placeholder="Search users, content..." autofocus=""
+          button.sc-button.sc-button-default.sc-button-small.sc-button-icon.sc-button-flat.uk-margin-small-left type="submit"
+            i.mdi.mdi-magnify.sc-icon-24.md-color-white
+
+    .nav-overlay.nav-overlay-small.uk-navbar-right
+      ul.uk-navbar-nav
+        /! Search toggle
+        li
+          a.uk-navbar-toggle(class="uk-visible@m" href="#" data-uk-toggle="target: .nav-overlay; animation: uk-animation-slide-top")
+            i.mdi.mdi-magnify
+          a.uk-navbar-toggle(class="uk-hidden@m" href="#" id="sc-search-main-toggle-mobile" data-uk-toggle="target: .nav-overlay-small; animation: uk-animation-slide-top")
+            i.mdi.mdi-magnify
+
+        /! User dropdown
+        li
+          a href="#"
+            - if current_user&.avatar&.present?
+              = image_tag current_user.avatar.thumb.url, alt: current_user.username, class: 'sc-avatar'
+            - else
+              span.sc-avatar-initials.md-color-white.md-bg-blue-500 style="width: 32px; height: 32px; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;"
+                = current_user&.initials || "?"
+          .uk-navbar-dropdown.uk-dropdown-small
+            ul.uk-nav.uk-nav-navbar
+              li
+                = link_to root_path, target: '_blank'
+                  i.mdi.mdi-open-in-new.uk-margin-small-right
+                  | View Site
+              li
+                = link_to edit_user_registration_path
+                  i.mdi.mdi-account.uk-margin-small-right
+                  | Profile
+              li.uk-nav-divider
+              li
+                = link_to destroy_user_session_path, data: { turbo_method: :delete }
+                  i.mdi.mdi-logout.uk-margin-small-right
+                  | Log Out
+
+      /! Mobile menu toggle
+      a.sc-js-offcanvas-toggle.md-color-white.uk-margin-left(class="uk-hidden@l" href="#")
+        i.mdi.mdi-menu.sc-offcanvas-open
+        i.mdi.mdi-arrow-right.sc-offcanvas-close

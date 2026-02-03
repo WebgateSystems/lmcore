@@ -1,0 +1,290 @@
+- content_for :title, "#{@user.full_name} - Users - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Users', admin_users_path
+  li
+    span= @user.full_name
+
+/! User Header Card
+.uk-card.uk-margin-top
+  .uk-card-body
+    .uk-grid-small.uk-flex-middle data-uk-grid=""
+      .uk-width-auto
+        - if @user.avatar.present?
+          = image_tag @user.avatar.medium.url, class: 'sc-avatar sc-avatar-large', alt: @user.username, style: 'width: 80px; height: 80px;'
+        - else
+          span.sc-avatar-initials.md-color-white.sc-avatar-large class=user_role_badge_class(@user) style="width: 80px; height: 80px; font-size: 24px; display: flex; align-items: center; justify-content: center;"
+            = @user.initials
+
+      .uk-width-expand
+        h3.uk-margin-remove= @user.full_name
+        p.uk-text-meta.uk-margin-remove
+          = @user.email
+          - if @user.username.present?
+            |  · @#{@user.username}
+        .uk-margin-small-top
+          - highest_role = @user.highest_role
+          span.uk-label.uk-margin-small-right(class=user_role_badge_class(@user))= highest_role&.name || 'User'
+          - if @user.role_assignments.global.active.count > 1
+            span.uk-text-small.uk-text-muted.uk-margin-small-right= "+#{@user.role_assignments.global.active.count - 1} more"
+          span.uk-label(class=user_status_badge_class(@user))= @user.status.capitalize
+          - if @user.confirmed_at.present?
+            span.uk-label.md-bg-green-500.uk-margin-small-left
+              i.mdi.mdi-check.uk-margin-small-right
+              | Verified
+
+      .uk-width-auto
+        .uk-button-group
+          = link_to edit_admin_user_path(@user), class: 'sc-button sc-button-primary'
+            i.mdi.mdi-pencil.uk-margin-small-right
+            | Edit
+
+          - if @user.status == 'active'
+            = link_to suspend_admin_user_path(@user), class: 'sc-button sc-button-danger', data: { turbo_method: :post, turbo_confirm: 'Are you sure you want to suspend this user?' }
+              i.mdi.mdi-account-cancel.uk-margin-small-right
+              | Suspend
+          - elsif @user.status == 'suspended'
+            = link_to activate_admin_user_path(@user), class: 'sc-button sc-button-success', data: { turbo_method: :post }
+              i.mdi.mdi-account-check.uk-margin-small-right
+              | Activate
+
+          - if Admin::UserPolicy.new(current_user, @user).impersonate?
+            = link_to impersonate_admin_user_path(@user), class: 'sc-button sc-button-default uk-margin-small-left', data: { turbo_method: :post, turbo_confirm: 'Login as this user?' }
+              i.mdi.mdi-account-switch.uk-margin-small-right
+              | Impersonate
+
+/! Main Content
+.uk-margin-medium-top data-uk-grid=""
+  /! User Details
+  div(class="uk-width-2-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title User Details
+
+      .uk-card-body
+        dl.uk-description-list
+          dt Email
+          dd
+            = @user.email
+            - if @user.confirmed_at.present?
+              span.uk-text-small.uk-text-success.uk-margin-small-left
+                i.mdi.mdi-check
+                |  Confirmed #{time_ago_in_words(@user.confirmed_at)} ago
+            - else
+              span.uk-text-small.uk-text-warning.uk-margin-small-left
+                i.mdi.mdi-alert
+                |  Not confirmed
+
+          - if @user.username.present?
+            dt Username
+            dd= "@#{@user.username}"
+
+          dt Full Name
+          dd= @user.full_name
+
+          - if @user.phone.present?
+            dt Phone
+            dd= @user.phone
+
+          dt Status
+          dd
+            span.uk-label(class=user_status_badge_class(@user))= @user.status.capitalize
+
+          dt Roles
+          dd
+            - if @global_roles.any?
+              - @global_roles.each do |assignment|
+                span.uk-label.uk-margin-small-right(class=user_role_badge_class(@user))= assignment.role.name
+            - else
+              span.uk-text-muted No roles assigned
+            - if @contextual_roles.any?
+              br
+              span.uk-text-small.uk-text-muted= "+ #{@contextual_roles.count} contextual role(s)"
+
+          dt Price Plan
+          dd= @user.price_plan&.name || 'Free'
+
+          dt Locale
+          dd= @user.locale&.upcase || 'Default'
+
+          dt Timezone
+          dd= @user.timezone || 'UTC'
+
+          dt Registered
+          dd
+            = @user.created_at.strftime('%B %d, %Y at %H:%M')
+            span.uk-text-muted.uk-margin-small-left= "(#{time_ago_in_words(@user.created_at)} ago)"
+
+          dt Last Sign In
+          dd
+            - if @user.last_sign_in_at.present?
+              = @user.last_sign_in_at.strftime('%B %d, %Y at %H:%M')
+              span.uk-text-muted.uk-margin-small-left= "(#{time_ago_in_words(@user.last_sign_in_at)} ago)"
+              - if @user.last_sign_in_ip.present?
+                br
+                span.uk-text-small.uk-text-muted= "from #{@user.last_sign_in_ip}"
+            - else
+              span.uk-text-muted Never
+
+          dt Sign In Count
+          dd= @user.sign_in_count
+
+          - if @user.bio.present?
+            dt Bio
+            dd= @user.bio
+
+    /! Recent Posts
+    .uk-card.uk-margin-top
+      .uk-card-header
+        .uk-flex.uk-flex-middle
+          .uk-flex-1
+            h3.uk-card-title Recent Posts
+          - if @posts.any?
+            = link_to 'View All', '#', class: 'uk-text-small'
+
+      .uk-card-body
+        - if @posts.any?
+          ul.uk-list.uk-list-divider
+            - @posts.each do |post|
+              li.sc-list-group
+                .sc-list-body
+                  .uk-flex.uk-flex-middle
+                    .uk-flex-1
+                      = link_to post.title, '#', class: 'uk-display-block'
+                      span.uk-text-small.uk-text-muted= post.created_at.strftime('%b %d, %Y')
+                    span.uk-label class=(post.published? ? 'md-bg-green-500' : 'md-bg-grey-500')
+                      = post.status
+        - else
+          p.uk-text-center.uk-text-muted No posts yet
+
+  /! Sidebar
+  div(class="uk-width-1-3@m")
+    /! Roles Management
+    .uk-card
+      .uk-card-header
+        .uk-flex.uk-flex-middle
+          .uk-flex-1
+            h3.uk-card-title Roles
+          - if current_user.admin?
+            a.uk-text-small(href="#" data-uk-toggle="target: #add-role-modal")
+              i.mdi.mdi-plus
+              |  Add Role
+
+      .uk-card-body
+        h5.uk-margin-small-bottom Global Roles
+        - if @global_roles.any?
+          ul.uk-list.uk-list-divider.uk-margin-remove
+            - @global_roles.each do |assignment|
+              li.uk-flex.uk-flex-middle
+                .uk-flex-1
+                  span.uk-label.uk-margin-small-right(class=user_role_badge_class(@user))= assignment.role.name
+                  - if assignment.granted_by.present?
+                    br
+                    span.uk-text-small.uk-text-muted= "by #{assignment.granted_by.full_name}"
+                - if current_user.admin? && !(assignment.role.slug == 'super-admin' && @user == current_user)
+                  = link_to remove_role_admin_user_path(@user, role_assignment_id: assignment.id), class: 'uk-text-danger', data: { turbo_method: :delete, turbo_confirm: "Remove role '#{assignment.role.name}'?" }, title: 'Remove'
+                    i.mdi.mdi-close
+        - else
+          p.uk-text-small.uk-text-muted.uk-margin-remove No global roles
+
+        - if @contextual_roles.any?
+          h5.uk-margin-top.uk-margin-small-bottom Blog-Specific Roles
+          ul.uk-list.uk-list-divider.uk-margin-remove
+            - @contextual_roles.each do |assignment|
+              li.uk-flex.uk-flex-middle
+                .uk-flex-1
+                  span.uk-label.uk-margin-small-right(class=user_role_badge_class(@user))= assignment.role.name
+                  span.uk-text-small.uk-text-muted= "on @#{assignment.blog_owner&.username || 'unknown'}"
+                - if current_user.admin?
+                  = link_to remove_role_admin_user_path(@user, role_assignment_id: assignment.id), class: 'uk-text-danger', data: { turbo_method: :delete, turbo_confirm: "Remove role?" }, title: 'Remove'
+                    i.mdi.mdi-close
+
+    /! Quick Actions
+    .uk-card.uk-margin-top
+      .uk-card-header
+        h3.uk-card-title Quick Actions
+
+      .uk-card-body
+        ul.uk-list
+          li
+            = link_to '#', class: 'uk-flex uk-flex-middle'
+              i.mdi.mdi-email.uk-margin-small-right
+              | Send Email
+          li
+            = link_to '#', class: 'uk-flex uk-flex-middle'
+              i.mdi.mdi-key.uk-margin-small-right
+              | Reset Password
+
+    /! Stats
+    .uk-card.uk-margin-top
+      .uk-card-header
+        h3.uk-card-title Stats
+
+      .uk-card-body
+        .uk-child-width-1-2.uk-grid-small data-uk-grid=""
+          div
+            h4.uk-margin-remove= @user.posts.count
+            p.uk-text-small.uk-text-muted Posts
+          div
+            h4.uk-margin-remove= @user.comments.count
+            p.uk-text-small.uk-text-muted Comments
+          div
+            h4.uk-margin-remove= @user.followers.count
+            p.uk-text-small.uk-text-muted Followers
+          div
+            h4.uk-margin-remove= @user.following.count
+            p.uk-text-small.uk-text-muted Following
+
+    /! Recent Activity
+    .uk-card.uk-margin-top
+      .uk-card-header
+        h3.uk-card-title Recent Activity
+
+      .uk-card-body
+        - if @activity.any?
+          ul.uk-list.uk-list-divider
+            - @activity.first(5).each do |log|
+              li
+                .uk-flex.uk-flex-middle
+                  i.mdi.uk-margin-small-right class=activity_icon_class(log.action)
+                  .uk-flex-1
+                    span= log.action.humanize
+                    br
+                    span.uk-text-small.uk-text-muted= time_ago_in_words(log.created_at) + ' ago'
+        - else
+          p.uk-text-center.uk-text-muted No recent activity
+
+/! Add Role Modal
+- if current_user.admin?
+  #add-role-modal.uk-modal data-uk-modal=""
+    .uk-modal-dialog
+      button.uk-modal-close-default type="button" data-uk-close=""
+      .uk-modal-header
+        h2.uk-modal-title Add Role
+      .uk-modal-body
+        = form_tag add_role_admin_user_path(@user), method: :post do
+          .uk-margin
+            label.uk-form-label Role
+            .uk-form-controls
+              select.uk-select name="role_id"
+                - @available_roles.each do |role|
+                  - next if role.slug == 'super-admin' && !current_user.super_admin?
+                  option(value=role.id)= role.name
+
+          .uk-margin
+            label.uk-form-label Scope
+            .uk-form-controls
+              select.uk-select name="scope_user_id"
+                option value="" Global (system-wide)
+                option value=@user.id disabled="disabled" -- Blog-specific roles --
+                - User.with_vanity_domain.limit(50).each do |blog_owner|
+                  option(value=blog_owner.id)= "@#{blog_owner.username} (#{blog_owner.full_name})"
+
+          p.uk-text-small.uk-text-muted
+            i.mdi.mdi-information.uk-margin-small-right
+            | Global roles grant permissions across the entire system. Blog-specific roles only apply to the selected user's blog.
+
+          .uk-margin
+            button.sc-button.sc-button-primary type="submit" Add Role
+            button.sc-button.sc-button-default.uk-modal-close.uk-margin-small-left type="button" Cancel

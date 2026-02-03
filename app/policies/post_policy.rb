@@ -20,21 +20,21 @@ class PostPolicy < ApplicationPolicy
   end
 
   def update?
-    owner? || admin?
+    owner? || can_edit?
   end
 
   def destroy?
-    owner? || admin?
+    owner? || can_moderate?
   end
 
   def publish?
     return false unless user
 
-    owner? || admin?
+    owner? || can_edit?
   end
 
   def archive?
-    owner? || admin?
+    owner? || can_moderate?
   end
 
   def feature?

@@ -1,0 +1,112 @@
+aside#sc-sidebar-main.sc-sidebar-info-fixed
+  .uk-offcanvas-bar
+    .sc-sidebar-main-scrollable data-sc-scrollbar="visible-y"
+      ul.sc-sidebar-menu.uk-nav
+
+        /! Dashboard Section
+        li.sc-sidebar-menu-heading
+          span Dashboard
+        li title="Dashboard" class=("sc-page-active" if controller_name == 'dashboard')
+          = link_to admin_root_path
+            span.uk-nav-icon
+              i.mdi.mdi-view-dashboard-variant
+            span.uk-nav-title Dashboard
+
+        /! Users Section
+        li.sc-sidebar-menu-heading
+          span Users
+        li title="Users" class=("sc-page-active" if controller_name == 'users')
+          = link_to admin_users_path
+            span.uk-nav-icon
+              i.mdi.mdi-account-group
+            span.uk-nav-title Users
+          ul.sc-sidebar-menu-sub
+            li class=("sc-page-active" if controller_name == 'users' && action_name == 'index')
+              = link_to 'All Users', admin_users_path
+            li class=("sc-page-active" if controller_name == 'users' && action_name == 'new')
+              = link_to 'Add User', new_admin_user_path
+
+        /! Content Section
+        li.sc-sidebar-menu-heading
+          span Content
+        li title="Posts" class=("sc-page-active" if controller_name == 'posts')
+          = link_to admin_posts_path
+            span.uk-nav-icon
+              i.mdi.mdi-file-document-outline
+            span.uk-nav-title Posts
+          ul.sc-sidebar-menu-sub
+            li class=("sc-page-active" if controller_name == 'posts' && action_name == 'index')
+              = link_to 'All Posts', admin_posts_path
+            li class=("sc-page-active" if controller_name == 'posts' && action_name == 'new')
+              = link_to 'Add New', new_admin_post_path
+
+        li title="Videos" class=("sc-page-active" if controller_name == 'videos')
+          = link_to admin_videos_path
+            span.uk-nav-icon
+              i.mdi.mdi-video-outline
+            span.uk-nav-title Videos
+          ul.sc-sidebar-menu-sub
+            li class=("sc-page-active" if controller_name == 'videos' && action_name == 'index')
+              = link_to 'All Videos', admin_videos_path
+            li class=("sc-page-active" if controller_name == 'videos' && action_name == 'new')
+              = link_to 'Add New', new_admin_video_path
+
+        li title="Photos" class=("sc-page-active" if controller_name == 'photos')
+          = link_to admin_photos_path
+            span.uk-nav-icon
+              i.mdi.mdi-image-outline
+            span.uk-nav-title Photos
+          ul.sc-sidebar-menu-sub
+            li class=("sc-page-active" if controller_name == 'photos' && action_name == 'index')
+              = link_to 'All Photos', admin_photos_path
+            li class=("sc-page-active" if controller_name == 'photos' && action_name == 'new')
+              = link_to 'Upload Photo', new_admin_photo_path
+
+        li title="Pages" class=("sc-page-active" if controller_name == 'pages')
+          = link_to admin_pages_path
+            span.uk-nav-icon
+              i.mdi.mdi-text-box-outline
+            span.uk-nav-title Pages
+          ul.sc-sidebar-menu-sub
+            li class=("sc-page-active" if controller_name == 'pages' && action_name == 'index')
+              = link_to 'All Pages', admin_pages_path
+            li class=("sc-page-active" if controller_name == 'pages' && action_name == 'new')
+              = link_to 'Add New', new_admin_page_path
+
+        /! Settings Section
+        li.sc-sidebar-menu-heading
+          span Settings
+        li title="Categories" class=("sc-page-active" if controller_name == 'categories')
+          = link_to admin_categories_path
+            span.uk-nav-icon
+              i.mdi.mdi-folder-outline
+            span.uk-nav-title Categories
+
+        li title="Tags" class=("sc-page-active" if controller_name == 'tags')
+          = link_to admin_tags_path
+            span.uk-nav-icon
+              i.mdi.mdi-tag-outline
+            span.uk-nav-title Tags
+
+        /! System Section
+        li.sc-sidebar-menu-heading
+          span System
+
+        li title="Audit Logs" class=("sc-page-active" if controller_name == 'audit_logs')
+          = link_to admin_audit_logs_path
+            span.uk-nav-icon
+              i.mdi.mdi-clipboard-text-clock-outline
+            span.uk-nav-title Audit Logs
+
+        - if current_user&.super_admin?
+          li title="Sidekiq"
+            = link_to '/sidekiq', target: '_blank'
+              span.uk-nav-icon
+                i.mdi.mdi-cog-outline
+              span.uk-nav-title
+                | Sidekiq
+                span.uk-margin-small-left
+                  i.mdi.mdi-open-in-new
+
+    .sc-sidebar-info
+      | version: #{AppIdService.version}

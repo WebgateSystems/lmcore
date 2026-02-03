@@ -1,0 +1,243 @@
+- content_for :title, "Dashboard - Admin Panel"
+
+/! Stats Cards Row 1
+.uk-grid-match(class="uk-child-width-1-5@xl uk-child-width-1-3@l uk-child-width-1-2@s" data-uk-grid="")
+  div
+    .uk-card.sc-widget.uk-flex
+      .uk-width-1-4.md-bg-blue-600.uk-flex-middle.uk-flex.uk-flex-center
+        i.mdi.mdi-account-group.md-color-white.sc-icon-24
+      .uk-flex-1
+        .uk-card-body
+          h3.uk-card-title Total Users
+          p.uk-text-meta.sc-widget-addon= number_with_delimiter(@stats[:users][:total])
+
+  div
+    .uk-card.sc-widget.uk-flex
+      .uk-width-1-4.md-bg-light-green-600.uk-flex-middle.uk-flex.uk-flex-center
+        i.mdi.mdi-account-plus.md-color-white.sc-icon-24
+      .uk-flex-1
+        .uk-card-body
+          h3.uk-card-title New Today
+          p.uk-text-meta
+            = @stats[:users][:new_today]
+            span.uk-text-small.uk-margin-small-left users
+
+  div
+    .uk-card.sc-widget.uk-flex
+      .uk-width-1-4.md-bg-amber-600.uk-flex-middle.uk-flex.uk-flex-center
+        i.mdi.mdi-file-document-multiple.md-color-white.sc-icon-24
+      .uk-flex-1
+        .uk-card-body
+          h3.uk-card-title Total Posts
+          p.uk-text-meta= number_with_delimiter(@stats[:content][:posts])
+
+  div
+    .uk-card.sc-widget.uk-flex
+      .uk-width-1-4.md-bg-purple-600.uk-flex-middle.uk-flex.uk-flex-center
+        i.mdi.mdi-comment-multiple.md-color-white.sc-icon-24
+      .uk-flex-1
+        .uk-card-body
+          h3.uk-card-title Comments
+          p.uk-text-meta= number_with_delimiter(@stats[:engagement][:comments])
+
+  div
+    .uk-card.sc-widget.uk-flex
+      .uk-width-1-4.md-bg-cyan-600.uk-flex-middle.uk-flex.uk-flex-center
+        i.mdi.mdi-currency-usd.md-color-white.sc-icon-24
+      .uk-flex-1
+        .uk-card-body
+          h3.uk-card-title MRR
+          p.uk-text-meta= number_to_currency(@stats[:revenue][:mrr])
+
+/! Stats Cards Row 2 - Detailed stats with charts
+.sc-sequence-show-manual.uk-margin-medium-top(class="uk-child-width-1-4@xl uk-child-width-1-2@s" data-uk-grid="")
+  div
+    .uk-card.sc-widget
+      .sc-widget-content
+        .uk-flex.uk-flex-middle
+          .uk-flex-1
+            h3.uk-card-title Users This Week
+            p.uk-text-meta Last 7 days
+          div
+            span.sc-widget-addon.md-color-green-600
+              = @stats[:users][:new_this_week]
+              |  new
+
+  div
+    .uk-card.sc-widget
+      .sc-widget-content
+        .uk-flex.uk-flex-middle
+          .uk-flex-1
+            h3.uk-card-title Published Posts
+            p.uk-text-meta Active content
+          div
+            span.sc-widget-addon.md-color-blue-600= @stats[:content][:posts_published]
+
+  div
+    .uk-card.sc-widget
+      .sc-widget-content
+        .uk-flex.uk-flex-middle
+          .uk-flex-1
+            h3.uk-card-title Active Subscriptions
+            p.uk-text-meta Paid users
+          div
+            span.sc-widget-addon.md-color-purple-600= @stats[:revenue][:subscriptions_active]
+
+  div
+    .uk-card.sc-widget
+      .sc-widget-content
+        .uk-flex.uk-flex-middle
+          .uk-flex-1
+            h3.uk-card-title Revenue This Month
+            p.uk-text-meta Payments + Donations
+          div
+            span.sc-widget-addon.md-color-green-600
+              = number_to_currency(@stats[:revenue][:payments_this_month] + @stats[:revenue][:donations_this_month])
+
+/! Main Content Row
+.uk-margin-medium-top data-uk-grid=""
+  /! Recent Users Card
+  div(class="uk-width-1-3@l")
+    .uk-card
+      .uk-card-header
+        .uk-flex.uk-flex-middle
+          .uk-flex-1
+            h3.uk-card-title Recent Users
+            p.uk-text-meta Latest registrations
+          .sc-actions
+            = link_to admin_users_path, class: 'sc-actions-icon'
+              i.mdi.mdi-arrow-right
+
+      .uk-card-body
+        ul.uk-list.uk-list-divider
+          - @recent_users.each do |user|
+            li.sc-list-group
+              .sc-list-addon
+                - if user.avatar.present?
+                  = image_tag user.avatar.thumb.url, class: 'sc-avatar', alt: user.username
+                - else
+                  span.sc-avatar-initials.md-color-white.md-bg-blue-500 title=user.username
+                    = user.initials
+              .sc-list-body
+                .uk-flex.uk-flex-middle
+                  .uk-flex-1
+                    = link_to user.full_name, admin_user_path(user), class: 'uk-display-block'
+                    span.uk-text-small.uk-text-muted= user.email
+                  span.uk-label(class=user_status_badge_class(user))= user.status
+
+  /! User Status Overview
+  div(class="uk-width-1-3@l")
+    .uk-card
+      .uk-card-header
+        .uk-flex.uk-flex-middle
+          h3.uk-card-title User Status
+
+      .uk-card-body
+        .uk-grid-divider.uk-grid-small(class="uk-child-width-1-3@s" data-uk-grid="")
+          .uk-text-center
+            span.uk-text-medium.md-color-green-600 Active
+            h4.uk-margin-mini-top= @stats[:users][:active]
+          .uk-text-center
+            span.uk-text-medium.md-color-amber-600 Pending
+            h4.uk-margin-mini-top= @stats[:users][:pending]
+          .uk-text-center
+            span.uk-text-medium.md-color-red-600 Suspended
+            h4.uk-margin-mini-top= @stats[:users][:suspended]
+
+        hr
+
+        div
+          span.sc-color-secondary.uk-text-medium User Distribution
+          - if @stats[:users][:total] > 0
+            - total = @stats[:users][:total].to_f
+            - @active_pct = (@stats[:users][:active] / total * 100).round
+            - @pending_pct = (@stats[:users][:pending] / total * 100).round
+            - @suspended_pct = (@stats[:users][:suspended] / total * 100).round
+            .sc-progress.sc-progress-group.uk-margin-medium-top
+              div.sc-progress-bar.md-bg-light-green-600.uk-text-center style="width: #{@active_pct}%"
+                = "#{@active_pct}%"
+              div.sc-progress-bar.md-bg-amber-600.uk-text-center style="width: #{@pending_pct}%"
+                = "#{@pending_pct}%"
+              div.sc-progress-bar.md-bg-red-600.uk-text-center style="width: #{@suspended_pct}%"
+                = "#{@suspended_pct}%"
+
+  /! Content Overview
+  div(class="uk-width-1-3@l")
+    .uk-card
+      .uk-card-header
+        .uk-flex.uk-flex-middle
+          h3.uk-card-title Content Overview
+
+      .uk-card-body
+        .uk-grid-small(class="uk-child-width-1-2@s" data-uk-grid="")
+          div
+            h5.uk-margin-bottom Posts
+            - @posts_pct = @stats[:content][:posts] > 0 ? (@stats[:content][:posts_published].to_f / @stats[:content][:posts] * 100).round : 0
+            .sc-progress.uk-margin-medium-top.sc-progress-small
+              span.sc-progress-label
+                span.uk-text-center.uk-display-inline-block style="width: #{@posts_pct}%"
+                  = "#{@posts_pct}%"
+              .sc-progress-bar.md-bg-blue-600 style="width: #{@posts_pct}%"
+            p.uk-text-small.uk-text-muted.uk-margin-small-top
+              = "#{@stats[:content][:posts_published]} / #{@stats[:content][:posts]} published"
+
+          div
+            h5.uk-margin-bottom Videos
+            - @videos_pct = @stats[:content][:videos] > 0 ? (@stats[:content][:videos_published].to_f / @stats[:content][:videos] * 100).round : 0
+            .sc-progress.uk-margin-medium-top.sc-progress-small
+              span.sc-progress-label
+                span.uk-text-center.uk-display-inline-block style="width: #{@videos_pct}%"
+                  = "#{@videos_pct}%"
+              .sc-progress-bar.md-bg-purple-600 style="width: #{@videos_pct}%"
+            p.uk-text-small.uk-text-muted.uk-margin-small-top
+              = "#{@stats[:content][:videos_published]} / #{@stats[:content][:videos]} published"
+
+          div
+            h5.uk-margin-bottom Photos
+            - @photos_pct = @stats[:content][:photos] > 0 ? (@stats[:content][:photos_published].to_f / @stats[:content][:photos] * 100).round : 0
+            .sc-progress.uk-margin-medium-top.sc-progress-small
+              span.sc-progress-label
+                span.uk-text-center.uk-display-inline-block style="width: #{@photos_pct}%"
+                  = "#{@photos_pct}%"
+              .sc-progress-bar.md-bg-amber-600 style="width: #{@photos_pct}%"
+            p.uk-text-small.uk-text-muted.uk-margin-small-top
+              = "#{@stats[:content][:photos_published]} / #{@stats[:content][:photos]} published"
+
+          div
+            h5.uk-margin-bottom Pages
+            p.uk-text-meta.uk-margin-small-top
+              = @stats[:content][:pages]
+              |  total
+
+/! Recent Activity
+.uk-margin-medium-top data-uk-grid=""
+  .uk-width-1-1
+    .uk-card
+      .uk-card-header
+        .uk-flex.uk-flex-middle
+          .uk-flex-1
+            h3.uk-card-title Recent Activity
+            p.uk-text-meta Latest system events
+          .sc-actions
+            a.sc-actions-icon.mdi.mdi-refresh href="#" data-uk-toggle=""
+
+      .uk-card-body
+        - if @recent_activity.any?
+          ul.uk-list.uk-list-divider
+            - @recent_activity.each do |log|
+              li.sc-list-group
+                .sc-list-addon
+                  i.mdi class=activity_icon_class(log.action)
+                .sc-list-body
+                  .uk-flex.uk-flex-middle
+                    .uk-flex-1
+                      span.uk-display-block
+                        strong= log.user&.full_name || "System"
+                        |  #{log.action}
+                        |  #{log.auditable_type.underscore.humanize}
+                        - if log.auditable_id.present?
+                          |  ##{log.auditable_id.to_s.first(8)}
+                      span.uk-text-small.uk-text-muted= time_ago_in_words(log.created_at) + " ago"
+                    span.uk-text-small.uk-text-muted= log.created_at.strftime("%H:%M")
+        - else
+          p.uk-text-center.uk-text-muted No recent activity

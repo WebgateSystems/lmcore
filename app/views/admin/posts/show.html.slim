@@ -1,0 +1,105 @@
+- content_for :title, "#{@post.title} - Posts - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Posts', admin_posts_path
+  li
+    span= truncate(@post.title, length: 50)
+
+/! Header
+.uk-card.uk-margin-top
+  .uk-card-body
+    .uk-grid-small.uk-flex-middle data-uk-grid=""
+      .uk-width-expand
+        h3.uk-margin-remove= @post.title
+        p.uk-text-meta.uk-margin-remove
+          | by #{@post.author&.full_name || 'Unknown'}
+          |  · Created #{time_ago_in_words(@post.created_at)} ago
+        .uk-margin-small-top
+          - case @post.status
+          - when 'published'
+            span.uk-label.md-bg-green-500= @post.status.capitalize
+          - when 'draft'
+            span.uk-label.md-bg-grey-500= @post.status.capitalize
+          - else
+            span.uk-label.md-bg-amber-500= @post.status.capitalize
+          - if @post.featured?
+            span.uk-label.md-bg-amber-500.uk-margin-small-left Featured
+
+      .uk-width-auto
+        .uk-button-group
+          = link_to edit_admin_post_path(@post), class: 'sc-button sc-button-primary'
+            i.mdi.mdi-pencil.uk-margin-small-right
+            | Edit
+
+          - if @post.status == 'draft'
+            = link_to publish_admin_post_path(@post), class: 'sc-button sc-button-success uk-margin-small-left', data: { turbo_method: :post }
+              i.mdi.mdi-publish.uk-margin-small-right
+              | Publish
+          - elsif @post.status == 'published'
+            = link_to unpublish_admin_post_path(@post), class: 'sc-button sc-button-warning uk-margin-small-left', data: { turbo_method: :post }
+              i.mdi.mdi-eye-off.uk-margin-small-right
+              | Unpublish
+
+/! Content
+.uk-margin-medium-top data-uk-grid=""
+  div(class="uk-width-2-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Content
+
+      .uk-card-body
+        - if @post.lead.present?
+          h5 Lead
+          p.uk-text-muted= @post.lead
+          hr
+
+        .post-content
+          == @post.content
+
+  div(class="uk-width-1-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Details
+
+      .uk-card-body
+        dl.uk-description-list
+          dt Status
+          dd
+            - case @post.status
+            - when 'published'
+              span.uk-label.md-bg-green-500= @post.status.capitalize
+            - else
+              span.uk-label.md-bg-grey-500= @post.status.capitalize
+
+          dt Author
+          dd= @post.author&.full_name || 'Unknown'
+
+          - if @post.category.present?
+            dt Category
+            dd= @post.category.name
+
+          dt Created
+          dd= @post.created_at.strftime('%B %d, %Y at %H:%M')
+
+          - if @post.published_at.present?
+            dt Published
+            dd= @post.published_at.strftime('%B %d, %Y at %H:%M')
+
+          dt Last Updated
+          dd= @post.updated_at.strftime('%B %d, %Y at %H:%M')
+
+    .uk-card.uk-margin-top
+      .uk-card-header
+        h3.uk-card-title Actions
+
+      .uk-card-body
+        ul.uk-list
+          li
+            = link_to '#', class: 'uk-flex uk-flex-middle'
+              i.mdi.mdi-eye.uk-margin-small-right
+              | View on site
+          li
+            = link_to admin_post_path(@post), class: 'uk-flex uk-flex-middle md-color-red-500', data: { turbo_method: :delete, turbo_confirm: 'Are you sure you want to delete this post?' }
+              i.mdi.mdi-delete.uk-margin-small-right
+              | Delete Post

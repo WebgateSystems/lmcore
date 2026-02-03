@@ -1,0 +1,102 @@
+- content_for :title, "#{@video.title} - Videos - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Videos', admin_videos_path
+  li
+    span= truncate(@video.title, length: 50)
+
+/! Header
+.uk-card.uk-margin-top
+  .uk-card-body
+    .uk-grid-small.uk-flex-middle data-uk-grid=""
+      .uk-width-expand
+        h3.uk-margin-remove= @video.title
+        p.uk-text-meta.uk-margin-remove
+          | by #{@video.author&.full_name || 'Unknown'}
+          |  · Created #{time_ago_in_words(@video.created_at)} ago
+        .uk-margin-small-top
+          - case @video.status
+          - when 'published'
+            span.uk-label.md-bg-green-500= @video.status.capitalize
+          - when 'draft'
+            span.uk-label.md-bg-grey-500= @video.status.capitalize
+          - else
+            span.uk-label.md-bg-amber-500= @video.status.capitalize
+
+      .uk-width-auto
+        .uk-button-group
+          = link_to edit_admin_video_path(@video), class: 'sc-button sc-button-primary'
+            i.mdi.mdi-pencil.uk-margin-small-right
+            | Edit
+
+          - if @video.status == 'draft'
+            = link_to publish_admin_video_path(@video), class: 'sc-button sc-button-success uk-margin-small-left', data: { turbo_method: :post }
+              i.mdi.mdi-publish.uk-margin-small-right
+              | Publish
+          - elsif @video.status == 'published'
+            = link_to unpublish_admin_video_path(@video), class: 'sc-button sc-button-warning uk-margin-small-left', data: { turbo_method: :post }
+              i.mdi.mdi-eye-off.uk-margin-small-right
+              | Unpublish
+
+/! Content
+.uk-margin-medium-top data-uk-grid=""
+  div(class="uk-width-2-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Video
+
+      .uk-card-body
+        - if @video.video_external_id.present?
+          .video-container
+            - case @video.video_provider
+            - when 'youtube'
+              iframe width="100%" height="400" src="https://www.youtube.com/embed/#{@video.video_external_id}" frameborder="0" allowfullscreen=""
+            - when 'vimeo'
+              iframe width="100%" height="400" src="https://player.vimeo.com/video/#{@video.video_external_id}" frameborder="0" allowfullscreen=""
+            - else
+              p.uk-text-muted Self-hosted video: #{@video.video_external_id}
+        - else
+          .uk-text-center.uk-padding
+            i.mdi.mdi-video-off style="font-size: 64px;" class="uk-text-muted"
+            p.uk-text-muted No video configured
+
+        - if @video.description.present?
+          hr
+          h5 Description
+          p= @video.description
+
+  div(class="uk-width-1-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Details
+
+      .uk-card-body
+        dl.uk-description-list
+          dt Status
+          dd
+            - if @video.status == 'published'
+              span.uk-label.md-bg-green-500= @video.status.capitalize
+            - else
+              span.uk-label.md-bg-grey-500= @video.status.capitalize
+
+          dt Author
+          dd= @video.author&.full_name || 'Unknown'
+
+          - if @video.duration_seconds.present?
+            dt Duration
+            dd= @video.duration_formatted
+
+          dt Created
+          dd= @video.created_at.strftime('%B %d, %Y at %H:%M')
+
+    .uk-card.uk-margin-top
+      .uk-card-header
+        h3.uk-card-title Actions
+
+      .uk-card-body
+        ul.uk-list
+          li
+            = link_to admin_video_path(@video), class: 'uk-flex uk-flex-middle md-color-red-500', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }
+              i.mdi.mdi-delete.uk-margin-small-right
+              | Delete Video

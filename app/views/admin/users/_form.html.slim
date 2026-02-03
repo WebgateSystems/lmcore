@@ -1,0 +1,127 @@
+= form_with model: [:admin, @user], local: true, class: 'uk-form-stacked' do |f|
+  - if @user.errors.any?
+    .uk-alert.uk-alert-danger data-uk-alert=""
+      a.uk-alert-close data-uk-close=""
+      h4= "#{pluralize(@user.errors.count, 'error')} prohibited this user from being saved:"
+      ul
+        - @user.errors.full_messages.each do |message|
+          li= message
+
+  .uk-card
+    .uk-card-header
+      h3.uk-card-title Account Information
+
+    .uk-card-body
+      .uk-grid-small data-uk-grid=""
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :email, class: 'uk-form-label'
+            .uk-form-controls
+              = f.email_field :email, class: 'uk-input', required: true, placeholder: 'user@example.com'
+
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :username, class: 'uk-form-label'
+            .uk-form-controls
+              .uk-inline.uk-width-1-1
+                span.uk-form-icon @
+                = f.text_field :username, class: 'uk-input', placeholder: 'username'
+
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :first_name, class: 'uk-form-label'
+            .uk-form-controls
+              = f.text_field :first_name, class: 'uk-input', placeholder: 'First name'
+
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :last_name, class: 'uk-form-label'
+            .uk-form-controls
+              = f.text_field :last_name, class: 'uk-input', placeholder: 'Last name'
+
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :phone, class: 'uk-form-label'
+            .uk-form-controls
+              = f.telephone_field :phone, class: 'uk-input', placeholder: '+1 234 567 890'
+
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :status, class: 'uk-form-label'
+            .uk-form-controls
+              = f.select :status, options_for_select([['Pending', 'pending'], ['Active', 'active'], ['Suspended', 'suspended']], @user.status), {}, class: 'uk-select'
+
+  .uk-card.uk-margin-top
+    .uk-card-header
+      h3.uk-card-title Role & Plan
+
+    .uk-card-body
+      .uk-grid-small data-uk-grid=""
+        - if current_user.admin?
+          div(class="uk-width-1-2@m")
+            .uk-margin
+              label.uk-form-label Roles
+              .uk-form-controls
+                - if @user.persisted?
+                  - if @user.global_roles.any?
+                    - @user.global_roles.each do |role|
+                      span.uk-label.uk-margin-small-right= role.name
+                  - else
+                    span.uk-text-muted No roles assigned
+                  br
+                  = link_to 'Manage roles', admin_user_path(@user), class: 'uk-text-small uk-margin-small-top uk-display-inline-block'
+                - else
+                  span.uk-text-muted.uk-text-small Roles can be assigned after user is created.
+
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :price_plan_id, 'Price Plan', class: 'uk-form-label'
+            .uk-form-controls
+              = f.select :price_plan_id, options_from_collection_for_select(@price_plans, :id, :name, @user.price_plan_id), { include_blank: 'Default plan' }, class: 'uk-select'
+
+  .uk-card.uk-margin-top
+    .uk-card-header
+      h3.uk-card-title Preferences
+
+    .uk-card-body
+      .uk-grid-small data-uk-grid=""
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :locale, 'Language', class: 'uk-form-label'
+            .uk-form-controls
+              = f.select :locale, options_for_select(I18n.available_locales.map { |l| [l.to_s.upcase, l.to_s] }, @user.locale), { include_blank: 'Default' }, class: 'uk-select'
+
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :timezone, class: 'uk-form-label'
+            .uk-form-controls
+              = f.select :timezone, options_for_select(ActiveSupport::TimeZone.all.map { |tz| [tz.to_s, tz.name] }, @user.timezone), { include_blank: 'UTC' }, class: 'uk-select'
+
+  - if current_user.super_admin?
+    .uk-card.uk-margin-top
+      .uk-card-header
+        h3.uk-card-title
+          | Password
+          span.uk-text-small.uk-text-muted.uk-margin-small-left (Super Admin only)
+
+      .uk-card-body
+        .uk-grid-small data-uk-grid=""
+          div(class="uk-width-1-2@m")
+            .uk-margin
+              = f.label :password, class: 'uk-form-label'
+              .uk-form-controls
+                = f.password_field :password, class: 'uk-input', placeholder: 'Leave blank to keep current password', autocomplete: 'new-password'
+
+          div(class="uk-width-1-2@m")
+            .uk-margin
+              = f.label :password_confirmation, class: 'uk-form-label'
+              .uk-form-controls
+                = f.password_field :password_confirmation, class: 'uk-input', placeholder: 'Confirm new password', autocomplete: 'new-password'
+
+        p.uk-text-small.uk-text-muted
+          i.mdi.mdi-information.uk-margin-small-right
+          | Leave password fields blank to keep the current password.
+
+  .uk-margin-medium-top
+    = f.submit @user.new_record? ? 'Create User' : 'Update User', class: 'sc-button sc-button-primary'
+    = link_to 'Cancel', @user.new_record? ? admin_users_path : admin_user_path(@user), class: 'sc-button sc-button-default uk-margin-small-left'

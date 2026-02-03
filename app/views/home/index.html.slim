@@ -56,7 +56,39 @@
 
           /! Auth button (visible on all screens)
           .auth-buttons
-            = link_to t('nav.login'), new_user_session_path, class: 'btn btn-primary'
+            - if user_signed_in?
+              .dropdown data-controller="dropdown"
+                button.dropdown-toggle.user-dropdown type="button" data-action="click->dropdown#toggle" aria-expanded="false" aria-haspopup="true"
+                  - if current_user.avatar.present?
+                    = image_tag current_user.avatar.thumb.url, class: 'user-avatar', alt: current_user.username
+                  - else
+                    span.user-initials= current_user.initials
+                  i.fa-solid.fa-chevron-down.dropdown-arrow aria-hidden="true"
+                .dropdown-menu.dropdown-menu-right role="menu" data-dropdown-target="menu"
+                  .dropdown-header
+                    strong= current_user.full_name
+                    - if session[:admin_user_id].present?
+                      br
+                      span.text-warning
+                        i.fa-solid.fa-user-secret
+                        |  Impersonating
+                  .dropdown-divider
+                  - if current_user.admin?
+                    = link_to admin_root_path, class: 'dropdown-item', role: 'menuitem'
+                      i.fa-solid.fa-cog
+                      = t('nav.admin', default: 'Admin Panel')
+                  = link_to edit_user_registration_path, class: 'dropdown-item', role: 'menuitem'
+                    i.fa-solid.fa-user
+                    = t('nav.profile', default: 'Profile')
+                  - if session[:admin_user_id].present?
+                    = link_to stop_impersonating_path, class: 'dropdown-item text-warning', role: 'menuitem', data: { turbo_method: :delete }
+                      i.fa-solid.fa-user-slash
+                      = t('nav.stop_impersonating', default: 'Stop Impersonating')
+                  = link_to destroy_user_session_path, class: 'dropdown-item', role: 'menuitem', data: { turbo_method: :delete }
+                    i.fa-solid.fa-sign-out-alt
+                    = t('nav.logout', default: 'Log Out')
+            - else
+              = link_to t('nav.login'), new_user_session_path, class: 'btn btn-primary'
 
   /! Mobile navigation - full screen overlay (OUTSIDE header to avoid stacking context issues)
   .mobile-nav-overlay.mobile-only data-mobile-menu-target="overlay" data-action="click->mobile-menu#close"

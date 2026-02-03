@@ -19,7 +19,9 @@ FactoryBot.define do
     end
 
     trait :super_admin do
-      role_name { 'Super Admin' }
+      transient do
+        role_name { 'Super Admin' }
+      end
       slug { 'super-admin' }
       permissions { [ '*' ] }
       priority { 100 }
@@ -27,7 +29,9 @@ FactoryBot.define do
     end
 
     trait :admin do
-      role_name { 'Admin' }
+      transient do
+        role_name { 'Admin' }
+      end
       slug { 'admin' }
       permissions { %w[manage_users manage_content manage_settings] }
       priority { 90 }
@@ -35,7 +39,9 @@ FactoryBot.define do
     end
 
     trait :moderator do
-      role_name { 'Moderator' }
+      transient do
+        role_name { 'Moderator' }
+      end
       slug { 'moderator' }
       permissions { %w[moderate_comments moderate_content] }
       priority { 50 }
@@ -43,7 +49,9 @@ FactoryBot.define do
     end
 
     trait :author do
-      role_name { 'Author' }
+      transient do
+        role_name { 'Author' }
+      end
       slug { 'author' }
       permissions { %w[create_content edit_own_content] }
       priority { 30 }
@@ -51,7 +59,9 @@ FactoryBot.define do
     end
 
     trait :user do
-      role_name { 'User' }
+      transient do
+        role_name { 'User' }
+      end
       slug { 'user' }
       permissions { %w[comment react] }
       priority { 10 }

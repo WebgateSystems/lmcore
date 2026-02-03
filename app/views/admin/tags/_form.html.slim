@@ -1,0 +1,38 @@
+= form_with model: [:admin, @tag], local: true, class: 'uk-form-stacked' do |f|
+  - if @tag.errors.any?
+    .uk-alert.uk-alert-danger data-uk-alert=""
+      a.uk-alert-close data-uk-close=""
+      h4= "#{pluralize(@tag.errors.count, 'error')} prohibited this tag from being saved:"
+      ul
+        - @tag.errors.full_messages.each do |message|
+          li= message
+
+  .uk-margin-medium-top
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Tag Details
+
+      .uk-card-body
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :name, 'Name', class: 'uk-form-label'
+            .uk-form-controls
+              = f.text_field :name, class: 'uk-input', placeholder: 'tag-name', autofocus: true
+              p.uk-text-small.uk-text-muted Tags are automatically lowercased
+
+          .uk-margin
+            = f.label :slug, 'Slug', class: 'uk-form-label'
+            .uk-form-controls
+              = f.text_field :slug, class: 'uk-input', placeholder: 'tag-slug'
+              p.uk-text-small.uk-text-muted Leave blank to auto-generate from name
+
+  /! Actions
+  .uk-margin-large-top.uk-flex.uk-flex-between
+    div
+      - if @tag.persisted?
+        = link_to admin_tag_path(@tag), class: 'sc-button sc-button-danger', data: { turbo_method: :delete, turbo_confirm: 'Are you sure? Content will be untagged.' }
+          i.mdi.mdi-delete.uk-margin-small-right
+          | Delete
+    div
+      = link_to 'Cancel', (@tag.persisted? ? admin_tag_path(@tag) : admin_tags_path), class: 'sc-button sc-button-default uk-margin-small-right'
+      = f.submit (@tag.persisted? ? 'Update Tag' : 'Create Tag'), class: 'sc-button sc-button-primary'

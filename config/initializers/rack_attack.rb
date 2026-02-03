@@ -38,10 +38,16 @@ class Rack::Attack
   # Block suspicious requests
   blocklist("block suspicious requests") do |req|
     Rack::Attack::Fail2Ban.filter("fail2ban-#{req.ip}", maxretry: 5, findtime: 10.minutes, bantime: 1.hour) do
+      # Block common attack paths but allow legitimate admin routes
+      # Legitimate admin: /admin, /admin/*, /api/*/admin/*
+      suspicious_admin = req.path.include?("/admin") &&
+                         !req.path.start_with?("/admin") &&
+                         !req.path.start_with?("/api/")
+
       req.path.include?("/wp-") ||
         req.path.include?("/phpmyadmin") ||
         req.path.include?(".php") ||
-        req.path.include?("/admin") && !req.path.start_with?("/api/")
+        suspicious_admin
     end
   end
 

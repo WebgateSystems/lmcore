@@ -21,8 +21,9 @@ erDiagram
     User ||--o{ Payment : "makes"
     User ||--o{ Donation : "donates"
     User ||--o{ Notification : "receives"
-    User }|--o{ Role : "has_many_through"
-    User }|--o{ UserGroup : "belongs_to_many"
+    User ||--o{ RoleAssignment : "has_many"
+    RoleAssignment }o--|| Role : "belongs_to"
+    RoleAssignment }o--o| User : "scope (optional)"
 
     Post ||--o{ Comment : "has_many"
     Post ||--o{ Reaction : "has_many"
@@ -97,6 +98,45 @@ end
 | `timezone` | string | Strefa czasowa |
 | `verified_at` | datetime | Data weryfikacji |
 | `created_at` | datetime | Data utworzenia |
+| `status` | string | pending/active/suspended/deleted |
+| `discarded_at` | datetime | Soft-delete (Discard gem) |
+
+---
+
+### Role (role)
+
+System ról z hierarchią i uprawnieniami. Szczegóły: [features/users.md](features/users.md)
+
+| Kolumna | Typ | Opis |
+|---------|-----|------|
+| `id` | uuid | Primary key |
+| `name` | string | Nazwa wyświetlana |
+| `name_i18n` | jsonb | Nazwa (wielojęzyczna) |
+| `slug` | string | Unikalny identyfikator (np. `admin`) |
+| `description_i18n` | jsonb | Opis (wielojęzyczny) |
+| `permissions` | jsonb | Tablica uprawnień |
+| `priority` | integer | Priorytet (wyższy = więcej uprawnień) |
+| `system_role` | boolean | Czy rola systemowa |
+
+**Role systemowe**: `super-admin` (100), `admin` (90), `moderator` (50), `author` (30), `user` (10), `guest` (0)
+
+---
+
+### RoleAssignment (przypisania ról)
+
+Join table łącząca użytkowników z rolami. Obsługuje role globalne i kontekstualne.
+
+| Kolumna | Typ | Opis |
+|---------|-----|------|
+| `id` | uuid | Primary key |
+| `user_id` | uuid | FK → users |
+| `role_id` | uuid | FK → roles |
+| `scope_type` | string | Typ zakresu (nil = globalna) |
+| `scope_id` | uuid | ID zakresu (np. właściciel bloga) |
+| `granted_by_id` | uuid | FK → users (kto przyznał) |
+| `expires_at` | datetime | Data wygaśnięcia |
+
+**Unikalny indeks**: `[user_id, role_id, scope_type, scope_id]`
 
 ---
 

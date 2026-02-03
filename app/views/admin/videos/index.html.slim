@@ -1,0 +1,76 @@
+- content_for :title, "Videos - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li
+    span Videos
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove Videos
+    p.uk-text-meta= "#{@pagy.count} videos total"
+  = link_to new_admin_video_path, class: 'sc-button sc-button-primary'
+    i.mdi.mdi-plus.uk-margin-small-right
+    | New Video
+
+/! Filters
+.uk-card.uk-margin-top
+  .uk-card-body.uk-padding-small
+    = form_tag admin_videos_path, method: :get, class: 'uk-grid-small', 'data-uk-grid': '' do
+      div(class="uk-width-1-3@m")
+        input.uk-input type="text" name="q" value=params[:q] placeholder="Search videos..."
+      div(class="uk-width-1-4@m")
+        select.uk-select name="status"
+          option value="" All statuses
+          option(value="draft" selected=(params[:status] == 'draft')) Draft
+          option(value="published" selected=(params[:status] == 'published')) Published
+      .uk-width-auto
+        button.sc-button.sc-button-primary type="submit"
+          i.mdi.mdi-magnify
+        = link_to admin_videos_path, class: 'sc-button sc-button-default uk-margin-small-left'
+          i.mdi.mdi-refresh
+
+/! Videos Table
+.uk-card.uk-margin-top
+  .uk-card-body.uk-padding-remove
+    .uk-overflow-auto
+      table.uk-table.uk-table-hover.uk-table-middle.uk-table-divider.uk-margin-remove
+        thead
+          tr
+            th Title
+            th Author
+            th Duration
+            th Status
+            th Created
+            th.uk-text-right Actions
+        tbody
+          - @videos.each do |video|
+            tr
+              td= link_to video.title, admin_video_path(video), class: 'uk-link-reset'
+              td
+                - if video.author
+                  = video.author.full_name
+                - else
+                  span.uk-text-muted System
+              td
+                - if video.duration_seconds.present?
+                  = video.duration_formatted
+                - else
+                  span.uk-text-muted -
+              td
+                - if video.status == 'published'
+                  span.uk-label.md-bg-green-500= video.status.capitalize
+                - else
+                  span.uk-label.md-bg-grey-500= video.status.capitalize
+              td= video.created_at.strftime('%b %d, %Y')
+              td.uk-text-right.uk-text-nowrap
+                = link_to admin_video_path(video), class: 'uk-icon-link', title: 'View'
+                  i.mdi.mdi-eye
+                = link_to edit_admin_video_path(video), class: 'uk-icon-link uk-margin-small-left', title: 'Edit'
+                  i.mdi.mdi-pencil
+
+/! Pagination
+- if @pagy.pages > 1
+  .uk-flex.uk-flex-center.uk-margin-medium-top
+    == pagy_nav(@pagy)

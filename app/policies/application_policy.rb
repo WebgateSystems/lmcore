@@ -67,6 +67,7 @@ class ApplicationPolicy
     end
   end
 
+  # Global role checks (hierarchical)
   def admin?
     user&.admin?
   end
@@ -75,11 +76,40 @@ class ApplicationPolicy
     user&.super_admin?
   end
 
-  def moderator?
-    user&.moderator?
+  # Contextual role checks - checks if user has role on the blog of record's author
+  def can_moderate?
+    return true if admin?
+    return false unless user && record_owner
+
+    user.can_moderate?(record_owner)
   end
 
-  def author?
-    user&.author?
+  def can_edit?
+    return true if admin?
+    return false unless user && record_owner
+
+    user.can_edit?(record_owner)
+  end
+
+  def can_author?
+    return true if admin?
+    return false unless user && record_owner
+
+    user.can_author?(record_owner)
+  end
+
+  # Get the owner/author of the record (for contextual role checks)
+  def record_owner
+    return nil unless record
+
+    if record.respond_to?(:author)
+      record.author
+    elsif record.respond_to?(:user)
+      record.user
+    elsif record.respond_to?(:owner)
+      record.owner
+    elsif record.is_a?(User)
+      record
+    end
   end
 end

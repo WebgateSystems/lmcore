@@ -276,20 +276,37 @@ FactoryBot.define do
     password { 'password123' }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
+    status { 'active' }
+    confirmed_at { Time.current }
     
-    trait :verified do
-      verified_at { Time.current }
-    end
-    
+    # System ról używa RoleAssignment (patrz: docs/features/users.md)
     trait :admin do
       after(:create) do |user|
-        user.roles << Role.find_or_create_by(name: 'admin')
+        admin_role = Role.find_by(slug: "admin") || Role.create!(
+          slug: "admin", name: "Admin", permissions: %w[manage_users manage_content],
+          priority: 90, system_role: true
+        )
+        create(:role_assignment, user: user, role: admin_role)
       end
     end
     
-    trait :creator do
+    trait :super_admin do
       after(:create) do |user|
-        user.roles << Role.find_or_create_by(name: 'creator')
+        super_admin_role = Role.find_by(slug: "super-admin") || Role.create!(
+          slug: "super-admin", name: "Super Admin", permissions: ["*"],
+          priority: 100, system_role: true
+        )
+        create(:role_assignment, user: user, role: super_admin_role)
+      end
+    end
+    
+    trait :author do
+      after(:create) do |user|
+        author_role = Role.find_by(slug: "author") || Role.create!(
+          slug: "author", name: "Author", permissions: %w[create_content edit_own_content],
+          priority: 30, system_role: true
+        )
+        create(:role_assignment, user: user, role: author_role)
       end
     end
   end

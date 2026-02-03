@@ -1,0 +1,73 @@
+- content_for :title, "#{@category.name} - Categories - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Categories', admin_categories_path
+  li
+    span= @category.name
+
+/! Header
+.uk-card.uk-margin-top
+  .uk-card-body
+    .uk-grid-small.uk-flex-middle data-uk-grid=""
+      .uk-width-expand
+        h3.uk-margin-remove= @category.name
+        p.uk-text-meta.uk-margin-remove
+          code= @category.slug
+
+      .uk-width-auto
+        = link_to edit_admin_category_path(@category), class: 'sc-button sc-button-primary'
+          i.mdi.mdi-pencil.uk-margin-small-right
+          | Edit
+
+/! Content
+.uk-margin-medium-top data-uk-grid=""
+  div(class="uk-width-2-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Posts in this category
+
+      .uk-card-body
+        - if @category.posts.any?
+          ul.uk-list.uk-list-divider
+            - @category.posts.limit(20).each do |post|
+              li
+                = link_to post.title, admin_post_path(post)
+                span.uk-text-muted.uk-margin-small-left= post.status
+        - else
+          p.uk-text-muted No posts in this category
+
+  div(class="uk-width-1-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Details
+
+      .uk-card-body
+        dl.uk-description-list
+          dt Name
+          dd= @category.name
+
+          dt Slug
+          dd
+            code= @category.slug
+
+          - if @category.description.present?
+            dt Description
+            dd= @category.description
+
+          dt Posts Count
+          dd= @category.posts.count
+
+          dt Created
+          dd= @category.created_at.strftime('%B %d, %Y')
+
+    .uk-card.uk-margin-top
+      .uk-card-header
+        h3.uk-card-title Actions
+
+      .uk-card-body
+        ul.uk-list
+          li
+            = link_to admin_category_path(@category), class: 'uk-flex uk-flex-middle md-color-red-500', data: { turbo_method: :delete, turbo_confirm: 'This will not delete posts. Are you sure?' }
+              i.mdi.mdi-delete.uk-margin-small-right
+              | Delete Category

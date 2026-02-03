@@ -6,7 +6,7 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def show?
-    record.approved? || owner? || content_owner? || moderator?
+    record.approved? || owner? || content_owner? || can_moderate_content?
   end
 
   def create?
@@ -21,19 +21,19 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def destroy?
-    owner? || content_owner? || moderator?
+    owner? || content_owner? || can_moderate_content?
   end
 
   def approve?
-    content_owner? || moderator?
+    content_owner? || can_moderate_content?
   end
 
   def mark_as_spam?
-    content_owner? || moderator?
+    content_owner? || can_moderate_content?
   end
 
   def reject?
-    content_owner? || moderator?
+    content_owner? || can_moderate_content?
   end
 
   class Scope < ApplicationPolicy::Scope
@@ -58,5 +58,16 @@ class CommentPolicy < ApplicationPolicy
     else
       false
     end
+  end
+
+  def can_moderate_content?
+    return true if admin?
+    return false unless user && record.commentable
+
+    # Check if user can moderate on the content author's blog
+    content_author = record.commentable.respond_to?(:author) ? record.commentable.author : nil
+    return false unless content_author
+
+    user.can_moderate?(content_author)
   end
 end

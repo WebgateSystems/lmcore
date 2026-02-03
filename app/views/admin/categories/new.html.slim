@@ -1,0 +1,14 @@
+- content_for :title, "New Category - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Categories', admin_categories_path
+  li
+    span New Category
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove New Category
+
+== render 'form'

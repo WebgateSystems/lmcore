@@ -8,7 +8,8 @@ class Role < ApplicationRecord
   translates :name, :description
 
   # Associations
-  has_many :users, dependent: :nullify
+  has_many :role_assignments, dependent: :destroy
+  has_many :users, through: :role_assignments, source: :user
 
   # Validations
   validates :name, presence: true, uniqueness: true

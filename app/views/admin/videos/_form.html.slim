@@ -1,0 +1,105 @@
+= form_with model: [:admin, @video], local: true, class: 'uk-form-stacked' do |f|
+  - if @video.errors.any?
+    .uk-alert.uk-alert-danger data-uk-alert=""
+      a.uk-alert-close data-uk-close=""
+      h4= "#{pluralize(@video.errors.count, 'error')} prohibited this video from being saved:"
+      ul
+        - @video.errors.full_messages.each do |message|
+          li= message
+
+  .uk-margin-medium-top data-uk-grid=""
+    /! Main Content
+    div(class="uk-width-2-3@m")
+      .uk-card
+        .uk-card-header
+          h3.uk-card-title Video Details
+
+        .uk-card-body
+          /! Title (translatable)
+          .uk-margin
+            = f.label :title, 'Title', class: 'uk-form-label'
+            .uk-form-controls
+              .uk-grid-small data-uk-grid=""
+                div(class="uk-width-1-2@m")
+                  .uk-inline.uk-width-1-1
+                    span.uk-form-icon PL
+                    = text_field_tag 'video[title_i18n][pl]', @video.title_i18n&.dig('pl'), class: 'uk-input', placeholder: 'Polish title'
+                div(class="uk-width-1-2@m")
+                  .uk-inline.uk-width-1-1
+                    span.uk-form-icon EN
+                    = text_field_tag 'video[title_i18n][en]', @video.title_i18n&.dig('en'), class: 'uk-input', placeholder: 'English title'
+
+          /! Description (translatable)
+          .uk-margin
+            = f.label :description, 'Description', class: 'uk-form-label'
+            .uk-form-controls
+              ul.uk-tab data-uk-tab=""
+                li.uk-active
+                  a href="#" PL
+                li
+                  a href="#" EN
+              ul.uk-switcher.uk-margin
+                li
+                  = text_area_tag 'video[description_i18n][pl]', @video.description_i18n&.dig('pl'), class: 'uk-textarea', rows: 6, placeholder: 'Polish description'
+                li
+                  = text_area_tag 'video[description_i18n][en]', @video.description_i18n&.dig('en'), class: 'uk-textarea', rows: 6, placeholder: 'English description'
+
+      .uk-card.uk-margin-top
+        .uk-card-header
+          h3.uk-card-title Video Source
+
+        .uk-card-body
+          .uk-margin
+            = f.label :video_provider, 'Provider', class: 'uk-form-label'
+            .uk-form-controls
+              = f.select :video_provider, options_for_select([['YouTube', 'youtube'], ['Vimeo', 'vimeo'], ['Self Hosted', 'self_hosted']], @video.video_provider), { include_blank: 'Select provider...' }, class: 'uk-select'
+
+          .uk-margin
+            = f.label :video_external_id, 'Video ID / URL', class: 'uk-form-label'
+            .uk-form-controls
+              = f.text_field :video_external_id, class: 'uk-input', placeholder: 'YouTube/Vimeo video ID or URL'
+            p.uk-text-small.uk-text-muted For YouTube: video ID (e.g., dQw4w9WgXcQ)
+
+          .uk-margin
+            = f.label :duration, 'Duration (seconds)', class: 'uk-form-label'
+            .uk-form-controls
+              = f.number_field :duration, class: 'uk-input', min: 0
+
+    /! Sidebar
+    div(class="uk-width-1-3@m")
+      .uk-card
+        .uk-card-header
+          h3.uk-card-title Publishing
+
+        .uk-card-body
+          .uk-margin
+            = f.label :status, 'Status', class: 'uk-form-label'
+            .uk-form-controls
+              = f.select :status, options_for_select([['Draft', 'draft'], ['Published', 'published'], ['Archived', 'archived']], @video.status), {}, class: 'uk-select'
+
+          .uk-margin
+            = f.label :category_id, 'Category', class: 'uk-form-label'
+            .uk-form-controls
+              = f.collection_select :category_id, Category.all, :id, :name, { include_blank: 'No category' }, class: 'uk-select'
+
+      .uk-card.uk-margin-top
+        .uk-card-header
+          h3.uk-card-title Thumbnail
+
+        .uk-card-body
+          .uk-margin
+            - if @video.thumbnail.present?
+              .uk-margin-small-bottom
+                = image_tag @video.thumbnail.thumb.url, style: 'max-width: 100%;'
+            = f.file_field :thumbnail, class: 'uk-input'
+
+  /! Actions
+  .uk-margin-large-top.uk-flex.uk-flex-between
+    div
+      - if @video.persisted?
+        = link_to admin_video_path(@video), class: 'sc-button sc-button-danger', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }
+          i.mdi.mdi-delete.uk-margin-small-right
+          | Delete
+    div
+      = link_to 'Cancel', (@video.persisted? ? admin_video_path(@video) : admin_videos_path), class: 'sc-button sc-button-default uk-margin-small-right'
+      = f.submit (@video.persisted? ? 'Update Video' : 'Create Video'), class: 'sc-button sc-button-primary'

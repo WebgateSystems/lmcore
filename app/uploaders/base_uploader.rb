@@ -18,9 +18,7 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   # Process files as they are uploaded
   def filename
-    return unless original_filename
-
-    "#{secure_token}.#{file.extension}" if original_filename.present?
+    "#{secure_token}.#{file.extension}" if file
   end
 
   protected

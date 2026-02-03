@@ -14,8 +14,23 @@ class User < ApplicationRecord
   translates :bio
 
   # Associations
-  belongs_to :role, optional: true
   belongs_to :price_plan, optional: true
+
+  # Multi-role system
+  has_many :role_assignments, dependent: :destroy
+  has_many :assigned_roles, through: :role_assignments, source: :role
+
+  # Role assignments granted by this user
+  has_many :granted_role_assignments, class_name: "RoleAssignment",
+                                      foreign_key: :granted_by_id,
+                                      dependent: :nullify,
+                                      inverse_of: :granted_by
+
+  # Blog collaborators (users who have roles on this user's blog)
+  has_many :blog_role_assignments, class_name: "RoleAssignment",
+                                   foreign_key: :scope_id,
+                                   dependent: :destroy,
+                                   inverse_of: :scope
 
   has_many :posts, foreign_key: :author_id, dependent: :destroy, inverse_of: :author
   has_many :videos, foreign_key: :author_id, dependent: :destroy, inverse_of: :author
@@ -89,25 +104,128 @@ class User < ApplicationRecord
     discard!
   end
 
-  # Role helpers
+  # Role helpers - Multi-role system
+
+  # Get all global roles for this user
+  def global_roles
+    role_assignments.global.active.includes(:role).map(&:role)
+  end
+
+  # Get all roles for a specific blog owner
+  def roles_for_blog(owner)
+    role_assignments.for_blog(owner).active.includes(:role).map(&:role)
+  end
+
+  # Get highest priority role (global or for specific scope)
+  def highest_role(scope: nil)
+    assignments = scope ? role_assignments.for_blog(scope) : role_assignments.global
+    assignments.active.joins(:role).order("roles.priority DESC").first&.role
+  end
+
+  # Check if user has a specific role (global or scoped)
+  def has_role?(role_slug, scope: nil)
+    assignments = scope ? role_assignments.for_blog(scope) : role_assignments.global
+    assignments.active.joins(:role).where(roles: { slug: role_slug }).exists?
+  end
+
+  # Check if user has any role with at least the given priority (hierarchical check)
+  def has_role_with_priority?(min_priority, scope: nil)
+    assignments = scope ? role_assignments.for_blog(scope) : role_assignments.global
+    assignments.active.joins(:role).where("roles.priority >= ?", min_priority).exists?
+  end
+
+  # Global role checks (hierarchical)
   def super_admin?
-    role&.slug == "super-admin"
+    has_role?("super-admin")
   end
 
   def admin?
-    super_admin? || role&.slug == "admin"
-  end
-
-  def moderator?
-    admin? || role&.slug == "moderator"
+    super_admin? || has_role?("admin")
   end
 
   def author?
-    moderator? || role&.slug == "author"
+    has_role?("author")
   end
 
+  def moderator?
+    has_role?("moderator")
+  end
+
+  # Contextual role checks (for specific blog)
+  def can_moderate?(blog_owner)
+    return true if admin?
+    return true if blog_owner == self
+    return true if has_role?("moderator", scope: blog_owner)
+
+    # Check hierarchical - anyone with moderator+ priority on this blog
+    has_role_with_priority?(70, scope: blog_owner)
+  end
+
+  def can_edit?(blog_owner)
+    return true if can_moderate?(blog_owner)
+    return true if has_role?("editor", scope: blog_owner)
+
+    # Check hierarchical - anyone with editor+ priority on this blog
+    has_role_with_priority?(50, scope: blog_owner)
+  end
+
+  def can_author?(blog_owner)
+    return true if can_edit?(blog_owner)
+    return true if has_role?("author", scope: blog_owner)
+
+    # Check hierarchical - anyone with author+ priority on this blog
+    has_role_with_priority?(30, scope: blog_owner)
+  end
+
+  # Permission check across all roles
   def has_permission?(permission)
-    role&.has_permission?(permission)
+    # Check global roles first
+    global_roles.any? { |r| r.has_permission?(permission) }
+  end
+
+  def has_permission_for_blog?(permission, blog_owner)
+    # Check global admin permissions
+    return true if admin? && Role.admin&.has_permission?(permission)
+
+    # Check blog-specific roles
+    roles_for_blog(blog_owner).any? { |r| r.has_permission?(permission) }
+  end
+
+  # Role assignment methods
+  def assign_role!(role_or_slug, scope: nil, granted_by: nil, expires_at: nil)
+    role = role_or_slug.is_a?(Role) ? role_or_slug : Role.find_by!(slug: role_or_slug)
+
+    role_assignments.find_or_create_by!(
+      role: role,
+      scope_type: scope ? "User" : nil,
+      scope_id: scope&.id
+    ) do |assignment|
+      assignment.granted_by = granted_by || Current.user
+      assignment.expires_at = expires_at
+    end
+  end
+
+  def remove_role!(role_or_slug, scope: nil)
+    role = role_or_slug.is_a?(Role) ? role_or_slug : Role.find_by!(slug: role_or_slug)
+
+    assignment = role_assignments.find_by(
+      role: role,
+      scope_type: scope ? "User" : nil,
+      scope_id: scope&.id
+    )
+    assignment&.destroy!
+  end
+
+  def has_any_role?
+    role_assignments.active.exists?
+  end
+
+  # Get all users who have roles on this user's blog
+  def blog_collaborators
+    User.joins(:role_assignments)
+        .where(role_assignments: { scope_type: "User", scope_id: id })
+        .where("role_assignments.expires_at IS NULL OR role_assignments.expires_at > ?", Time.current)
+        .distinct
   end
 
   # Name helpers

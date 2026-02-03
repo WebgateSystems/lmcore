@@ -1,0 +1,83 @@
+- content_for :title, "Posts - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li
+    span Posts
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove Posts
+    p.uk-text-meta= "#{@pagy.count} posts total"
+  = link_to new_admin_post_path, class: 'sc-button sc-button-primary'
+    i.mdi.mdi-plus.uk-margin-small-right
+    | New Post
+
+/! Filters
+.uk-card.uk-margin-top
+  .uk-card-body.uk-padding-small
+    = form_tag admin_posts_path, method: :get, class: 'uk-grid-small', 'data-uk-grid': '' do
+      div(class="uk-width-1-4@m")
+        input.uk-input type="text" name="q" value=params[:q] placeholder="Search posts..."
+      div(class="uk-width-1-4@m")
+        select.uk-select name="status"
+          option value="" All statuses
+          option(value="draft" selected=(params[:status] == 'draft')) Draft
+          option(value="published" selected=(params[:status] == 'published')) Published
+          option(value="archived" selected=(params[:status] == 'archived')) Archived
+      div(class="uk-width-1-4@m")
+        select.uk-select name="author_id"
+          option value="" All authors
+          - @authors.each do |author|
+            option(value=author.id selected=(params[:author_id].to_s == author.id.to_s))= author.full_name
+      .uk-width-auto
+        button.sc-button.sc-button-primary type="submit"
+          i.mdi.mdi-magnify
+        = link_to admin_posts_path, class: 'sc-button sc-button-default uk-margin-small-left'
+          i.mdi.mdi-refresh
+
+/! Posts Table
+.uk-card.uk-margin-top
+  .uk-card-body.uk-padding-remove
+    .uk-overflow-auto
+      table.uk-table.uk-table-hover.uk-table-middle.uk-table-divider.uk-margin-remove
+        thead
+          tr
+            th Title
+            th Author
+            th Status
+            th Created
+            th.uk-text-right Actions
+        tbody
+          - @posts.each do |post|
+            tr
+              td
+                = link_to post.title, admin_post_path(post), class: 'uk-link-reset'
+                - if post.featured?
+                  span.uk-label.md-bg-amber-500.uk-margin-small-left Featured
+              td
+                - if post.author
+                  = post.author.full_name
+                - else
+                  span.uk-text-muted System
+              td
+                - case post.status
+                - when 'published'
+                  span.uk-label.md-bg-green-500= post.status.capitalize
+                - when 'draft'
+                  span.uk-label.md-bg-grey-500= post.status.capitalize
+                - else
+                  span.uk-label.md-bg-amber-500= post.status.capitalize
+              td
+                = post.created_at.strftime('%b %d, %Y')
+              td.uk-text-right.uk-text-nowrap
+                = link_to admin_post_path(post), class: 'uk-icon-link', title: 'View'
+                  i.mdi.mdi-eye
+                = link_to edit_admin_post_path(post), class: 'uk-icon-link uk-margin-small-left', title: 'Edit'
+                  i.mdi.mdi-pencil
+
+/! Pagination
+- if @pagy.pages > 1
+  .uk-flex.uk-flex-center.uk-margin-medium-top
+    == pagy_nav(@pagy)

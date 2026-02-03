@@ -1,0 +1,15 @@
+- content_for :title, "Edit Video - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Videos', admin_videos_path
+  li= link_to truncate(@video.title, length: 30), admin_video_path(@video)
+  li
+    span Edit
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove Edit Video
+
+== render 'form'

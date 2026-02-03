@@ -18,11 +18,11 @@ SecureHeaders::Configuration.default do |config|
 
   config.csp = {
     default_src: %w['self'],
-    script_src: %w['self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://player.vimeo.com https://cloud.umami.is],
-    style_src: %w['self' 'unsafe-inline' https://fonts.googleapis.com],
+    script_src: %w['self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://player.vimeo.com https://cloud.umami.is https://cdn.jsdelivr.net],
+    style_src: %w['self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net],
     img_src: %w['self' data: https: blob:],
-    font_src: %w['self' https://fonts.gstatic.com],
-    connect_src: %w['self' wss: https://cloud.umami.is],
+    font_src: %w['self' https://fonts.gstatic.com https://cdn.jsdelivr.net],
+    connect_src: %w['self' wss: https://cloud.umami.is https://cdn.jsdelivr.net],
     frame_src: %w['self' https://www.youtube.com https://player.vimeo.com],
     media_src: %w['self' https: blob:],
     object_src: %w['none'],

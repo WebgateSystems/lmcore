@@ -16,18 +16,14 @@ Ta dokumentacja zawiera szczegółowe informacje techniczne o platformie LibreMe
 
 | Dokument | Opis |
 |----------|------|
-| [features/content.md](features/content.md) | System treści (posty, wideo, zdjęcia) |
-| [features/monetization.md](features/monetization.md) | Subskrypcje, darowizny, płatności |
 | [features/users.md](features/users.md) | Użytkownicy, role, uprawnienia |
-| [features/social.md](features/social.md) | Obserwacje, komentarze, reakcje |
+| [features/monetization.md](features/monetization.md) | Subskrypcje, darowizny, płatności |
 
 ### Infrastruktura
 
 | Dokument | Opis |
 |----------|------|
 | [deployment.md](deployment.md) | Instrukcje wdrożenia (Capistrano) |
-| [infrastructure.md](infrastructure.md) | Serwery, bazy danych, CDN |
-| [monitoring.md](monitoring.md) | Monitoring, logi, alerty |
 
 ### Dla deweloperów
 
@@ -35,7 +31,6 @@ Ta dokumentacja zawiera szczegółowe informacje techniczne o platformie LibreMe
 |----------|------|
 | [development.md](development.md) | Środowisko lokalne, konwencje |
 | [testing.md](testing.md) | Testy, pokrycie, CI/CD |
-| [i18n.md](i18n.md) | Internacjonalizacja, tłumaczenia |
 
 ---
 
@@ -78,13 +73,16 @@ LibreMedia to platforma dla twórców treści, umożliwiająca:
 
 ### Role użytkowników
 
-| Rola | Opis | Uprawnienia |
-|------|------|-------------|
-| `guest` | Niezalogowany użytkownik | Przeglądanie publicznych treści |
-| `user` | Zarejestrowany użytkownik | Komentarze, obserwacje, reakcje |
-| `creator` | Twórca treści | Publikowanie, monetyzacja |
-| `moderator` | Moderator | Moderacja treści i komentarzy |
-| `admin` | Administrator | Pełny dostęp do systemu |
+System ról obsługuje role globalne i kontekstualne (przypisane do konkretnego bloga). Szczegóły: [features/users.md](features/users.md)
+
+| Rola | Slug | Priorytet | Uprawnienia |
+|------|------|-----------|-------------|
+| **Super Admin** | `super-admin` | 100 | Pełny dostęp do systemu |
+| **Admin** | `admin` | 90 | Zarządzanie użytkownikami, treścią, ustawieniami |
+| **Moderator** | `moderator` | 50 | Moderacja treści i komentarzy |
+| **Author** | `author` | 30 | Tworzenie i edycja własnych treści |
+| **User** | `user` | 10 | Komentarze, obserwacje, reakcje |
+| **Guest** | `guest` | 0 | Przeglądanie publicznych treści |
 
 ### Typy treści
 

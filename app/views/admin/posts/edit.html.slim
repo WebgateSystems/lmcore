@@ -1,0 +1,15 @@
+- content_for :title, "Edit Post - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Posts', admin_posts_path
+  li= link_to truncate(@post.title, length: 30), admin_post_path(@post)
+  li
+    span Edit
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove Edit Post
+
+== render 'form'

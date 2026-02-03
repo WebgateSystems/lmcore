@@ -1,0 +1,15 @@
+- content_for :title, "Edit Tag - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to 'Tags', admin_tags_path
+  li= link_to @tag.name, admin_tag_path(@tag)
+  li
+    span Edit
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove Edit Tag
+
+== render 'form'

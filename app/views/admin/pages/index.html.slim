@@ -1,0 +1,67 @@
+- content_for :title, "Pages - Admin Panel"
+
+/! Breadcrumb
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li
+    span Pages
+
+/! Header
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove Pages
+    p.uk-text-meta= "#{@pagy.count} pages total"
+  = link_to new_admin_page_path, class: 'sc-button sc-button-primary'
+    i.mdi.mdi-plus.uk-margin-small-right
+    | New Page
+
+/! Filters
+.uk-card.uk-margin-top
+  .uk-card-body.uk-padding-small
+    = form_tag admin_pages_path, method: :get, class: 'uk-grid-small', 'data-uk-grid': '' do
+      div(class="uk-width-1-3@m")
+        input.uk-input type="text" name="q" value=params[:q] placeholder="Search pages..."
+      div(class="uk-width-1-4@m")
+        select.uk-select name="status"
+          option value="" All statuses
+          option(value="draft" selected=(params[:status] == 'draft')) Draft
+          option(value="published" selected=(params[:status] == 'published')) Published
+      .uk-width-auto
+        button.sc-button.sc-button-primary type="submit"
+          i.mdi.mdi-magnify
+        = link_to admin_pages_path, class: 'sc-button sc-button-default uk-margin-small-left'
+          i.mdi.mdi-refresh
+
+/! Pages Table
+.uk-card.uk-margin-top
+  .uk-card-body.uk-padding-remove
+    .uk-overflow-auto
+      table.uk-table.uk-table-hover.uk-table-middle.uk-table-divider.uk-margin-remove
+        thead
+          tr
+            th Title
+            th Slug
+            th Status
+            th Updated
+            th.uk-text-right Actions
+        tbody
+          - @pages.each do |page|
+            tr
+              td= link_to page.title, admin_page_path(page), class: 'uk-link-reset'
+              td
+                code.uk-text-small= "/#{page.slug}"
+              td
+                - if page.status == 'published'
+                  span.uk-label.md-bg-green-500= page.status.capitalize
+                - else
+                  span.uk-label.md-bg-grey-500= page.status.capitalize
+              td= page.updated_at.strftime('%b %d, %Y')
+              td.uk-text-right.uk-text-nowrap
+                = link_to admin_page_path(page), class: 'uk-icon-link', title: 'View'
+                  i.mdi.mdi-eye
+                = link_to edit_admin_page_path(page), class: 'uk-icon-link uk-margin-small-left', title: 'Edit'
+                  i.mdi.mdi-pencil
+
+/! Pagination
+- if @pagy.pages > 1
+  .uk-flex.uk-flex-center.uk-margin-medium-top
+    == pagy_nav(@pagy)

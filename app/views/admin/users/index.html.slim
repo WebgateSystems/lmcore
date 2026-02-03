@@ -1,0 +1,138 @@
+- content_for :title, "Users - Admin Panel"
+
+/! Page Header
+.uk-flex.uk-flex-middle.uk-margin-bottom
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove-top Users
+    p.uk-text-meta Manage all users in the system
+  div
+    = link_to new_admin_user_path, class: 'sc-button sc-button-primary'
+      i.mdi.mdi-plus.uk-margin-small-right
+      | Add User
+
+/! Filters Card
+.uk-card.uk-margin-bottom
+  .uk-card-body
+    = form_tag admin_users_path, method: :get, class: 'uk-grid-small', 'data-uk-grid': ''
+      div(class="uk-width-1-4@m")
+        .uk-form-controls
+          input.uk-input type="text" name="q" value=params[:q] placeholder="Search users..."
+
+      div(class="uk-width-1-5@m")
+        .uk-form-controls
+          select.uk-select name="status"
+            option value="" All Statuses
+            option value="active" selected=(params[:status] == 'active') Active
+            option value="pending" selected=(params[:status] == 'pending') Pending
+            option value="suspended" selected=(params[:status] == 'suspended') Suspended
+
+      div(class="uk-width-1-5@m")
+        .uk-form-controls
+          select.uk-select name="role_id"
+            option value="" All Roles
+            - @roles.each do |role|
+              option(value=role.id selected=(params[:role_id].to_s == role.id.to_s))= role.name
+
+      .uk-width-auto
+        button.sc-button.sc-button-primary type="submit"
+          i.mdi.mdi-magnify.uk-margin-small-right
+          | Filter
+        = link_to 'Reset', admin_users_path, class: 'sc-button sc-button-default uk-margin-small-left'
+
+/! Users Table
+.uk-card
+  .uk-overflow-auto
+    table.uk-table.uk-table-divider.uk-table-striped.uk-table-hover.uk-table-middle
+      thead
+        tr
+          th.uk-table-shrink
+          th= sortable_column(:email, 'Email', params[:sort], params[:direction])
+          th= sortable_column(:username, 'Username', params[:sort], params[:direction])
+          th Role
+          th= sortable_column(:status, 'Status', params[:sort], params[:direction])
+          th= sortable_column(:created_at, 'Registered', params[:sort], params[:direction])
+          th.uk-table-shrink Actions
+
+      tbody
+        - @users.each do |user|
+          tr
+            td
+              - if user.avatar.present?
+                = image_tag user.avatar.thumb.url, class: 'sc-avatar', alt: user.username
+              - else
+                span.sc-avatar-initials.md-color-white(class=user_role_badge_class(user) title=user.username)
+                  = user.initials
+
+            td
+              = link_to user.email, admin_user_path(user)
+              - if user.confirmed_at.present?
+                i.mdi.mdi-check-decagram.md-color-green-500.uk-margin-small-left title="Email confirmed"
+
+            td
+              - if user.username.present?
+                = "@#{user.username}"
+              - else
+                span.uk-text-muted Not set
+
+            td
+              - highest_role = user.highest_role
+              span.uk-label(class=user_role_badge_class(user))= highest_role&.name || 'User'
+              - role_count = user.role_assignments.global.active.count
+              - if role_count > 1
+                span.uk-text-small.uk-text-muted.uk-margin-small-left= "+#{role_count - 1}"
+
+            td
+              span.uk-label(class=user_status_badge_class(user))= user.status.capitalize
+
+            td
+              = user.created_at.strftime('%b %d, %Y')
+              br
+              span.uk-text-small.uk-text-muted= time_ago_in_words(user.created_at) + ' ago'
+
+            td.table-actions.uk-text-nowrap
+              = link_to admin_user_path(user), class: 'uk-icon-link', title: 'View', 'data-uk-tooltip': ''
+                i.mdi.mdi-eye
+              = link_to edit_admin_user_path(user), class: 'uk-icon-link', title: 'Edit', 'data-uk-tooltip': ''
+                i.mdi.mdi-pencil
+              - if user.status == 'active'
+                = link_to suspend_admin_user_path(user), class: 'uk-icon-link md-color-amber-600', title: 'Suspend', 'data-uk-tooltip': '', data: { turbo_method: :post, turbo_confirm: 'Are you sure you want to suspend this user?' }
+                  i.mdi.mdi-account-cancel
+              - elsif user.status == 'suspended'
+                = link_to activate_admin_user_path(user), class: 'uk-icon-link md-color-green-600', title: 'Activate', 'data-uk-tooltip': '', data: { turbo_method: :post }
+                  i.mdi.mdi-account-check
+
+/! Pagination
+- if @pagy.pages > 1
+  .uk-flex.uk-flex-center.uk-margin-medium-top
+    ul.uk-pagination
+      - if @pagy.prev.nil?
+        li.uk-disabled
+          span
+            i.mdi.mdi-chevron-left
+      - else
+        li
+          = link_to url_for(page: @pagy.prev)
+            i.mdi.mdi-chevron-left
+
+      - @pagy.series.each do |item|
+        - if item == :gap
+          li.uk-disabled
+            span ...
+        - elsif item.is_a?(Integer)
+          li
+            = link_to item, url_for(page: item)
+        - elsif item.is_a?(String)
+          li.uk-active
+            span= item
+
+      - if @pagy.next.nil?
+        li.uk-disabled
+          span
+            i.mdi.mdi-chevron-right
+      - else
+        li
+          = link_to url_for(page: @pagy.next)
+            i.mdi.mdi-chevron-right
+
+    p.uk-text-center.uk-text-muted.uk-margin-small-top
+      = "Showing #{@pagy.from}-#{@pagy.to} of #{@pagy.count} users"

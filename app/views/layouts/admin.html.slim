@@ -1,0 +1,199 @@
+doctype html
+html lang="en"
+  head
+    meta charset="UTF-8"
+    meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    meta http-equiv="X-UA-Compatible" content="ie=edge"
+    title= content_for(:title) || "Admin Panel - LibreMedia"
+    meta name="description" content="LibreMedia Admin Panel"
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    /! Favicon
+    link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"
+    link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"
+    link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png"
+
+    /! Turbo (for data-turbo-method links)
+    = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
+
+    /! UIkit JS (loaded early for FOUC prevention)
+    script src="https://cdn.jsdelivr.net/npm/uikit@3.16.26/dist/js/uikit.min.js"
+
+    /! Apply saved theme immediately to prevent FOUC
+    javascript:
+      (function() {
+        var savedTheme = localStorage.getItem('admin-theme');
+        var savedSidebarDark = localStorage.getItem('admin-sidebar-dark');
+        if (savedTheme) document.documentElement.classList.add(savedTheme);
+        if (savedSidebarDark === 'true') document.documentElement.classList.add('sc-sidebar-dark');
+      })();
+
+  body
+    javascript:
+      // Prevent FOUC
+      var html = document.getElementsByTagName('html')[0];
+      html.style.backgroundColor = '#f5f5f5';
+      document.body.style.visibility = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.body.style.opacity = '0';
+      document.body.style.maxHeight = "100%";
+
+    /! Header
+    = render 'admin/shared/header'
+
+    /! Sidebar
+    = render 'admin/shared/sidebar'
+
+    /! Page Content
+    #sc-page-wrapper
+      #sc-page-content
+        /! Flash Messages
+        - if flash[:notice]
+          .admin-flash
+            .uk-alert.uk-alert-success data-uk-alert=""
+              a.uk-alert-close data-uk-close=""
+              p= flash[:notice]
+        - if flash[:alert]
+          .admin-flash
+            .uk-alert.uk-alert-danger data-uk-alert=""
+              a.uk-alert-close data-uk-close=""
+              p= flash[:alert]
+
+        = yield
+
+    /! Footer
+    = render 'admin/shared/footer'
+
+    /! Style Switcher
+    = render 'admin/shared/style_switcher'
+
+    /! Stylesheets (async loading)
+    script src="https://cdn.jsdelivr.net/npm/loadjs@4.2.0/dist/loadjs.min.js"
+    javascript:
+      var html = document.getElementsByTagName('html')[0];
+
+      // Material Design Icons
+      loadjs('https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css', { preload: true });
+
+      // UIkit CSS
+      loadjs('https://cdn.jsdelivr.net/npm/uikit@3.16.26/dist/css/uikit.min.css', { preload: true });
+
+      // Scutum main CSS
+      loadjs('#{asset_path("stylesheets/main.min.css")}', function() {});
+
+      // Scutum themes
+      loadjs('#{asset_path("stylesheets/themes_combined.min.css")}', { preload: true });
+
+      // Admin custom CSS
+      loadjs('#{asset_path("stylesheets/admin.css")}', { preload: true });
+
+      // Google Fonts (loaded via link tags, not loadjs)
+      var fontLink1 = document.createElement('link');
+      fontLink1.rel = 'stylesheet';
+      fontLink1.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap';
+      document.head.appendChild(fontLink1);
+      var fontLink2 = document.createElement('link');
+      fontLink2.rel = 'stylesheet';
+      fontLink2.href = 'https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap';
+      document.head.appendChild(fontLink2);
+
+      // Vendor JS
+      loadjs('#{asset_path("javascripts/vendor.min.js")}', function() {
+        // Scutum common functions
+        loadjs('#{asset_path("javascripts/scutum_common.min.js")}', function() {
+          if (typeof scutum !== 'undefined') {
+            scutum.init();
+          }
+
+          // Initialize style switcher
+          initStyleSwitcher();
+
+          // Show page
+          setTimeout(function() {
+            html.style.backgroundColor = '';
+            document.body.style.visibility = '';
+            document.body.style.overflow = '';
+            document.body.style.opacity = '';
+            document.body.style.maxHeight = '';
+          }, 100);
+        });
+      });
+
+      // Style Switcher
+      function initStyleSwitcher() {
+        var $sSw = document.getElementById('sc-style-switcher');
+        if (!$sSw) return;
+
+        var themes = 'sc-theme-a sc-theme-b sc-theme-c sc-theme-d sc-theme-e sc-theme-f sc-theme-g sc-theme-h sc-theme-dark';
+        var themesArray = themes.split(' ');
+
+        // Load saved theme from localStorage
+        var savedTheme = localStorage.getItem('admin-theme');
+        var savedSidebarDark = localStorage.getItem('admin-sidebar-dark');
+
+        if (savedTheme) {
+          html.classList.add(savedTheme);
+          // Mark correct theme as active
+          var activeLink = $sSw.querySelector('[data-theme="' + savedTheme + '"]');
+          if (activeLink) {
+            $sSw.querySelectorAll('.sc-sSw-theme-switcher li').forEach(function(li) {
+              li.classList.remove('active');
+            });
+            activeLink.parentElement.classList.add('active');
+          }
+        }
+
+        if (savedSidebarDark === 'true') {
+          html.classList.add('sc-sidebar-dark');
+          var darkCheckbox = document.getElementById('sc-sidebar-dark-mode');
+          if (darkCheckbox) darkCheckbox.checked = true;
+        }
+
+        // Toggle style switcher panel
+        $sSw.querySelector('.sc-sSw-toggle').addEventListener('click', function(e) {
+          e.preventDefault();
+          $sSw.classList.toggle('active');
+        });
+
+        // Theme switching
+        $sSw.querySelectorAll('.sc-sSw-theme-switch').forEach(function(link) {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var li = this.parentElement;
+            li.classList.add('active');
+            li.parentElement.querySelectorAll('li').forEach(function(sibling) {
+              if (sibling !== li) sibling.classList.remove('active');
+            });
+
+            var theme = this.getAttribute('data-theme');
+
+            // Remove all theme classes
+            themesArray.forEach(function(t) {
+              html.classList.remove(t);
+            });
+
+            // Add new theme
+            if (theme !== '') {
+              html.classList.add(theme);
+              localStorage.setItem('admin-theme', theme);
+            } else {
+              localStorage.removeItem('admin-theme');
+            }
+          });
+        });
+
+        // Sidebar dark mode toggle
+        var darkCheckbox = document.getElementById('sc-sidebar-dark-mode');
+        if (darkCheckbox) {
+          darkCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+              html.classList.add('sc-sidebar-dark');
+              localStorage.setItem('admin-sidebar-dark', 'true');
+            } else {
+              html.classList.remove('sc-sidebar-dark');
+              localStorage.removeItem('admin-sidebar-dark');
+            }
+          });
+        }
+      }

@@ -20,15 +20,15 @@ class VideoPolicy < ApplicationPolicy
   end
 
   def update?
-    owner? || admin?
+    owner? || can_edit?
   end
 
   def destroy?
-    owner? || admin?
+    owner? || can_moderate?
   end
 
   def publish?
-    owner? || admin?
+    owner? || can_edit?
   end
 
   class Scope < ApplicationPolicy::Scope

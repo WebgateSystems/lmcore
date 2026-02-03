@@ -16,6 +16,72 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => "/sidekiq"
   end
 
+  # Stop impersonating
+  delete "stop_impersonating", to: "application#stop_impersonating", as: :stop_impersonating
+
+  # Admin Panel
+  namespace :admin do
+    root "dashboard#index"
+
+    resources :users do
+      member do
+        post :suspend
+        post :activate
+        post :change_role
+        post :add_role
+        delete :remove_role
+        post :impersonate
+      end
+    end
+
+    resources :posts do
+      member do
+        post :publish
+        post :unpublish
+        post :feature
+      end
+    end
+
+    resources :videos do
+      member do
+        post :publish
+        post :unpublish
+      end
+    end
+
+    resources :photos do
+      member do
+        post :publish
+        post :unpublish
+      end
+    end
+
+    resources :pages do
+      member do
+        post :publish
+        post :unpublish
+      end
+    end
+
+    resources :categories
+    resources :tags
+    resources :audit_logs, only: %i[index show]
+
+    namespace :api, defaults: { format: :json } do
+      namespace :v1 do
+        resources :users, only: %i[index show update destroy] do
+          member do
+            post :suspend
+            post :activate
+            post :change_role
+          end
+        end
+        resources :stats, only: [ :index ]
+        resources :activity, only: [ :index ]
+      end
+    end
+  end
+
   # Devise routes
   devise_for :users, path: "", path_names: {
     sign_in: "login",
@@ -114,7 +180,7 @@ Rails.application.routes.draw do
     resources :photos, only: %i[index show], param: :slug
     resources :categories, only: %i[index show], param: :slug
     resources :tags, only: %i[index show], param: :slug
-    resources :pages, only: :show, param: :slug, path: ""
+    resources :pages, only: :show, param: :slug, path: "", constraints: { slug: /[^.]+/ }
 
     # User profiles
     get "@:username", to: "profiles#show", as: :user_profile

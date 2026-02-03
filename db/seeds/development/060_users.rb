@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-return if User.joins(:role).where(roles: { slug: %w[super-admin admin] }).exists?
+# Check if super-admin already exists using role_assignments
+super_admin_role = Role.find_by(slug: 'super-admin')
+if super_admin_role && RoleAssignment.joins(:role).where(roles: { slug: 'super-admin' }, scope_type: nil).exists?
+  return
+end
 
 log('Creating Users...')
 
@@ -20,8 +24,15 @@ pwd = 'devpass123!'
 @plan_basic = PricePlan.find_by!(slug: 'basic')
 @plan_free = PricePlan.find_by!(slug: 'free')
 
+# Helper to create user with role assignment
+def create_user_with_role(attrs, role)
+  user = User.create!(attrs)
+  user.assign_role!(role)
+  user
+end
+
 # Super Admin
-@super_admin = User.create!(
+@super_admin = create_user_with_role({
   email: 'superadmin@libremedia.org',
   password: pwd,
   password_confirmation: pwd,
@@ -32,14 +43,13 @@ pwd = 'devpass123!'
   locale: 'en',
   status: 'active',
   confirmed_at: Time.current,
-  role: @role_super_admin,
   price_plan: @plan_enterprise,
   phone: "+48#{rand(500_000_000..599_999_999)}"
-)
+}, @role_super_admin)
 log("  Created super admin: #{@super_admin.email}")
 
 # Admin
-@admin = User.create!(
+@admin = create_user_with_role({
   email: 'admin@libremedia.org',
   password: pwd,
   password_confirmation: pwd,
@@ -50,14 +60,13 @@ log("  Created super admin: #{@super_admin.email}")
   locale: 'en',
   status: 'active',
   confirmed_at: Time.current,
-  role: @role_admin,
   price_plan: @plan_enterprise,
   phone: "+48#{rand(600_000_000..699_999_999)}"
-)
+}, @role_admin)
 log("  Created admin: #{@admin.email}")
 
 # Moderator
-@moderator = User.create!(
+@moderator = create_user_with_role({
   email: 'moderator@libremedia.org',
   password: pwd,
   password_confirmation: pwd,
@@ -68,14 +77,13 @@ log("  Created admin: #{@admin.email}")
   locale: 'pl',
   status: 'active',
   confirmed_at: Time.current,
-  role: @role_moderator,
   price_plan: @plan_professional,
   phone: "+48#{rand(700_000_000..799_999_999)}"
-)
+}, @role_moderator)
 log("  Created moderator: #{@moderator.email}")
 
 # Editor
-@editor = User.create!(
+@editor = create_user_with_role({
   email: 'editor@libremedia.org',
   password: pwd,
   password_confirmation: pwd,
@@ -86,14 +94,13 @@ log("  Created moderator: #{@moderator.email}")
   locale: 'en',
   status: 'active',
   confirmed_at: Time.current,
-  role: @role_editor,
   price_plan: @plan_professional,
   phone: "+48#{rand(800_000_000..899_999_999)}"
-)
+}, @role_editor)
 log("  Created editor: #{@editor.email}")
 
 # Sample Author - Polish journalist
-@author_pl = User.create!(
+@author_pl = create_user_with_role({
   email: 'autor@libremedia.org',
   password: pwd,
   password_confirmation: pwd,
@@ -104,14 +111,13 @@ log("  Created editor: #{@editor.email}")
   locale: 'pl',
   status: 'active',
   confirmed_at: Time.current,
-  role: @role_author,
   price_plan: @plan_professional,
   phone: "+48#{rand(500_000_000..599_999_999)}"
-)
+}, @role_author)
 log("  Created author (PL): #{@author_pl.email}")
 
 # Sample Author - Ukrainian journalist
-@author_uk = User.create!(
+@author_uk = create_user_with_role({
   email: 'author.ua@libremedia.org',
   password: pwd,
   password_confirmation: pwd,
@@ -122,14 +128,13 @@ log("  Created author (PL): #{@author_pl.email}")
   locale: 'uk',
   status: 'active',
   confirmed_at: Time.current,
-  role: @role_author,
   price_plan: @plan_professional,
   phone: "+380#{rand(50_000_0000..99_999_9999)}"
-)
+}, @role_author)
 log("  Created author (UK): #{@author_uk.email}")
 
 # Sample Author - Lithuanian journalist
-@author_lt = User.create!(
+@author_lt = create_user_with_role({
   email: 'author.lt@libremedia.org',
   password: pwd,
   password_confirmation: pwd,
@@ -140,15 +145,14 @@ log("  Created author (UK): #{@author_uk.email}")
   locale: 'lt',
   status: 'active',
   confirmed_at: Time.current,
-  role: @role_author,
   price_plan: @plan_basic,
   phone: "+370#{rand(600_00000..699_99999)}"
-)
+}, @role_author)
 log("  Created author (LT): #{@author_lt.email}")
 
 # Sample regular users
 5.times do |i|
-  User.create!(
+  create_user_with_role({
     email: "user#{i + 1}@libremedia.org",
     password: pwd,
     password_confirmation: pwd,
@@ -159,10 +163,9 @@ log("  Created author (LT): #{@author_lt.email}")
     locale: %w[en pl uk lt].sample,
     status: 'active',
     confirmed_at: Time.current,
-    role: @role_user,
     price_plan: @plan_free,
     phone: "+48#{rand(500_000_000..999_999_999)}"
-  )
+  }, @role_user)
 end
 log("  Created 5 regular users")
 

@@ -13,7 +13,8 @@ RSpec.describe Role do
   end
 
   describe 'associations' do
-    it { is_expected.to have_many(:users).dependent(:nullify) }
+    it { is_expected.to have_many(:role_assignments).dependent(:destroy) }
+    it { is_expected.to have_many(:users).through(:role_assignments) }
   end
 
   describe 'scopes' do
