@@ -1,0 +1,18 @@
+= form_with(model: [:dashboard, tag], class: "dashboard-form") do |f|
+  - if tag.errors.any?
+    .alert.alert-danger
+      ul.mb-0
+        - tag.errors.full_messages.each do |msg|
+          li = msg
+
+  .mb-3
+    = f.label :name, t("dashboard.common.table.name"), class: "form-label"
+    = f.text_field :name, class: "form-control", placeholder: t("dashboard.tags.form.name_placeholder")
+
+  .mb-3
+    = f.label :slug, t("dashboard.common.table.slug"), class: "form-label"
+    = f.text_field :slug, class: "form-control", placeholder: t("dashboard.tags.form.slug_placeholder")
+
+  .dashboard-actions
+    = f.submit tag.persisted? ? t("dashboard.tags.form.update") : t("dashboard.tags.form.create"), class: "btn-dashboard-primary"
+    = link_to t("dashboard.common.cancel"), dashboard_tags_path, class: "btn-dashboard-secondary"

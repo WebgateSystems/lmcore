@@ -1,0 +1,35 @@
+header.dashboard-top-bar
+  button.dashboard-sidebar-toggle type="button" aria-label=t("dashboard.a11y.toggle_navigation") data-sidebar-toggle=""
+    i.bi.bi-list
+  - raw_page_title = content_for(:page_title).presence
+  - page_title_key = raw_page_title.to_s.parameterize(separator: "_")
+  - translated_page_title = page_title_key.present? ? t("dashboard.page_titles.#{page_title_key}", default: raw_page_title) : raw_page_title
+  h1 = translated_page_title.is_a?(Hash) ? t("dashboard.navigation.dashboard") : (translated_page_title.presence || t("dashboard.navigation.dashboard"))
+  .dashboard-top-actions
+    .dropdown
+      button.icon-pill.dropdown-toggle type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label=t("dashboard.a11y.interface_language")
+        = locale_ui_tag
+      ul.dropdown-menu.dropdown-menu-end
+        - dashboard_available_locales.each do |locale_code|
+          li
+            = link_to dashboard_switch_locale_path(interface_locale: locale_path_segment(locale_code), locale: nil), class: "dropdown-item d-flex align-items-center justify-content-between#{' active' if I18n.locale.to_s == locale_code}" do
+              span.fw-semibold = locale_ui_tag(locale_code)
+              span.text-muted.ms-3 = dashboard_locale_name(locale_code)
+    = render "dashboard/shared/theme_toggle"
+    - if current_user
+      .dropdown
+        button.icon-pill.dropdown-toggle type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label=t("dashboard.a11y.user_menu")
+          span.d-inline-flex.align-items-center.justify-content-center style="width:28px;height:28px;border-radius:50%;background:var(--surface-accent);color:#fff;font-size:12px;font-weight:600"
+            = current_user.initials
+        ul.dropdown-menu.dropdown-menu-end
+          li
+            = link_to t("dashboard.user_menu.my_blog"), "/blogs/#{current_user.username}", class: "dropdown-item", target: "_blank"
+          li
+            = link_to t("dashboard.user_menu.profile"), edit_user_registration_path, class: "dropdown-item"
+          - if current_user.admin?
+            li
+              = link_to t("dashboard.user_menu.admin_panel"), admin_root_path, class: "dropdown-item"
+          li
+            hr.dropdown-divider
+          li
+            = button_to t("dashboard.user_menu.sign_out"), destroy_user_session_path, method: :delete, class: "dropdown-item text-danger"

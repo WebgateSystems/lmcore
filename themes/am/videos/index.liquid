@@ -1,0 +1,473 @@
+<!-- Videos listing page -->
+<div class="section-videos">
+  <div class="filter-icon">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect y="3.19971" width="32" height="3.2" fill="black"/>
+      <rect y="14.3999" width="32" height="3.2" fill="black"/>
+      <rect y="26" width="32" height="3" fill="black"/>
+      <path d="M11.3788 4.8C11.3788 6.7006 9.93929 8.1 8.3333 8.1C6.7273 8.1 5.28784 6.7006 5.28784 4.8C5.28784 2.8994 6.7273 1.5 8.3333 1.5C9.93929 1.5 11.3788 2.8994 11.3788 4.8Z" fill="white" stroke="black" stroke-width="3"/>
+      <path d="M11.3788 27.1999C11.3788 29.1005 9.93929 30.4999 8.3333 30.4999C6.7273 30.4999 5.28784 29.1005 5.28784 27.1999C5.28784 25.2993 6.7273 23.8999 8.3333 23.8999C9.93929 23.8999 11.3788 25.2993 11.3788 27.1999Z" fill="white" stroke="black" stroke-width="3"/>
+      <path d="M27.4698 15.9997C27.4698 17.9003 26.0304 19.2997 24.4244 19.2997C22.8184 19.2997 21.3789 17.9003 21.3789 15.9997C21.3789 14.0991 22.8184 12.6997 24.4244 12.6997C26.0304 12.6997 27.4698 14.0991 27.4698 15.9997Z" fill="white" stroke="black" stroke-width="3"/>
+    </svg>
+  </div>
+  <div class="current-page mobile-current-page"><a href="{{ base_path }}/videos">{{ 'navigation.videos' | t }}</a></div>
+  <div class="container-fluid container">
+    <div class="section-videos__inner row">
+      <!-- Desktop Filters -->
+      <div class="section-content__filter-wrapper">
+        <div class="section-content__filters">
+          <!-- Title filter -->
+          <div class="section-content__filter section-content__filter--title">
+            <div class="section-content__filter-input section-content__filter-input--search">
+              <input type="text" name="q" value="{{ query }}" placeholder="{{ 'filters.title' | t }}" class="js_filter_title_input">
+            </div>
+          </div>
+
+          <!-- Year filter -->
+          <div class="section-content__filter">
+            <div class="section-content__filter-input">
+              <input type="text" placeholder="{{ 'filters.year' | t }}">
+              <div class="section-content__filter-ico js_filter_years_btn">
+                <svg width="19" height="11" viewBox="0 0 19 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L9.5 9L18 1" stroke="black" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+            <div class="section-content__filter-list-wrapper js_filter_years_list">
+              <ul class="section-content__filter-list">
+                {% for year in years %}
+                <li class="section-content__filter-item">
+                  <label class="js_filter_option" data-option="{{ year }}">
+                    <input type="checkbox"><span class="section-content__filter-item-label">{{ year }}</span>
+                  </label>
+                </li>
+                {% endfor %}
+              </ul>
+              <div class="section-content__filter-submit-remove">
+                <div class="section-content__filter-btn section-content__filter-btn-submit">
+                  <button>{{ 'filters.apply' | t }}</button>
+                </div>
+                <div class="section-content__filter-btn section-content__filter-btn-delete">
+                  <button>{{ 'filters.remove' | t }}<span class="section-content__filter-counter"></span></button>
+                </div>
+              </div>
+            </div>
+            <div class="section-content__filters-choose"></div>
+          </div>
+          <!-- Tags filter -->
+          <div class="section-content__filter">
+            <div class="section-content__filter-input">
+              <input type="text" placeholder="{{ 'filters.tags' | t }}">
+              <div class="section-content__filter-ico js_filter_tags_btn">
+                <svg width="19" height="11" viewBox="0 0 19 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L9.5 9L18 1" stroke="black" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+            <div class="section-content__filter-list-wrapper js_filter_tags_list">
+              <ul class="section-content__filter-list">
+                {% for tag in tags %}
+                <li class="section-content__filter-item">
+                  <label class="js_filter_option" data-option="{{ tag.name }}">
+                    <input type="checkbox"><span class="section-content__filter-item-label">{{ tag.name }}</span>
+                  </label>
+                </li>
+                {% endfor %}
+              </ul>
+              <div class="section-content__filter-submit-remove">
+                <div class="section-content__filter-btn section-content__filter-btn-submit">
+                  <button type="submit">{{ 'filters.apply' | t }}</button>
+                </div>
+                <div class="section-content__filter-btn section-content__filter-btn-delete">
+                  <button type="submit">{{ 'filters.remove' | t | default: 'видалити' }}<span class="section-content__filter-counter"></span></button>
+                </div>
+              </div>
+            </div>
+            <div class="section-content__filters-choose _active"></div>
+          </div>
+          <!-- Type filter -->
+          <div class="section-content__filter js_filter_types_search_page">
+            <div class="section-content__filter-input">
+              <input type="text" placeholder="{{ 'filters.type' | t }}">
+              <div class="section-content__filter-ico js_filter_types_btn">
+                <svg width="19" height="11" viewBox="0 0 19 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L9.5 9L18 1" stroke="black" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+            <div class="section-content__filter-list-wrapper js_filter_types_list">
+              <ul class="section-content__filter-list">
+                <li class="section-content__filter-item">
+                  <label class="js_filter_option" data-option="video">
+                    <input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.videos' | t }}</span>
+                  </label>
+                </li>
+                <li class="section-content__filter-item">
+                  <label class="js_filter_option" data-option="article">
+                    <input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.articles' | t }}</span>
+                  </label>
+                </li>
+                <li class="section-content__filter-item">
+                  <label class="js_filter_option" data-option="photo">
+                    <input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.photos' | t }}</span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+            <div class="section-content__filters-choose _active"></div>
+          </div>
+          <div class="section-content__filter-rem-choose _active">
+            <button>{{ 'filters.remove_all' | t }}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Filters -->
+      <div class="section__filter-wrapper--mobile js__popup">
+        <div class="section__filter-close--mobile close-filter-btn">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M28 2.82L25.18 0L14 11.18L2.82 0L0 2.82L11.18 14L0 25.18L2.82 28L14 16.82L25.18 28L28 25.18L16.82 14L28 2.82Z" fill="white"/>
+          </svg>
+        </div>
+        <div class="section__filters--mobile">
+          <div class="section__filter--mobile">
+            <div class="section__filter-item--mobile js_filter_tags_btn_mobile">
+              <div class="section__filter-item-text--mobile"><p>{{ 'filters.tags' | t }}</p></div>
+              <div class="section__filter-item-open--mobile _active js_filter_plus--tags">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14.9946 8.75H8.99463V14.75H6.99463V8.75H0.994629V6.75H6.99463V0.75H8.99463V6.75H14.9946V8.75Z" fill="white"/>
+                </svg>
+              </div>
+              <div class="section__filter-item-close--mobile js_filter_minus--tags">
+                <svg width="14" height="2" viewBox="0 0 14 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 2H0V0H14V2Z" fill="black"/>
+                </svg>
+              </div>
+            </div>
+            <div class="section__filter-list-wrapper--mobile js_filter_tags_list_mobile">
+              <ul class="section-content__filter-list--mobile">
+                {% for tag in tags %}
+                <li class="section-content__filter-item">
+                  <label><input type="checkbox"><span class="section-content__filter-item-label">{{ tag.name }}</span></label>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="section__filter--mobile">
+            <div class="section__filter-item--mobile js_filter_years_btn_mobile">
+              <div class="section__filter-item-text--mobile"><p>{{ 'filters.year' | t }}</p></div>
+              <div class="section__filter-item-open--mobile _active js_filter_plus--years">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14.9946 8.75H8.99463V14.75H6.99463V8.75H0.994629V6.75H6.99463V0.75H8.99463V6.75H14.9946V8.75Z" fill="white"/>
+                </svg>
+              </div>
+              <div class="section__filter-item-close--mobile js_filter_minus--years">
+                <svg width="14" height="2" viewBox="0 0 14 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 2H0V0H14V2Z" fill="black"/>
+                </svg>
+              </div>
+            </div>
+            <div class="section__filter-list-wrapper--mobile js_filter_years_list_mobile">
+              <ul class="section-content__filter-list--mobile">
+                {% for year in years %}
+                <li class="section-content__filter-item"><label><input type="checkbox"><span class="section-content__filter-item-label">{{ year }}</span></label></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="section__filter--mobile">
+            <div class="section__filter-item--mobile js_filter_types_btn_mobile">
+              <div class="section__filter-item-text--mobile"><p>{{ 'filters.type' | t }}</p></div>
+              <div class="section__filter-item-open--mobile _active js_filter_plus--types">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14.9946 8.75H8.99463V14.75H6.99463V8.75H0.994629V6.75H6.99463V0.75H8.99463V6.75H14.9946V8.75Z" fill="white"/>
+                </svg>
+              </div>
+              <div class="section__filter-item-close--mobile js_filter_minus--types">
+                <svg width="14" height="2" viewBox="0 0 14 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 2H0V0H14V2Z" fill="black"/>
+                </svg>
+              </div>
+            </div>
+            <div class="section__filter-list-wrapper--mobile js_filter_types_list_mobile">
+              <ul class="section-content__filter-list--mobile">
+                <li class="section-content__filter-item"><label><input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.videos' | t }}</span></label></li>
+                <li class="section-content__filter-item"><label><input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.articles' | t }}</span></label></li>
+                <li class="section-content__filter-item"><label><input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.photos' | t }}</span></label></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="section__filter-btn--mobile">
+          <div class="section__filet-cansel-btn--mobile">
+            <button type="submit">{{ 'filters.cancel' | t }}</button>
+          </div>
+          <div class="section__filet-submit-btn--mobile">
+            <button type="submit">{{ 'filters.apply_short' | t }}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Videos content - 2 per row -->
+      {% if videos.size > 0 %}
+        {% assign video_pairs = videos.size | divided_by: 2 %}
+        {% for i in (0..video_pairs) %}
+          {% assign start_index = i | times: 2 %}
+          <div class="section-videos__content row">
+            {% for j in (0..1) %}
+              {% assign video_index = start_index | plus: j %}
+              {% if video_index < videos.size %}
+                {% assign video = videos[video_index] %}
+                {% assign video_thumb_fallback = '/themes/am/img/image/video/video-' | append: video_index | plus: 1 | append: '.png' %}
+                {% assign video_thumb = video.thumbnail_url | default: video_thumb_fallback %}
+                <div class="section-dashboard__item col">
+                  <div class="section-dashboard__item-tags">
+                    <div class="section-dashboard__item-tags-content">
+                      {% for tag in video.tags %}
+                      <span><a href="{{ base_path }}/tags/{{ tag.slug }}">#{{ tag.name }}</a></span>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="section-dashboard__item-content">
+                    <a class="video-link" href="{{ video.slug | video_url }}"></a>
+                    <div class="section-dashboard__item-image">
+                      <picture>
+                        <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ video_thumb }}" alt="{{ video.title }}" width="380" height="230">
+                      </picture>
+                    </div>
+                    <div class="section-dashboard__item-date-rewiews">
+                      <p class="article-date">{{ video.published_at | date_format }}</p>
+                      <div class="section-dashboard__item-date-rewiews-counter">
+                        <div class="section-dashboard__item-comment">
+                          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.986 2.8C27.986 1.26 26.74 0 25.2 0H2.8C1.26 0 0 1.26 0 2.8V19.6C0 21.14 1.26 22.4 2.8 22.4H22.4L28 28L27.986 2.8ZM22.4 16.8H5.6V14H22.4V16.8ZM22.4 12.6H5.6V9.8H22.4V12.6ZM22.4 8.4H5.6V5.6H22.4V8.4Z" fill="black"/>
+                          </svg>
+                          <span>{{ video.comments_count | default: 0 }}</span>
+                        </div>
+                        <div class="section-dashboard__item-rewiews">
+                          <svg width="30" height="20" viewBox="0 0 30 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.0007 0C8.33398 0 2.64065 4.14667 0.333984 10C2.64065 15.8533 8.33398 20 15.0007 20C21.6673 20 27.3606 15.8533 29.6673 10C27.3606 4.14667 21.6673 0 15.0007 0ZM15.0007 16.6667C11.3207 16.6667 8.33398 13.68 8.33398 10C8.33398 6.32 11.3207 3.33333 15.0007 3.33333C18.6807 3.33333 21.6673 6.32 21.6673 10C21.6673 13.68 18.6807 16.6667 15.0007 16.6667ZM15.0007 6C12.7873 6 11.0007 7.78667 11.0007 10C11.0007 12.2133 12.7873 14 15.0007 14C17.214 14 19.0007 12.2133 19.0007 10C19.0007 7.78667 17.214 6 15.0007 6Z" fill="black"/>
+                          </svg>
+                          <span>{{ video.views_count | default: 0 }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="section-dashboard__item-description">
+                      <h2 class="site-text__large">{{ video.title }}</h2>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="section-videos__content row">
+          <div class="no-results">
+            {% if query and query != blank %}
+              <p class="site-text__large">{{ 'search.no_results' | t }}: "{{ query }}"</p>
+            {% else %}
+              <p class="site-text__large">{{ 'content.no_results' | t }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Pagination -->
+      {% if pagination and pagination.total_pages > 1 %}
+      <div class="section-articles__pagination row">
+        <div class="section-articles__pagination-content col">
+          {% assign current_page = pagination.current_page %}
+          {% assign total_pages = pagination.total_pages %}
+          {% assign window_start = current_page | minus: 2 %}
+          {% assign window_end = current_page | plus: 2 %}
+          {% assign penultimate_page = total_pages | minus: 1 %}
+          {% if window_start < 1 %}{% assign window_start = 1 %}{% endif %}
+          {% if window_end > total_pages %}{% assign window_end = total_pages %}{% endif %}
+
+          {% if current_page > 1 %}
+          <div class="section-articles__pagination-btn">
+            <div class="section-articles__pagination-btn-next">
+              <a href="?page={{ current_page | minus: 1 }}{{ filters_query }}">&lt;</a>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="section-articles__pagination-numbers">
+            <span>
+              <a {% if current_page == 1 %}class="_active"{% endif %} href="?page=1{{ filters_query }}">1</a>
+            </span>
+
+            {% if window_start > 2 %}
+              <span><a class="disabled" href="javascript:void(0)">...</a></span>
+            {% endif %}
+
+            {% for p in (window_start..window_end) %}
+              {% if p > 1 and p < total_pages %}
+              <span>
+                <a {% if p == current_page %}class="_active"{% endif %} href="?page={{ p }}{{ filters_query }}">{{ p }}</a>
+              </span>
+              {% endif %}
+            {% endfor %}
+
+            {% if total_pages > 1 %}
+              {% if window_end < penultimate_page %}
+                <span><a class="disabled" href="javascript:void(0)">...</a></span>
+              {% endif %}
+              <span>
+                <a {% if current_page == total_pages %}class="_active"{% endif %} href="?page={{ total_pages }}{{ filters_query }}">{{ total_pages }}</a>
+              </span>
+            {% endif %}
+          </div>
+
+          {% if current_page < total_pages %}
+          <div class="section-articles__pagination-btn">
+            <div class="section-articles__pagination-btn-next">
+              <a href="?page={{ current_page | plus: 1 }}{{ filters_query }}">&gt;</a>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .section-content__filter--title {
+    min-width: 260px;
+    margin-right: 12px;
+  }
+
+  .section-content__filter-input--search input {
+    width: 100%;
+    min-width: 220px;
+    padding-right: 42px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z' fill='%236f6f6f'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 20px 20px;
+  }
+
+  .section-articles__pagination-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .section-videos .section-articles__pagination {
+    position: static !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100%;
+    min-height: 0;
+    padding: 0;
+    margin: -44px 0 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .section-articles__pagination-numbers {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .section-articles__pagination-numbers a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #d5d5d5;
+    border-radius: 10px;
+    color: #111;
+    background: #fff;
+    font-family: FiraSansExtraCondensed-SemiBold, sans-serif;
+    font-size: 18px;
+    line-height: 1;
+    transition: all .18s ease;
+  }
+
+  .section-articles__pagination-numbers a:hover {
+    border-color: #111;
+    transform: translateY(-1px);
+  }
+
+  .section-articles__pagination-numbers a._active {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+  }
+
+  .section-articles__pagination-numbers a.disabled {
+    pointer-events: none;
+    border-color: transparent;
+    background: transparent;
+    min-width: auto;
+    padding: 0 4px;
+  }
+
+  .section-articles__pagination-btn-next a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #111;
+    color: #111;
+    background: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    transition: all .18s ease;
+  }
+
+  .section-articles__pagination-btn-next a:hover {
+    background: #111;
+    color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    .section-content__filter--title {
+      min-width: 100%;
+      width: 100%;
+    }
+
+    .section-content__filter-input--search input {
+      min-width: 0;
+    }
+
+    .section-articles__pagination-content {
+      gap: 10px;
+    }
+
+    .section-videos .section-articles__pagination {
+      min-height: 0;
+      padding: 0;
+      margin: -20px 0 56px;
+    }
+
+    .section-articles__pagination-numbers {
+      gap: 6px;
+    }
+
+    .section-articles__pagination-numbers a,
+    .section-articles__pagination-btn-next a {
+      min-width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      font-size: 16px;
+      padding: 0 8px;
+    }
+  }
+</style>

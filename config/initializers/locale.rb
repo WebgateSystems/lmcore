@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Available locales
-I18n.available_locales = %i[en pl uk lt de fr es]
+I18n.available_locales = %i[en pl uk ru lt de fr es]
 
 # Default locale
 I18n.default_locale = :en

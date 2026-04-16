@@ -19,12 +19,23 @@
 #   cleanup_old_audit_logs:
 #     cron: '0 2 * * 0'
 #     class: CleanupAuditLogsWorker
+#   sync_ayder_youtube_videos:
+#     cron: '0 */6 * * *'
+#     class: SyncYoutubeChannelVideosWorker
+#     args:
+#       - '<ayder-user-id>'
+#       - 'https://www.youtube.com/@AyderMuzhdabaev/videos'
+#       - 'uk'
+#       - 'media'
 
 development:
   :concurrency: 5
 
 test:
   :concurrency: 1
+
+staging:
+  :concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY', 15) %>
 
 production:
   :concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY', 20) %>

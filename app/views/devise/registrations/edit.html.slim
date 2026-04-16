@@ -1,0 +1,91 @@
+- content_for :title, t('users.edit_profile')
+
+h2.auth-title= t('users.edit_profile')
+
+- current_locale = I18n.locale.to_s
+- interface_language_label = locale_menu_label
+- identity_editable = resource.super_admin?
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'auth-form' }) do |f|
+  - if resource.errors.any?
+    .auth-alert.auth-alert-error
+      i.fa-solid.fa-circle-exclamation
+      span= resource.errors.full_messages.first
+
+  .form-row-2
+    .form-group
+      = f.label :first_name, t('activerecord.attributes.user.first_name')
+      .input-wrapper
+        i.fa-solid.fa-user.input-icon
+        = f.text_field :first_name, class: 'form-input', autofocus: true, placeholder: t('activerecord.attributes.user.first_name')
+
+    .form-group
+      = f.label :last_name, t('activerecord.attributes.user.last_name')
+      .input-wrapper
+        i.fa-solid.fa-user.input-icon
+        = f.text_field :last_name, class: 'form-input', placeholder: t('activerecord.attributes.user.last_name')
+
+  - if identity_editable
+    .form-group
+      = f.label :username, t('activerecord.attributes.user.username')
+      .input-wrapper
+        i.fa-solid.fa-at.input-icon
+        = f.text_field :username, class: 'form-input', autocomplete: 'username'
+  - else
+    .form-group
+      = label_tag nil, t('activerecord.attributes.user.username')
+      .input-wrapper
+        i.fa-solid.fa-at.input-icon
+        p#profile-username-display.form-static-value= resource.username.presence || '—'
+
+    p.form-hint= t('auth.identity_fields_locked_hint')
+
+  .form-group
+    = f.label :email, t('auth.email')
+    .input-wrapper
+      i.fa-solid.fa-envelope.input-icon
+      = f.email_field :email, class: 'form-input', autocomplete: 'email'
+
+  .translatable-legend
+    span.translatable-legend__badge= t('auth.multilingual_label')
+    span.translatable-legend__text= t('auth.multilingual_legend')
+
+  .form-group
+    = label_tag "user_display_name_current_locale", "#{t('auth.display_name')} (#{interface_language_label})", class: 'translatable-field-label'
+    .input-wrapper
+      i.fa-solid.fa-language.input-icon
+      = text_field_tag "user[display_name_current_locale]", resource.display_name_i18n&.dig(current_locale), id: "user_display_name_current_locale", class: 'form-input', placeholder: "#{t('auth.display_name')} (#{interface_language_label})"
+
+  .form-group
+    = f.label :locale, t('activerecord.attributes.user.locale')
+    .input-wrapper
+      i.fa-solid.fa-globe.input-icon
+      = f.select :locale, options_for_select(locale_select_options_for_user(resource), I18n.locale.to_s), {}, class: 'form-input'
+
+  .form-group
+    = f.label :timezone, t('activerecord.attributes.user.timezone')
+    .input-wrapper
+      i.fa-regular.fa-clock.input-icon
+      = f.time_zone_select :timezone, nil, {}, class: 'form-input'
+
+  .form-group
+    = f.label :password, t('auth.new_password')
+    .input-wrapper
+      i.fa-solid.fa-lock.input-icon
+      = f.password_field :password, class: 'form-input', autocomplete: 'new-password', placeholder: t('auth.leave_blank_if_unchanged')
+
+  .form-group
+    = f.label :password_confirmation, t('auth.password_confirmation')
+    .input-wrapper
+      i.fa-solid.fa-lock.input-icon
+      = f.password_field :password_confirmation, class: 'form-input', autocomplete: 'new-password'
+
+  .form-group
+    = f.label :current_password, t('auth.current_password')
+    .input-wrapper
+      i.fa-solid.fa-key.input-icon
+      = f.password_field :current_password, class: 'form-input', autocomplete: 'current-password'
+    p.form-hint= t('auth.current_password_hint')
+
+  .form-actions
+    = f.submit t('auth.update_profile'), class: 'btn btn-primary btn-lg btn-block'

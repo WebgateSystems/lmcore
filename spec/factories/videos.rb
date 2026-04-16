@@ -11,7 +11,7 @@ FactoryBot.define do
     archived { false }
     comments_enabled { true }
     video_provider { 'youtube' }
-    video_external_id { 'dQw4w9WgXcQ' }
+    sequence(:video_external_id) { |n| "yt-video-#{n}" }
     duration_seconds { 212 }
 
     trait :published do
@@ -21,7 +21,7 @@ FactoryBot.define do
 
     trait :youtube do
       video_provider { 'youtube' }
-      video_external_id { 'dQw4w9WgXcQ' }
+      sequence(:video_external_id) { |n| "yt-video-#{n}" }
     end
 
     trait :vimeo do

@@ -3,6 +3,7 @@
 class User < ApplicationRecord
   include Discard::Model
   include Translatable
+  include YoutubeCredentials
 
   # Devise modules
   devise :database_authenticatable, :registerable,
@@ -51,6 +52,7 @@ class User < ApplicationRecord
   has_many :site_settings, dependent: :destroy
   has_many :api_keys, dependent: :destroy
   has_many :audit_logs, dependent: :nullify
+  has_many :dashboard_job_runs, dependent: :destroy
 
   # Following
   has_many :active_follows, class_name: "Follow", foreign_key: :follower_id, dependent: :destroy, inverse_of: :follower
@@ -69,9 +71,12 @@ class User < ApplicationRecord
   # Validations
   validates :email, presence: true, uniqueness: { case_sensitive: false },
                     format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :username, uniqueness: { case_sensitive: false }, allow_nil: true,
-                       format: { with: /\A[a-zA-Z0-9_]+\z/, message: "only allows letters, numbers, and underscores" },
-                       length: { minimum: 3, maximum: 30 }
+  validates :username, uniqueness: { case_sensitive: false }, allow_nil: true
+  validates :username,
+            format: { with: /\A[a-zA-Z0-9_]+\z/, message: "only allows letters, numbers, and underscores" },
+            length: { minimum: 3, maximum: 30 },
+            allow_nil: true,
+            if: :validating_username_constraints?
   validates :phone, uniqueness: true, allow_nil: true
   validates :status, presence: true, inclusion: { in: %w[pending active suspended deleted] }
   validates :locale, inclusion: { in: I18n.available_locales.map(&:to_s) }, allow_nil: true
@@ -229,12 +234,30 @@ class User < ApplicationRecord
   end
 
   # Name helpers
-  def full_name
-    [ first_name, last_name ].compact.join(" ").presence || display_name || username || email.split("@").first
+  def full_name(locale: I18n.locale)
+    localized_display_name(locale: locale).presence ||
+      [ first_name, last_name ].compact.join(" ").presence ||
+      display_name ||
+      username ||
+      email.split("@").first
   end
 
   def initials
     full_name.split.map(&:first).join.upcase[0..1]
+  end
+
+  def localized_display_name(locale: I18n.locale)
+    translations = display_name_i18n.is_a?(Hash) ? display_name_i18n : {}
+    return if translations.blank?
+
+    requested_locale = locale.to_s
+    user_locale = self.locale.to_s.presence
+    default_locale = I18n.default_locale.to_s
+
+    translations[requested_locale].presence ||
+      translations[user_locale].presence ||
+      translations[default_locale].presence ||
+      translations.values.compact.find(&:present?)
   end
 
   # Subscription helpers
@@ -287,6 +310,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def validating_username_constraints?
+    username.present? && (new_record? || will_save_change_to_username?)
+  end
 
   def set_defaults
     self.status ||= "pending"

@@ -1,0 +1,53 @@
+- content_for(:page_title) { "Comments Moderation" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    .d-flex.gap-2
+      = link_to t("dashboard.comments.index.filter_all"), dashboard_comments_path, class: "btn-dashboard-secondary #{'active' unless params[:status]}"
+      = link_to t("dashboard.comments.index.filter_pending"), dashboard_comments_path(status: "pending"), class: "btn-dashboard-secondary #{'active' if params[:status] == 'pending'}"
+      = link_to t("dashboard.comments.index.filter_approved"), dashboard_comments_path(status: "approved"), class: "btn-dashboard-secondary #{'active' if params[:status] == 'approved'}"
+      = link_to t("dashboard.comments.index.filter_spam"), dashboard_comments_path(status: "spam"), class: "btn-dashboard-secondary #{'active' if params[:status] == 'spam'}"
+    div
+
+  - if @comments.any?
+    .panel
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.author")
+            th = t("dashboard.common.table.comment")
+            th = t("dashboard.common.table.on")
+            th = t("dashboard.common.table.status")
+            th = t("dashboard.common.table.date")
+            th.text-end = t("dashboard.common.table.actions")
+        tbody
+          - @comments.each do |comment|
+            tr
+              td = comment.user&.full_name || comment.author_name || t("dashboard.common.anonymous")
+              td = truncate(comment.body, length: 80)
+              td
+                - if comment.commentable
+                  = comment.commentable_type.underscore.humanize
+                  | :
+                  = " "
+                  = comment.commentable.try(:title)&.truncate(30) || "##{comment.commentable_id}"
+              td
+                span class="dashboard-badge dashboard-badge--#{comment.status}" = comment.status.humanize
+              td.text-body-3 = comment.created_at.strftime("%b %d, %Y")
+              td.text-end
+                .dashboard-actions.justify-content-end
+                  - if comment.status != "approved"
+                    = button_to dashboard_comment_path(comment), method: :patch, class: "icon-pill text-success", title: t("dashboard.common.approve"), params: { comment: { status: "approved" } } do
+                      i.bi.bi-check-circle
+                  - if comment.status != "spam"
+                    = button_to dashboard_comment_path(comment), method: :patch, class: "icon-pill text-warning", title: t("dashboard.common.mark_spam"), params: { comment: { status: "spam" } } do
+                      i.bi.bi-exclamation-triangle
+                  = button_to dashboard_comment_path(comment), method: :delete, class: "icon-pill text-danger", title: t("dashboard.common.delete"), data: { turbo_confirm: t("dashboard.common.confirm_delete") } do
+                    i.bi.bi-trash
+    - if @pagy.pages > 1
+      .d-flex.justify-content-center.mt-4
+        == pagy_nav(@pagy)
+  - else
+    .dashboard-empty
+      i.bi.bi-chat-dots
+      p = t("dashboard.comments.index.empty")

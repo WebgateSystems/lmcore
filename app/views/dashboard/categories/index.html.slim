@@ -1,0 +1,35 @@
+- content_for(:page_title) { "Categories" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    = link_to t("dashboard.categories.index.new"), new_dashboard_category_path, class: "btn-dashboard-primary"
+
+  - if @categories.any?
+    .panel
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.name")
+            th = t("dashboard.common.table.type")
+            th = t("dashboard.common.table.parent")
+            th = t("dashboard.common.table.posts")
+            th.text-end = t("dashboard.common.table.actions")
+        tbody
+          - @categories.each do |category|
+            tr
+              td = link_to category.name, edit_dashboard_category_path(category), class: "text-decoration-none fw-medium"
+              td = category.category_type&.humanize || t("dashboard.categories.index.general_type")
+              td = category.parent&.name || t("dashboard.common.none")
+              td = category.posts.count
+              td.text-end
+                .dashboard-actions.justify-content-end
+                  = link_to edit_dashboard_category_path(category), class: "icon-pill", title: t("dashboard.common.edit") do
+                    i.bi.bi-pencil
+                  = button_to dashboard_category_path(category), method: :delete, class: "icon-pill text-danger", title: t("dashboard.common.delete"), data: { turbo_confirm: t("dashboard.common.confirm_delete_category") } do
+                    i.bi.bi-trash
+  - else
+    .dashboard-empty
+      i.bi.bi-folder
+      p = t("dashboard.categories.index.empty")
+      = link_to t("dashboard.categories.index.empty_cta"), new_dashboard_category_path, class: "btn-dashboard-primary"

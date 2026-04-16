@@ -27,6 +27,12 @@ class ImageUploader < BaseUploader
   end
 
   # Add an allowlist of extensions which are allowed to be uploaded
+  def store_dir
+    return youtube_thumbnail_store_dir if youtube_video_thumbnail?
+
+    super
+  end
+
   def extension_allowlist
     %w[jpg jpeg gif png webp svg]
   end
@@ -50,5 +56,17 @@ class ImageUploader < BaseUploader
       img.quality "85"
       img
     end
+  end
+
+  private
+
+  def youtube_video_thumbnail?
+    model.is_a?(Video) && mounted_as.to_s == "thumbnail" && model.video_provider.to_s == "youtube"
+  end
+
+  def youtube_thumbnail_store_dir
+    owner = model.author&.username.presence || model.author_id || "unknown"
+    file_scope = model.id || "pending"
+    "uploads/#{owner}/youtube/thumbnails/#{file_scope}"
   end
 end

@@ -51,8 +51,11 @@ class Rack::Attack
     end
   end
 
-  # Custom response for throttled requests
-  self.throttled_responder = lambda do |env|
+  # Custom response for throttled requests.
+  # rack-attack >= 6.7 passes a Rack::Attack::Request (not a plain env hash),
+  # so we read rack.attack.match_data via #env to stay compatible across versions.
+  self.throttled_responder = lambda do |request|
+    env = request.respond_to?(:env) ? request.env : request
     retry_after = (env["rack.attack.match_data"] || {})[:period]
     [
       429,
@@ -65,7 +68,7 @@ class Rack::Attack
   end
 
   # Custom response for blocked requests
-  self.blocklisted_responder = lambda do |_env|
+  self.blocklisted_responder = lambda do |_request|
     [
       403,
       { "Content-Type" => "application/json" },
@@ -74,5 +77,10 @@ class Rack::Attack
   end
 end
 
-# Enable in production
-Rails.application.config.middleware.use Rack::Attack unless Rails.env.test?
+# Disable the middleware in the test environment. Rack::Attack's Railtie inserts
+# itself into the middleware stack automatically, so simply skipping
+# `config.middleware.use` is not enough — we have to actively delete it.
+if Rails.env.test?
+  Rails.application.config.middleware.delete Rack::Attack
+  Rack::Attack.enabled = false if Rack::Attack.respond_to?(:enabled=)
+end

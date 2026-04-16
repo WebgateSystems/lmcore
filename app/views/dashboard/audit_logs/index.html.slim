@@ -1,0 +1,41 @@
+- content_for(:page_title) { "Audit Log" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    .d-flex.gap-2
+      = link_to t("dashboard.audit_logs.index.filter_all"), dashboard_audit_logs_path, class: "btn-dashboard-secondary #{'active' unless params[:action_filter]}"
+      = link_to t("dashboard.audit_logs.index.filter_creates"), dashboard_audit_logs_path(action_filter: "create"), class: "btn-dashboard-secondary #{'active' if params[:action_filter] == 'create'}"
+      = link_to t("dashboard.audit_logs.index.filter_updates"), dashboard_audit_logs_path(action_filter: "update"), class: "btn-dashboard-secondary #{'active' if params[:action_filter] == 'update'}"
+      = link_to t("dashboard.audit_logs.index.filter_deletes"), dashboard_audit_logs_path(action_filter: "destroy"), class: "btn-dashboard-secondary #{'active' if params[:action_filter] == 'destroy'}"
+    div
+
+  - if @audit_logs.any?
+    .panel
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.user")
+            th = t("dashboard.common.table.action")
+            th = t("dashboard.common.table.resource")
+            th = t("dashboard.common.table.date")
+            th.text-end
+        tbody
+          - @audit_logs.each do |log|
+            tr
+              td = log.user&.full_name || t("dashboard.common.system")
+              td
+                span.dashboard-badge.dashboard-badge--pending = log.action.humanize
+              td
+                = log.auditable_type&.underscore&.humanize
+                = " ##{log.auditable_id}" if log.auditable_id
+              td.text-body-3 = log.created_at.strftime("%b %d, %Y %H:%M")
+              td.text-end
+                = link_to dashboard_audit_log_path(log), class: "icon-pill", title: t("dashboard.common.details") do
+                  i.bi.bi-eye
+    - if @pagy.pages > 1
+      .d-flex.justify-content-center.mt-4
+        == pagy_nav(@pagy)
+  - else
+    .dashboard-empty
+      i.bi.bi-clock-history
+      p = t("dashboard.audit_logs.index.empty")

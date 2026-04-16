@@ -4,6 +4,8 @@ class Partner < ApplicationRecord
   include Sluggable
   include Translatable
 
+  belongs_to :user, optional: true
+
   # Translations
   translates :description
 
@@ -20,6 +22,8 @@ class Partner < ApplicationRecord
   scope :inactive, -> { where(active: false) }
   scope :ordered, -> { order(position: :asc) }
   scope :for_locale, ->(locale) { where(locale: locale.to_s) }
+  scope :global, -> { where(user_id: nil) }
+  scope :for_user, ->(user) { where(user: user) }
 
   # Instance methods
   def activate!

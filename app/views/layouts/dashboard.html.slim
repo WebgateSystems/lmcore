@@ -1,0 +1,40 @@
+doctype html
+html lang="en" data-theme="auto"
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width,initial-scale=1"
+    title = (content_for(:title) || t("dashboard.navigation.dashboard")) + " | LibreMedia"
+    link rel="preconnect" href="https://fonts.googleapis.com"
+    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""
+    link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Rubik:wght@500;600;700&display=swap" rel="stylesheet"
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag "dashboard", "data-turbo-track": "reload"
+    = javascript_include_tag "dashboard", type: "module"
+  body
+    .dashboard-app data-dashboard-app=""
+      aside.dashboard-sidebar
+        .dashboard-logo
+          .dashboard-logo__brand
+            = link_to dashboard_root_path, class: "dashboard-logo__brand" do
+              span.dashboard-logo__full LibreMedia
+          button.dashboard-collapse-toggle type="button" aria-label=t("dashboard.a11y.collapse_sidebar") aria-expanded="true" data-sidebar-collapse-toggle=""
+            i.bi.bi-chevron-bar-left.dashboard-collapse-toggle__icon.dashboard-collapse-toggle__icon--collapse
+            i.bi.bi-chevron-bar-right.dashboard-collapse-toggle__icon.dashboard-collapse-toggle__icon--expand
+        = render "dashboard/shared/sidebar"
+      .dashboard-sidebar-overlay data-sidebar-overlay="" aria-hidden="true"
+      main.dashboard-main
+        = render "dashboard/shared/top_bar"
+
+        - if notice
+          .alert.alert-success role="alert"
+            = notice
+            button.alert-close type="button" aria-label=t("dashboard.a11y.close") data-dismiss-alert=""
+              i.bi.bi-x
+        - if alert
+          .alert.alert-danger role="alert"
+            = alert
+            button.alert-close type="button" aria-label=t("dashboard.a11y.close") data-dismiss-alert=""
+              i.bi.bi-x
+
+        = yield

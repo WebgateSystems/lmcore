@@ -82,12 +82,40 @@ Rails.application.routes.draw do
     end
   end
 
+  # Author/Moderator Dashboard
+  namespace :dashboard do
+    root "home#index"
+    get "locale/:interface_locale", to: "base#switch_locale", as: :switch_locale
+    resources :posts
+    resources :videos do
+      collection do
+        post :sync_youtube
+        get :sync_status
+      end
+      member do
+        post :create_post_from_video
+      end
+    end
+    resources :photos
+    resources :pages
+    resources :categories, only: %i[index show new create edit update destroy]
+    resources :tags, only: %i[index show new create edit update destroy]
+    resource :settings, only: %i[show update]
+    resources :partners, only: %i[index new create edit update destroy] do
+      collection do
+        post :reorder
+      end
+    end
+    resources :comments, only: %i[index show update destroy]
+    resources :audit_logs, only: %i[index show]
+  end
+
   # Devise routes
   devise_for :users, path: "", path_names: {
     sign_in: "login",
     sign_out: "logout",
     sign_up: "register"
-  }
+  }, controllers: { registrations: "users/registrations" }
 
   # API routes
   namespace :api do
@@ -163,11 +191,27 @@ Rails.application.routes.draw do
     end
   end
 
+  # Blog routes — Liquid-rendered per-user blogs
+  scope "blogs/:blog_slug", as: :blog do
+    get "/", to: "blogs#show"
+    get "posts", to: "blogs#posts", as: :posts
+    get "posts/:slug", to: "blogs#post", as: :post
+    get "videos", to: "blogs#videos", as: :videos
+    get "videos/:slug", to: "blogs#video", as: :video
+    get "photos", to: "blogs#photos", as: :photos
+    get "photos/:slug", to: "blogs#photo", as: :photo
+    get "categories/:slug", to: "blogs#category", as: :category
+    get "tags/:slug", to: "blogs#tag", as: :tag
+    get "pages/:slug", to: "blogs#page", as: :page
+    get "search", to: "blogs#search", as: :search
+    get "locale/:locale", to: "blogs#switch_locale", as: :locale
+  end
+
   # Locale switching
   get "locale/:locale", to: "locale#switch", as: :switch_locale
 
   # Frontend routes (will be handled by views/frontend)
-  scope "(:locale)", locale: /en|pl|uk|lt|de|fr|es/ do
+  scope "(:locale)", locale: /en|pl|uk|ua|lt|de|fr|es|ru/ do
     root "home#index"
 
     # Legal pages

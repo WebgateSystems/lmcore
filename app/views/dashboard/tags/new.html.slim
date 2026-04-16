@@ -1,0 +1,8 @@
+- content_for(:page_title) { "New Tag" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    = link_to t("dashboard.tags.index.back"), dashboard_tags_path, class: "btn-dashboard-secondary"
+
+  = render "form", tag: @tag

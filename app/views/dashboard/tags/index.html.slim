@@ -1,0 +1,36 @@
+- content_for(:page_title) { "Tags" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    = link_to t("dashboard.tags.index.new"), new_dashboard_tag_path, class: "btn-dashboard-primary"
+
+  - if @tags.any?
+    .panel
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.name")
+            th = t("dashboard.common.table.slug")
+            th = t("dashboard.common.table.posts")
+            th.text-end = t("dashboard.common.table.actions")
+        tbody
+          - @tags.each do |tag|
+            tr
+              td = link_to tag.name, edit_dashboard_tag_path(tag), class: "text-decoration-none fw-medium"
+              td.text-body-3 = tag.slug
+              td = tag.posts.count
+              td.text-end
+                .dashboard-actions.justify-content-end
+                  = link_to edit_dashboard_tag_path(tag), class: "icon-pill", title: t("dashboard.common.edit") do
+                    i.bi.bi-pencil
+                  = button_to dashboard_tag_path(tag), method: :delete, class: "icon-pill text-danger", title: t("dashboard.common.delete"), data: { turbo_confirm: t("dashboard.common.confirm_delete") } do
+                    i.bi.bi-trash
+    - if @pagy.pages > 1
+      .d-flex.justify-content-center.mt-4
+        == pagy_nav(@pagy)
+  - else
+    .dashboard-empty
+      i.bi.bi-tags
+      p = t("dashboard.tags.index.empty")
+      = link_to t("dashboard.tags.index.empty_cta"), new_dashboard_tag_path, class: "btn-dashboard-primary"

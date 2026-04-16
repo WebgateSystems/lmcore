@@ -1,0 +1,8 @@
+- content_for(:page_title) { "New Photo" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    = link_to t("dashboard.photos.form.back_to_list"), dashboard_photos_path, class: "btn-dashboard-secondary"
+
+  = render "form", photo: @photo

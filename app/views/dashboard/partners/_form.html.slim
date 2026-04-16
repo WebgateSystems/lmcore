@@ -1,0 +1,59 @@
+= form_with(model: [:dashboard, partner], class: "dashboard-form") do |f|
+  - if partner.errors.any?
+    .alert.alert-danger
+      ul.mb-0
+        - partner.errors.full_messages.each do |msg|
+          li = msg
+
+  .mb-3
+    = f.label :name, t("dashboard.common.table.name"), class: "form-label"
+    = f.text_field :name, class: "form-control", placeholder: t("dashboard.partners.form.name_placeholder")
+
+  .mb-3
+    = f.label :slug, t("dashboard.common.table.slug"), class: "form-label"
+    = f.text_field :slug, class: "form-control", placeholder: t("dashboard.partners.form.slug_placeholder")
+
+  .mb-3
+    = f.label :url, t("dashboard.partners.form.url_label"), class: "form-label"
+    = f.url_field :url, class: "form-control", placeholder: t("dashboard.partners.form.url_placeholder")
+
+  h5.mt-4.mb-3 = t("dashboard.partners.form.logo_heading")
+  p.text-body-3.text-muted.mb-3 = t("dashboard.partners.form.logo_hint")
+
+  .mb-3
+    = f.label :logo_svg, t("dashboard.partners.form.logo_svg"), class: "form-label"
+    = f.text_area :logo_svg, class: "form-control", rows: 4, placeholder: t("dashboard.partners.form.logo_svg_placeholder")
+
+  .mb-3
+    = f.label :logo_url, t("dashboard.partners.form.logo_url"), class: "form-label"
+    = f.url_field :logo_url, class: "form-control", placeholder: t("dashboard.partners.form.logo_url_placeholder")
+
+  - if partner.logo_svg.present?
+    .mb-3
+      label.form-label = t("dashboard.partners.form.preview_svg")
+      .p-3.rounded style="background:var(--bg-secondary);display:inline-block"
+        == partner.logo_svg
+  - elsif partner.logo_url.present?
+    .mb-3
+      label.form-label = t("dashboard.partners.form.preview_image")
+      .p-3.rounded style="background:var(--bg-secondary);display:inline-block"
+        img src=partner.logo_url alt=partner.name style="max-height:60px"
+
+  hr.my-4
+
+  = render "dashboard/shared/i18n_legend"
+
+  .mb-3
+    = f.label :description, class: "form-label form-label--translatable" do
+      = t("dashboard.settings.description")
+      span.form-label__locale = " (#{locale_ui_tag})"
+    = f.text_area :description, class: "form-control", rows: 3, placeholder: t("dashboard.partners.form.description_placeholder")
+
+  .mb-3.d-flex.align-items-center.gap-3
+    .form-check
+      = f.check_box :active, class: "form-check-input"
+      = f.label :active, t("dashboard.partners.form.active"), class: "form-check-label"
+
+  .dashboard-actions
+    = f.submit partner.persisted? ? t("dashboard.partners.form.update") : t("dashboard.partners.form.create"), class: "btn-dashboard-primary"
+    = link_to t("dashboard.common.cancel"), dashboard_partners_path, class: "btn-dashboard-secondary"

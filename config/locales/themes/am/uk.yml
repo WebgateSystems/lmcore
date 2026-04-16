@@ -1,0 +1,136 @@
+uk:
+  themes:
+    am:
+      site:
+        name: "Айдер Муждабаєв"
+        tagline: "Журналіст"
+        description: "Особистий блог Айдера Муждабаєва - журналіста, правозахисника"
+
+      navigation:
+        home: "Головна"
+        about: "Про мене"
+        videos: "Відео"
+        articles: "Статті"
+        photos: "Фото"
+        search: "Пошук"
+        contact: "Контакти"
+
+      content:
+        back: "НАЗАД"
+        top_video: "TOP відео"
+        top_article: "TOP стаття"
+        top_photo: "TOP фото"
+        latest_video: "Останнє відео"
+        latest_articles: "Останні статті"
+        latest_photos: "Останні фото"
+        all_videos: "Всі відео"
+        all_articles: "Всі статті"
+        all_photos: "Всі фото"
+        more_videos: "більше відео"
+        more_articles: "більше статей"
+        more_photos: "більше фото"
+        read_more: "Читати далі"
+        watch: "Дивитися"
+        view: "Переглянути"
+        published_on: "Опубліковано"
+        by_author: "автор"
+        comments: "Коментарі"
+        share: "Поділитися"
+        tags: "Теги"
+        categories: "Категорії"
+        related: "Схоже"
+        related_video: "Пов'язане відео"
+        no_results: "Нічого не знайдено"
+        all: "Усе"
+        tag: "Тег"
+        materials: "матеріалів"
+        back_to_articles: "повернутися до статтей"
+        back_to_videos: "повернутися до відео"
+        back_to_photos: "повернутися до фото"
+        blog_ayder: "Блог Айдера Муждабаєва"
+
+      newsletter:
+        title: "Розсилка новин"
+        email_placeholder: "Введіть адресу вашої електронної пошти"
+        send: "Надіслати"
+
+      contact:
+        title: "Зв'язатися зі мною"
+        message_placeholder: "Напишіть своє повідомлення тут ..."
+        name_placeholder: "Напишіть тут своє повне ім'я ..."
+        email_placeholder: "Напишіть тут свою email ..."
+        send: "Надішліть своє повідомлення"
+
+      comments:
+        title: "коментарів"
+        views: "переглядів"
+        leave_comment: "Залишити коментар"
+        your_name: "Ваше ім'я"
+        your_email: "Ваш email"
+        your_comment: "Ваш коментар"
+        submit: "Відправити"
+        reply: "Відповісти"
+        pending: "Ваш коментар очікує на модерацію"
+        added_by: "додав"
+        login_to_comment: "Увійдіть або зареєструйтеся, щоб залишити коментар"
+        write_here: "Пишіть тут..."
+        post_reply: "Надіслати відповідь"
+
+      search:
+        title: "Пошук"
+        placeholder: "Шукати..."
+        results_for: "Результати пошуку"
+        no_results: "Нічого не знайдено за запитом"
+        try_different: "Спробуйте інші ключові слова"
+        enter_query: "Введіть запит, щоб знайти статті, відео та фото"
+
+      filters:
+        title: "Назва"
+        year: "Рік"
+        tags: "Теги"
+        type: "Тип"
+        apply: "Застосувати"
+        apply_short: "Застосувати"
+        remove: "Видалити"
+        remove_all: "Видалити фільтри"
+        cancel: "Скасувати фільтри"
+
+      pagination:
+        previous: "Попередня"
+        next: "Наступна"
+        page: "Сторінка"
+        of: "з"
+
+      errors:
+        not_found: "Сторінку не знайдено"
+        server_error: "Щось пішло не так"
+        back_home: "На головну"
+
+      footer:
+        copyright: "Всі права захищено"
+        terms: "Умови використання"
+        privacy: "Політика конфіденційності"
+        follow_me: "Слідуй за мною"
+        contact_me: "Зв'яжіться зі мною"
+        write_me: "Напиши мені"
+        menu: "Меню"
+        information: "Інформація"
+        friends: "Мої друзі"
+        up: "Догори"
+
+      admin:
+        dashboard: "Панель керування"
+        posts: "Статті"
+        videos: "Відео"
+        photos: "Фото"
+        comments: "Коментарі"
+        users: "Користувачі"
+        settings: "Налаштування"
+        themes: "Теми"
+        new: "Новий"
+        edit: "Редагувати"
+        delete: "Видалити"
+        publish: "Опублікувати"
+        unpublish: "Зняти з публікації"
+        save: "Зберегти"
+        cancel: "Скасувати"

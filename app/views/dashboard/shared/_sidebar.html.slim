@@ -1,0 +1,46 @@
+nav.dashboard-nav
+  = link_to dashboard_root_path, class: "dashboard-nav__button #{'is-active' if request.path == dashboard_root_path}"
+    i.bi.bi-speedometer2 aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.dashboard")
+
+  .dashboard-nav__divider
+
+  = link_to dashboard_posts_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/posts')}"
+    i.bi.bi-file-text aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.posts")
+  = link_to dashboard_videos_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/videos')}"
+    i.bi.bi-camera-video aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.videos")
+  = link_to dashboard_photos_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/photos')}"
+    i.bi.bi-image aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.photos")
+  = link_to dashboard_pages_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/pages')}"
+    i.bi.bi-file-earmark aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.pages")
+
+  .dashboard-nav__divider
+
+  = link_to dashboard_categories_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/categories')}"
+    i.bi.bi-folder aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.categories")
+  = link_to dashboard_tags_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/tags')}"
+    i.bi.bi-tags aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.tags")
+
+  .dashboard-nav__divider
+
+  = link_to dashboard_settings_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/settings')}"
+    i.bi.bi-gear aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.settings")
+  = link_to dashboard_partners_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/partners')}"
+    i.bi.bi-people aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.partners")
+
+  - if current_user.moderator? || current_user.admin?
+    .dashboard-nav__divider
+    = link_to dashboard_comments_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/comments')}"
+      i.bi.bi-chat-dots aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.comments")
+    = link_to dashboard_audit_logs_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/audit_logs')}"
+      i.bi.bi-clock-history aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.audit_log")

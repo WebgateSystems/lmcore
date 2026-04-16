@@ -1,0 +1,111 @@
+- content_for(:page_title) { "Videos" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+      - if params[:status].present?
+        span.dashboard-badge class="dashboard-badge--#{params[:status]}" = params[:status].humanize
+        = " "
+        = link_to t("dashboard.common.clear_filter"), dashboard_videos_path, class: "text-body-3 text-decoration-none"
+    .d-flex.gap-2
+      = button_to t("dashboard.videos.sync.action"), sync_youtube_dashboard_videos_path, method: :post, class: "btn-dashboard-secondary"
+      = link_to t("dashboard.videos.index.new"), new_dashboard_video_path, class: "btn-dashboard-primary"
+
+  - if @latest_sync_run.present?
+    .panel.mb-4 data-dashboard-sync-panel="true"
+      .d-flex.justify-content-between.align-items-center.flex-wrap.gap-2
+        div
+          h6.mb-1 = t("dashboard.videos.sync.last_run")
+          p.text-body-3.mb-0
+            strong = t("dashboard.videos.sync.status")
+            = ": "
+            span data-dashboard-sync-status="true" = @latest_sync_run.status.humanize
+            = " | "
+            strong = t("dashboard.videos.sync.stage")
+            = ": "
+            span data-dashboard-sync-stage="true" = @latest_sync_run.stage.presence || t("dashboard.videos.index.stage_fallback")
+        div.text-body-3
+          span data-dashboard-sync-progress="true"
+            - total = @latest_sync_run.progress_total.to_i
+            - current = @latest_sync_run.progress_current.to_i
+            = total.positive? ? "#{current}/#{total}" : current.to_s
+      .mt-2.text-body-3
+        span = t("dashboard.videos.sync.stats")
+        = ": "
+        span data-dashboard-sync-stats="true"
+          = "created=#{@latest_sync_run.created_count}, updated=#{@latest_sync_run.updated_count}, skipped=#{@latest_sync_run.skipped_count}, errors=#{@latest_sync_run.error_count}"
+
+  - if @videos.any?
+    .panel
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.thumbnail", default: "Thumbnail")
+            th = t("dashboard.common.table.title")
+            th = t("dashboard.common.table.provider")
+            th = t("dashboard.common.table.status")
+            th = t("dashboard.common.table.published")
+            th.text-end = t("dashboard.common.table.actions")
+        tbody
+          - @videos.each do |video|
+            tr
+              td
+                - if video.thumbnail.present?
+                  = image_tag video.thumbnail.url, class: "rounded", style: "width: 76px; height: 44px; object-fit: cover;", alt: video.title.to_s
+                - else
+                  = image_tag "/images/fallback/video_thumbnail.png", class: "rounded opacity-50", style: "width: 76px; height: 44px; object-fit: cover;", alt: t("dashboard.common.none")
+              td = link_to video.title, edit_dashboard_video_path(video), class: "text-decoration-none fw-medium"
+              td = video.video_provider&.humanize || t("dashboard.common.none")
+              td
+                span class="dashboard-badge dashboard-badge--#{video.status}" = video.status.humanize
+              td.text-body-3 = (video.published_at || video.created_at).strftime("%b %d, %Y")
+              td.text-end
+                .dashboard-actions.justify-content-end
+                  = button_to create_post_from_video_dashboard_video_path(video), method: :post, class: "icon-pill", title: t("dashboard.videos.create_post.action"), form: { data: { turbo_confirm: t("dashboard.videos.create_post.confirm") } } do
+                    i.bi.bi-file-earmark-plus
+                  = link_to edit_dashboard_video_path(video), class: "icon-pill", title: t("dashboard.common.edit") do
+                    i.bi.bi-pencil
+                  = button_to dashboard_video_path(video), method: :delete, class: "icon-pill text-danger", title: t("dashboard.common.delete"), data: { turbo_confirm: t("dashboard.common.confirm_delete") } do
+                    i.bi.bi-trash
+                - last_post_run = @video_post_runs[video.id]&.first
+                - if last_post_run.present?
+                  .text-body-3.mt-1 = "#{t("dashboard.videos.create_post.status")}: #{last_post_run.status} (#{last_post_run.stage.presence || t("dashboard.videos.index.stage_fallback")})"
+    - if @pagy.pages > 1
+      .d-flex.justify-content-center.mt-4
+        == pagy_nav(@pagy)
+  - else
+    .dashboard-empty
+      i.bi.bi-camera-video
+      p = t("dashboard.videos.index.empty")
+      = link_to t("dashboard.videos.index.empty_cta"), new_dashboard_video_path, class: "btn-dashboard-primary"
+
+javascript:
+  (() => {
+    const panel = document.querySelector("[data-dashboard-sync-panel='true']");
+    if (!panel) return;
+
+    const statusEl = panel.querySelector("[data-dashboard-sync-status='true']");
+    const stageEl = panel.querySelector("[data-dashboard-sync-stage='true']");
+    const progressEl = panel.querySelector("[data-dashboard-sync-progress='true']");
+    const statsEl = panel.querySelector("[data-dashboard-sync-stats='true']");
+    const dash = #{t("dashboard.videos.index.stage_fallback").to_json};
+
+    const refresh = async () => {
+      try {
+        const response = await fetch("#{sync_status_dashboard_videos_path}", { headers: { "Accept": "application/json" } });
+        if (!response.ok) return;
+        const data = await response.json();
+        if (!data.present) return;
+
+        statusEl.textContent = data.status || dash;
+        stageEl.textContent = data.stage || dash;
+        const total = Number(data.progress_total || 0);
+        const current = Number(data.progress_current || 0);
+        progressEl.textContent = total > 0 ? `${current}/${total}` : `${current}`;
+        statsEl.textContent = `created=${data.created_count || 0}, updated=${data.updated_count || 0}, skipped=${data.skipped_count || 0}, errors=${data.error_count || 0}`;
+      } catch (_error) {
+      }
+    };
+
+    setInterval(refresh, 5000);
+  })();

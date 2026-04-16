@@ -26,6 +26,9 @@ uk:
     profile: "Профіль"
     settings: "Налаштування"
     dashboard: "Панель"
+    control_panel: "Панель керування"
+    my_blog: "Мій блог"
+    admin: "Панель адміністратора"
     menu: "Меню"
 
   # Theme
@@ -249,6 +252,15 @@ uk:
     remember_me: "Запам'ятати мене"
     no_account: "Немає акаунту?"
     have_account: "Вже маєте акаунт?"
+    display_name: "Публічне ім'я"
+    multilingual_label: "Багатомовне поле"
+    multilingual_legend: "Це значення зберігається лише для активної мови інтерфейсу."
+    identity_fields_locked_hint: "Змінити ім'я користувача (username) може лише суперадміністратор — це впливає на обліковий запис на всьому сайті."
+    new_password: "Новий пароль"
+    leave_blank_if_unchanged: "Залиште порожнім, якщо не змінюєте"
+    current_password: "Поточний пароль"
+    current_password_hint: "Потрібен лише коли ви вказуєте новий пароль вище."
+    update_profile: "Оновити профіль"
 
   # User
   users:
@@ -458,6 +470,8 @@ uk:
         username: "Ім'я користувача"
         first_name: "Ім'я"
         last_name: "Прізвище"
+        locale: "Мова"
+        timezone: "Часовий пояс"
         bio: "Біографія"
       post:
         title: "Заголовок"

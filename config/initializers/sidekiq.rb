@@ -10,8 +10,9 @@ Sidekiq.configure_server do |config|
     # Add custom middleware here if needed
   end
 
-  # Set up logging
-  config.logger.level = Rails.env.production? ? Logger::INFO : Logger::DEBUG
+  # Set up logging (default INFO in all environments, override with SIDEKIQ_LOG_LEVEL=debug)
+  configured_level = ENV.fetch("SIDEKIQ_LOG_LEVEL", "info").to_s.upcase
+  config.logger.level = Logger.const_defined?(configured_level) ? Logger.const_get(configured_level) : Logger::INFO
 end
 
 Sidekiq.configure_client do |config|

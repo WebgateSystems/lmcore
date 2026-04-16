@@ -25,6 +25,11 @@ RSpec.describe "Locale", type: :request do
       expect(cookies[:locale]).to eq("en")
     end
 
+    it "maps ua path alias to canonical uk in session" do
+      get switch_locale_path(locale: "ua")
+      expect(session[:locale]).to eq("uk")
+    end
+
     context "with referer header" do
       it "redirects back with new locale" do
         get switch_locale_path(locale: "pl"), headers: { "HTTP_REFERER" => "http://example.com/en/posts" }
@@ -35,6 +40,11 @@ RSpec.describe "Locale", type: :request do
         get switch_locale_path(locale: "pl"), headers: { "HTTP_REFERER" => "http://example.com/en/posts" }
         expect(response).to redirect_to("/pl/posts")
       end
+
+      it "replaces ua alias in referer path when switching" do
+        get switch_locale_path(locale: "pl"), headers: { "HTTP_REFERER" => "http://example.com/ua/posts" }
+        expect(response).to redirect_to("/pl/posts")
+      end
     end
 
     context "without referer" do
@@ -42,10 +52,20 @@ RSpec.describe "Locale", type: :request do
         get switch_locale_path(locale: "pl")
         expect(response).to redirect_to(root_path(locale: "pl"))
       end
+
+      it "redirects Ukrainian to ua URL segment" do
+        get switch_locale_path(locale: "uk")
+        expect(response).to redirect_to(root_path(locale: "ua"))
+      end
+
+      it "redirects ua alias to ua URL segment with canonical session" do
+        get switch_locale_path(locale: "ua")
+        expect(response).to redirect_to(root_path(locale: "ua"))
+      end
     end
 
     context "with different locales" do
-      %w[en pl uk lt de fr es].each do |locale|
+      %w[en pl uk lt de fr es ru].each do |locale|
         it "accepts #{locale} locale" do
           get switch_locale_path(locale: locale)
           expect(session[:locale]).to eq(locale)

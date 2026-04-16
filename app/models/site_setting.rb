@@ -33,7 +33,29 @@ class SiteSetting < ApplicationRecord
       distinct.pluck(:category).compact.sort
     end
 
+    # Locales this blog owner exposes (dashboard, profile /edit, blog theme switcher).
+    # Stored value may use "ua" for Ukrainian; canonical is always "uk". Sorted alphabetically.
+    # If unset or empty, defaults to %w[en] only — never the full platform list.
+    def blog_available_locale_codes_for(user)
+      parse_blog_available_locales_raw(get("available_locales", user: user, default: nil))
+    end
+
     private
+
+    def parse_blog_available_locales_raw(raw)
+      list = case raw
+      when Array then raw.map(&:to_s)
+      when String then raw.split(",").map(&:strip)
+      else []
+      end
+      list = list.map { |l| l.to_s.strip.downcase == "ua" ? "uk" : l.to_s.strip.downcase }
+      list = list.reject(&:blank?)
+      platform = I18n.available_locales.map(&:to_s)
+      list = list.select { |l| platform.include?(l) }
+      list.uniq!
+      list.sort!
+      list.presence || %w[en]
+    end
 
     def infer_value_type(value)
       case value

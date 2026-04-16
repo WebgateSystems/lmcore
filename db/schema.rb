@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_14_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -108,6 +108,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
     t.index ["target_type", "target_id"], name: "index_visibility_on_target"
     t.index ["visible_type", "visible_id", "target_type", "target_id"], name: "index_visibility_uniqueness", unique: true
     t.index ["visible_type", "visible_id"], name: "index_visibility_on_visible"
+  end
+
+  create_table "dashboard_job_runs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "created_count", default: 0, null: false
+    t.integer "error_count", default: 0, null: false
+    t.text "error_message"
+    t.datetime "finished_at"
+    t.string "job_type", null: false
+    t.string "last_video_id"
+    t.jsonb "payload", default: {}, null: false
+    t.uuid "post_id"
+    t.integer "progress_current", default: 0, null: false
+    t.integer "progress_total"
+    t.integer "skipped_count", default: 0, null: false
+    t.string "stage"
+    t.datetime "started_at"
+    t.string "status", default: "queued", null: false
+    t.datetime "updated_at", null: false
+    t.integer "updated_count", default: 0, null: false
+    t.uuid "user_id", null: false
+    t.uuid "video_id"
+    t.index ["job_type"], name: "index_dashboard_job_runs_on_job_type"
+    t.index ["post_id"], name: "index_dashboard_job_runs_on_post_id"
+    t.index ["status"], name: "index_dashboard_job_runs_on_status"
+    t.index ["user_id", "job_type", "created_at"], name: "idx_dashboard_job_runs_user_type_created"
+    t.index ["user_id"], name: "index_dashboard_job_runs_on_user_id"
+    t.index ["video_id"], name: "index_dashboard_job_runs_on_video_id"
   end
 
   create_table "donations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -254,10 +282,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
     t.string "slug", null: false
     t.datetime "updated_at", null: false
     t.string "url"
+    t.uuid "user_id"
     t.index ["active"], name: "index_partners_on_active"
     t.index ["locale"], name: "index_partners_on_locale"
     t.index ["position"], name: "index_partners_on_position"
     t.index ["slug"], name: "index_partners_on_slug", unique: true
+    t.index ["user_id"], name: "index_partners_on_user_id"
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -348,6 +378,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
     t.jsonb "subtitle_i18n", default: {}
     t.jsonb "title_i18n", default: {}, null: false
     t.datetime "updated_at", null: false
+    t.uuid "video_id"
     t.integer "views_count", default: 0, null: false
     t.index ["author_id", "slug"], name: "index_posts_on_author_id_and_slug", unique: true
     t.index ["author_id"], name: "index_posts_on_author_id"
@@ -359,6 +390,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
     t.index ["published_by_id"], name: "index_posts_on_published_by_id"
     t.index ["scheduled_at"], name: "index_posts_on_scheduled_at"
     t.index ["status"], name: "index_posts_on_status"
+    t.index ["video_id"], name: "index_posts_on_video_id"
   end
 
   create_table "price_plans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -563,6 +595,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
     t.datetime "discarded_at"
     t.integer "disk_space_used_bytes", default: 0, null: false
     t.string "display_name"
+    t.jsonb "display_name_i18n", default: {}, null: false
     t.string "email", null: false
     t.string "encrypted_password", null: false
     t.integer "failed_attempts", default: 0, null: false
@@ -590,6 +623,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
     t.string "username"
     t.string "vanity_domain"
     t.boolean "vanity_domain_verified", default: false
+    t.datetime "youtube_age_confirmed_at"
+    t.string "youtube_cookies_checksum", limit: 64
+    t.text "youtube_cookies_ciphertext"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -637,7 +673,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
     t.string "video_provider"
     t.string "video_url"
     t.integer "views_count", default: 0, null: false
+    t.index ["author_id", "external_source", "external_id"], name: "index_videos_on_author_external_source_id_unique", unique: true, where: "((external_source IS NOT NULL) AND (external_id IS NOT NULL))"
     t.index ["author_id", "slug"], name: "index_videos_on_author_id_and_slug", unique: true
+    t.index ["author_id", "video_provider", "video_external_id"], name: "index_videos_on_author_provider_external_id_unique", unique: true, where: "((video_provider IS NOT NULL) AND (video_external_id IS NOT NULL))"
     t.index ["author_id"], name: "index_videos_on_author_id"
     t.index ["category_id"], name: "index_videos_on_category_id"
     t.index ["discarded_at"], name: "index_videos_on_discarded_at"
@@ -655,6 +693,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
   add_foreign_key "comments", "comments", column: "parent_id", on_delete: :cascade
   add_foreign_key "comments", "users", column: "approved_by_id", on_delete: :nullify
   add_foreign_key "comments", "users", on_delete: :nullify
+  add_foreign_key "dashboard_job_runs", "posts", on_delete: :nullify
+  add_foreign_key "dashboard_job_runs", "users", on_delete: :cascade
+  add_foreign_key "dashboard_job_runs", "videos", on_delete: :cascade
   add_foreign_key "donations", "payments", on_delete: :nullify
   add_foreign_key "donations", "users", column: "donor_id", on_delete: :nullify
   add_foreign_key "donations", "users", column: "recipient_id", on_delete: :cascade
@@ -667,6 +708,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "pages", "users", column: "author_id", on_delete: :cascade
   add_foreign_key "pages", "users", column: "published_by_id", on_delete: :nullify
+  add_foreign_key "partners", "users"
   add_foreign_key "payments", "subscriptions", on_delete: :nullify
   add_foreign_key "payments", "users", on_delete: :cascade
   add_foreign_key "photos", "categories", on_delete: :nullify
@@ -675,6 +717,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_02_210002) do
   add_foreign_key "posts", "categories", on_delete: :nullify
   add_foreign_key "posts", "users", column: "author_id", on_delete: :cascade
   add_foreign_key "posts", "users", column: "published_by_id", on_delete: :nullify
+  add_foreign_key "posts", "videos", on_delete: :nullify
   add_foreign_key "reactions", "users", on_delete: :cascade
   add_foreign_key "role_assignments", "roles", on_delete: :cascade
   add_foreign_key "role_assignments", "users", column: "granted_by_id", on_delete: :nullify

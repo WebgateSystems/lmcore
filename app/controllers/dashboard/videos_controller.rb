@@ -1,0 +1,149 @@
+# frozen_string_literal: true
+
+module Dashboard
+  class VideosController < BaseController
+    before_action :set_video, only: %i[show edit update destroy create_post_from_video]
+
+    def index
+      authorize Video, policy_class: Dashboard::VideoPolicy
+      videos = policy_scope(Video, policy_scope_class: Dashboard::VideoPolicy::Scope)
+               .order(Arel.sql("COALESCE(published_at, created_at) DESC"))
+      videos = videos.where(status: params[:status]) if params[:status].present?
+      @pagy, @videos = pagy(videos, items: 20)
+      @latest_sync_run = current_user.dashboard_job_runs.youtube_sync.recent_first.first
+      @video_post_runs = current_user.dashboard_job_runs.video_to_post
+                                   .where(video_id: @videos.map(&:id))
+                                   .recent_first
+                                   .group_by(&:video_id)
+    end
+
+    def show
+      authorize @video, policy_class: Dashboard::VideoPolicy
+      redirect_to edit_dashboard_video_path(@video)
+    end
+
+    def new
+      @video = Video.new
+      authorize @video, policy_class: Dashboard::VideoPolicy
+      @categories = scoped_categories
+    end
+
+    def create
+      @video = Video.new(video_params)
+      @video.author = current_user
+      authorize @video, policy_class: Dashboard::VideoPolicy
+
+      if @video.save
+        redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.created")
+      else
+        @categories = scoped_categories
+        render :new, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+      authorize @video, policy_class: Dashboard::VideoPolicy
+      @categories = scoped_categories
+    end
+
+    def update
+      authorize @video, policy_class: Dashboard::VideoPolicy
+      if @video.update(video_params)
+        redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.updated")
+      else
+        @categories = scoped_categories
+        render :edit, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      authorize @video, policy_class: Dashboard::VideoPolicy
+      @video.discard
+      redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.trashed")
+    end
+
+    def sync_youtube
+      authorize Video, :sync_youtube?, policy_class: Dashboard::VideoPolicy
+
+      channel_url = SiteSetting.get("youtube_url", user: current_user, default: nil).presence ||
+                    SiteSetting.get("social_youtube", user: current_user, default: nil).presence
+
+      if channel_url.blank?
+        redirect_to dashboard_videos_path, alert: t("dashboard.flash.videos.sync_channel_missing")
+        return
+      end
+
+      job_run = current_user.dashboard_job_runs.create!(
+        job_type: "youtube_sync",
+        status: "queued",
+        stage: "queued",
+        payload: { channel_url: channel_url }
+      )
+
+      SyncYoutubeChannelVideosWorker.perform_async(
+        current_user.id,
+        channel_url,
+        nil,
+        nil,
+        job_run.id
+      )
+
+      redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.sync_enqueued")
+    end
+
+    def sync_status
+      authorize Video, :sync_youtube?, policy_class: Dashboard::VideoPolicy
+
+      run = current_user.dashboard_job_runs.youtube_sync.recent_first.first
+      render json: serialize_job_run(run)
+    end
+
+    def create_post_from_video
+      authorize @video, :create_post_from_video?, policy_class: Dashboard::VideoPolicy
+
+      job_run = current_user.dashboard_job_runs.create!(
+        job_type: "video_to_post",
+        video: @video,
+        status: "queued",
+        stage: "queued",
+        payload: { video_id: @video.id, video_external_id: @video.video_external_id }
+      )
+
+      CreatePostFromVideoSubtitlesWorker.perform_async(current_user.id, @video.id, job_run.id)
+      redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.create_post_enqueued")
+    end
+
+    private
+
+    def set_video
+      @video = scoped_videos.find(params[:id])
+    end
+
+    def video_params
+      params.require(:video).permit(:title, :slug, :body, :excerpt, :status, :category_id,
+                                    :video_url, :video_provider, :thumbnail,
+                                    :meta_title, :meta_description, :published_at, tag_ids: [])
+    end
+
+    def serialize_job_run(run)
+      return { present: false } unless run
+
+      {
+        present: true,
+        id: run.id,
+        status: run.status,
+        stage: run.stage,
+        progress_current: run.progress_current,
+        progress_total: run.progress_total,
+        created_count: run.created_count,
+        updated_count: run.updated_count,
+        skipped_count: run.skipped_count,
+        error_count: run.error_count,
+        last_video_id: run.last_video_id,
+        error_message: run.error_message,
+        started_at: run.started_at,
+        finished_at: run.finished_at
+      }
+    end
+  end
+end

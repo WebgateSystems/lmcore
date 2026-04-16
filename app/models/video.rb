@@ -20,8 +20,10 @@ class Video < ApplicationRecord
   belongs_to :author, class_name: "User", inverse_of: :videos
   belongs_to :category, optional: true, counter_cache: true
   belongs_to :published_by, class_name: "User", optional: true
+  has_many :posts, dependent: :nullify
   has_many :media_attachments, as: :attachable, dependent: :destroy
   has_many :content_visibilities, as: :visible, dependent: :destroy
+  has_many :dashboard_job_runs, dependent: :nullify
 
   # CarrierWave
   mount_uploader :thumbnail, ImageUploader

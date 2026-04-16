@@ -1,0 +1,18 @@
+.dashboard-app [data-theme-icon] {
+	transition: filter 0.2s ease;
+}
+
+.theme-dark .dashboard-app [data-theme-icon] {
+	filter: brightness(0) invert(1);
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}

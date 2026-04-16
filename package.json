@@ -6,14 +6,16 @@
     "sass": "^1.80.0"
   },
   "scripts": {
-    "build": "npx esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
-    "build:css": "npm run copy:fonts && npx sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
-    "build:css:watch": "npm run copy:fonts && npx sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules --watch",
-    "copy:fonts": "cp app/assets/fonts/*.woff2 app/assets/builds/ 2>/dev/null || true"
+    "build": "npx esbuild app/javascript/application.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets && npx esbuild app/javascript/dashboard.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build:css": "npm run copy:fonts && npx sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules && npx sass ./app/assets/stylesheets/dashboard.sass.scss:./app/assets/builds/dashboard.css --no-source-map --load-path=node_modules",
+    "build:css:watch": "npm run copy:fonts && npx sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css:./app/assets/stylesheets/dashboard.sass.scss:./app/assets/builds/dashboard.css --no-source-map --load-path=node_modules --watch",
+    "copy:fonts": "cp app/assets/fonts/*.woff2 app/assets/builds/ 2>/dev/null || true; mkdir -p app/assets/builds/fonts; cp node_modules/bootstrap-icons/font/fonts/* app/assets/builds/fonts/"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",
     "@hotwired/stimulus": "^3.2.2",
-    "@hotwired/turbo-rails": "^8.0.23"
+    "@hotwired/turbo-rails": "^8.0.23",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1"
   }
 }

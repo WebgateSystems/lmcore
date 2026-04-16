@@ -1,0 +1,281 @@
+# Posts seed data
+# Edit this file to add/modify articles
+# Run: bundle exec rake db:recreate
+
+# ============================================
+# DEMO POST - Секрети психології Путіна (featured)
+# ============================================
+- slug: secrets-of-putins-psychology
+  title:
+    en: "<span>Secrets</span><br>of Putin's Psychology"
+    ua: "<span>Секрети</span><br>психології Путіна"
+    ru: "<span>Секреты</span><br>психологии Путина"
+    pl: "<span>Sekrety</span><br>psychologii Putina"
+  subtitle:
+    en: "Putin delivers an ultimatum to Zelensky"
+    ua: "Путін ставить ультиматум Зеленському"
+    ru: "Путин ставит ультиматум Зеленскому"
+    pl: "Putin stawia ultimatum Zełenskiemu"
+  lead:
+    en: "Today at the press conference of the president, a representative of the TV channelization called \"NASH\" publicly broadcast to Vladimir Zelensky the lie that Lenur Islyamov is allegedly a citizen of Russia."
+    ua: "Сьогодні на прес-конференції президента представник телеканалізації під назвою \"НАШ\" публічно транслював Володимиру Зеленському неправду про те, що нібито Ленур Іслямов – громадянин Росії."
+    ru: "Поэтому сегодня на пресс-конференции президента представитель телеканализации под названием \"НАШ\" публично протранслировал Владимиру Зеленскому ложь о том, что якобы Ленур Ислямов – гражданин России."
+    pl: "Dlatego dziś na konferencji prasowej prezydenta przedstawiciel telekanalizacji o nazwie \"NASZ\" publicznie przekazał Władimirowi Zełenskiemu kłamstwo, że Lenur Isłamow jest rzekomo obywatelem Rosji."
+  content:
+    en: |
+      <div class="section-article-item__paragraph site-text__bold-24">Today in Kyiv, another press conference of the President of Ukraine Volodymyr Zelensky was held. I will not analyze its content in detail, since no journalist asked the president the main question about the confrontation with Russia. And this question should have concerned Putin's direct ultimatum, read out yesterday from the cheat sheet sent from Moscow by the so-called "head of the LPR" in his "emergency video address".</div>
+      <div class="section-article-item__paragraph site-text__large-24">What is it about? About the fact that, allegedly, the Ukrainian troops are destroying the civilian infrastructure of the "LPR". First, the mouth of the "head of the DPR" reads this lie, and then "sets the condition" for the President of Ukraine, which can be briefly expressed as follows:</div>
+      <div class="section-article-item__paragraph site-text__large-24">"If you continue not to \"strive for peace\" on Putin's terms, then Russian troops will go on the offensive on those sections of the front where the Russian General Staff deems necessary, and \"push\" the line of contact deeper into Ukraine"</div>
+      <div class="section-article-item__paragraph site-text__bold-24 text-quote">Let us not evaluate the military realism of this "blitzkrieg", let us discuss what is behind its threat.<span class="text-quote-quotes"><svg width="40" height="36" viewBox="0 0 40 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M36.25 0.5H26.25C24.1797 0.5 22.5 2.17969 22.5 4.25V14.25C22.5 16.3203 24.1797 18 26.25 18H32.5V23C32.5 25.7578 30.2578 28 27.5 28H26.875C25.8359 28 25 28.8359 25 29.875V33.625C25 34.6641 25.8359 35.5 26.875 35.5H27.5C34.4062 35.5 40 29.9062 40 23V4.25C40 2.17969 38.3203 0.5 36.25 0.5ZM13.75 0.5H3.75C1.67969 0.5 0 2.17969 0 4.25V14.25C0 16.3203 1.67969 18 3.75 18H10V23C10 25.7578 7.75781 28 5 28H4.375C3.33594 28 2.5 28.8359 2.5 29.875V33.625C2.5 34.6641 3.33594 35.5 4.375 35.5H5C11.9062 35.5 17.5 29.9062 17.5 23V4.25C17.5 2.17969 15.8203 0.5 13.75 0.5Z" fill="black"/></svg></span></div>
+      <div class="section-article-item__paragraph site-text__large-24">Putin threatens to multiply by zero all agreements on the separation of forces and other "peaceful" nonsense, which means nothing to the Russians. The goal is to force our country's authorities to accept the so-called "Minsk-3" on the terms dictated by Russia.</div>
+    ua: |
+      <div class="section-article-item__paragraph site-text__bold-24">Сьогодні в Києві відбулася чергова прес-конференція президента України Володимира Зеленського. Я не буду детально аналізувати її зміст, оскільки головного питання про протистояння з Росією ніхто з журналістів президенту так і не поставив. А стосуватися це питання мало прямого ультиматуму Путіна, зачитаного вчора з надісланої з Москви шпаргалки т.зв. "главою ЛНР" у його "екстреному відеозверненні".</div>
+      <div class="section-article-item__paragraph site-text__large-24">Про що там ідеться? Про те, що, нібито, українські війська руйнують цивільну інфраструктуру "ЛНР". Спочатку рот "глави ДНР" зачитує цю брехню, а потім "ставить умову" президенту України, яку стисло можна виразити так:</div>
+      <div class="section-article-item__paragraph site-text__large-24">"Якщо ви й далі не будете "прагнути до миру" на умовах Путіна, то російські війська підуть у наступ на тих ділянках фронту, де Генштаб РФ вважатиме за потрібне, і "відсуне" вглиб України лінію зіткнення"</div>
+      <div class="section-article-item__paragraph site-text__bold-24 text-quote">Не будемо оцінювати військову реалістичність цього "бліцкригу", обговоримо те, що за його загрозою стоїть.<span class="text-quote-quotes"><svg width="40" height="36" viewBox="0 0 40 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M36.25 0.5H26.25C24.1797 0.5 22.5 2.17969 22.5 4.25V14.25C22.5 16.3203 24.1797 18 26.25 18H32.5V23C32.5 25.7578 30.2578 28 27.5 28H26.875C25.8359 28 25 28.8359 25 29.875V33.625C25 34.6641 25.8359 35.5 26.875 35.5H27.5C34.4062 35.5 40 29.9062 40 23V4.25C40 2.17969 38.3203 0.5 36.25 0.5ZM13.75 0.5H3.75C1.67969 0.5 0 2.17969 0 4.25V14.25C0 16.3203 1.67969 18 3.75 18H10V23C10 25.7578 7.75781 28 5 28H4.375C3.33594 28 2.5 28.8359 2.5 29.875V33.625C2.5 34.6641 3.33594 35.5 4.375 35.5H5C11.9062 35.5 17.5 29.9062 17.5 23V4.25C17.5 2.17969 15.8203 0.5 13.75 0.5Z" fill="black"/></svg></span></div>
+      <div class="section-article-item__paragraph site-text__large-24">Путін погрожує помножити на нуль усі домовленості про розведення сил та іншу "мирну" нісенітницю, яка для росіян нічого не варта. Мета – примусити владу нашої країни прийняти т.зв. "Мінськ-3" на продиктованих Росією умовах.</div>
+    ru: |
+      <div class="section-article-item__paragraph site-text__bold-24">Сегодня в Киеве прошла очередная пресс-конференция президента Украины Владимира Зеленского. Я не буду подробно анализировать ее содержание, поскольку главного вопроса о противостоянии с Россией никто из журналистов президенту так и не задал. А касаться этот вопрос должен был прямого ультиматума Путина, зачитанного вчера с присланной из Москвы шпаргалки т.н. "главой ЛНР" в его "экстренном видеообращении".</div>
+      <div class="section-article-item__paragraph site-text__large-24">О чем там идет речь? О том, что, якобы, украинские войска разрушают гражданскую инфраструктуру "ЛНР". Сначала рот "главы ДНР" зачитывает эту брехню, а затем "ставит условие" президенту Украины, которое сжато можно выразить так:</div>
+      <div class="section-article-item__paragraph site-text__large-24">"Если вы и дальше не будете "стремиться к миру" на условиях Путина, то российские войска пойдут в наступление на тех участках фронта, где Генштаб РФ посчитает нужным, и "отодвинет" вглубь Украины линию соприкосновения"</div>
+      <div class="section-article-item__paragraph site-text__bold-24 text-quote">Не будем оценивать военную реалистичность этого "блицкрига", обсудим то, что за его угрозой стоит.<span class="text-quote-quotes"><svg width="40" height="36" viewBox="0 0 40 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M36.25 0.5H26.25C24.1797 0.5 22.5 2.17969 22.5 4.25V14.25C22.5 16.3203 24.1797 18 26.25 18H32.5V23C32.5 25.7578 30.2578 28 27.5 28H26.875C25.8359 28 25 28.8359 25 29.875V33.625C25 34.6641 25.8359 35.5 26.875 35.5H27.5C34.4062 35.5 40 29.9062 40 23V4.25C40 2.17969 38.3203 0.5 36.25 0.5ZM13.75 0.5H3.75C1.67969 0.5 0 2.17969 0 4.25V14.25C0 16.3203 1.67969 18 3.75 18H10V23C10 25.7578 7.75781 28 5 28H4.375C3.33594 28 2.5 28.8359 2.5 29.875V33.625C2.5 34.6641 3.33594 35.5 4.375 35.5H5C11.9062 35.5 17.5 29.9062 17.5 23V4.25C17.5 2.17969 15.8203 0.5 13.75 0.5Z" fill="black"/></svg></span></div>
+      <div class="section-article-item__paragraph site-text__large-24">Путин грозит помножить на ноль все договоренности о разведении сил и прочую "мирную" лабуду, которая для русских ничего не стоит. Цель – принудить власти нашей страны принять т.н. "Минск-3" на продиктованных Россией условиях.</div>
+    pl: |
+      <div class="section-article-item__paragraph site-text__bold-24">Dziś w Kijowie odbyła się kolejna konferencja prasowa prezydenta Ukrainy Wołodymyra Zełenskiego. Nie będę szczegółowo analizować jej treści, ponieważ żaden z dziennikarzy nie zadał prezydentowi głównego pytania o konfrontację z Rosją. A pytanie to powinno dotyczyć bezpośredniego ultimatum Putina, odczytanego wczoraj ze ściągi przesłanej z Moskwy przez tzw. "głowę ŁRL" w jego "nadzwyczajnym orędziu wideo".</div>
+      <div class="section-article-item__paragraph site-text__large-24">O co tam chodzi? O to, że rzekomo ukraińskie wojska niszczą infrastrukturę cywilną "ŁRL". Najpierw "głowa DRL" odczytuje te kłamstwa, a następnie "stawia warunek" prezydentowi Ukrainy, który można krótko wyrazić następująco:</div>
+      <div class="section-article-item__paragraph site-text__large-24">"Jeśli nadal nie będziecie \"dążyć do pokoju\" na warunkach Putina, to rosyjskie wojska przejdą do ofensywy na tych odcinkach frontu, gdzie Sztab Generalny FR uzna za stosowne, i \"przesuną\" linię kontaktową w głąb Ukrainy"</div>
+      <div class="section-article-item__paragraph site-text__bold-24 text-quote">Nie będziemy oceniać militarnego realizmu tego "blitzkriegu", omówmy to, co kryje się za jego groźbą.<span class="text-quote-quotes"><svg width="40" height="36" viewBox="0 0 40 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M36.25 0.5H26.25C24.1797 0.5 22.5 2.17969 22.5 4.25V14.25C22.5 16.3203 24.1797 18 26.25 18H32.5V23C32.5 25.7578 30.2578 28 27.5 28H26.875C25.8359 28 25 28.8359 25 29.875V33.625C25 34.6641 25.8359 35.5 26.875 35.5H27.5C34.4062 35.5 40 29.9062 40 23V4.25C40 2.17969 38.3203 0.5 36.25 0.5ZM13.75 0.5H3.75C1.67969 0.5 0 2.17969 0 4.25V14.25C0 16.3203 1.67969 18 3.75 18H10V23C10 25.7578 7.75781 28 5 28H4.375C3.33594 28 2.5 28.8359 2.5 29.875V33.625C2.5 34.6641 3.33594 35.5 4.375 35.5H5C11.9062 35.5 17.5 29.9062 17.5 23V4.25C17.5 2.17969 15.8203 0.5 13.75 0.5Z" fill="black"/></svg></span></div>
+      <div class="section-article-item__paragraph site-text__large-24">Putin grozi zrównaniem z ziemią wszystkich porozumień o rozdzieleniu sił i innych "pokojowych" bzdur, które dla Rosjan nic nie znaczą. Celem jest zmuszenie władz naszego kraju do przyjęcia tzw. "Mińska-3" na warunkach dyktowanych przez Rosję.</div>
+  featured: true
+  status: published
+  published_at: 2020-10-14
+  category_slug: politics
+  tag_slugs:
+    - krym
+    - ukraina
+  source_name: "Blog Ajdera Mużdabajewa"
+  source_url: "https://muzhdabaiev.com/posts/secrets-of-putins-psychology"
+
+# ============================================
+# REAL ARTICLES FROM UKRAINSKA PRAVDA
+# Source: https://www.pravda.com.ua/rus/authors/5629ea2b53bb8/
+# ============================================
+
+# 1. В новом гетто Путина (16 декабря 2016)
+- slug: v-novom-getto-putina
+  title:
+    ru: "В новом гетто Путина вместо заборов из колючей проволоки ‒ преследования и притеснения"
+    ua: "У новому гетто Путіна замість парканів з колючого дроту – переслідування і утиски"
+    en: "In Putin's new ghetto, instead of barbed wire fences - persecution and oppression"
+    pl: "W nowym getcie Putina zamiast ogrodzeń z drutu kolczastego – prześladowania i represje"
+  subtitle:
+    ru: "Я не знаю, сколько еще людей в Крыму должны быть убиты, изгнаны и лишены человеческого достоинства до момента, когда мир, когда-то победивший фашизм, встанет на защиту крымских татар."
+    ua: "Я не знаю, скільки ще людей в Криму мають бути вбиті, вигнані та позбавлені людської гідності до моменту, коли світ, який колись переміг фашизм, стане на захист кримських татар."
+    en: "I don't know how many more people in Crimea must be killed, expelled and stripped of human dignity before the world that once defeated fascism will stand up for the Crimean Tatars."
+    pl: "Nie wiem, ile jeszcze ludzi na Krymie musi zostać zabitych, wypędzonych i pozbawionych ludzkiej godności, zanim świat, który kiedyś pokonał faszyzm, stanie w obronie Tatarów krymskich."
+  lead:
+    ru: "В то время, когда мой народ подвергается гонениям со стороны России, – мир молчит."
+    ua: "У той час, коли мій народ зазнає гонінь з боку Росії – світ мовчить."
+    en: "While my people are being persecuted by Russia, the world is silent."
+    pl: "Podczas gdy mój naród jest prześladowany przez Rosję – świat milczy."
+  content:
+    ru: "В то время, когда мой народ подвергается гонениям со стороны России, – мир молчит.\n\nКрымский полуостров, захваченный Россией в 2014 году, стремительно превратился в поле для широких репрессий."
+    ua: "У той час, коли мій народ зазнає гонінь з боку Росії – світ мовчить.\n\nКримський півострів, захоплений Росією у 2014 році, стрімко перетворився на поле для широких репресій."
+    en: "While my people are being persecuted by Russia, the world is silent.\n\nThe Crimean peninsula, seized by Russia in 2014, has rapidly become a field for widespread repression."
+    pl: "Podczas gdy mój naród jest prześladowany przez Rosję – świat milczy.\n\nPółwysep Krymski, zajęty przez Rosję w 2014 roku, szybko stał się polem szeroko zakrojonych represji."
+  featured: false
+  status: published
+  published_at: 2016-12-16 15:37:00
+  category_slug: politics
+  tag_slugs:
+    - krym
+  source_name: "Українська правда"
+  source_url: "https://www.pravda.com.ua/rus/columns/2016/12/16/7130070/"
+
+# 2. Что может сделать Украина для крымских татар (18 мая 2016)
+- slug: chto-mozhet-sdelat-ukraina-dlya-krymskih-tatar
+  title:
+    ru: "Что может сделать Украина для крымских татар и возвращения Крыма"
+    ua: "Що може зробити Україна для кримських татар і повернення Криму"
+    en: "What Ukraine can do for the Crimean Tatars and the return of Crimea"
+    pl: "Co Ukraina może zrobić dla Tatarów krymskich i odzyskania Krymu"
+  subtitle:
+    ru: "Необходимо немедленно начать конституционный процесс реализации прав крымскотатарского народа как коренного народа Украины."
+    ua: "Необхідно негайно розпочати конституційний процес реалізації прав кримськотатарського народу як корінного народу України."
+    en: "It is necessary to immediately begin the constitutional process of implementing the rights of the Crimean Tatar people as an indigenous people of Ukraine."
+    pl: "Konieczne jest natychmiastowe rozpoczęcie konstytucyjnego procesu realizacji praw narodu krymskotatarskiego jako rdzennego narodu Ukrainy."
+  lead:
+    ru: "На практике это означает создание в Крыму крымскотатарской национально-территориальной автономии в составе единой Украины."
+    ua: "На практиці це означає створення в Криму кримськотатарської національно-територіальної автономії у складі єдиної України."
+    en: "In practice, this means creating a Crimean Tatar national-territorial autonomy in Crimea as part of a united Ukraine."
+    pl: "W praktyce oznacza to utworzenie na Krymie krymskotatarskiej autonomii narodowo-terytorialnej w ramach zjednoczonej Ukrainy."
+  content:
+    ru: "Необходимо немедленно начать конституционный процесс реализации прав крымскотатарского народа как коренного народа Украины."
+    ua: "Необхідно негайно розпочати конституційний процес реалізації прав кримськотатарського народу як корінного народу України."
+    en: "It is necessary to immediately begin the constitutional process of implementing the rights of the Crimean Tatar people as an indigenous people of Ukraine."
+    pl: "Konieczne jest natychmiastowe rozpoczęcie konstytucyjnego procesu realizacji praw narodu krymskotatarskiego jako rdzennego narodu Ukrainy."
+  featured: false
+  status: published
+  published_at: 2016-05-18 15:48:00
+  category_slug: politics
+  tag_slugs:
+    - krym
+    - ukraina
+  source_name: "Українська правда"
+  source_url: "https://www.pravda.com.ua/rus/columns/2016/05/18/7109094/"
+
+# 3. Крымские татары "второго сорта" (3 марта 2016)
+- slug: krymskie-tatary-vtorogo-sorta
+  title:
+    ru: "Крымские татары \"второго сорта\""
+    ua: "Кримські татари \"другого сорту\""
+    en: "Crimean Tatars of \"second class\""
+    pl: "Tatarzy krymscy \"drugiej kategorii\""
+  subtitle:
+    ru: "Напомню, что крымские татары точно так же находятся в руках российской репрессивной машины."
+    ua: "Нагадаю, що кримські татари так само перебувають у руках російської репресивної машини."
+    en: "Let me remind you that the Crimean Tatars are also in the hands of the Russian repressive machine."
+    pl: "Przypomnę, że Tatarzy krymscy również znajdują się w rękach rosyjskiej machiny represji."
+  lead:
+    ru: "Им точно так же грозят тяжкие статьи УК РФ ни за что. Точнее, за преданность Родине, Украине."
+    ua: "Їм так само загрожують тяжкі статті КК РФ ні за що. Точніше, за відданість Батьківщині, Україні."
+    en: "They also face serious articles of the Criminal Code of the Russian Federation for nothing. More precisely, for loyalty to the Motherland, Ukraine."
+    pl: "Im również grożą ciężkie artykuły kodeksu karnego FR za nic. A właściwie za wierność Ojczyźnie, Ukrainie."
+  content:
+    ru: "Напомню, что крымские татары точно так же находятся в руках российской репрессивной машины. Им точно так же грозят тяжкие статьи УК РФ ни за что."
+    ua: "Нагадаю, що кримські татари так само перебувають у руках російської репресивної машини. Їм так само загрожують тяжкі статті КК РФ ні за що."
+    en: "Let me remind you that the Crimean Tatars are also in the hands of the Russian repressive machine. They also face serious articles of the Criminal Code."
+    pl: "Przypomnę, że Tatarzy krymscy również znajdują się w rękach rosyjskiej machiny represji. Im również grożą ciężkie artykuły kodeksu karnego FR za nic."
+  featured: false
+  status: published
+  published_at: 2016-03-03 13:07:00
+  category_slug: politics
+  tag_slugs:
+    - krym
+  source_name: "Українська правда"
+  source_url: "https://www.pravda.com.ua/rus/columns/2016/03/03/7100887/"
+
+# 4. Крымские татары: пропасть между властями и обществом (1 марта 2016)
+- slug: krymskie-tatary-propast-mezhdu-vlastyami-i-obshchestvom
+  title:
+    ru: "Крымские татары: пропасть между властями и обществом"
+    ua: "Кримські татари: прірва між владою та суспільством"
+    en: "Crimean Tatars: the abyss between authorities and society"
+    pl: "Tatarzy krymscy: przepaść między władzą a społeczeństwem"
+  subtitle:
+    ru: "Трещина между властями и обществом растет по всем направлениям — где быстрее, где медленнее."
+    ua: "Тріщина між владою та суспільством зростає в усіх напрямках — де швидше, де повільніше."
+    en: "The crack between authorities and society is growing in all directions — faster in some places, slower in others."
+    pl: "Szczelina między władzą a społeczeństwem rośnie we wszystkich kierunkach — gdzieś szybciej, gdzieś wolniej."
+  lead:
+    ru: "Но по линии солидарности с крымскими татарами — это уже тектонический разлом."
+    ua: "Але по лінії солідарності з кримськими татарами — це вже тектонічний розлом."
+    en: "But along the line of solidarity with the Crimean Tatars — this is already a tectonic rift."
+    pl: "Ale wzdłuż linii solidarności z Tatarami krymskimi — to już tektoniczny rozłam."
+  content:
+    ru: "Трещина между властями и обществом растет по всем направлениям — где быстрее, где медленнее. Но по линии солидарности с крымскими татарами — это уже тектонический разлом."
+    ua: "Тріщина між владою та суспільством зростає в усіх напрямках — де швидше, де повільніше. Але по лінії солідарності з кримськими татарами — це вже тектонічний розлом."
+    en: "The crack between authorities and society is growing in all directions. But along the line of solidarity with the Crimean Tatars — this is already a tectonic rift."
+    pl: "Szczelina między władzą a społeczeństwem rośnie we wszystkich kierunkach. Ale wzdłuż linii solidarności z Tatarami krymskimi — to już tektoniczny rozłam."
+  featured: false
+  status: published
+  published_at: 2016-03-01 11:52:00
+  category_slug: politics
+  tag_slugs:
+    - krym
+  source_name: "Українська правда"
+  source_url: "https://www.pravda.com.ua/rus/columns/2016/03/01/7100462/"
+
+# 5. Украина должна помогать российским политическим беженцам (26 декабря 2015)
+- slug: ukraina-dolzhna-pomogat-rossiyskim-politicheskim-bezhentsam
+  title:
+    ru: "Украина должна помогать российским политическим беженцам"
+    ua: "Україна повинна допомагати російським політичним біженцям"
+    en: "Ukraine must help Russian political refugees"
+    pl: "Ukraina powinna pomagać rosyjskim uchodźcom politycznym"
+  subtitle:
+    ru: "В России покончил с собой 18-летний парень — Влад Колесников."
+    ua: "У Росії покінчив із собою 18-річний хлопець — Влад Колєсніков."
+    en: "An 18-year-old guy — Vlad Kolesnikov — committed suicide in Russia."
+    pl: "W Rosji popełnił samobójstwo 18-letni chłopak — Wład Kolesnikow."
+  lead:
+    ru: "Имя юноши стало широко известно после его выступлений в поддержку Украины."
+    ua: "Ім'я юнака стало широко відомим після його виступів на підтримку України."
+    en: "The young man's name became widely known after his speeches in support of Ukraine."
+    pl: "Imię młodzieńca stało się szeroko znane po jego wystąpieniach w obronie Ukrainy."
+  content:
+    ru: "В России покончил с собой 18-летний парень — Влад Колесников. Имя юноши стало широко известно после его выступлений в поддержку Украины."
+    ua: "У Росії покінчив із собою 18-річний хлопець — Влад Колєсніков. Ім'я юнака стало широко відомим після його виступів на підтримку України."
+    en: "An 18-year-old guy — Vlad Kolesnikov — committed suicide in Russia. The young man's name became widely known after his speeches in support of Ukraine."
+    pl: "W Rosji popełnił samobójstwo 18-letni chłopak — Wład Kolesnikow. Imię młodzieńca stało się szeroko znane po jego wystąpieniach w obronie Ukrainy."
+  featured: false
+  status: published
+  published_at: 2015-12-26 14:32:00
+  category_slug: politics
+  tag_slugs:
+    - ukraina
+  source_name: "Українська правда"
+  source_url: "https://www.pravda.com.ua/rus/columns/2015/12/26/7093573/"
+
+# 6. Запретить крымскотатарский народ (27 октября 2015)
+- slug: zapretit-krymskotatarskiy-narod
+  title:
+    ru: "Запретить крымскотатарский народ"
+    ua: "Заборонити кримськотатарський народ"
+    en: "To ban the Crimean Tatar people"
+    pl: "Zakazać narodu krymskotatarskiego"
+  subtitle:
+    ru: "Миру, особенно Европе и США, такие подходы к национальным меньшинствам не могут понравиться."
+    ua: "Світові, особливо Європі та США, такі підходи до національних меншин не можуть сподобатися."
+    en: "The world, especially Europe and the USA, cannot like such approaches to national minorities."
+    pl: "Świat, zwłaszcza Europa i USA, nie może lubić takiego podejścia do mniejszości narodowych."
+  lead:
+    ru: "Особенно мирным меньшинствам на аннексированных территориях."
+    ua: "Особливо мирним меншинам на анексованих територіях."
+    en: "Especially peaceful minorities in annexed territories."
+    pl: "Szczególnie pokojowym mniejszościom na anektowanych terytoriach."
+  content:
+    ru: "Миру, особенно Европе и США, такие подходы к национальным меньшинствам, тем более мирным, тем более на аннексированных территориях, мягко говоря, не могут понравиться."
+    ua: "Світові, особливо Європі та США, такі підходи до національних меншин, тим більше мирних, тим більше на анексованих територіях, м'яко кажучи, не можуть сподобатися."
+    en: "The world, especially Europe and the USA, to put it mildly, cannot like such approaches to national minorities, especially peaceful ones, especially in annexed territories."
+    pl: "Świat, zwłaszcza Europa i USA, delikatnie mówiąc, nie może lubić takiego podejścia do mniejszości narodowych, tym bardziej pokojowych, tym bardziej na anektowanych terytoriach."
+  featured: false
+  status: published
+  published_at: 2015-10-27 15:04:00
+  category_slug: politics
+  tag_slugs:
+    - krym
+  source_name: "Українська правда"
+  source_url: "https://www.pravda.com.ua/rus/columns/2015/10/27/7086249/"
+
+# 7. Крымские татары по 3 рубля 95 копеек (23 октября 2015)
+- slug: krymskie-tatary-po-3-rublya-95-kopeek
+  title:
+    ru: "Крымские татары по 3 рубля 95 копеек"
+    ua: "Кримські татари по 3 рублі 95 копійок"
+    en: "Crimean Tatars for 3 rubles 95 kopecks"
+    pl: "Tatarzy krymscy za 3 ruble 95 kopiejek"
+  subtitle:
+    ru: "Спасибо Демчишину — не знаю, как насчёт порядочности, но, безусловно, — честному человеку."
+    ua: "Дякую Демчишину — не знаю, як щодо порядності, але, безумовно, — чесній людині."
+    en: "Thanks to Demchyshyn — I don't know about decency, but certainly — an honest man."
+    pl: "Dziękuję Demczyszynowi — nie wiem jak z przyzwoitością, ale z pewnością — uczciwemu człowiekowi."
+  lead:
+    ru: "Благодаря его искренности всем стало ясно, почем нынче в Украине жизни крымских татар."
+    ua: "Завдяки його щирості всім стало ясно, почому нині в Україні життя кримських татар."
+    en: "Thanks to his sincerity, everyone now understands the price of the lives of Crimean Tatars."
+    pl: "Dzięki jego szczerości wszyscy teraz rozumieją, ile kosztuje życie Tatarów krymskich."
+  content:
+    ru: "Спасибо Демчишину — не знаю, как насчёт порядочности, но, безусловно, — честному человеку. Благодаря его искренности всем стало ясно, почем нынче в Украине жизни крымских татар и других граждан, которых убивают, пытают и сажают в тюрьмы в Крыму."
+    ua: "Дякую Демчишину — не знаю, як щодо порядності, але, безумовно, — чесній людині. Завдяки його щирості всім стало ясно, почому нині в Україні життя кримських татар та інших громадян, яких вбивають, катують і саджають у в'язниці в Криму."
+    en: "Thanks to Demchyshyn — I don't know about decency, but certainly — an honest man. Thanks to his sincerity, everyone now understands the price of the lives of Crimean Tatars and other citizens who are killed, tortured and imprisoned in Crimea."
+    pl: "Dziękuję Demczyszynowi — nie wiem jak z przyzwoitością, ale z pewnością — uczciwemu człowiekowi. Dzięki jego szczerości wszyscy teraz rozumieją, ile kosztuje życie Tatarów krymskich i innych obywateli, których zabijają, torturują i więzią na Krymie."
+  featured: false
+  status: published
+  published_at: 2015-10-23 11:12:00
+  category_slug: politics
+  tag_slugs:
+    - krym
+  source_name: "Українська правда"
+  source_url: "https://www.pravda.com.ua/rus/columns/2015/10/23/7085711/"
+

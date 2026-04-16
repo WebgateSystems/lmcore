@@ -102,7 +102,9 @@ module Admin
 
           # Roles are managed through role_assignments (change_role action)
 
-          params.require(:user).permit(permitted)
+          attrs = params.require(:user).permit(permitted, display_name_i18n: {})
+          attrs = attrs.except(:username) unless current_user.super_admin?
+          attrs
         end
 
         def user_json(user, detailed: false)
@@ -112,6 +114,7 @@ module Admin
             username: user.username,
             first_name: user.first_name,
             last_name: user.last_name,
+            display_name_i18n: user.display_name_i18n,
             full_name: user.full_name,
             initials: user.initials,
             status: user.status,

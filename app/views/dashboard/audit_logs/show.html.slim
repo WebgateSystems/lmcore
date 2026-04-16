@@ -1,0 +1,38 @@
+- content_for(:page_title) { "Audit Log Entry" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    = link_to t("dashboard.audit_logs.show.back"), dashboard_audit_logs_path, class: "btn-dashboard-secondary"
+
+  .panel
+    .row.mb-3
+      .col-md-3
+        strong = t("dashboard.common.table.user")
+      .col-md-9
+        = @audit_log.user&.full_name || t("dashboard.common.system")
+
+    .row.mb-3
+      .col-md-3
+        strong = t("dashboard.common.table.action")
+      .col-md-9
+        span.dashboard-badge.dashboard-badge--pending = @audit_log.action.humanize
+
+    .row.mb-3
+      .col-md-3
+        strong = t("dashboard.common.table.resource")
+      .col-md-9
+        = @audit_log.auditable_type&.underscore&.humanize
+        = " ##{@audit_log.auditable_id}" if @audit_log.auditable_id
+
+    .row.mb-3
+      .col-md-3
+        strong = t("dashboard.common.table.date")
+      .col-md-9
+        = @audit_log.created_at.strftime("%B %d, %Y at %H:%M:%S")
+
+    - if @audit_log.respond_to?(:metadata) && @audit_log.metadata.present?
+      hr
+      h4.mb-3 = t("dashboard.audit_logs.show.changes")
+      pre.bg-light.p-3.rounded style="max-height:400px;overflow:auto;font-size:12px"
+        = JSON.pretty_generate(@audit_log.metadata)

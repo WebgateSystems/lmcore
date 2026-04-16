@@ -1,0 +1,136 @@
+pl:
+  themes:
+    am:
+      site:
+        name: "Ajder Muzhdabajew"
+        tagline: "Dziennikarz"
+        description: "Osobisty blog Ajdera Muzhdabajewa - dziennikarza, obrońcy praw człowieka"
+
+      navigation:
+        home: "Strona główna"
+        about: "O mnie"
+        videos: "Wideo"
+        articles: "Artykuły"
+        photos: "Zdjęcia"
+        search: "Szukaj"
+        contact: "Kontakt"
+
+      content:
+        back: "WSTECZ"
+        top_video: "TOP wideo"
+        top_article: "TOP artykuł"
+        top_photo: "TOP zdjęcie"
+        latest_video: "Najnowsze wideo"
+        latest_articles: "Najnowsze artykuły"
+        latest_photos: "Najnowsze zdjęcia"
+        all_videos: "Wszystkie wideo"
+        all_articles: "Wszystkie artykuły"
+        all_photos: "Wszystkie zdjęcia"
+        more_videos: "więcej wideo"
+        more_articles: "więcej artykułów"
+        more_photos: "więcej zdjęć"
+        read_more: "Czytaj więcej"
+        watch: "Oglądaj"
+        view: "Zobacz"
+        published_on: "Opublikowano"
+        by_author: "autor"
+        comments: "Komentarze"
+        share: "Udostępnij"
+        tags: "Tagi"
+        categories: "Kategorie"
+        related: "Podobne"
+        related_video: "Powiazane wideo"
+        no_results: "Nie znaleziono wyników"
+        all: "Wszystko"
+        tag: "Tag"
+        materials: "materiałów"
+        back_to_articles: "powrót do artykułów"
+        back_to_videos: "powrót do wideo"
+        back_to_photos: "powrót do zdjęć"
+        blog_ayder: "Blog Ajdera Mużdabajewa"
+
+      newsletter:
+        title: "Newsletter"
+        email_placeholder: "Podaj swój adres email"
+        send: "Wyślij"
+
+      contact:
+        title: "Skontaktuj się ze mną"
+        message_placeholder: "Napisz swoją wiadomość tutaj..."
+        name_placeholder: "Napisz tutaj swoje pełne imię..."
+        email_placeholder: "Napisz tutaj swój email..."
+        send: "Wyślij wiadomość"
+
+      comments:
+        title: "komentarzy"
+        views: "wyświetleń"
+        leave_comment: "Zostaw komentarz"
+        your_name: "Twoje imię"
+        your_email: "Twój email"
+        your_comment: "Twój komentarz"
+        submit: "Wyślij"
+        reply: "Odpowiedz"
+        pending: "Twój komentarz czeka na moderację"
+        added_by: "dodał"
+        login_to_comment: "Zaloguj się lub zarejestruj, aby zostawić komentarz"
+        write_here: "Pisz tutaj..."
+        post_reply: "Wyślij odpowiedź"
+
+      search:
+        title: "Szukaj"
+        placeholder: "Szukaj..."
+        results_for: "Wyniki dla"
+        no_results: "Nie znaleziono wyników dla"
+        try_different: "Spróbuj innych słów kluczowych"
+        enter_query: "Wpisz frazę, aby znaleźć artykuły, wideo i zdjęcia"
+
+      filters:
+        title: "Tytul"
+        year: "Rok"
+        tags: "Tagi"
+        type: "Typ"
+        apply: "Zastosuj"
+        apply_short: "Zastosuj"
+        remove: "Usuń"
+        remove_all: "Usuń filtry"
+        cancel: "Anuluj filtry"
+
+      pagination:
+        previous: "Poprzednia"
+        next: "Następna"
+        page: "Strona"
+        of: "z"
+
+      errors:
+        not_found: "Strona nie znaleziona"
+        server_error: "Coś poszło nie tak"
+        back_home: "Powrót do strony głównej"
+
+      footer:
+        copyright: "Wszelkie prawa zastrzeżone"
+        terms: "Regulamin"
+        privacy: "Polityka prywatności"
+        follow_me: "Śledź mnie"
+        contact_me: "Skontaktuj się"
+        write_me: "Napisz do mnie"
+        menu: "Menu"
+        information: "Informacje"
+        friends: "Moi przyjaciele"
+        up: "Do góry"
+
+      admin:
+        dashboard: "Panel"
+        posts: "Artykuły"
+        videos: "Wideo"
+        photos: "Zdjęcia"
+        comments: "Komentarze"
+        users: "Użytkownicy"
+        settings: "Ustawienia"
+        themes: "Motywy"
+        new: "Nowy"
+        edit: "Edytuj"
+        delete: "Usuń"
+        publish: "Opublikuj"
+        unpublish: "Cofnij publikację"
+        save: "Zapisz"
+        cancel: "Anuluj"

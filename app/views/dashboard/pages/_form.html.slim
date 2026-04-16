@@ -1,0 +1,52 @@
+- page_type_options = %w[custom about contact terms privacy].map { |k| [t("dashboard.pages.page_types.#{k}"), k] }
+- page_status_options = %w[draft published].map { |k| [t("dashboard.pages.statuses.#{k}"), k] }
+= form_with(model: [:dashboard, page], class: "dashboard-form") do |f|
+  - if page.errors.any?
+    .alert.alert-danger
+      ul.mb-0
+        - page.errors.full_messages.each do |msg|
+          li = msg
+
+  = render "dashboard/shared/i18n_legend"
+
+  .mb-3
+    = f.label :title, class: "form-label form-label--translatable" do
+      = t("dashboard.common.table.title")
+      span.form-label__locale = " (#{locale_ui_tag})"
+    = f.text_field :title, class: "form-control", placeholder: t("dashboard.pages.form.title_placeholder")
+
+  .mb-3
+    = f.label :slug, t("dashboard.common.table.slug"), class: "form-label"
+    = f.text_field :slug, class: "form-control", placeholder: t("dashboard.pages.form.slug_placeholder")
+
+  .mb-3
+    = f.label :body, class: "form-label form-label--translatable" do
+      = t("dashboard.pages.form.content")
+      span.form-label__locale = " (#{locale_ui_tag})"
+    = f.text_area :body, class: "form-control", rows: 15, placeholder: t("dashboard.pages.form.content_placeholder")
+
+  .row
+    .col-md-6.mb-3
+      = f.label :page_type, t("dashboard.pages.form.page_type"), class: "form-label"
+      = f.select :page_type, page_type_options, {}, class: "form-select"
+    .col-md-6.mb-3
+      = f.label :status, t("dashboard.pages.form.status"), class: "form-label"
+      = f.select :status, page_status_options, {}, class: "form-select"
+
+  .mb-3.form-check
+    = f.check_box :show_in_menu, class: "form-check-input"
+    = f.label :show_in_menu, t("dashboard.pages.form.show_in_menu"), class: "form-check-label"
+
+  .row
+    .col-md-6.mb-3
+      = f.label :meta_title, t("dashboard.pages.form.meta_title"), class: "form-label"
+      = f.text_field :meta_title, class: "form-control", placeholder: t("dashboard.pages.form.meta_title_placeholder")
+    .col-md-6.mb-3
+      = f.label :meta_description, class: "form-label form-label--translatable" do
+        = t("dashboard.pages.form.meta_description")
+        span.form-label__locale = " (#{locale_ui_tag})"
+      = f.text_field :meta_description, class: "form-control", placeholder: t("dashboard.pages.form.meta_description_placeholder")
+
+  .dashboard-actions
+    = f.submit page.persisted? ? t("dashboard.pages.form.update") : t("dashboard.pages.form.create"), class: "btn-dashboard-primary"
+    = link_to t("dashboard.common.cancel"), dashboard_pages_path, class: "btn-dashboard-secondary"

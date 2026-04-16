@@ -1,0 +1,8 @@
+- content_for(:page_title) { "New Post" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    = link_to t("dashboard.posts.index.back"), dashboard_posts_path, class: "btn-dashboard-secondary"
+
+  = render "form", post: @post

@@ -5,16 +5,18 @@ class LocaleController < ApplicationController
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
 
-  SUPPORTED_LOCALES = %w[en pl uk lt de fr es].freeze
+  # Path prefixes that may appear after the leading slash (canonical + UA alias for uk)
+  PATH_PREFIX_LOCALES = %w[en pl uk ua lt de fr es ru].freeze
 
   def switch
-    new_locale = params[:locale].to_s.strip.downcase
+    raw = params[:locale].to_s.strip.downcase
+    canonical = LocaleTags.canonical_locale_code(raw)
 
-    if I18n.available_locales.map(&:to_s).include?(new_locale)
-      session[:locale] = new_locale
-      cookies[:locale] = { value: new_locale, expires: 1.year.from_now }
+    if canonical.present? && I18n.available_locales.map(&:to_s).include?(canonical)
+      session[:locale] = canonical
+      cookies[:locale] = { value: canonical, expires: 1.year.from_now }
 
-      redirect_to build_redirect_url(new_locale), allow_other_host: false
+      redirect_to build_redirect_url(canonical), allow_other_host: false
     else
       redirect_back(fallback_location: root_path)
     end
@@ -22,37 +24,33 @@ class LocaleController < ApplicationController
 
   private
 
-  def build_redirect_url(new_locale)
+  def build_redirect_url(canonical_locale)
     referer = request.referer
-    return root_path(locale: new_locale) if referer.blank?
+    seg = LocaleTags.path_segment_for_canonical(canonical_locale)
+    return root_path(locale: seg) if referer.blank?
 
     begin
       uri = URI.parse(referer)
       path = uri.path
 
-      # Replace existing locale in path or add new one
-      new_path = replace_locale_in_path(path, new_locale)
+      new_path = replace_locale_in_path(path, canonical_locale)
 
-      # Build the new URL with query string if present
       uri.query.present? ? "#{new_path}?#{uri.query}" : new_path
     rescue URI::InvalidURIError
-      root_path(locale: new_locale)
+      root_path(locale: seg)
     end
   end
 
-  def replace_locale_in_path(path, new_locale)
-    # Match locale at the start of the path: /pl, /en, /uk, etc.
-    locale_pattern = %r{^/(#{SUPPORTED_LOCALES.join("|")})(?:/|$)}
+  def replace_locale_in_path(path, canonical_locale)
+    new_seg = LocaleTags.path_segment_for_canonical(canonical_locale)
+    locale_pattern = %r{^/(#{PATH_PREFIX_LOCALES.join("|")})(?:/|$)}
 
     if path.match?(locale_pattern)
-      # Replace existing locale with new one
-      path.sub(locale_pattern) { |match| match.sub($1, new_locale) }
+      path.sub(locale_pattern) { |match| match.sub($1, new_seg) }
     elsif path == "/" || path.empty?
-      # Root path - add locale
-      "/#{new_locale}"
+      "/#{new_seg}"
     else
-      # No locale in path - prepend new locale
-      "/#{new_locale}#{path}"
+      "/#{new_seg}#{path}"
     end
   end
 end

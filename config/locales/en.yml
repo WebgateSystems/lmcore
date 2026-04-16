@@ -26,6 +26,9 @@ en:
     profile: "Profile"
     settings: "Settings"
     dashboard: "Dashboard"
+    control_panel: "Control Panel"
+    my_blog: "My Blog"
+    admin: "Admin Panel"
     menu: "Menu"
 
   # Theme
@@ -249,6 +252,15 @@ en:
     remember_me: "Remember me"
     no_account: "Don't have an account?"
     have_account: "Already have an account?"
+    display_name: "Display name"
+    multilingual_label: "Multilingual field"
+    multilingual_legend: "This value is edited for the active interface language only."
+    identity_fields_locked_hint: "Only a super administrator can change your username. It is tied to your account across the site."
+    new_password: "New password"
+    leave_blank_if_unchanged: "Leave blank if unchanged"
+    current_password: "Current password"
+    current_password_hint: "Only required when you choose a new password above."
+    update_profile: "Update profile"
 
   # User
   users:
@@ -471,6 +483,8 @@ en:
         username: "Username"
         first_name: "First name"
         last_name: "Last name"
+        locale: "Language"
+        timezone: "Time zone"
         bio: "Bio"
       post:
         title: "Title"

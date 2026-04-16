@@ -1,0 +1,8 @@
+- content_for(:page_title) { "New Video" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    = link_to t("dashboard.videos.index.back"), dashboard_videos_path, class: "btn-dashboard-secondary"
+
+  = render "form", video: @video

@@ -121,6 +121,49 @@
   color: var(--color-text-secondary);
 }
 
+.translatable-field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: rgba(20, 184, 166, 0.18);
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .translatable-field-label {
+  background: rgba(45, 212, 191, 0.22);
+}
+
+.translatable-legend {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.translatable-legend__badge {
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  background: rgba(20, 184, 166, 0.18);
+  color: var(--color-text-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .translatable-legend__badge {
+  background: rgba(45, 212, 191, 0.22);
+}
+
+.translatable-legend__text {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
 .input-wrapper {
   position: relative;
   display: flex;
@@ -164,6 +207,27 @@
 
 [data-theme="dark"] .form-input:focus {
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2);
+}
+
+.form-input[readonly] {
+  cursor: not-allowed;
+  opacity: 0.92;
+  background-color: var(--color-surface-elevated, var(--color-surface));
+}
+
+/* Plain text in place of an input (not submitted with the form) */
+.form-static-value {
+  width: 100%;
+  margin: 0;
+  padding: 14px 14px 14px 44px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.35;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-elevated, var(--color-surface));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: default;
 }
 
 .form-hint {

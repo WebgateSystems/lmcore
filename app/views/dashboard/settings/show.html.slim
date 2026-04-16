@@ -1,0 +1,109 @@
+- content_for(:page_title) { "Settings" }
+
+section
+  - current_locale = I18n.locale.to_s
+  = form_with(url: dashboard_settings_path, method: :patch, class: "dashboard-form") do |f|
+    h3.mb-4 = t("dashboard.settings.general")
+    = render "dashboard/shared/i18n_legend"
+
+    .mb-3
+      label.form-label.form-label--translatable for="settings_site_name"
+        = t("dashboard.settings.site_name")
+        span.form-label__locale = " (#{locale_ui_tag})"
+      input.form-control type="text" name="settings[site_name]" id="settings_site_name" value=@settings["site_name"] placeholder=t("dashboard.settings.site_name_placeholder")
+
+    .mb-3
+      label.form-label.form-label--translatable for="settings_site_tagline"
+        = t("dashboard.settings.tagline")
+        span.form-label__locale = " (#{locale_ui_tag})"
+      input.form-control type="text" name="settings[site_tagline]" id="settings_site_tagline" value=@settings["site_tagline"] placeholder=t("dashboard.settings.tagline_placeholder")
+
+    .mb-3
+      label.form-label.form-label--translatable for="settings_site_description"
+        = t("dashboard.settings.description")
+        span.form-label__locale = " (#{locale_ui_tag})"
+      textarea.form-control name="settings[site_description]" id="settings_site_description" rows="3" placeholder=t("dashboard.settings.description_placeholder")
+        = @settings["site_description"]
+
+    hr.my-4
+
+    h3.mb-4 = t("dashboard.settings.social_links")
+
+    .row
+      .col-md-6.mb-3
+        label.form-label for="settings_social_facebook" = t("dashboard.settings.facebook")
+        input.form-control type="url" name="settings[social_facebook]" id="settings_social_facebook" value=@settings["social_facebook"] placeholder="https://facebook.com/..."
+      .col-md-6.mb-3
+        label.form-label for="settings_social_twitter" = t("dashboard.settings.twitter")
+        input.form-control type="url" name="settings[social_twitter]" id="settings_social_twitter" value=@settings["social_twitter"] placeholder="https://x.com/..."
+
+    .row
+      .col-md-6.mb-3
+        label.form-label for="settings_social_instagram" = t("dashboard.settings.instagram")
+        input.form-control type="url" name="settings[social_instagram]" id="settings_social_instagram" value=@settings["social_instagram"] placeholder="https://instagram.com/..."
+      .col-md-6.mb-3
+        label.form-label for="settings_social_youtube" = t("dashboard.settings.youtube")
+        input.form-control type="url" name="settings[social_youtube]" id="settings_social_youtube" value=@settings["social_youtube"] placeholder="https://youtube.com/..."
+
+    .mb-3
+      label.form-label for="settings_youtube_url" = t("dashboard.settings.youtube_channel_url")
+      input.form-control type="url" name="settings[youtube_url]" id="settings_youtube_url" value=@settings["youtube_url"] placeholder="https://www.youtube.com/@YourChannel/videos"
+      small.text-body-3.text-muted = t("dashboard.settings.youtube_channel_url_hint")
+
+    hr.my-4
+
+    h3.mb-4 = t("dashboard.settings.youtube_integration.title")
+
+    p.text-body-3.text-muted.mb-3 = t("dashboard.settings.youtube_integration.intro")
+
+    .mb-3
+      - if current_user.youtube_cookies_configured?
+        p.mb-2
+          span.badge.text-bg-success = t("dashboard.settings.youtube_integration.stored")
+          - if current_user.youtube_cookies_checksum.present?
+            span.text-body-3.text-muted.ms-2 = t("dashboard.settings.youtube_integration.fingerprint", fp: current_user.youtube_cookies_checksum)
+      - else
+        p.mb-2.text-body-3.text-muted = t("dashboard.settings.youtube_integration.not_stored")
+
+    .mb-3
+      label.form-label for="youtube_integration_netscape_cookies" = t("dashboard.settings.youtube_integration.netscape_label")
+      textarea.form-control name="youtube_integration[netscape_cookies]" id="youtube_integration_netscape_cookies" rows="6" autocomplete="off" placeholder=t("dashboard.settings.youtube_integration.netscape_placeholder")
+      small.text-body-3.text-muted = t("dashboard.settings.youtube_integration.netscape_help")
+
+    .form-check.mb-3
+      - age_checked = current_user.youtube_age_confirmed_at.present?
+      input.form-check-input type="checkbox" name="youtube_integration[age_acknowledged]" id="youtube_integration_age" value="1" *(age_checked ? { checked: "checked" } : {})
+      label.form-check-label for="youtube_integration_age" = t("dashboard.settings.youtube_integration.age_acknowledged")
+
+    .form-check.mb-4
+      input.form-check-input type="checkbox" name="youtube_integration[remove_cookies]" id="youtube_integration_remove" value="1"
+      label.form-check-label for="youtube_integration_remove" = t("dashboard.settings.youtube_integration.remove")
+
+    hr.my-4
+
+    h3.mb-4 = t("dashboard.settings.localization")
+
+    .row
+      .col-md-6.mb-3
+        label.form-label for="settings_default_locale" = t("dashboard.settings.default_language")
+        select.form-select name="settings[default_locale]" id="settings_default_locale"
+          - %w[en pl uk ru lt de fr es].each do |loc|
+            option value=loc selected=(loc == @settings["default_locale"])
+              = loc.upcase
+
+      .col-md-6.mb-3
+        label.form-label for="settings_available_locales" = t("dashboard.settings.available_languages")
+        input.form-control type="text" name="settings[available_locales]" id="settings_available_locales" value=@settings["available_locales"] placeholder="en,pl,uk,ru"
+        small.text-body-3.text-muted = t("dashboard.settings.locale_codes_hint")
+
+    hr.my-4
+
+    h3.mb-4 = t("dashboard.settings.theme")
+
+    .mb-3
+      label.form-label for="settings_theme_slug" = t("dashboard.settings.theme")
+      input.form-control type="text" name="settings[theme_slug]" id="settings_theme_slug" value=@settings["theme_slug"] placeholder="default"
+      small.text-body-3.text-muted = t("dashboard.settings.theme_hint")
+
+    .dashboard-actions
+      button.btn-dashboard-primary type="submit" = t("dashboard.settings.save")

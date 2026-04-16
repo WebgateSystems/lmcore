@@ -186,7 +186,7 @@ module Admin
       permitted = %i[
         email username first_name last_name phone
         status locale timezone price_plan_id
-        bio_i18n vanity_domain
+        vanity_domain
       ]
 
       # Roles are now managed through role_assignments (add_role/remove_role actions)
@@ -196,7 +196,11 @@ module Admin
         permitted += %i[password password_confirmation]
       end
 
-      params.require(:user).permit(permitted)
+      attrs = params.require(:user).permit(permitted, bio_i18n: {}, display_name_i18n: {})
+      if action_name == "update" && !current_user.super_admin?
+        attrs = attrs.except(:username)
+      end
+      attrs
     end
 
     def available_roles

@@ -47,7 +47,7 @@ ul.uk-breadcrumb.uk-margin-remove-bottom
 
       .uk-card-body
         .page-content
-          == @page.content
+          = sanitize(@page.content, tags: %w[p br div span strong em b i u ul ol li blockquote h1 h2 h3 h4 h5 h6 a img], attributes: %w[href src alt title target rel class])
 
   div(class="uk-width-1-3@m")
     .uk-card

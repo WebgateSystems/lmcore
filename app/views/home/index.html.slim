@@ -34,25 +34,16 @@
             i.fa-regular.fa-moon.theme-icon-dark aria-hidden="true"
 
           /! Language Switcher
-          - locale_display = { en: 'EN', pl: 'PL', uk: 'UA', lt: 'LT', de: 'DE', fr: 'FR', es: 'ES' }
           .dropdown data-controller="dropdown"
             button.dropdown-toggle type="button" data-action="click->dropdown#toggle" aria-expanded="false" aria-haspopup="true"
               i.fa-solid.fa-globe aria-hidden="true"
-              span.current-lang= locale_display[I18n.locale] || I18n.locale.to_s.upcase
+              span.current-lang= locale_ui_tag
               i.fa-solid.fa-chevron-down.dropdown-arrow aria-hidden="true"
             .dropdown-menu role="menu" data-dropdown-target="menu"
-              a.dropdown-item class=(I18n.locale == :en ? 'active' : '') href=switch_locale_path('en') role="menuitem" lang="en"
-                | EN
-                span.lang-name English
-              a.dropdown-item class=(I18n.locale == :pl ? 'active' : '') href=switch_locale_path('pl') role="menuitem" lang="pl"
-                | PL
-                span.lang-name Polski
-              a.dropdown-item class=(I18n.locale == :uk ? 'active' : '') href=switch_locale_path('uk') role="menuitem" lang="uk"
-                | UA
-                span.lang-name Українська
-              a.dropdown-item class=(I18n.locale == :lt ? 'active' : '') href=switch_locale_path('lt') role="menuitem" lang="lt"
-                | LT
-                span.lang-name Lietuvių
+              - home_locale_switcher_locales.each do |loc|
+                a.dropdown-item class=(I18n.locale == loc ? 'active' : '') href=switch_locale_path(locale_path_segment(loc)) role="menuitem" lang=loc
+                  = locale_ui_tag(loc)
+                  span.lang-name= locale_native_name(loc)
 
           /! Auth button (visible on all screens)
           .auth-buttons
@@ -73,13 +64,19 @@
                         i.fa-solid.fa-user-secret
                         |  Impersonating
                   .dropdown-divider
+                  = link_to blog_path(blog_slug: current_user.username), class: 'dropdown-item', role: 'menuitem'
+                    i.fa-solid.fa-blog
+                    = t('nav.my_blog', default: 'My Blog')
+                  = link_to dashboard_root_path, class: 'dropdown-item', role: 'menuitem'
+                    i.fa-solid.fa-gauge-high
+                    = t('nav.control_panel', default: 'Control Panel')
+                  = link_to edit_user_registration_path, class: 'dropdown-item', role: 'menuitem'
+                    i.fa-solid.fa-user
+                    = t('nav.profile', default: 'Profile')
                   - if current_user.admin?
                     = link_to admin_root_path, class: 'dropdown-item', role: 'menuitem'
                       i.fa-solid.fa-cog
                       = t('nav.admin', default: 'Admin Panel')
-                  = link_to edit_user_registration_path, class: 'dropdown-item', role: 'menuitem'
-                    i.fa-solid.fa-user
-                    = t('nav.profile', default: 'Profile')
                   - if session[:admin_user_id].present?
                     = link_to stop_impersonating_path, class: 'dropdown-item text-warning', role: 'menuitem', data: { turbo_method: :delete }
                       i.fa-solid.fa-user-slash

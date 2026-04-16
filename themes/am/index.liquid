@@ -1,0 +1,245 @@
+<!-- Hero section -->
+<div class="section-name">
+  <div class="container-fluid container">
+    <div class="section-name__inner">
+      <a href="{{ base_path }}/pages/about"></a>
+      <div class="section-name__content">
+        {% assign name_parts = site.site_name | split: ' ' %}
+        <div class="section-name__text">
+          <div class="section-name__text--black">
+            <p class="site-title__large">{{ name_parts | first }}</p>
+            <p class="site-title__large move-right">{{ name_parts | last }}</p>
+          </div>
+          <div class="section-name__text--white">
+            <p class="site-title__large-140">{{ site.site_tagline | default: 'Журналіст' }}</p>
+            <span></span>
+          </div>
+        </div>
+        <div class="section-name__content-image">
+          <picture class="desktop-show">
+            <source srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/homepage/amam-1.webp" type="image/webp">
+            <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/homepage/amam-1.png" alt="{{ site.site_name }}" width="530" height="513">
+          </picture>
+          <picture class="mobile-show">
+            <source srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/homepage/amam-1-mobile.webp" type="image/webp">
+            <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/homepage/amam-1-mobile.png" alt="{{ site.site_name }}" width="372" height="411">
+          </picture>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOP content section -->
+<div class="section-main-articles">
+  <div class="container-fluid container">
+    <!-- TOP row: Video, Article, Photo -->
+    <div class="section-main-articles__content row">
+      
+      <!-- TOP Video -->
+      {% if videos.size > 0 %}
+      {% assign top_video = videos | first %}
+      {% assign top_video_thumb = top_video.thumbnail_url | default: '/themes/am/img/image/homepage/homepage-1.png' %}
+      <div class="section-main-articles__article col">
+        <div class="section-main-articles__article-title">
+          <h2 class="article-title article-title--red">{{ 'content.top_video' | t }}</h2>
+        </div>
+        <div class="section-main-articles__article-content">
+          <a class="article-link" href="{{ top_video.slug | video_url }}"></a>
+          <div class="section-main-articles__article-image">
+            <picture>
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ top_video_thumb }}" alt="{{ top_video.title }}" width="380" height="230">
+            </picture>
+          </div>
+          <div class="section-main-articles__article-date">
+            <p class="article-date">{{ top_video.published_at | date_format }}</p>
+          </div>
+          <div class="section-main-articles__article-description">
+            <h2 class="site-text__large">{{ top_video.title }}</h2>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- TOP Article -->
+      {% if featured_post %}
+      <div class="section-main-articles__article col">
+        <div class="section-main-articles__article-title">
+          <h2 class="article-title article-title--red">{{ 'content.top_article' | t }}</h2>
+        </div>
+        <div class="section-main-articles__article-content">
+          <a class="article-link" href="{{ featured_post.slug | post_url }}"></a>
+          <div class="section-main-articles__article-date">
+            <p class="article-date">{{ featured_post.published_at | date_format }}</p>
+          </div>
+          <div class="section-main-articles__article-description">
+            <h2 class="site-text__large">{{ featured_post.title }}</h2>
+          </div>
+          {% if featured_post.lead %}
+          <div class="section-main-articles__article-info">
+            <p class="site-text__medium">{{ featured_post.lead | excerpt: 200 }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- TOP Photo (placeholder) -->
+      <div class="section-main-articles__article col">
+        <div class="section-main-articles__article-title">
+          <h2 class="article-title article-title--red">{{ 'content.top_photo' | t }}</h2>
+        </div>
+        <div class="section-main-articles__article-content">
+          <a class="article-link" href="{{ base_path }}/photos"></a>
+          <div class="section-main-articles__article-image">
+            <picture>
+              <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/homepage/homepage-2.webp" type="image/webp">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/homepage/homepage-2.png" alt="TOP фото" width="380" height="230">
+            </picture>
+          </div>
+          <div class="section-main-articles__article-date">
+            <p class="article-date">{{ 'now' | date: '%d.%m.%Y' }}</p>
+          </div>
+          <div class="section-main-articles__article-description">
+            <h2 class="site-text__large">{{ 'content.latest_photos' | t }}</h2>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Second row: Latest content -->
+    <div class="section-main-articles__content row hidden-680">
+      
+      <!-- Latest Video -->
+      {% if videos.size > 1 %}
+      {% assign latest_video = videos[1] %}
+      {% assign latest_video_thumb = latest_video.thumbnail_url | default: '/themes/am/img/image/homepage/homepage-3.png' %}
+      <div class="section-main-articles__article col">
+        <div class="section-main-articles__article-title">
+          <h2 class="article-title article-title--black">{{ 'content.latest_video' | t }}</h2>
+        </div>
+        <div class="section-main-articles__article-content">
+          <a class="article-link" href="{{ latest_video.slug | video_url }}"></a>
+          <div class="section-main-articles__article-title mobile-title">
+            <h2 class="article-title article-title--black">{{ 'content.all_videos' | t }}</h2>
+          </div>
+          <div class="section-main-articles__article-image">
+            <picture>
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ latest_video_thumb }}" alt="{{ latest_video.title }}" width="380" height="230">
+            </picture>
+          </div>
+          <div class="section-main-articles__article-date">
+            <p class="article-date">{{ latest_video.published_at | date_format }}</p>
+          </div>
+          <div class="section-main-articles__article-description">
+            <h2 class="site-text__large">{{ latest_video.title }}</h2>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- Latest Article -->
+      {% if posts.size > 0 %}
+      {% assign latest_post = posts | first %}
+      <div class="section-main-articles__article col">
+        <div class="section-main-articles__article-title">
+          <h2 class="article-title article-title--black">{{ 'content.latest_articles' | t }}</h2>
+        </div>
+        <div class="section-main-articles__article-content">
+          <a class="article-link" href="{{ latest_post.slug | post_url }}"></a>
+          <div class="section-main-articles__article-date">
+            <p class="article-date">{{ latest_post.published_at | date_format }}</p>
+          </div>
+          <div class="section-main-articles__article-description">
+            <h2 class="site-text__large"><a href="{{ latest_post.slug | post_url }}">{{ latest_post.title }}</a></h2>
+          </div>
+          {% if latest_post.lead %}
+          <div class="section-main-articles__article-info">
+            <p class="site-text__medium">{{ latest_post.lead | excerpt: 200 }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- Latest Photo -->
+      <div class="section-main-articles__article col">
+        <div class="section-main-articles__article-title">
+          <h2 class="article-title article-title--black">{{ 'content.latest_photos' | t }}</h2>
+        </div>
+        <div class="section-main-articles__article-content">
+          <a class="article-link" href="{{ base_path }}/photos"></a>
+          <div class="section-main-articles__article-image">
+            <picture>
+              <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/homepage/homepage-4.webp" type="image/webp">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/homepage/homepage-4.png" alt="Photos" width="380" height="230">
+            </picture>
+          </div>
+          <div class="section-main-articles__article-date">
+            <p class="article-date">{{ 'now' | date: '%d.%m.%Y' }}</p>
+          </div>
+          <div class="section-main-articles__article-description">
+            <h2 class="site-text__large">{{ 'content.all_photos' | t }}</h2>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- More links row -->
+    <div class="section-main-articles__content row hidden-680">
+      <div class="section-main-articles__article col">
+        <div class="section-main-articles__article-content">
+          <div class="section-main-articles__article-title">
+            <a class="article-title article-title--black hover" href="{{ base_path }}/videos">{{ 'content.more_videos' | t }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="section-main-articles__article col">
+        <div class="section-main-articles__article-content">
+          <div class="section-main-articles__article-title">
+            <a class="article-title article-title--black hover" href="{{ base_path }}/posts">{{ 'content.more_articles' | t }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="section-main-articles__article col">
+        <div class="section-main-articles__article-content">
+          <div class="section-main-articles__article-title">
+            <a class="article-title article-title--black hover" href="{{ base_path }}/photos">{{ 'content.more_photos' | t }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Newsletter section -->
+<div class="section-news-mailing">
+  <div class="container-fluid container">
+    <div class="section-news-mailing__content row desktop-content" style="flex-wrap:nowrap;">
+      <div class="section-news-mailing__text col">
+        <h2 class="site-title__medium-64">{{ 'newsletter.title' | t }}</h2>
+      </div>
+      <form class="section-news-mailing__form col" action="javascript:void(0)">
+        <div class="section-news-mailing__form-input">
+          <input class="js_validation_email" type="email" placeholder="{{ 'newsletter.email_placeholder' | t }}">
+          <button class="js_submit_form" type="submit">{{ 'newsletter.send' | t }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="section-news-mailing__content row mobile-content">
+  <div class="section-news-mailing__form col">
+    <div class="section-news-mailing__form-submit js__popup_email_open">
+      <button>
+        {{ 'newsletter.title' | t }}
+        <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.7579 4.5H0.287109V7.5H13.7579V12L18.2332 6L13.7579 0V4.5Z" fill="white"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

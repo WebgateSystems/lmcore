@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
   # Set current attributes for auditing and other purposes
   before_action :set_current_attributes
   before_action :set_locale
+  before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :normalize_translatable_user_params, if: :devise_controller?
 
   # Pundit authorization
   after_action :verify_authorized, unless: :skip_pundit_verify?
@@ -46,17 +48,20 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    locale = params[:locale] ||
-             session[:locale] ||
-             cookies[:locale] ||
-             current_user&.locale ||
-             extract_locale_from_header ||
-             I18n.default_locale
-    I18n.locale = locale if I18n.available_locales.map(&:to_s).include?(locale.to_s)
+    raw = params[:locale] ||
+          session[:locale] ||
+          cookies[:locale] ||
+          current_user&.locale ||
+          extract_locale_from_header ||
+          I18n.default_locale
+    locale = LocaleTags.canonical_locale_code(raw) || I18n.default_locale.to_s
+    I18n.locale = locale.to_sym if I18n.available_locales.map(&:to_s).include?(locale.to_s)
   end
 
   def default_url_options
-    { locale: I18n.locale == I18n.default_locale ? nil : I18n.locale }
+    return {} if I18n.locale == I18n.default_locale
+
+    { locale: LocaleTags.path_segment_for_canonical(I18n.locale.to_s) }
   end
 
   private
@@ -96,6 +101,18 @@ class ApplicationController < ActionController::Base
   # Configure permitted parameters for Devise
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[username first_name last_name])
-    devise_parameter_sanitizer.permit(:account_update, keys: %i[username first_name last_name bio_i18n avatar locale timezone])
+    devise_parameter_sanitizer.permit(:account_update, keys: [ :username, :first_name, :last_name, :avatar, :locale, :timezone, { bio_i18n: {}, display_name_i18n: {} } ])
+  end
+
+  def normalize_translatable_user_params
+    return unless params[:user].is_a?(ActionController::Parameters)
+
+    localized_display_name = params[:user].delete(:display_name_current_locale)
+    return if localized_display_name.nil?
+
+    translations = current_user&.display_name_i18n
+    merged_translations = translations.is_a?(Hash) ? translations.dup : {}
+    merged_translations[I18n.locale.to_s] = localized_display_name.to_s
+    params[:user][:display_name_i18n] = merged_translations
   end
 end

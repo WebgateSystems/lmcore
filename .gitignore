@@ -58,5 +58,4 @@ node_modules/
 
 coverage
 
-# E2E test screenshots
-/e2e/screenshots/
+/docs/examples.tar

@@ -1,0 +1,67 @@
+- content_for(:page_title) { "Dashboard" }
+
+section.dashboard-stats
+  .stat-card
+    = link_to dashboard_posts_path, class: "stat-card--link" do
+      p.stat-label = t("dashboard.home.stat_posts")
+      p.stat-value = @posts_count
+  .stat-card
+    = link_to dashboard_videos_path, class: "stat-card--link" do
+      p.stat-label = t("dashboard.home.stat_videos")
+      p.stat-value = @videos_count
+  .stat-card
+    = link_to dashboard_photos_path, class: "stat-card--link" do
+      p.stat-label = t("dashboard.home.stat_photos")
+      p.stat-value = @photos_count
+  .stat-card
+    = link_to dashboard_pages_path, class: "stat-card--link" do
+      p.stat-label = t("dashboard.home.stat_pages")
+      p.stat-value = @pages_count
+  .stat-card
+    p.stat-label = t("dashboard.home.stat_comments")
+    p.stat-value = @comments_count
+
+section.mini-grid
+  .panel
+    .panel__header
+      h2 = t("dashboard.home.recent_posts")
+      = link_to t("dashboard.home.view_all"), dashboard_posts_path, class: "btn-dashboard-secondary"
+    - if @recent_posts.any?
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.title")
+            th = t("dashboard.common.table.status")
+            th = t("dashboard.common.table.date")
+        tbody
+          - @recent_posts.each do |post|
+            tr
+              td = link_to post.title, edit_dashboard_post_path(post), class: "text-decoration-none"
+              td
+                span class="dashboard-badge dashboard-badge--#{post.status}" = post.status.humanize
+              td = post.created_at.strftime("%b %d, %Y")
+    - else
+      .dashboard-empty
+        i.bi.bi-file-text
+        p = t("dashboard.home.no_posts")
+        = link_to t("dashboard.home.new_post"), new_dashboard_post_path, class: "btn-dashboard-primary"
+
+  .panel
+    .panel__header
+      h2 = t("dashboard.home.drafts")
+      = link_to t("dashboard.home.view_all"), dashboard_posts_path(status: "draft"), class: "btn-dashboard-secondary"
+    - if @draft_posts.any?
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.title")
+            th = t("dashboard.common.table.updated")
+        tbody
+          - @draft_posts.each do |post|
+            tr
+              td = link_to post.title, edit_dashboard_post_path(post), class: "text-decoration-none"
+              td = post.updated_at.strftime("%b %d, %Y")
+    - else
+      .dashboard-empty
+        i.bi.bi-pencil
+        p = t("dashboard.home.no_drafts")

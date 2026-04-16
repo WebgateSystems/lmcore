@@ -26,6 +26,9 @@ lt:
     profile: "Profilis"
     settings: "Nustatymai"
     dashboard: "Valdymo skydas"
+    control_panel: "Valdymo skydas"
+    my_blog: "Mano tinklaraštis"
+    admin: "Administravimo skydas"
     menu: "Meniu"
 
   # Theme
@@ -249,6 +252,15 @@ lt:
     remember_me: "Prisiminti mane"
     no_account: "Neturite paskyros?"
     have_account: "Jau turite paskyrą?"
+    display_name: "Rodomas vardas"
+    multilingual_label: "Daugiakalbis laukas"
+    multilingual_legend: "Ši reikšmė saugoma tik aktyviai sąsajos kalbai."
+    identity_fields_locked_hint: "Naudotojo vardą (username) gali keisti tik superadministratorius — tai susiję su paskyra visoje svetainėje."
+    new_password: "Naujas slaptažodis"
+    leave_blank_if_unchanged: "Palikite tuščią, jei nekeičiate"
+    current_password: "Dabartinis slaptažodis"
+    current_password_hint: "Reikalingas tik jei aukščiau nustatote naują slaptažodį."
+    update_profile: "Atnaujinti profilį"
 
   # User
   users:
@@ -471,6 +483,8 @@ lt:
         username: "Vartotojo vardas"
         first_name: "Vardas"
         last_name: "Pavardė"
+        locale: "Kalba"
+        timezone: "Laiko juosta"
         bio: "Aprašymas"
       post:
         title: "Pavadinimas"

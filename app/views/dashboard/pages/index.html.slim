@@ -1,0 +1,43 @@
+- content_for(:page_title) { "Pages" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+      - if params[:status].present?
+        span.dashboard-badge class="dashboard-badge--#{params[:status]}" = params[:status].humanize
+        = " "
+        = link_to t("dashboard.common.clear_filter"), dashboard_pages_path, class: "text-body-3 text-decoration-none"
+    = link_to t("dashboard.pages.index.new"), new_dashboard_page_path, class: "btn-dashboard-primary"
+
+  - if @pages.any?
+    .panel
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.title")
+            th = t("dashboard.common.table.type")
+            th = t("dashboard.common.table.status")
+            th = t("dashboard.common.table.created")
+            th.text-end = t("dashboard.common.table.actions")
+        tbody
+          - @pages.each do |page|
+            tr
+              td = link_to page.title, edit_dashboard_page_path(page), class: "text-decoration-none fw-medium"
+              td = page.page_type&.humanize || t("dashboard.common.custom")
+              td
+                span class="dashboard-badge dashboard-badge--#{page.status}" = page.status.humanize
+              td.text-body-3 = page.created_at.strftime("%b %d, %Y")
+              td.text-end
+                .dashboard-actions.justify-content-end
+                  = link_to edit_dashboard_page_path(page), class: "icon-pill", title: t("dashboard.common.edit") do
+                    i.bi.bi-pencil
+                  = button_to dashboard_page_path(page), method: :delete, class: "icon-pill text-danger", title: t("dashboard.common.delete"), data: { turbo_confirm: t("dashboard.common.confirm_delete") } do
+                    i.bi.bi-trash
+    - if @pagy.pages > 1
+      .d-flex.justify-content-center.mt-4
+        == pagy_nav(@pagy)
+  - else
+    .dashboard-empty
+      i.bi.bi-file-earmark
+      p = t("dashboard.pages.index.empty")
+      = link_to t("dashboard.pages.index.empty_cta"), new_dashboard_page_path, class: "btn-dashboard-primary"

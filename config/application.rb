@@ -38,5 +38,9 @@ module Libremedia
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Vanity domain resolver — rewrites subdomain requests to /blogs/:slug
+    require_relative "../app/middleware/vanity_domain_resolver"
+    config.middleware.insert_before 0, VanityDomainResolver
   end
 end

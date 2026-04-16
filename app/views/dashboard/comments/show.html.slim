@@ -1,0 +1,42 @@
+- content_for(:page_title) { "Comment Detail" }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    = link_to t("dashboard.comments.show.back"), dashboard_comments_path, class: "btn-dashboard-secondary"
+
+  .panel
+    .mb-3
+      strong = "#{t("dashboard.comments.show.author")}: "
+      = @comment.user&.full_name || @comment.author_name || t("dashboard.common.anonymous")
+
+    .mb-3
+      strong = "#{t("dashboard.comments.show.status")}: "
+      span class="dashboard-badge dashboard-badge--#{@comment.status}" = @comment.status.humanize
+
+    .mb-3
+      strong = "#{t("dashboard.comments.show.on")}: "
+      - if @comment.commentable
+        = @comment.commentable_type.underscore.humanize
+        | :
+        = " "
+        = @comment.commentable.try(:title) || "##{@comment.commentable_id}"
+
+    .mb-3
+      strong = "#{t("dashboard.comments.show.date")}: "
+      = @comment.created_at.strftime("%B %d, %Y at %H:%M")
+
+    hr
+
+    .mb-4
+      p = @comment.body
+
+    .dashboard-actions
+      - if @comment.status != "approved"
+        = button_to dashboard_comment_path(@comment), method: :patch, class: "btn-dashboard-primary", params: { comment: { status: "approved" } } do
+          = t("dashboard.common.approve")
+      - if @comment.status != "spam"
+        = button_to dashboard_comment_path(@comment), method: :patch, class: "btn-dashboard-secondary", params: { comment: { status: "spam" } } do
+          = t("dashboard.comments.show.mark_spam")
+      = button_to dashboard_comment_path(@comment), method: :delete, class: "btn-dashboard-danger", data: { turbo_confirm: t("dashboard.common.confirm_delete") } do
+        = t("dashboard.common.delete")

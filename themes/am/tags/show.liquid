@@ -1,0 +1,177 @@
+<!-- Tag page - wszystkie materiały z tagiem -->
+<div class="section-articles">
+  <div class="container-fluid container">
+    <!-- Nagłówek z nazwą tagu -->
+    <div class="section-articles__title" style="margin-bottom: 30px;">
+      <h1 class="article-title article-title--black">
+        <span style="color: #959595; font-weight: 300;">{{ 'content.tag' | t }}:</span> #{{ tag.name }}
+      </h1>
+      <p class="site-text__large-24" style="color: #959595; margin-top: 10px;">
+        {{ total_count }} {{ 'content.materials' | t }}
+      </p>
+    </div>
+
+    {% if total_count == 0 %}
+    <div class="no-results" style="text-align: center; padding: 60px 0;">
+      <p class="site-text__large-24" style="color: #959595;">{{ 'content.no_results' | t }}</p>
+    </div>
+    {% else %}
+
+    <!-- ARTYKUŁY -->
+    {% if posts.size > 0 %}
+    <div class="tag-section" style="margin-bottom: 50px;">
+      <div class="tag-section__header" style="display: flex; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #000;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 12px;">
+          <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM17 17H7V15H17V17ZM17 13H7V11H17V13ZM17 9H7V7H17V9Z" fill="currentColor"/>
+        </svg>
+        <h2 class="site-text__bold-24" style="margin: 0; text-transform: uppercase;">{{ 'navigation.articles' | t }}</h2>
+        <span style="margin-left: 10px; color: #959595; font-size: 18px;">({{ posts.size }})</span>
+      </div>
+      
+      <div class="tag-items">
+        {% for post in posts %}
+        <div class="tag-item" style="display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
+          <div class="tag-item__content" style="flex: 1;">
+            <a href="{{ base_path }}/posts/{{ post.slug }}" class="tag-item__title" style="text-decoration: none; color: #000;">
+              <h3 class="site-text__bold-24" style="margin: 0 0 8px 0; transition: color 0.2s;">{{ post.title | strip_html }}</h3>
+            </a>
+            {% if post.subtitle %}
+            <p class="site-text__large-18" style="color: #666; margin: 0;">{{ post.subtitle | strip_html | truncate: 150 }}</p>
+            {% endif %}
+          </div>
+          <div class="tag-item__meta" style="text-align: right; min-width: 120px; margin-left: 20px;">
+            <span class="tag-item__date" style="color: #959595; font-size: 14px;">{{ post.published_at }}</span>
+            <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 8px;">
+              <span style="color: #959595; font-size: 14px; display: flex; align-items: center;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M8 3C4.364 3 1.258 5.073 0 8C1.258 10.927 4.364 13 8 13C11.636 13 14.742 10.927 16 8C14.742 5.073 11.636 3 8 3ZM8 11.5C5.791 11.5 4 9.709 4 7.5S5.791 3.5 8 3.5 12 5.291 12 7.5 10.209 11.5 8 11.5ZM8 5C6.619 5 5.5 6.119 5.5 7.5S6.619 10 8 10 10.5 8.881 10.5 7.5 9.381 5 8 5Z" fill="#959595"/>
+                </svg>
+                {{ post.views_count }}
+              </span>
+              <span style="color: #959595; font-size: 14px; display: flex; align-items: center;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M14 1H2C0.9 1 0 1.9 0 3V11C0 12.1 0.9 13 2 13H4V15.5L8.5 13H14C15.1 13 16 12.1 16 11V3C16 1.9 15.1 1 14 1Z" fill="#959595"/>
+                </svg>
+                {{ post.comments_count }}
+              </span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- WIDEO -->
+    {% if videos.size > 0 %}
+    <div class="tag-section" style="margin-bottom: 50px;">
+      <div class="tag-section__header" style="display: flex; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #000;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 12px;">
+          <path d="M17 10.5V7C17 6.45 16.55 6 16 6H4C3.45 6 3 6.45 3 7V17C3 17.55 3.45 18 4 18H16C16.55 18 17 17.55 17 17V13.5L21 17.5V6.5L17 10.5Z" fill="currentColor"/>
+        </svg>
+        <h2 class="site-text__bold-24" style="margin: 0; text-transform: uppercase;">{{ 'navigation.videos' | t }}</h2>
+        <span style="margin-left: 10px; color: #959595; font-size: 18px;">({{ videos.size }})</span>
+      </div>
+      
+      <div class="tag-items">
+        {% for video in videos %}
+        <div class="tag-item" style="display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
+          <div class="tag-item__content" style="flex: 1;">
+            <a href="{{ base_path }}/videos/{{ video.slug }}" class="tag-item__title" style="text-decoration: none; color: #000;">
+              <h3 class="site-text__bold-24" style="margin: 0 0 8px 0; transition: color 0.2s;">{{ video.title | strip_html }}</h3>
+            </a>
+            {% if video.subtitle %}
+            <p class="site-text__large-18" style="color: #666; margin: 0;">{{ video.subtitle | strip_html | truncate: 150 }}</p>
+            {% endif %}
+          </div>
+          <div class="tag-item__meta" style="text-align: right; min-width: 120px; margin-left: 20px;">
+            <span class="tag-item__date" style="color: #959595; font-size: 14px;">{{ video.published_at }}</span>
+            <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 8px;">
+              <span style="color: #959595; font-size: 14px; display: flex; align-items: center;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M8 3C4.364 3 1.258 5.073 0 8C1.258 10.927 4.364 13 8 13C11.636 13 14.742 10.927 16 8C14.742 5.073 11.636 3 8 3ZM8 11.5C5.791 11.5 4 9.709 4 7.5S5.791 3.5 8 3.5 12 5.291 12 7.5 10.209 11.5 8 11.5ZM8 5C6.619 5 5.5 6.119 5.5 7.5S6.619 10 8 10 10.5 8.881 10.5 7.5 9.381 5 8 5Z" fill="#959595"/>
+                </svg>
+                {{ video.views_count }}
+              </span>
+              <span style="color: #959595; font-size: 14px; display: flex; align-items: center;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M14 1H2C0.9 1 0 1.9 0 3V11C0 12.1 0.9 13 2 13H4V15.5L8.5 13H14C15.1 13 16 12.1 16 11V3C16 1.9 15.1 1 14 1Z" fill="#959595"/>
+                </svg>
+                {{ video.comments_count }}
+              </span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- ZDJĘCIA / GALERIE -->
+    {% if photos.size > 0 %}
+    <div class="tag-section" style="margin-bottom: 50px;">
+      <div class="tag-section__header" style="display: flex; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #000;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 12px;">
+          <path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="currentColor"/>
+        </svg>
+        <h2 class="site-text__bold-24" style="margin: 0; text-transform: uppercase;">{{ 'navigation.photos' | t }}</h2>
+        <span style="margin-left: 10px; color: #959595; font-size: 18px;">({{ photos.size }})</span>
+      </div>
+      
+      <div class="tag-items">
+        {% for photo in photos %}
+        <div class="tag-item" style="display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
+          <div class="tag-item__content" style="flex: 1;">
+            <a href="{{ base_path }}/photos/{{ photo.slug }}" class="tag-item__title" style="text-decoration: none; color: #000;">
+              <h3 class="site-text__bold-24" style="margin: 0 0 8px 0; transition: color 0.2s;">{{ photo.title | strip_html }}</h3>
+            </a>
+            {% if photo.subtitle %}
+            <p class="site-text__large-18" style="color: #666; margin: 0;">{{ photo.subtitle | strip_html | truncate: 150 }}</p>
+            {% endif %}
+          </div>
+          <div class="tag-item__meta" style="text-align: right; min-width: 120px; margin-left: 20px;">
+            <span class="tag-item__date" style="color: #959595; font-size: 14px;">{{ photo.published_at }}</span>
+            <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 8px;">
+              <span style="color: #959595; font-size: 14px; display: flex; align-items: center;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M8 3C4.364 3 1.258 5.073 0 8C1.258 10.927 4.364 13 8 13C11.636 13 14.742 10.927 16 8C14.742 5.073 11.636 3 8 3ZM8 11.5C5.791 11.5 4 9.709 4 7.5S5.791 3.5 8 3.5 12 5.291 12 7.5 10.209 11.5 8 11.5ZM8 5C6.619 5 5.5 6.119 5.5 7.5S6.619 10 8 10 10.5 8.881 10.5 7.5 9.381 5 8 5Z" fill="#959595"/>
+                </svg>
+                {{ photo.views_count }}
+              </span>
+              <span style="color: #959595; font-size: 14px; display: flex; align-items: center;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M14 1H2C0.9 1 0 1.9 0 3V11C0 12.1 0.9 13 2 13H4V15.5L8.5 13H14C15.1 13 16 12.1 16 11V3C16 1.9 15.1 1 14 1Z" fill="#959595"/>
+                </svg>
+                {{ photo.comments_count }}
+              </span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.tag-item__title:hover h3 {
+  color: #cc0000 !important;
+}
+
+@media (max-width: 768px) {
+  .tag-item {
+    flex-direction: column !important;
+  }
+  .tag-item__meta {
+    text-align: left !important;
+    margin-left: 0 !important;
+    margin-top: 15px !important;
+  }
+  .tag-item__meta > div {
+    justify-content: flex-start !important;
+  }
+}
+</style>
