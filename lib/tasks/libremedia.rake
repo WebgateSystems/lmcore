@@ -91,49 +91,63 @@ namespace :libremedia do
       $stdout.flush
     end
 
-    result = Youtube::ChannelVideosSyncService.new(
-      user: user,
-      channel_url: channel_url,
-      locale: "uk",
-      category_slug: "media",
-      progress_every: 20,
-      download_thumbnails: download_thumbnails,
-      playlist_items: playlist_items,
-      source_json_path: source_json_path,
-      thumbnail_base_dir: thumbnail_base_dir,
-      snapshot_jsonl_path: snapshot_jsonl_path,
-      retry_limit: retry_limit,
-      retry_base_delay: retry_base_delay,
-      sleep_requests: sleep_requests,
-      progress: lambda do |event, payload|
-        case event
-        when :start
-          puts "[YouTube] Start user=#{payload[:user_id]} channel=#{payload[:channel_url]} thumbs=#{payload[:download_thumbnails]} playlist_items=#{payload[:playlist_items] || 'all'} source_json=#{payload[:source_json_path] || '-'} snapshot=#{payload[:snapshot_jsonl_path] || '-'} thumb_base=#{payload[:thumbnail_base_dir]} sleep_requests=#{payload[:sleep_requests]} retries=#{payload[:retry_limit]}"
-        when :snapshot
-          puts "[YouTube] Snapshot JSONL => #{payload[:path]}"
-        when :phase
-          puts "[YouTube] Phase=#{payload[:name]}"
-        when :phase_heartbeat
-          puts "[YouTube] ...phase=#{payload[:phase]} elapsed=#{payload[:elapsed_s]}s" if payload[:phase] == "fetch_video_ids"
-        when :discovered
-          progress_state[:total] = payload[:total].to_i
-          puts "[YouTube] Found #{payload[:total]} videos"
-        when :metadata_progress
-          puts "[YouTube] Metadata #{payload[:index]}/#{payload[:total]} video=#{payload[:video_id]}" if (payload[:index].to_i % 50).zero? || payload[:index].to_i == 1
-        when :progress
-          render_progress.call(payload)
-        when :error
-          print "\n"
-          puts "[YouTube] ERROR video_id=#{payload[:video_id]} message=#{payload[:message]}"
-        when :rate_limited
-          print "\n"
-          puts "[YouTube] RATE LIMIT video_id=#{payload[:video_id]} attempt=#{payload[:attempt]} sleep=#{payload[:sleep_seconds]}s"
-        when :finish
-          print "\n"
-          puts "[YouTube] Finished: #{payload[:stats]}"
+    cookies_path_override = ENV["YT_COOKIES_FILE"].presence
+    result = nil
+    run_sync = lambda do |cookies_path|
+      result = Youtube::ChannelVideosSyncService.new(
+        user: user,
+        channel_url: channel_url,
+        locale: "uk",
+        category_slug: "media",
+        progress_every: 20,
+        download_thumbnails: download_thumbnails,
+        playlist_items: playlist_items,
+        source_json_path: source_json_path,
+        thumbnail_base_dir: thumbnail_base_dir,
+        snapshot_jsonl_path: snapshot_jsonl_path,
+        retry_limit: retry_limit,
+        retry_base_delay: retry_base_delay,
+        sleep_requests: sleep_requests,
+        cookies_path: cookies_path,
+        progress: lambda do |event, payload|
+          case event
+          when :start
+            puts "[YouTube] Start user=#{payload[:user_id]} channel=#{payload[:channel_url]} thumbs=#{payload[:download_thumbnails]} playlist_items=#{payload[:playlist_items] || 'all'} source_json=#{payload[:source_json_path] || '-'} snapshot=#{payload[:snapshot_jsonl_path] || '-'} thumb_base=#{payload[:thumbnail_base_dir]} sleep_requests=#{payload[:sleep_requests]} retries=#{payload[:retry_limit]} youtube_auth=#{payload[:youtube_auth] ? 'yes' : 'no'}"
+          when :snapshot
+            puts "[YouTube] Snapshot JSONL => #{payload[:path]}"
+          when :phase
+            puts "[YouTube] Phase=#{payload[:name]}"
+          when :phase_heartbeat
+            puts "[YouTube] ...phase=#{payload[:phase]} elapsed=#{payload[:elapsed_s]}s" if payload[:phase] == "fetch_video_ids"
+          when :discovered
+            progress_state[:total] = payload[:total].to_i
+            puts "[YouTube] Found #{payload[:total]} videos"
+          when :metadata_progress
+            puts "[YouTube] Metadata #{payload[:index]}/#{payload[:total]} video=#{payload[:video_id]}" if (payload[:index].to_i % 50).zero? || payload[:index].to_i == 1
+          when :progress
+            render_progress.call(payload)
+          when :error
+            print "\n"
+            puts "[YouTube] ERROR video_id=#{payload[:video_id]} message=#{payload[:message]}"
+          when :bot_check
+            print "\n"
+            puts "[YouTube] BOT CHECK video_id=#{payload[:video_id]} attempt=#{payload[:attempt]} trying=#{payload[:next_clients]}"
+          when :rate_limited
+            print "\n"
+            puts "[YouTube] RATE LIMIT video_id=#{payload[:video_id]} attempt=#{payload[:attempt]} sleep=#{payload[:sleep_seconds]}s"
+          when :finish
+            print "\n"
+            puts "[YouTube] Finished: #{payload[:stats]}"
+          end
         end
-      end
-    ).call
+      ).call
+    end
+
+    if cookies_path_override
+      run_sync.call(cookies_path_override)
+    else
+      user.with_youtube_cookies_file { |path| run_sync.call(path) }
+    end
 
     puts "Ayder YouTube sync completed: #{result}"
   end
@@ -173,49 +187,63 @@ namespace :libremedia do
 
     raise "channel_url argument or site setting 'youtube_url' is required" if channel_url.blank?
 
-    result = Youtube::ChannelVideosSyncService.new(
-      user: user,
-      channel_url: channel_url,
-      locale: args[:locale],
-      category_slug: args[:category_slug],
-      progress_every: 20,
-      download_thumbnails: download_thumbnails,
-      playlist_items: playlist_items,
-      source_json_path: source_json_path,
-      thumbnail_base_dir: thumbnail_base_dir,
-      snapshot_jsonl_path: snapshot_jsonl_path,
-      retry_limit: retry_limit,
-      retry_base_delay: retry_base_delay,
-      sleep_requests: sleep_requests,
-      progress: lambda do |event, payload|
-        case event
-        when :start
-          puts "[YouTube] Start user=#{payload[:user_id]} channel=#{payload[:channel_url]} thumbs=#{payload[:download_thumbnails]} playlist_items=#{payload[:playlist_items] || 'all'} source_json=#{payload[:source_json_path] || '-'} snapshot=#{payload[:snapshot_jsonl_path] || '-'} thumb_base=#{payload[:thumbnail_base_dir]} sleep_requests=#{payload[:sleep_requests]} retries=#{payload[:retry_limit]}"
-        when :snapshot
-          puts "[YouTube] Snapshot JSONL => #{payload[:path]}"
-        when :phase
-          puts "[YouTube] Phase=#{payload[:name]}"
-        when :phase_heartbeat
-          puts "[YouTube] ...phase=#{payload[:phase]} elapsed=#{payload[:elapsed_s]}s" if payload[:phase] == "fetch_video_ids"
-        when :discovered
-          progress_state[:total] = payload[:total].to_i
-          puts "[YouTube] Found #{payload[:total]} videos"
-        when :metadata_progress
-          puts "[YouTube] Metadata #{payload[:index]}/#{payload[:total]} video=#{payload[:video_id]}" if (payload[:index].to_i % 50).zero? || payload[:index].to_i == 1
-        when :progress
-          render_progress.call(payload)
-        when :error
-          print "\n"
-          puts "[YouTube] ERROR video_id=#{payload[:video_id]} message=#{payload[:message]}"
-        when :rate_limited
-          print "\n"
-          puts "[YouTube] RATE LIMIT video_id=#{payload[:video_id]} attempt=#{payload[:attempt]} sleep=#{payload[:sleep_seconds]}s"
-        when :finish
-          print "\n"
-          puts "[YouTube] Finished: #{payload[:stats]}"
+    cookies_path_override = ENV["YT_COOKIES_FILE"].presence
+    result = nil
+    run_sync = lambda do |cookies_path|
+      result = Youtube::ChannelVideosSyncService.new(
+        user: user,
+        channel_url: channel_url,
+        locale: args[:locale],
+        category_slug: args[:category_slug],
+        progress_every: 20,
+        download_thumbnails: download_thumbnails,
+        playlist_items: playlist_items,
+        source_json_path: source_json_path,
+        thumbnail_base_dir: thumbnail_base_dir,
+        snapshot_jsonl_path: snapshot_jsonl_path,
+        retry_limit: retry_limit,
+        retry_base_delay: retry_base_delay,
+        sleep_requests: sleep_requests,
+        cookies_path: cookies_path,
+        progress: lambda do |event, payload|
+          case event
+          when :start
+            puts "[YouTube] Start user=#{payload[:user_id]} channel=#{payload[:channel_url]} thumbs=#{payload[:download_thumbnails]} playlist_items=#{payload[:playlist_items] || 'all'} source_json=#{payload[:source_json_path] || '-'} snapshot=#{payload[:snapshot_jsonl_path] || '-'} thumb_base=#{payload[:thumbnail_base_dir]} sleep_requests=#{payload[:sleep_requests]} retries=#{payload[:retry_limit]} youtube_auth=#{payload[:youtube_auth] ? 'yes' : 'no'}"
+          when :snapshot
+            puts "[YouTube] Snapshot JSONL => #{payload[:path]}"
+          when :phase
+            puts "[YouTube] Phase=#{payload[:name]}"
+          when :phase_heartbeat
+            puts "[YouTube] ...phase=#{payload[:phase]} elapsed=#{payload[:elapsed_s]}s" if payload[:phase] == "fetch_video_ids"
+          when :discovered
+            progress_state[:total] = payload[:total].to_i
+            puts "[YouTube] Found #{payload[:total]} videos"
+          when :metadata_progress
+            puts "[YouTube] Metadata #{payload[:index]}/#{payload[:total]} video=#{payload[:video_id]}" if (payload[:index].to_i % 50).zero? || payload[:index].to_i == 1
+          when :progress
+            render_progress.call(payload)
+          when :error
+            print "\n"
+            puts "[YouTube] ERROR video_id=#{payload[:video_id]} message=#{payload[:message]}"
+          when :bot_check
+            print "\n"
+            puts "[YouTube] BOT CHECK video_id=#{payload[:video_id]} attempt=#{payload[:attempt]} trying=#{payload[:next_clients]}"
+          when :rate_limited
+            print "\n"
+            puts "[YouTube] RATE LIMIT video_id=#{payload[:video_id]} attempt=#{payload[:attempt]} sleep=#{payload[:sleep_seconds]}s"
+          when :finish
+            print "\n"
+            puts "[YouTube] Finished: #{payload[:stats]}"
+          end
         end
-      end
-    ).call
+      ).call
+    end
+
+    if cookies_path_override
+      run_sync.call(cookies_path_override)
+    else
+      user.with_youtube_cookies_file { |path| run_sync.call(path) }
+    end
 
     puts "YouTube sync completed for user #{user.id}: #{result}"
   end

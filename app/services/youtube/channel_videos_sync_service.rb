@@ -169,15 +169,34 @@ module Youtube
     def fetch_video_metadata_with_retry(video_id, index, total, stats)
       attempts = 0
       mode = :default
+      bot_fallback_index = -1
       begin
         attempts += 1
-        tolerant_mode = (mode != :default)
-        auth_client_fallback = (mode == :auth_client)
-        entry = fetch_video_metadata(video_id, tolerant_mode: tolerant_mode, auth_client_fallback: auth_client_fallback)
+        tolerant_mode = (mode == :tolerant || mode == :bot_bypass)
+        player_clients = player_clients_for(mode, bot_fallback_index)
+        entry = fetch_video_metadata(video_id, tolerant_mode: tolerant_mode, player_clients: player_clients)
         { status: :ok, entry: entry }
       rescue StandardError => e
+        if bot_check_error?(e.message)
+          bot_fallback_index += 1
+          if bot_fallback_index < bot_bypass_client_sets.length
+            mode = :bot_bypass
+            stats[:bot_bypass_fallbacks] ||= 0
+            stats[:bot_bypass_fallbacks] += 1
+            emit_progress(:bot_check,
+              video_id: video_id,
+              attempt: attempts,
+              next_clients: bot_bypass_client_sets[bot_fallback_index].join(","))
+            logger.info("[YouTube Sync] bot check, retrying with player_client=#{bot_bypass_client_sets[bot_fallback_index].join(',')} video_id=#{video_id}")
+            retry
+          end
+
+          emit_progress(:error, video_id: video_id, message: e.message, stage: "metadata_fetch")
+          return { status: :error, message: e.message }
+        end
+
         if age_restricted_error?(e.message)
-          if cookies_path.present? && mode == :default
+          if cookies_path.present? && mode != :auth_client
             stats[:age_auth_fallbacks] += 1
             logger.info("[YouTube Sync] age restricted, retrying metadata with auth client fallback video_id=#{video_id}")
             mode = :auth_client
@@ -210,14 +229,14 @@ module Youtube
       end
     end
 
-    def fetch_video_metadata(video_id, tolerant_mode: false, auth_client_fallback: false)
+    def fetch_video_metadata(video_id, tolerant_mode: false, player_clients: nil)
       command = [
         "yt-dlp",
         "--dump-json",
         "--skip-download",
         "--ignore-errors",
         "--no-warnings",
-        "--extractor-args", metadata_extractor_args(auth_client_fallback: auth_client_fallback),
+        "--extractor-args", metadata_extractor_args(player_clients: player_clients),
         "--sleep-requests", sleep_requests.to_s
       ]
       command << "--ignore-no-formats-error" if tolerant_mode
@@ -616,11 +635,41 @@ module Youtube
       [ "--cookies", cookies_path.to_s ]
     end
 
-    def metadata_extractor_args(auth_client_fallback: false)
-      return "youtube:approximate_date" unless auth_client_fallback
+    def metadata_extractor_args(player_clients: nil)
+      parts = [ "youtube:approximate_date" ]
+      if player_clients.present?
+        parts << "player_client=#{Array(player_clients).join(',')}"
+      end
+      parts.join(";")
+    end
 
-      # Some age-restricted videos expose metadata only for selected clients.
-      "youtube:approximate_date;player_client=android,web,web_creator,tv_embedded"
+    # Enumerates player_client combinations to try when YouTube serves the
+    # "Sign in to confirm you're not a bot" challenge. Ordering goes from
+    # least to most aggressive. yt-dlp team periodically changes which clients
+    # are unaffected by the bot wall; refresh this list as needed.
+    def bot_bypass_client_sets
+      @bot_bypass_client_sets ||= begin
+        from_env = ENV["YT_PLAYER_CLIENTS"].to_s.strip
+        if from_env.present?
+          from_env.split("|").map { |set| set.split(",").map(&:strip).reject(&:blank?) }.reject(&:empty?)
+        else
+          [
+            %w[tv],
+            %w[tv_embedded ios],
+            %w[ios web_safari],
+            %w[mweb android_vr tv_embedded]
+          ]
+        end
+      end
+    end
+
+    def player_clients_for(mode, bot_fallback_index)
+      case mode
+      when :auth_client
+        %w[android web web_creator tv_embedded]
+      when :bot_bypass
+        bot_bypass_client_sets[bot_fallback_index] || bot_bypass_client_sets.last
+      end
     end
 
     def rate_limited_error?(message)
@@ -635,6 +684,13 @@ module Youtube
     def age_restricted_error?(message)
       text = message.to_s.downcase
       text.include?("sign in to confirm your age") || text.include?("age-restricted")
+    end
+
+    def bot_check_error?(message)
+      text = message.to_s.downcase
+      text.include?("sign in to confirm you're not a bot") ||
+        text.include?("sign in to confirm you\u2019re not a bot") ||
+        text.include?("confirm you are not a bot")
     end
 
     def metadata_fetch_error_message(video_id, stderr)
