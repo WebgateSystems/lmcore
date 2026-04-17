@@ -183,10 +183,19 @@ class BlogsController < ApplicationController
       session[:locale] = locale
       I18n.locale = locale.to_sym
     end
-    redirect_to blog_path(blog_slug: @blog_owner.username)
+
+    if vanity_request?
+      redirect_to "/"
+    else
+      redirect_to blog_path(blog_slug: @blog_owner.username)
+    end
   end
 
   private
+
+  def vanity_request?
+    request.env["ORIGINAL_HOST"].present?
+  end
 
   def set_blog_owner
     @blog_owner = User.active.find_by!(username: params[:blog_slug])
@@ -221,7 +230,9 @@ class BlogsController < ApplicationController
       "site" => site_settings_hash,
       "blog" => serialize_blog_owner,
       "locale" => I18n.locale.to_s,
-      "base_path" => "/blogs/#{@blog_owner.username}",
+      "base_path" => vanity_request? ? "" : "/blogs/#{@blog_owner.username}",
+      "canonical_base_path" => "/blogs/#{@blog_owner.username}",
+      "vanity_domain" => request.env["ORIGINAL_HOST"].to_s,
       "theme_slug" => active_theme_slug,
       "theme_translation_scope" => "themes.#{active_theme_slug}",
       "current_url" => request.original_url,

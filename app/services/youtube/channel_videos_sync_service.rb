@@ -42,6 +42,10 @@ module Youtube
       @thumbnail_base_dir = thumbnail_base_dir.to_s.strip.presence || Rails.root.join("bin").to_s
       @snapshot_jsonl_path = snapshot_jsonl_path.to_s.strip.presence
       @cookies_path = cookies_path.to_s.strip.presence
+      # Sticky player_clients: once we discover a client set that bypasses the
+      # YouTube bot wall, use it for the remaining videos in this run instead
+      # of re-triggering the bot check with the default client every time.
+      @preferred_player_clients = nil
     end
 
     def call
@@ -170,14 +174,34 @@ module Youtube
       attempts = 0
       mode = :default
       bot_fallback_index = -1
+
+      # If we already learned which player_clients pass the bot wall on this
+      # run, skip the default client altogether and hit yt-dlp with that set
+      # directly. bot_bypass_client_sets puts the sticky set at index 0.
+      if @preferred_player_clients
+        mode = :bot_bypass
+        bot_fallback_index = 0
+      end
+
       begin
         attempts += 1
         tolerant_mode = (mode == :tolerant || mode == :bot_bypass)
         player_clients = player_clients_for(mode, bot_fallback_index)
         entry = fetch_video_metadata(video_id, tolerant_mode: tolerant_mode, player_clients: player_clients)
+        @preferred_player_clients = player_clients if mode == :bot_bypass && player_clients.present?
         { status: :ok, entry: entry }
       rescue StandardError => e
         if bot_check_error?(e.message)
+          # Sticky set just failed — drop it and restart the fallback walk from
+          # the base list (skipping the set that just failed, if present).
+          if mode == :bot_bypass && @preferred_player_clients && bot_fallback_index == 0
+            failed_set = @preferred_player_clients
+            @preferred_player_clients = nil
+            base = bot_bypass_client_sets
+            next_index = base.index { |set| set != failed_set }
+            bot_fallback_index = next_index.nil? ? bot_bypass_client_sets.length : next_index - 1
+          end
+
           bot_fallback_index += 1
           if bot_fallback_index < bot_bypass_client_sets.length
             mode = :bot_bypass
@@ -646,9 +670,19 @@ module Youtube
     # Enumerates player_client combinations to try when YouTube serves the
     # "Sign in to confirm you're not a bot" challenge. Ordering goes from
     # least to most aggressive. yt-dlp team periodically changes which clients
-    # are unaffected by the bot wall; refresh this list as needed.
+    # are unaffected by the bot wall; refresh this list as needed. If a sticky
+    # set has already worked during this run, it is surfaced to index 0 so the
+    # fallback walker hits it first.
     def bot_bypass_client_sets
-      @bot_bypass_client_sets ||= begin
+      base = base_bot_bypass_client_sets
+      sticky = @preferred_player_clients
+      return base if sticky.blank?
+
+      [ sticky ] + base.reject { |set| set == sticky }
+    end
+
+    def base_bot_bypass_client_sets
+      @base_bot_bypass_client_sets ||= begin
         from_env = ENV["YT_PLAYER_CLIENTS"].to_s.strip
         if from_env.present?
           from_env.split("|").map { |set| set.split(",").map(&:strip).reject(&:blank?) }.reject(&:empty?)

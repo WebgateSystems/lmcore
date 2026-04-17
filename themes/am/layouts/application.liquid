@@ -256,7 +256,7 @@
         <div class="header__inner">
           <div class="header__logo-wrapper">
             <div class="header__logo">
-              <a href="{{ base_path }}">
+              <a href="{{ base_path | default: '/' }}">
                 <picture>
                   <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/logo-header.webp" type="image/webp">
                   <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/logo-header.png" alt="{{ site.site_name }}" width="530" height="513">
@@ -266,7 +266,7 @@
           </div>
           <div class="header__nav-wrapper">
             <div class="header__nav">
-              <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}">{{ 'navigation.home' | t }}</a></div>
+              <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path | default: '/' }}">{{ 'navigation.home' | t }}</a></div>
               <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/pages/about">{{ 'navigation.about' | t }}</a></div>
               <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/videos">{{ 'navigation.videos' | t }}</a></div>
               <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/posts">{{ 'navigation.articles' | t }}</a></div>
@@ -454,7 +454,7 @@
             </svg>
           </div>
           <div class="mobile-menu__item js_search_mobile_btn"><a class="mobile-menu__link" href="#">{{ 'navigation.search' | t }}</a></div>
-          <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}">{{ 'navigation.home' | t }}</a></div>
+          <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path | default: '/' }}">{{ 'navigation.home' | t }}</a></div>
           <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/pages/about">{{ 'navigation.about' | t }}</a></div>
           <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/videos">{{ 'navigation.videos' | t }}</a></div>
           <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/posts">{{ 'navigation.articles' | t }}</a></div>
