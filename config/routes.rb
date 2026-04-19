@@ -108,6 +108,16 @@ Rails.application.routes.draw do
     end
     resources :comments, only: %i[index show update destroy]
     resources :audit_logs, only: %i[index show]
+    resources :team, only: %i[index create destroy] do
+      member do
+        patch :update_role
+      end
+    end
+    resources :team_invitations, only: %i[create destroy] do
+      member do
+        post :resend
+      end
+    end
   end
 
   # Devise routes
@@ -184,7 +194,7 @@ Rails.application.routes.draw do
       resources :donations, only: %i[index create]
 
       # Media
-      resources :media_attachments, only: %i[index create destroy]
+      resources :media_attachments, only: %i[index show create update destroy]
 
       # Settings
       resource :settings, only: %i[show update]
@@ -196,6 +206,7 @@ Rails.application.routes.draw do
     get "/", to: "blogs#show"
     get "posts", to: "blogs#posts", as: :posts
     get "posts/:slug", to: "blogs#post", as: :post
+    post "posts/:post_slug/comments", to: "comments#create", as: :post_comments
     get "videos", to: "blogs#videos", as: :videos
     get "videos/:slug", to: "blogs#video", as: :video
     get "photos", to: "blogs#photos", as: :photos

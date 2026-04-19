@@ -37,15 +37,16 @@ class SiteSetting < ApplicationRecord
     # Stored value may use "ua" for Ukrainian; canonical is always "uk". Sorted alphabetically.
     # If unset or empty, defaults to %w[en] only — never the full platform list.
     def blog_available_locale_codes_for(user)
-      parse_blog_available_locales_raw(get("available_locales", user: user, default: nil))
+      parse_blog_available_locales(get("available_locales", user: user, default: nil))
     end
 
-    private
-
-    def parse_blog_available_locales_raw(raw)
+    # Public helper: turn anything (Array, comma string, JSON-array string) into a
+    # canonicalised, platform-filtered, sorted Array<String> of locale codes.
+    # If the input is empty or unparseable, falls back to %w[en].
+    def parse_blog_available_locales(raw)
       list = case raw
       when Array then raw.map(&:to_s)
-      when String then raw.split(",").map(&:strip)
+      when String then split_locale_string(raw)
       else []
       end
       list = list.map { |l| l.to_s.strip.downcase == "ua" ? "uk" : l.to_s.strip.downcase }
@@ -55,6 +56,16 @@ class SiteSetting < ApplicationRecord
       list.uniq!
       list.sort!
       list.presence || %w[en]
+    end
+
+    private
+
+    # Tolerate strings produced by older code that serialized arrays via
+    # `Array#to_s` (e.g. `"[\"en\", \"pl\"]"`). Strip JSON-array syntax and
+    # quotes so that legacy values still parse to a useful locale list.
+    def split_locale_string(raw)
+      cleaned = raw.to_s.tr('[]"', "").gsub(/\s+/, "")
+      cleaned.split(",").map(&:strip)
     end
 
     def infer_value_type(value)

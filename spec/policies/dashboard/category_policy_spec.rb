@@ -30,12 +30,12 @@ RSpec.describe Dashboard::CategoryPolicy, type: :policy do
     it { is_expected.not_to permit_action(:destroy) }
   end
 
-  context "when user is a moderator" do
+  context "when user is a moderator on someone else's category" do
     let(:user) { moderator }
 
-    it { is_expected.to permit_action(:show) }
-    it { is_expected.to permit_action(:update) }
-    it { is_expected.to permit_action(:destroy) }
+    it { is_expected.not_to permit_action(:show) }
+    it { is_expected.not_to permit_action(:update) }
+    it { is_expected.not_to permit_action(:destroy) }
   end
 
   context "when user has no dashboard role" do
@@ -54,12 +54,13 @@ RSpec.describe Dashboard::CategoryPolicy, type: :policy do
       expect(scope).to contain_exactly(own)
     end
 
-    it "returns all categories for moderators" do
-      c1 = create(:category, user: owner)
-      c2 = create(:category, user: other_author)
+    it "limits moderators to their own categories (dashboard is per-blog)" do
+      moderator_cat = create(:category, user: moderator)
+      create(:category, user: owner)
+      create(:category, user: other_author)
 
       scope = described_class.new(moderator, Category.all).resolve
-      expect(scope).to contain_exactly(c1, c2)
+      expect(scope).to contain_exactly(moderator_cat)
     end
   end
 end

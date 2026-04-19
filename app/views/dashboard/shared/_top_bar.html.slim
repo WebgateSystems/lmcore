@@ -25,6 +25,8 @@ header.dashboard-top-bar
           li
             = link_to t("dashboard.user_menu.my_blog"), "/blogs/#{current_user.username}", class: "dropdown-item", target: "_blank"
           li
+            = link_to t("dashboard.user_menu.blog_settings"), dashboard_settings_path, class: "dropdown-item"
+          li
             = link_to t("dashboard.user_menu.profile"), edit_user_registration_path, class: "dropdown-item"
           - if current_user.admin?
             li

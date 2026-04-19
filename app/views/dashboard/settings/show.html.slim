@@ -83,18 +83,31 @@ section
 
     h3.mb-4 = t("dashboard.settings.localization")
 
-    .row
-      .col-md-6.mb-3
-        label.form-label for="settings_default_locale" = t("dashboard.settings.default_language")
-        select.form-select name="settings[default_locale]" id="settings_default_locale"
-          - %w[en pl uk ru lt de fr es].each do |loc|
-            option value=loc selected=(loc == @settings["default_locale"])
-              = loc.upcase
+    - selected_locales = Array(@settings["available_locales"])
+    - selected_locales = %w[en] if selected_locales.empty?
+    - default_locale_value = @settings["default_locale"].to_s
+    - default_locale_value = selected_locales.first unless selected_locales.include?(default_locale_value)
 
-      .col-md-6.mb-3
-        label.form-label for="settings_available_locales" = t("dashboard.settings.available_languages")
-        input.form-control type="text" name="settings[available_locales]" id="settings_available_locales" value=@settings["available_locales"] placeholder="en,pl,uk,ru"
-        small.text-body-3.text-muted = t("dashboard.settings.locale_codes_hint")
+    .mb-4 data-locale-picker=""
+      label.form-label = t("dashboard.settings.available_languages")
+      p.form-hint.mb-2 = t("dashboard.settings.available_languages_hint")
+      .locale-picker
+        - I18n.available_locales.map(&:to_s).each do |loc|
+          - checked = selected_locales.include?(loc)
+          label.locale-option class=("is-checked" if checked)
+            input.locale-option__input type="checkbox" name="settings[available_locales][]" value=loc checked=checked data-locale-picker-checkbox=""
+            span.locale-option__tag = locale_ui_tag(loc)
+            span.locale-option__name = locale_native_name(loc)
+            i.bi.bi-check-lg.locale-option__check aria-hidden="true"
+
+      .mt-4
+        label.form-label for="settings_default_locale" = t("dashboard.settings.default_language")
+        p.form-hint.mb-2 = t("dashboard.settings.default_language_hint")
+        .form-select-wrapper.locale-picker__default
+          select#settings_default_locale.form-select name="settings[default_locale]" data-locale-picker-default=""
+            - selected_locales.each do |loc|
+              option value=loc selected=(loc == default_locale_value)
+                = "#{locale_ui_tag(loc)} #{locale_native_name(loc)}"
 
     hr.my-4
 

@@ -261,6 +261,7 @@ lt:
     current_password: "Dabartinis slaptažodis"
     current_password_hint: "Reikalingas tik jei aukščiau nustatote naują slaptažodį."
     update_profile: "Atnaujinti profilį"
+    invitation_intro: "Jūs buvote pakviestas (-a) prisijungti. Registruokitės naudodami %{email} — komandos vaidmuo bus suteiktas automatiškai."
 
   # User
   users:

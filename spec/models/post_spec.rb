@@ -8,6 +8,7 @@ RSpec.describe Post do
 
     it { is_expected.to validate_uniqueness_of(:slug).scoped_to(:author_id) }
     it { is_expected.to validate_inclusion_of(:status).in_array(%w[draft pending scheduled published archived]) }
+    it { is_expected.to validate_inclusion_of(:content_format).in_array(%w[html markdown]) }
 
     it 'validates title presence for at least one locale' do
       post = build(:post, title_i18n: {})
@@ -19,6 +20,12 @@ RSpec.describe Post do
       post = build(:post, content_i18n: {})
       expect(post).not_to be_valid
       expect(post.errors[:content_i18n]).to be_present
+    end
+
+    it 'rejects an unknown content_format value' do
+      post = build(:post, content_format: 'doc')
+      expect(post).not_to be_valid
+      expect(post.errors[:content_format]).to be_present
     end
   end
 
@@ -98,6 +105,63 @@ RSpec.describe Post do
       tag = create(:tag)
       post.tags << tag
       expect(post.related_posts).not_to include(post)
+    end
+  end
+
+  describe 'content rendering callback' do
+    let(:author) { create(:user, :author) }
+
+    it 'rerenders content_i18n on save when content_source_i18n changes' do
+      post = create(:post, author: author, content_format: 'html',
+                           content_source_i18n: { 'en' => '<p>Initial</p>' })
+      expect(post.content_i18n['en']).to include('<p>Initial</p>')
+
+      post.update!(content_source_i18n: { 'en' => '<p>Updated</p>' })
+      expect(post.content_i18n['en']).to include('<p>Updated</p>')
+    end
+
+    it 'rerenders when content_format flips from html to markdown' do
+      post = create(:post, author: author, content_format: 'html',
+                           content_source_i18n: { 'en' => '# H1' })
+      expect(post.content_i18n['en']).to include('# H1') # raw, was treated as html
+
+      post.update!(content_format: 'markdown')
+      expect(post.content_i18n['en']).to include('<h1>H1</h1>')
+    end
+
+    it 'does not run the renderer when only unrelated attributes change' do
+      post = create(:post, author: author, content_format: 'html',
+                           content_source_i18n: { 'en' => '<p>x</p>' })
+      expect(Posts::ContentRenderer).not_to receive(:render)
+      post.update!(views_count: post.views_count + 1)
+    end
+  end
+
+  describe '#inline_images' do
+    let(:author) { create(:user, :author) }
+    let(:post)   { create(:post, author: author) }
+
+    it 'returns only image attachments ordered by position' do
+      doc   = create(:media_attachment, :document, user: author, attachable: post, position: 1)
+      img_b = create(:media_attachment,            user: author, attachable: post, position: 5)
+      img_a = create(:media_attachment,            user: author, attachable: post, position: 1)
+
+      expect(post.inline_images.to_a).to eq([ img_a, img_b ])
+      expect(post.inline_images).not_to include(doc)
+    end
+  end
+
+  describe '#documents' do
+    let(:author) { create(:user, :author) }
+    let(:post)   { create(:post, author: author) }
+
+    it 'returns only document attachments ordered by position' do
+      img   = create(:media_attachment, user: author, attachable: post, position: 1)
+      doc_b = create(:media_attachment, :document, user: author, attachable: post, position: 5)
+      doc_a = create(:media_attachment, :document, user: author, attachable: post, position: 1)
+
+      expect(post.documents.to_a).to eq([ doc_a, doc_b ])
+      expect(post.documents).not_to include(img)
     end
   end
 

@@ -57,6 +57,63 @@ RSpec.describe Invitation, type: :model do
       expect(invitation.status).to eq("accepted")
       expect(invitation.invitee).to eq(invitee)
     end
+
+    context "with a blog-team invitation" do
+      let(:blog_owner) { create(:user, :author) }
+      let(:invitation) do
+        create(:invitation, :for_blog,
+               inviter: blog_owner,
+               blog_owner_user: blog_owner,
+               blog_role_slug: "moderator")
+      end
+
+      it "grants the requested role on the blog owner's scope" do
+        expect { invitation.accept!(invitee) }.to change {
+          invitee.role_assignments.for_blog(blog_owner).count
+        }.from(0).to(1)
+        expect(invitee.has_role?("moderator", scope: blog_owner)).to be true
+      end
+    end
+  end
+
+  describe "blog invitation validations" do
+    let(:blog_owner) { create(:user, :author) }
+
+    it "requires blog_owner when blog_role_slug is set" do
+      inv = build(:invitation, inviter: blog_owner, blog_role_slug: "editor", blog_owner: nil)
+      expect(inv).not_to be_valid
+      expect(inv.errors[:blog_role_slug]).to be_present
+    end
+
+    it "rejects blog_role_slug outside the allowed set" do
+      inv = build(:invitation, :for_blog, inviter: blog_owner, blog_owner_user: blog_owner, blog_role_slug: "admin")
+      expect(inv).not_to be_valid
+      expect(inv.errors[:blog_role_slug]).to be_present
+    end
+
+    it "allows inviting an existing user when it is a team invitation" do
+      existing = create(:user)
+      inv = build(:invitation, :for_blog,
+                  inviter: blog_owner,
+                  blog_owner_user: blog_owner,
+                  email: existing.email,
+                  blog_role_slug: "editor")
+      expect(inv).to be_valid
+    end
+
+    it "rejects inviting an existing team member twice" do
+      existing = create(:user)
+      role = Role.find_by(slug: "editor") || create(:role, slug: "editor", priority: 40, system_role: true)
+      existing.assign_role!(role, scope: blog_owner, granted_by: blog_owner)
+
+      inv = build(:invitation, :for_blog,
+                  inviter: blog_owner,
+                  blog_owner_user: blog_owner,
+                  email: existing.email,
+                  blog_role_slug: "editor")
+      expect(inv).not_to be_valid
+      expect(inv.errors[:email]).to be_present
+    end
   end
 
   describe "#expired?" do

@@ -17,7 +17,15 @@
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.23",
     "@popperjs/core": "^2.11.8",
+    "@tiptap/core": "^2.7.4",
+    "@tiptap/extension-image": "^2.7.4",
+    "@tiptap/extension-link": "^2.7.4",
+    "@tiptap/extension-placeholder": "^2.7.4",
+    "@tiptap/starter-kit": "^2.7.4",
     "bootstrap": "^5.3.8",
-    "bootstrap-icons": "^1.13.1"
+    "bootstrap-icons": "^1.13.1",
+    "easymde": "^2.18.0",
+    "sortablejs": "^1.15.6",
+    "turndown": "^7.2.0"
   }
 }

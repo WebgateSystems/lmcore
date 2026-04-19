@@ -1,0 +1,159 @@
+// Post WYSIWYG / Markdown editor
+// Minimal styles, designed to live next to Bootstrap defaults.
+
+.post-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+    padding-bottom: 0.25rem;
+  }
+
+  &__tab {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    &.active {
+      background: var(--bs-primary-bg-subtle, #cfe2ff);
+      border-color: var(--bs-primary-border-subtle, #9ec5fe);
+      font-weight: 600;
+    }
+  }
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &.d-none { display: none; }
+  }
+
+  &__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+
+    // Reserve space so the toolbar is visible (with at least a faint border)
+    // even before JavaScript injects the action buttons. Otherwise an empty
+    // div collapses to 0px and the user thinks the editor is broken.
+    min-height: 2rem;
+  }
+
+  // The host is the slot where TipTap or EasyMDE gets mounted. Give it a
+  // visible placeholder area before JS init so the user always sees an
+  // edit surface (and can spot mount failures immediately).
+  &__host {
+    min-height: 320px;
+    border: 1px dashed var(--bs-border-color, #dee2e6);
+    border-radius: 0.375rem;
+    background: var(--bs-tertiary-bg, #f8f9fa);
+
+    // Once a real editor mounts, drop the placeholder framing so it
+    // doesn't double-up with the editor's own border.
+    &:has(.post-editor__tiptap),
+    &:has(.EasyMDEContainer),
+    &:has(.post-editor__fallback) {
+      min-height: 0;
+      border: 0;
+      background: transparent;
+    }
+  }
+
+  &__fallback {
+    width: 100%;
+    min-height: 320px;
+    font-family: var(--bs-font-monospace, monospace);
+  }
+
+  &__tiptap {
+    min-height: 320px;
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    background: var(--bs-body-bg, #fff);
+
+    &:focus-within { border-color: var(--bs-primary, #0d6efd); }
+
+    .ProseMirror { min-height: 280px; outline: none; }
+    .ProseMirror p { margin-bottom: 0.75rem; }
+
+    figure[data-attachment-id] {
+      margin: 1rem 0;
+      img { max-width: 100%; height: auto; }
+      figcaption { font-size: 0.875rem; color: var(--bs-secondary-color, #6c757d); }
+    }
+  }
+}
+
+.attachment-library {
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background: var(--bs-body-bg, #fff);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: auto 80px 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem;
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-radius: 0.375rem;
+    background: var(--bs-tertiary-bg, #f8f9fa);
+  }
+
+  &__handle { cursor: grab; color: var(--bs-secondary-color, #6c757d); }
+
+  &__thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.25rem;
+
+    &--placeholder {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bs-secondary-bg, #e9ecef);
+      font-size: 1.5rem;
+      color: var(--bs-secondary-color, #6c757d);
+    }
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.25rem;
+  }
+}

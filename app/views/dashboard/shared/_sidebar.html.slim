@@ -29,18 +29,17 @@ nav.dashboard-nav
 
   .dashboard-nav__divider
 
-  = link_to dashboard_settings_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/settings')}"
-    i.bi.bi-gear aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.settings")
+  = link_to dashboard_team_index_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/team')}"
+    i.bi.bi-people-fill aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.team")
   = link_to dashboard_partners_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/partners')}"
     i.bi.bi-people aria-hidden="true"
     span.dashboard-nav__label = t("dashboard.navigation.partners")
 
-  - if current_user.moderator? || current_user.admin?
-    .dashboard-nav__divider
-    = link_to dashboard_comments_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/comments')}"
-      i.bi.bi-chat-dots aria-hidden="true"
-      span.dashboard-nav__label = t("dashboard.navigation.comments")
-    = link_to dashboard_audit_logs_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/audit_logs')}"
-      i.bi.bi-clock-history aria-hidden="true"
-      span.dashboard-nav__label = t("dashboard.navigation.audit_log")
+  .dashboard-nav__divider
+  = link_to dashboard_comments_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/comments')}"
+    i.bi.bi-chat-dots aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.comments")
+  = link_to dashboard_audit_logs_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/audit_logs')}"
+    i.bi.bi-clock-history aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.audit_log")

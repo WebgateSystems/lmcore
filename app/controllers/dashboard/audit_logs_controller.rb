@@ -2,8 +2,6 @@
 
 module Dashboard
   class AuditLogsController < BaseController
-    before_action :require_moderator!
-
     def index
       authorize AuditLog, policy_class: Dashboard::AuditLogPolicy
       logs = policy_scope(AuditLog, policy_scope_class: Dashboard::AuditLogPolicy::Scope)
@@ -13,7 +11,7 @@ module Dashboard
     end
 
     def show
-      @audit_log = AuditLog.find(params[:id])
+      @audit_log = policy_scope(AuditLog, policy_scope_class: Dashboard::AuditLogPolicy::Scope).find(params[:id])
       authorize @audit_log, policy_class: Dashboard::AuditLogPolicy
     end
   end

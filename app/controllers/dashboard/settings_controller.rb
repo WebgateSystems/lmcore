@@ -53,16 +53,24 @@ module Dashboard
     def save_site_settings!
       return unless params[:settings].present?
 
-      settings_params.each do |key, value|
+      processed = preprocess_settings_params(settings_params.to_h)
+
+      processed.each do |key, value|
         next unless EDITABLE_KEYS.include?(key)
 
         setting = SiteSetting.find_or_initialize_by(user: current_user, key: key)
         if TRANSLATABLE_KEYS.include?(key)
           setting.value = { "data" => merge_translation(setting, value) }
           setting.value_type = "json"
+        elsif key == "available_locales"
+          # Always persist as JSON array -- not as String#to_s'd Array, which
+          # is what produced the broken `"[\"en\", \"pl\"]"` blobs we saw in
+          # the database before this fix.
+          setting.value = { "data" => Array(value) }
+          setting.value_type = "json"
         else
           setting.value = { "data" => normalize_setting_value(key, value) }
-          setting.value_type ||= "string"
+          setting.value_type = "string"
         end
         setting.category ||= "general"
         setting.save!
@@ -93,7 +101,47 @@ module Dashboard
     end
 
     def settings_params
-      params.require(:settings).permit(*EDITABLE_KEYS)
+      permitted = EDITABLE_KEYS.map { |k| k == "available_locales" ? { available_locales: [] } : k }
+      params.require(:settings).permit(*permitted)
+    end
+
+    # Sanitises form payload before persistence:
+    #   * `available_locales` becomes a clean Array of canonical locale codes
+    #     (only when the form actually submitted that field, so partial PATCHes
+    #     don't accidentally wipe the user's locale list).
+    #   * `default_locale` is forced to fall inside the effective Array
+    #     (otherwise the UI dropdown could end up pointing at a language the
+    #     blog no longer publishes in).
+    def preprocess_settings_params(attrs)
+      result = attrs.dup
+
+      if result.key?("available_locales")
+        result["available_locales"] = sanitize_locale_list(result["available_locales"])
+      end
+
+      if result.key?("default_locale")
+        effective_locales = result["available_locales"] || SiteSetting.blog_available_locale_codes_for(current_user)
+        candidate = LocaleTags.canonical_locale_code(result["default_locale"]).to_s
+        result["default_locale"] = effective_locales.include?(candidate) ? candidate : (effective_locales.first || "en")
+      end
+
+      result
+    end
+
+    def sanitize_locale_list(value)
+      raw = case value
+      when Array  then value
+      when String then value.split(",")
+      else []
+      end
+
+      platform = I18n.available_locales.map(&:to_s)
+      raw.map { |code| LocaleTags.canonical_locale_code(code) }
+         .compact
+         .map(&:to_s)
+         .reject(&:blank?)
+         .select { |code| platform.include?(code) }
+         .uniq
     end
 
     def merge_translation(setting, incoming_value)
@@ -117,15 +165,14 @@ module Dashboard
         value.values.compact.find(&:present?).to_s
     end
 
+    # Returns the available locales as an Array<String> for the form, no
+    # matter how the value was historically stored (Array, comma string, or
+    # JSON-encoded Array via Array#to_s).
     def normalize_available_locales(value)
-      return value.join(",") if value.is_a?(Array)
-
-      value.to_s
+      SiteSetting.parse_blog_available_locales(value)
     end
 
-    def normalize_setting_value(key, value)
-      return value.to_s.split(",").map(&:strip).reject(&:blank?) if key == "available_locales"
-
+    def normalize_setting_value(_key, value)
       value
     end
   end

@@ -1,7 +1,8 @@
+- locales = dashboard_available_locales.presence || I18n.available_locales.map(&:to_s)
+- locales = locales.map(&:to_s)
+- active_locale = locales.include?(I18n.locale.to_s) ? I18n.locale.to_s : locales.first
+
 = form_with(model: [:dashboard, post], class: "dashboard-form") do |f|
-  - current_locale = I18n.locale.to_s
-  - label_locale = (LocaleTags.canonical_locale_code(current_locale).presence || current_locale).to_sym
-  - label_i18n = { locale: label_locale, lang: locale_ui_tag(current_locale) }
   - if post.errors.any?
     .alert.alert-danger
       ul.mb-0
@@ -10,46 +11,117 @@
 
   = render "dashboard/shared/i18n_legend"
 
-  .mb-3
-    = label_tag "post_title_i18n_#{current_locale}", t("dashboard.posts.form.title", **label_i18n), class: "form-label form-label--translatable"
-    = text_field_tag "post[title_i18n][#{current_locale}]", post.title_i18n&.dig(current_locale), class: "form-control", placeholder: t("dashboard.posts.form.title_placeholder")
-
-  .mb-3
-    = label_tag "post_subtitle_i18n_#{current_locale}", t("dashboard.posts.form.subtitle", **label_i18n), class: "form-label form-label--translatable"
-    = text_field_tag "post[subtitle_i18n][#{current_locale}]", post.subtitle_i18n&.dig(current_locale), class: "form-control", placeholder: t("dashboard.posts.form.subtitle_placeholder")
-
-  .mb-3
-    = f.label :slug, class: "form-label"
-    = f.text_field :slug, class: "form-control", placeholder: t("dashboard.posts.form.slug_placeholder")
-
-  .mb-3
-    = label_tag "post_lead_i18n_#{current_locale}", t("dashboard.posts.form.lead", **label_i18n), class: "form-label form-label--translatable"
-    = text_area_tag "post[lead_i18n][#{current_locale}]", post.lead_i18n&.dig(current_locale), class: "form-control", rows: 3, placeholder: t("dashboard.posts.form.lead_placeholder")
-
-  .mb-3
-    = label_tag "post_content_i18n_#{current_locale}", t("dashboard.posts.form.content", **label_i18n), class: "form-label form-label--translatable"
-    = text_area_tag "post[content_i18n][#{current_locale}]", post.content_i18n&.dig(current_locale), class: "form-control", rows: 15, placeholder: t("dashboard.posts.form.content_placeholder")
-
   .row
-    .col-md-6.mb-3
-      = f.label :category_id, t("dashboard.posts.form.category"), class: "form-label"
-      = f.collection_select :category_id, @categories, :id, :name, { include_blank: t("dashboard.posts.form.no_category") }, class: "form-select"
-    .col-md-6.mb-3
-      = f.label :status, t("dashboard.posts.form.status"), class: "form-label"
-      = f.select :status, Post.aasm.states.map { |s| [s.name.to_s.humanize, s.name] }, {}, class: "form-select"
+    .col-lg-8
+      .post-editor data-post-editor="" data-format-input-id="post_content_format"
+        .post-editor__tabs role="tablist"
+          - locales.each do |loc|
+            button.post-editor__tab type="button" data-locale-tab=loc class=(loc == active_locale ? "active" : "")
+              = locale_native_name(loc)
+              span.text-muted.ms-1.small
+                = "(#{locale_ui_tag(loc)})"
 
-  .row
-    .col-md-6.mb-3
-      = label_tag "post_keywords_i18n_#{current_locale}", t("dashboard.posts.form.seo_keywords", **label_i18n), class: "form-label form-label--translatable"
-      = text_field_tag "post[keywords_i18n][#{current_locale}]", post.keywords_i18n&.dig(current_locale), class: "form-control", placeholder: t("dashboard.posts.form.seo_keywords_placeholder")
-    .col-md-6.mb-3
-      = label_tag "post_meta_description_i18n_#{current_locale}", t("dashboard.posts.form.seo_description", **label_i18n), class: "form-label form-label--translatable"
-      = text_field_tag "post[meta_description_i18n][#{current_locale}]", post.meta_description_i18n&.dig(current_locale), class: "form-control", placeholder: t("dashboard.posts.form.seo_description_placeholder")
+        - locales.each do |loc|
+          - panel_classes = ["post-editor__panel"]
+          - panel_classes << "d-none" unless loc == active_locale
+          .post-editor__panel.dashboard-form__panel class=panel_classes.join(" ") data-locale-panel=loc
+            - lang_tag = locale_ui_tag(loc)
+            .mb-3
+              = label_tag "post_title_i18n_#{loc}", t("dashboard.posts.form.title", default: "Title (%{lang})", lang: lang_tag), class: "form-label form-label--translatable"
+              = text_field_tag "post[title_i18n][#{loc}]", post.title_i18n&.dig(loc), class: "form-control", placeholder: t("dashboard.posts.form.title_placeholder", default: "")
 
-  .mb-3
-    = f.label :published_at, t("dashboard.posts.form.published_at"), class: "form-label"
-    = f.datetime_local_field :published_at, class: "form-control"
+            .mb-3
+              = label_tag "post_subtitle_i18n_#{loc}", t("dashboard.posts.form.subtitle", default: "Subtitle (%{lang})", lang: lang_tag), class: "form-label form-label--translatable"
+              = text_field_tag "post[subtitle_i18n][#{loc}]", post.subtitle_i18n&.dig(loc), class: "form-control", placeholder: t("dashboard.posts.form.subtitle_placeholder", default: "")
 
-  .dashboard-actions
+            .mb-3
+              = label_tag "post_lead_i18n_#{loc}", t("dashboard.posts.form.lead", default: "Lead (%{lang})", lang: lang_tag), class: "form-label form-label--translatable"
+              = text_area_tag "post[lead_i18n][#{loc}]", post.lead_i18n&.dig(loc), class: "form-control", rows: 3, placeholder: t("dashboard.posts.form.lead_placeholder", default: "")
+
+            .mb-3
+              = label_tag "post_content_source_i18n_#{loc}", t("dashboard.posts.form.content", default: "Content (%{lang})", lang: lang_tag), class: "form-label form-label--translatable"
+              .post-editor__toolbar data-post-editor-toolbar="" data-insert-image-label=t("dashboard.posts.form.insert_image", default: "Insert image")
+              .post-editor__host data-post-editor-host="" data-placeholder=t("dashboard.posts.form.content_placeholder", default: "")
+              = text_area_tag "post[content_source_i18n][#{loc}]", post.content_source_i18n&.dig(loc), class: "d-none", data: { post_editor_source: true }
+
+            .row
+              .col-md-6.mb-3
+                = label_tag "post_keywords_i18n_#{loc}", t("dashboard.posts.form.seo_keywords", default: "SEO keywords (%{lang})", lang: lang_tag), class: "form-label form-label--translatable"
+                = text_field_tag "post[keywords_i18n][#{loc}]", post.keywords_i18n&.dig(loc), class: "form-control", placeholder: t("dashboard.posts.form.seo_keywords_placeholder", default: "")
+              .col-md-6.mb-3
+                = label_tag "post_meta_description_i18n_#{loc}", t("dashboard.posts.form.seo_description", default: "SEO description (%{lang})", lang: lang_tag), class: "form-label form-label--translatable"
+                = text_field_tag "post[meta_description_i18n][#{loc}]", post.meta_description_i18n&.dig(loc), class: "form-control", placeholder: t("dashboard.posts.form.seo_description_placeholder", default: "")
+
+    .col-lg-4
+      .card.mb-3
+        .card-header
+          = t("dashboard.posts.form.publishing", default: "Publishing")
+        .card-body
+          .mb-3
+            = f.label :slug, class: "form-label"
+            = f.text_field :slug, class: "form-control", placeholder: t("dashboard.posts.form.slug_placeholder")
+          .mb-3
+            = f.label :status, t("dashboard.posts.form.status"), class: "form-label"
+            = f.select :status, Post.aasm.states.map { |s| [s.name.to_s.humanize, s.name] }, {}, class: "form-select"
+          .mb-3
+            = f.label :category_id, t("dashboard.posts.form.category"), class: "form-label"
+            = f.collection_select :category_id, @categories, :id, :name, { include_blank: t("dashboard.posts.form.no_category") }, class: "form-select"
+          .mb-3
+            = f.label :published_at, t("dashboard.posts.form.published_at"), class: "form-label"
+            = f.datetime_local_field :published_at, class: "form-control"
+          .form-check.mb-2
+            = f.check_box :featured, class: "form-check-input"
+            = f.label :featured, t("dashboard.posts.form.featured", default: "Featured"), class: "form-check-label"
+          .form-check.mb-2
+            = f.check_box :comments_enabled, class: "form-check-input"
+            = f.label :comments_enabled, t("dashboard.posts.form.comments_enabled", default: "Allow comments"), class: "form-check-label"
+
+      .card.mb-3
+        .card-header
+          = t("dashboard.posts.form.content_format", default: "Content format")
+        .card-body
+          = f.label :content_format, class: "form-label"
+          = f.select :content_format,
+            [["HTML (WYSIWYG)", "html"], ["Markdown", "markdown"]],
+            {},
+            class: "form-select",
+            id: "post_content_format",
+            data: { switch_warning: t("dashboard.posts.form.switch_format_warning",
+              default: "Switching format will convert your content. Some formatting may be lost. Continue?") }
+          p.form-text.small.mt-2 = t("dashboard.posts.form.content_format_hint",
+            default: "Choose how you write the source. The platform always renders sanitized HTML on the public blog.")
+
+      .card.mb-3
+        .card-header
+          = t("dashboard.posts.form.featured_image", default: "Featured image")
+        .card-body
+          - if post.featured_image.present?
+            = image_tag post.featured_image.url, class: "img-fluid mb-2", style: "max-height:160px"
+          = f.file_field :featured_image, class: "form-control", accept: "image/*"
+
+      .card.mb-3 data-attachment-library="" data-attachment-type="image" data-active-locale=active_locale data-attachable-type=("Post") data-attachable-id=(post.persisted? ? post.id : nil)
+        .card-header.attachment-library__header
+          span = t("dashboard.posts.form.inline_images", default: "Inline images")
+          button.btn.btn-sm.btn-outline-primary type="button" data-library-upload-button=""
+            = t("dashboard.posts.form.upload_image", default: "Upload")
+        .card-body
+          input.d-none type="file" multiple="multiple" accept="image/*" data-library-upload-input=""
+          ul.attachment-library__list data-library-list=""
+          p.form-text.small = t("dashboard.posts.form.inline_images_hint", default: "Drag to reorder. Click 'Insert' to put a placeholder into the editor.")
+
+      .card.mb-3 data-attachment-library="" data-attachment-type="document" data-active-locale=active_locale data-attachable-type=("Post") data-attachable-id=(post.persisted? ? post.id : nil)
+        .card-header.attachment-library__header
+          span = t("dashboard.posts.form.documents", default: "Documents")
+          button.btn.btn-sm.btn-outline-primary type="button" data-library-upload-button=""
+            = t("dashboard.posts.form.upload_document", default: "Upload")
+        .card-body
+          input.d-none type="file" multiple="multiple" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" data-library-upload-input=""
+          ul.attachment-library__list data-library-list=""
+
+  / Hidden inputs filled by attachment_library.js when uploading orphan files
+  / before the post is created.
+  div data-pending-attachment-ids=""
+
+  .dashboard-actions.mt-3
     = f.submit post.persisted? ? t("dashboard.posts.form.update") : t("dashboard.posts.form.create"), class: "btn-dashboard-primary"
     = link_to t("dashboard.common.cancel"), dashboard_posts_path, class: "btn-dashboard-secondary"

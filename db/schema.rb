@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_220000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_17_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -176,6 +176,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_220000) do
 
   create_table "invitations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "accepted_at"
+    t.uuid "blog_owner_id"
+    t.string "blog_role_slug"
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.datetime "expires_at", null: false
@@ -186,6 +188,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_220000) do
     t.string "status", default: "pending", null: false
     t.string "token", null: false
     t.datetime "updated_at", null: false
+    t.index ["blog_owner_id", "status"], name: "index_invitations_on_blog_owner_id_and_status"
+    t.index ["blog_owner_id"], name: "index_invitations_on_blog_owner_id"
     t.index ["email"], name: "index_invitations_on_email"
     t.index ["expires_at"], name: "index_invitations_on_expires_at"
     t.index ["invitee_id"], name: "index_invitations_on_invitee_id"
@@ -217,6 +221,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_220000) do
     t.uuid "user_id", null: false
     t.index ["attachable_type", "attachable_id"], name: "index_media_attachments_on_attachable_type_and_attachable_id"
     t.index ["attachment_type"], name: "index_media_attachments_on_attachment_type"
+    t.index ["created_at"], name: "idx_media_attachments_orphans", where: "(attachable_id IS NULL)"
     t.index ["position"], name: "index_media_attachments_on_position"
     t.index ["user_id"], name: "index_media_attachments_on_user_id"
   end
@@ -355,7 +360,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_220000) do
     t.uuid "category_id"
     t.integer "comments_count", default: 0, null: false
     t.boolean "comments_enabled", default: true, null: false
+    t.string "content_format", default: "html", null: false
     t.jsonb "content_i18n", default: {}, null: false
+    t.jsonb "content_source_i18n", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "discarded_at"
     t.datetime "external_date"

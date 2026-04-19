@@ -2,7 +2,17 @@
 
 h2.auth-title= t('auth.sign_up')
 
+- invitation_token = params[:invitation_token].presence
+
+- if @pending_invitation
+  .auth-alert.auth-alert-info
+    i.fa-solid.fa-envelope-open-text
+    span = t('auth.invitation_intro', email: @pending_invitation.email)
+
 = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'auth-form' }) do |f|
+  - if invitation_token
+    = hidden_field_tag :invitation_token, invitation_token
+
   - if resource.errors.any?
     .auth-alert.auth-alert-error
       i.fa-solid.fa-circle-exclamation

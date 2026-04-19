@@ -27,10 +27,12 @@ RSpec.describe Dashboard::PhotoPolicy, type: :policy do
     it { is_expected.not_to permit_action(:update) }
   end
 
-  context "when user is a moderator" do
+  context "when user is a moderator on someone else's photo" do
     let(:user) { moderator }
 
-    it { is_expected.to permit_action(:update) }
+    it { is_expected.not_to permit_action(:show) }
+    it { is_expected.not_to permit_action(:update) }
+    it { is_expected.not_to permit_action(:destroy) }
   end
 
   describe Dashboard::PhotoPolicy::Scope do
@@ -40,6 +42,15 @@ RSpec.describe Dashboard::PhotoPolicy, type: :policy do
 
       scope = described_class.new(owner, Photo.all).resolve
       expect(scope).to contain_exactly(own)
+    end
+
+    it "limits moderators to their own photos (dashboard is per-blog)" do
+      moderator_photo = create(:photo, author: moderator)
+      create(:photo, author: owner)
+      create(:photo, author: other_author)
+
+      scope = described_class.new(moderator, Photo.all).resolve
+      expect(scope).to contain_exactly(moderator_photo)
     end
   end
 end

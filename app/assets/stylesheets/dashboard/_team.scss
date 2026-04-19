@@ -1,0 +1,208 @@
+// Team management page (/dashboard/team)
+//
+// Bootstrap's `.form-select` paints a native chevron via background-image which
+// doesn't react to our dark theme. We override it with a CSS-driven arrow so
+// the control matches the dashboard look in both themes.
+
+.dashboard-form {
+	.form-select-wrapper {
+		position: relative;
+		display: inline-block;
+		width: 100%;
+
+		&::after {
+			content: "";
+			position: absolute;
+			top: 50%;
+			right: 14px;
+			width: 10px;
+			height: 10px;
+			pointer-events: none;
+			border-right: 2px solid var(--content-secondary);
+			border-bottom: 2px solid var(--content-secondary);
+			transform: translateY(-75%) rotate(45deg);
+		}
+
+		&--sm {
+			max-width: 220px;
+
+			&::after {
+				width: 8px;
+				height: 8px;
+				right: 10px;
+			}
+		}
+	}
+
+	.form-select {
+		appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		background-image: none !important;
+		padding-right: 36px;
+		font-size: 14px;
+		font-weight: 500;
+		cursor: pointer;
+		width: 100%;
+
+		option {
+			background: var(--surface-primary);
+			color: var(--content-primary);
+			padding: 8px;
+		}
+
+		&:hover {
+			border-color: var(--border-focused);
+		}
+	}
+
+	.form-select-sm {
+		padding: 6px 32px 6px 12px;
+		font-size: 13px;
+	}
+}
+
+.btn-dashboard-secondary--sm {
+	padding: 6px 14px;
+	font-size: 13px;
+}
+
+.dashboard-team {
+	header h2 {
+		font-size: 24px;
+		margin: 0 0 6px;
+	}
+}
+
+.team-invite-form {
+	.team-invite-form__row {
+		display: grid;
+		grid-template-columns: minmax(220px, 1.6fr) minmax(180px, 1fr) auto;
+		gap: 16px;
+		align-items: end;
+
+		@media (max-width: 720px) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.team-invite-form__field--submit {
+		.btn-dashboard-primary {
+			min-width: 140px;
+			width: 100%;
+		}
+	}
+}
+
+.team-role-form {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+
+	.form-select-wrapper {
+		flex: 1 1 auto;
+	}
+}
+
+// Settings: language picker
+//
+// Renders an array of selectable, native-named locale cards instead of the
+// raw CSV input the page used to ship with. Default-language picker below
+// reuses the team-page `.form-select-wrapper` chevron treatment.
+.locale-picker {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 12px;
+	margin-top: 8px;
+}
+
+.locale-option {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 14px;
+	border: 1px solid var(--border-primary);
+	border-radius: 12px;
+	background: var(--surface-primary);
+	cursor: pointer;
+	transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+
+	&:hover { border-color: var(--border-focused); }
+
+	&.is-checked {
+		border-color: var(--button-primary);
+		background: var(--surface-accent-soft, rgba(20, 184, 166, 0.08));
+		box-shadow: 0 0 0 1px var(--button-primary) inset;
+
+		.locale-option__check { opacity: 1; }
+	}
+}
+
+.locale-option__input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.locale-option__tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 32px;
+	padding: 2px 8px;
+	border-radius: 6px;
+	background: var(--surface-secondary);
+	color: var(--content-primary);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+}
+
+.locale-option__name {
+	flex: 1;
+	font-size: 14px;
+	color: var(--content-primary);
+}
+
+.locale-option__check {
+	margin-left: auto;
+	color: var(--button-primary);
+	font-size: 18px;
+	opacity: 0;
+	transition: opacity 0.15s ease;
+}
+
+.locale-picker__default {
+	max-width: 320px;
+}
+
+.team-role-legend {
+	list-style: none;
+	margin: 16px 0 0;
+	padding: 16px;
+	border: 1px solid var(--border-primary);
+	border-radius: 12px;
+	background: var(--surface-secondary);
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 12px;
+
+	li {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	&__name {
+		font-weight: 600;
+		color: var(--content-primary);
+		font-size: 14px;
+	}
+
+	&__desc {
+		font-size: 13px;
+		color: var(--content-secondary);
+		line-height: 1.4;
+	}
+}

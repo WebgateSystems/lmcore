@@ -13,19 +13,12 @@ section
             th = t("dashboard.common.table.name")
             th = t("dashboard.common.table.slug")
             th = t("dashboard.common.table.posts")
-            th.text-end = t("dashboard.common.table.actions")
         tbody
           - @tags.each do |tag|
             tr
-              td = link_to tag.name, edit_dashboard_tag_path(tag), class: "text-decoration-none fw-medium"
+              td.fw-medium = tag.name
               td.text-body-3 = tag.slug
-              td = tag.posts.count
-              td.text-end
-                .dashboard-actions.justify-content-end
-                  = link_to edit_dashboard_tag_path(tag), class: "icon-pill", title: t("dashboard.common.edit") do
-                    i.bi.bi-pencil
-                  = button_to dashboard_tag_path(tag), method: :delete, class: "icon-pill text-danger", title: t("dashboard.common.delete"), data: { turbo_confirm: t("dashboard.common.confirm_delete") } do
-                    i.bi.bi-trash
+              td = tag.posts.where(author_id: current_user.id).count
     - if @pagy.pages > 1
       .d-flex.justify-content-center.mt-4
         == pagy_nav(@pagy)

@@ -10,7 +10,11 @@ class Post < ApplicationRecord
   include Reactable
 
   # Translations
-  translates :title, :subtitle, :lead, :content, :keywords, :meta_description
+  # NOTE: `content_i18n` holds the rendered+sanitized HTML ready for Liquid templates.
+  # `content_source_i18n` holds the original input (HTML or Markdown depending on
+  # `content_format`). The renderer is run in `before_save` so the public blog never
+  # has to call it on read.
+  translates :title, :subtitle, :lead, :content, :content_source, :keywords, :meta_description
 
   # Slug configuration
   sluggable_source :title
@@ -32,6 +36,7 @@ class Post < ApplicationRecord
   # Validations
   validates :slug, presence: true, uniqueness: { scope: :author_id }
   validates :status, presence: true, inclusion: { in: %w[draft pending scheduled published archived] }
+  validates :content_format, inclusion: { in: %w[html markdown] }, allow_nil: false
   validate :title_presence_for_locale
   validate :content_presence_for_locale
 
@@ -43,6 +48,7 @@ class Post < ApplicationRecord
   scope :for_feed, -> { published.visible.includes(:author, :category, :tags).recent }
 
   # Callbacks
+  before_save :rerender_content_per_locale!, if: :should_rerender_content?
   after_save :update_author_posts_count, if: :saved_change_to_status?
 
   # Search (pg_search)
@@ -89,6 +95,18 @@ class Post < ApplicationRecord
                           .exists?
   end
 
+  # Inline images rendered inside the post body (placeholders
+  # `<figure data-attachment-id="UUID">` resolved by Posts::ContentRenderer).
+  def inline_images
+    media_attachments.where(attachment_type: "image").order(:position)
+  end
+
+  # Files attached to the post, displayed under the body as a download list
+  # (PDFs etc.).
+  def documents
+    media_attachments.where(attachment_type: "document").order(:position)
+  end
+
   private
 
   def title_presence_for_locale
@@ -98,7 +116,9 @@ class Post < ApplicationRecord
   end
 
   def content_presence_for_locale
-    return if content_i18n.present? && content_i18n.values.any?(&:present?)
+    has_rendered = content_i18n.is_a?(Hash) && content_i18n.values.any?(&:present?)
+    has_source   = content_source_i18n.is_a?(Hash) && content_source_i18n.values.any?(&:present?)
+    return if has_rendered || has_source
 
     errors.add(:content_i18n, "must have at least one translation")
   end
@@ -112,5 +132,20 @@ class Post < ApplicationRecord
     return if previous_status == "published"
 
     author.increment!(:posts_this_month)
+  end
+
+  def should_rerender_content?
+    return true if new_record?
+
+    will_save_change_to_attribute?(:content_source_i18n) ||
+      will_save_change_to_attribute?(:content_format)
+  end
+
+  def rerender_content_per_locale!
+    sources = content_source_i18n.is_a?(Hash) ? content_source_i18n : {}
+    rendered = sources.each_with_object({}) do |(locale, source), acc|
+      acc[locale.to_s] = Posts::ContentRenderer.render(self, locale, source: source.to_s)
+    end
+    self.content_i18n = rendered if rendered.any?
   end
 end

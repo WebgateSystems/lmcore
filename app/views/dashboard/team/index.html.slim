@@ -1,0 +1,87 @@
+- content_for(:page_title) { t("dashboard.page_titles.team") }
+
+section.dashboard-team
+  header.mb-4
+    h2 = t("dashboard.team.heading")
+    p.text-body-3 = t("dashboard.team.intro")
+
+  .panel.mb-4
+    .panel__header
+      h3.panel__title = t("dashboard.team.invite.heading")
+    .panel__body
+      = form_with url: dashboard_team_index_path, method: :post, local: true, class: "dashboard-form team-invite-form" do
+        .team-invite-form__row
+          .team-invite-form__field.team-invite-form__field--email
+            = label_tag "team_email", t("dashboard.team.invite.email_label"), class: "form-label"
+            = email_field_tag "team[email]", nil, required: true, class: "form-control", placeholder: t("dashboard.team.invite.email_placeholder")
+          .team-invite-form__field.team-invite-form__field--role
+            = label_tag "team_role_slug", t("dashboard.team.invite.role_label"), class: "form-label"
+            .form-select-wrapper
+              = select_tag "team[role_slug]", options_from_collection_for_select(@available_roles, :slug, :name, "moderator"), class: "form-select"
+          .team-invite-form__field.team-invite-form__field--submit
+            = submit_tag t("dashboard.team.invite.submit"), class: "btn-dashboard-primary"
+        p.form-hint.mt-2 = t("dashboard.team.invite.hint")
+        ul.team-role-legend
+          - @available_roles.each do |role|
+            li
+              span.team-role-legend__name = role.name
+              span.team-role-legend__desc = t("dashboard.team.role_descriptions.#{role.slug}", default: "")
+
+  - if @assignments.any?
+    .panel.mb-4
+      .panel__header
+        h3.panel__title = t("dashboard.team.members.heading", count: @assignments.size)
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.team.members.user")
+            th = t("dashboard.team.members.email")
+            th = t("dashboard.team.members.role")
+            th = t("dashboard.team.members.granted")
+            th.text-end = t("dashboard.common.table.actions")
+        tbody
+          - @assignments.each do |assignment|
+            tr
+              td.fw-medium = assignment.user.full_name
+              td.text-body-3 = assignment.user.email
+              td
+                = form_with url: update_role_dashboard_team_path(assignment), method: :patch, local: true, class: "dashboard-form team-role-form" do
+                  .form-select-wrapper.form-select-wrapper--sm
+                    = select_tag "role_assignment[role_slug]", options_from_collection_for_select(@available_roles, :slug, :name, assignment.role.slug), class: "form-select form-select-sm"
+                  button.btn-dashboard-secondary.btn-dashboard-secondary--sm type="submit"
+                    = t("dashboard.common.save")
+              td.text-body-3 = l(assignment.created_at.to_date, format: :default)
+              td.text-end
+                - if assignment.user_id == current_user.id
+                  span.text-body-3 = t("dashboard.team.members.you")
+                - else
+                  = button_to dashboard_team_path(assignment), method: :delete, class: "icon-pill text-danger", title: t("dashboard.team.members.remove"), data: { turbo_confirm: t("dashboard.team.members.confirm_remove") } do
+                    i.bi.bi-trash
+  - else
+    .dashboard-empty.mb-4
+      i.bi.bi-people
+      p = t("dashboard.team.members.empty")
+
+  - if @pending_invitations.any?
+    .panel
+      .panel__header
+        h3.panel__title = t("dashboard.team.invitations.heading", count: @pending_invitations.size)
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.team.invitations.email")
+            th = t("dashboard.team.invitations.role")
+            th = t("dashboard.team.invitations.expires_at")
+            th.text-end = t("dashboard.common.table.actions")
+        tbody
+          - @pending_invitations.each do |inv|
+            tr
+              td.fw-medium = inv.email
+              td = (Role.find_by(slug: inv.blog_role_slug)&.name || inv.blog_role_slug.to_s.titleize)
+              td.text-body-3 = l(inv.expires_at.to_date, format: :default)
+              td.text-end
+                .dashboard-actions.justify-content-end
+                  = button_to resend_dashboard_team_invitation_path(inv), method: :post, class: "icon-pill", title: t("dashboard.team.invitations.resend") do
+                    i.bi.bi-arrow-clockwise
+                  = button_to dashboard_team_invitation_path(inv), method: :delete, class: "icon-pill text-danger", title: t("dashboard.team.invitations.cancel"), data: { turbo_confirm: t("dashboard.team.invitations.confirm_cancel") } do
+                    i.bi.bi-x-lg

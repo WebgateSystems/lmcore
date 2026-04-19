@@ -19,6 +19,9 @@
 #   cleanup_old_audit_logs:
 #     cron: '0 2 * * 0'
 #     class: CleanupAuditLogsWorker
+#   cleanup_orphan_media_attachments:
+#     cron: '15 4 * * *'
+#     class: CleanupOrphanMediaAttachmentsWorker
 #   sync_ayder_youtube_videos:
 #     cron: '0 */6 * * *'
 #     class: SyncYoutubeChannelVideosWorker

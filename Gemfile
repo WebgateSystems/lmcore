@@ -38,6 +38,9 @@ gem "mini_magick"
 gem "slim-rails"
 gem "liquid"
 
+# Markdown rendering for post content
+gem "redcarpet", "~> 3.6"
+
 # I18n & Translations
 gem "mobility", "~> 1.3"
 gem "mobility-ransack"

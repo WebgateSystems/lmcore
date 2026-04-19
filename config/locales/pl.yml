@@ -261,6 +261,7 @@ pl:
     current_password: "Aktualne hasło"
     current_password_hint: "Wymagane tylko przy ustawianiu nowego hasła powyżej."
     update_profile: "Zapisz profil"
+    invitation_intro: "Zaproszono Cię do współpracy. Zarejestruj się używając adresu %{email} — Twoja rola w zespole zostanie nadana automatycznie."
 
   # User
   users:

@@ -60,12 +60,37 @@ RSpec.describe "Dashboard::Posts", type: :request do
     it "creates a post owned by the signed-in author" do
       expect { post dashboard_posts_path, params: valid_params }.to change(Post, :count).by(1)
       expect(Post.last.author).to eq(author)
-      expect(response).to redirect_to(dashboard_posts_path)
+      expect(response).to redirect_to(edit_dashboard_post_path(Post.last))
     end
 
     it "re-renders the form when invalid" do
       post dashboard_posts_path, params: { post: { title_i18n: {}, content_i18n: {}, status: "draft" } }
       expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it "stores content_source_i18n and rerenders content_i18n via callback" do
+      params = valid_params.deep_merge(post: {
+        content_format: "markdown",
+        content_source_i18n: { "en" => "# Hello" }
+      })
+      expect { post dashboard_posts_path, params: params }.to change(Post, :count).by(1)
+      created = Post.last
+      expect(created.content_format).to eq("markdown")
+      expect(created.content_source_i18n["en"]).to eq("# Hello")
+      expect(created.content_i18n["en"]).to include("<h1>Hello</h1>")
+    end
+
+    it "links pending orphan attachments to the new post" do
+      orphan = create(:media_attachment, :orphan, user: author)
+      foreign_orphan = create(:media_attachment, :orphan, user: other_author)
+      params = valid_params.merge(pending_attachment_ids: [ orphan.id, foreign_orphan.id ])
+
+      post dashboard_posts_path, params: params
+
+      created = Post.last
+      expect(orphan.reload.attachable).to eq(created)
+      # foreign orphan should not be hijacked
+      expect(foreign_orphan.reload.attachable).to be_nil
     end
   end
 
@@ -89,8 +114,24 @@ RSpec.describe "Dashboard::Posts", type: :request do
 
     it "updates the post" do
       patch dashboard_post_path(post_record), params: { post: { title_i18n: { "en" => "Changed" } } }
-      expect(response).to redirect_to(dashboard_posts_path)
+      expect(response).to redirect_to(edit_dashboard_post_path(post_record))
       expect(post_record.reload.title_i18n["en"]).to eq("Changed")
+    end
+
+    it "rerenders content_i18n when content_source_i18n changes" do
+      patch dashboard_post_path(post_record), params: {
+        post: { content_format: "html", content_source_i18n: { "en" => "<p>NEW</p>" } }
+      }
+      expect(post_record.reload.content_i18n["en"]).to include("<p>NEW</p>")
+    end
+
+    it "links pending orphan attachments on update" do
+      orphan = create(:media_attachment, :orphan, user: author)
+      patch dashboard_post_path(post_record), params: {
+        post: { title_i18n: { "en" => "X" } },
+        pending_attachment_ids: [ orphan.id ]
+      }
+      expect(orphan.reload.attachable).to eq(post_record)
     end
   end
 

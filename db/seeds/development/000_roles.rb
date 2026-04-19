@@ -33,7 +33,7 @@ log('Creating Roles...')
     name: 'Editor',
     slug: 'editor',
     name_i18n: { 'en' => 'Editor', 'pl' => 'Redaktor', 'uk' => 'Редактор', 'lt' => 'Redaktorius' },
-    permissions: %w[create_content edit_content delete_content manage_categories manage_tags],
+    permissions: %w[edit_content manage_categories manage_tags],
     priority: 40,
     system_role: true
   },
@@ -49,8 +49,8 @@ log('Creating Roles...')
     name: 'Contributor',
     slug: 'contributor',
     name_i18n: { 'en' => 'Contributor', 'pl' => 'Współtwórca', 'uk' => 'Співавтор', 'lt' => 'Bendradarbis' },
-    permissions: %w[create_content edit_own_content],
-    priority: 20,
+    permissions: %w[create_content edit_own_content delete_own_content moderate_comments moderate_content view_reports ban_users],
+    priority: 60,
     system_role: true
   },
   {

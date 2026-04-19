@@ -8,7 +8,7 @@ section
   .panel
     .mb-3
       strong = "#{t("dashboard.comments.show.author")}: "
-      = @comment.user&.full_name || @comment.author_name || t("dashboard.common.anonymous")
+      = @comment.author_name.presence || t("dashboard.common.anonymous")
 
     .mb-3
       strong = "#{t("dashboard.comments.show.status")}: "
@@ -29,7 +29,7 @@ section
     hr
 
     .mb-4
-      p = @comment.body
+      p style="white-space: pre-wrap;" = @comment.content
 
     .dashboard-actions
       - if @comment.status != "approved"

@@ -2,7 +2,10 @@
 // Separate from the admin (Scutum) and landing stylesheets
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons";
+@import "easymde/dist/easymde.min";
 @import "dashboard/variables";
 @import "dashboard/typography";
 @import "dashboard/layout";
 @import "dashboard/dashboard";
+@import "dashboard/editor";
+@import "dashboard/team";

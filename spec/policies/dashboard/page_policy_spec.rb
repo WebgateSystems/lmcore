@@ -28,12 +28,12 @@ RSpec.describe Dashboard::PagePolicy, type: :policy do
     it { is_expected.not_to permit_action(:destroy) }
   end
 
-  context "when user is a moderator" do
+  context "when user is a moderator on someone else's page" do
     let(:user) { moderator }
 
-    it { is_expected.to permit_action(:show) }
-    it { is_expected.to permit_action(:update) }
-    it { is_expected.to permit_action(:destroy) }
+    it { is_expected.not_to permit_action(:show) }
+    it { is_expected.not_to permit_action(:update) }
+    it { is_expected.not_to permit_action(:destroy) }
   end
 
   describe Dashboard::PagePolicy::Scope do
@@ -43,6 +43,15 @@ RSpec.describe Dashboard::PagePolicy, type: :policy do
 
       scope = described_class.new(owner, Page.all).resolve
       expect(scope).to contain_exactly(own)
+    end
+
+    it "limits moderators to their own pages (dashboard is per-blog)" do
+      moderator_page = create(:page, author: moderator)
+      create(:page, author: owner)
+      create(:page, author: other_author)
+
+      scope = described_class.new(moderator, Page.all).resolve
+      expect(scope).to contain_exactly(moderator_page)
     end
   end
 end

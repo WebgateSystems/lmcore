@@ -10,20 +10,21 @@ RSpec.describe Dashboard::PartnerPolicy, type: :policy do
   let(:visitor) { create(:user) }
   let(:record) { create(:partner, user: author) }
 
-  context "when user is an author" do
+  context "when user is the author who owns the partner" do
     let(:user) { author }
 
     it { is_expected.to permit_action(:index) }
     it { is_expected.to permit_action(:create) }
     it { is_expected.to permit_action(:update) }
     it { is_expected.to permit_action(:reorder) }
-    it { is_expected.not_to permit_action(:destroy) }
+    it { is_expected.to permit_action(:destroy) }
   end
 
-  context "when user is a moderator" do
+  context "when user is a moderator looking at someone else's partner" do
     let(:user) { moderator }
 
-    it { is_expected.to permit_action(:destroy) }
+    it { is_expected.not_to permit_action(:update) }
+    it { is_expected.not_to permit_action(:destroy) }
   end
 
   context "when user has no dashboard role" do

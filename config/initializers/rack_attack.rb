@@ -35,6 +35,11 @@ class Rack::Attack
     req.ip if req.path.start_with?("/api/")
   end
 
+  # Throttle public comment posting
+  throttle("comments/ip", limit: 10, period: 1.minute) do |req|
+    req.ip if req.post? && req.path.match?(%r{/(blogs/[^/]+/)?posts/[^/]+/comments\z})
+  end
+
   # Block suspicious requests
   blocklist("block suspicious requests") do |req|
     Rack::Attack::Fail2Ban.filter("fail2ban-#{req.ip}", maxretry: 5, findtime: 10.minutes, bantime: 1.hour) do

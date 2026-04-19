@@ -63,52 +63,35 @@ module Dashboard
       end
     end
 
+    # The /dashboard area is the per-blog workspace. Even moderators and
+    # admins only see their OWN content here -- cross-blog moderation lives
+    # under /admin. Do NOT add a role-based bypass to these scopes.
     def scoped_posts
-      if current_user.moderator? || current_user.admin?
-        Post.all
-      else
-        Post.where(author: current_user)
-      end
+      Post.where(author: current_user)
     end
 
     def scoped_videos
-      if current_user.moderator? || current_user.admin?
-        Video.all
-      else
-        Video.where(author: current_user)
-      end
+      Video.where(author: current_user)
     end
 
     def scoped_photos
-      if current_user.moderator? || current_user.admin?
-        Photo.all
-      else
-        Photo.where(author: current_user)
-      end
+      Photo.where(author: current_user)
     end
 
     def scoped_pages
-      if current_user.moderator? || current_user.admin?
-        Page.all
-      else
-        Page.where(author: current_user)
-      end
+      Page.where(author: current_user)
     end
 
     def scoped_categories
-      if current_user.moderator? || current_user.admin?
-        Category.all
-      else
-        Category.where(user: current_user)
-      end
+      Category.where(user: current_user)
     end
 
+    # "My comments" on the dashboard means comments left under MY content
+    # (so I can moderate them), not comments I have written elsewhere.
     def scoped_comments
-      if current_user.moderator? || current_user.admin?
-        Comment.all
-      else
-        Comment.where(user: current_user)
-      end
+      Comment.where(commentable_type: "Post", commentable_id: scoped_posts.select(:id))
+             .or(Comment.where(commentable_type: "Video", commentable_id: scoped_videos.select(:id)))
+             .or(Comment.where(commentable_type: "Photo", commentable_id: scoped_photos.select(:id)))
     end
   end
 end

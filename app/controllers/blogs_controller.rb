@@ -241,7 +241,22 @@ class BlogsController < ApplicationController
       "available_locales" => blog_available_locales,
       "locale_display" => LocaleTags.ui_tag(I18n.locale),
       "blog_locale_switcher_items" => blog_locale_switcher_items,
-      "popular_tags" => popular_tags
+      "popular_tags" => popular_tags,
+      "csrf_token" => form_authenticity_token,
+      "current_user" => serialize_current_user
+    }
+  end
+
+  def serialize_current_user
+    return nil unless current_user
+
+    {
+      "id" => current_user.id,
+      "username" => current_user.username,
+      "name" => current_user.full_name,
+      "email" => current_user.email,
+      "confirmed" => current_user.confirmed?,
+      "avatar_url" => current_user.avatar&.url
     }
   end
 
@@ -471,8 +486,21 @@ class BlogsController < ApplicationController
       data["content"] = post.content_i18n[locale] || post.content_i18n.values.compact.first
       data["comments_enabled"] = post.comments_enabled?
       data["related_video"] = serialize_video(post.video, full: false) if post.video.present?
+      data["source_url"] = post.try(:source_url)
+      data["documents"] = post.documents.map { |d| serialize_document(d) }
     end
     data
+  end
+
+  def serialize_document(doc)
+    {
+      "id" => doc.id,
+      "url" => doc.file&.url,
+      "file_name" => doc.file_name,
+      "title" => doc.title,
+      "size" => doc.human_file_size,
+      "content_type" => doc.content_type
+    }
   end
 
   def serialize_video(video, full: false)
@@ -557,6 +585,9 @@ class BlogsController < ApplicationController
       "id" => comment.id,
       "content" => comment.content,
       "author_name" => comment.author_name,
+      "user_name" => comment.author_name,
+      "guest_name" => comment.guest_name,
+      "user" => (comment.user ? { "username" => comment.user.username, "name" => comment.user.full_name } : nil),
       "created_at" => comment.created_at,
       "replies" => comment.replies.approved.oldest.map { |r| serialize_comment(r) }
     }

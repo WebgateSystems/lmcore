@@ -30,7 +30,13 @@ RSpec.describe YoutubeCredentials do
       user.reload
 
       expect(user.youtube_cookies_ciphertext).to be_present
-      expect(user.youtube_cookies_ciphertext).not_to include("SID")
+      # The actual cookie *values* must never round-trip into the ciphertext;
+      # we don't check for short cookie *names* like "SID" because Rails'
+      # base64-encoded MessageEncryptor output can incidentally contain those
+      # 3 bytes purely by chance.
+      expect(user.youtube_cookies_ciphertext).not_to include("example-sid")
+      expect(user.youtube_cookies_ciphertext).not_to include("example-hsid")
+      expect(user.youtube_cookies_ciphertext).not_to include(".youtube.com")
       expect(user.youtube_cookies_checksum).to be_present
       expect(user.youtube_cookies_checksum.size).to eq(16)
       expect(user.youtube_age_confirmed_at.to_i).to eq(freeze_time.to_i)

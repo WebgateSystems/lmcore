@@ -261,6 +261,7 @@ en:
     current_password: "Current password"
     current_password_hint: "Only required when you choose a new password above."
     update_profile: "Update profile"
+    invitation_intro: "You were invited to join. Sign up using %{email} -- your team role will be granted automatically."
 
   # User
   users:
@@ -322,6 +323,12 @@ en:
     replies: "%{count} replies"
     pending_approval: "Your comment is pending approval"
     no_comments: "No comments yet. Be the first to comment!"
+    posted: "Thanks for your comment."
+    disabled: "Comments are disabled for this post."
+    confirm_email_required: "Please confirm your email address to comment."
+    cta_signup: "Want to comment? Create an account first — it only takes a moment."
+    cta_signup_button: "Create account"
+    cta_login: "or sign in"
 
   # Notifications
   notifications:

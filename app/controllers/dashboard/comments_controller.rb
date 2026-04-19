@@ -2,7 +2,6 @@
 
 module Dashboard
   class CommentsController < BaseController
-    before_action :require_moderator!
     before_action :set_comment, only: %i[show update destroy]
 
     def index
@@ -34,8 +33,12 @@ module Dashboard
 
     private
 
+    # Only look up comments inside the user's own blog scope. Any attempt to
+    # access a comment from another author's blog returns 404 -- the dashboard
+    # is intentionally siloed even for moderators/admins (cross-blog tools
+    # belong in /admin).
     def set_comment
-      @comment = Comment.find(params[:id])
+      @comment = policy_scope(Comment, policy_scope_class: Dashboard::CommentPolicy::Scope).find(params[:id])
     end
 
     def comment_params

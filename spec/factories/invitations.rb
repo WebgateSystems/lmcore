@@ -31,5 +31,31 @@ FactoryBot.define do
     trait :for_admin do
       role_type { 'admin' }
     end
+
+    trait :for_blog do
+      transient do
+        blog_owner_user { nil }
+      end
+
+      blog_owner { blog_owner_user || association(:user, :author) }
+      blog_role_slug { 'editor' }
+
+      before(:create) do |_invitation, _evaluator|
+        %w[editor moderator contributor].each do |slug|
+          next if Role.exists?(slug: slug)
+          priority = { 'moderator' => 50, 'editor' => 40, 'contributor' => 20 }.fetch(slug)
+          role = Role.new(
+            slug: slug,
+            name_i18n: { 'en' => slug.capitalize },
+            description_i18n: { 'en' => slug.capitalize },
+            permissions: [],
+            priority: priority,
+            system_role: true
+          )
+          role.write_attribute(:name, slug.capitalize)
+          role.save!
+        end
+      end
+    end
   end
 end

@@ -3,6 +3,23 @@
 module Users
   class RegistrationsController < Devise::RegistrationsController
     before_action :clamp_locale_to_blog_settings!, only: %i[edit update]
+    before_action :load_pending_invitation, only: %i[new create]
+
+    # GET /register
+    def new
+      build_resource(email_from_invitation_or({}))
+      yield resource if block_given?
+      respond_with resource
+    end
+
+    # Devise's default create then -- if the user persisted -- consume the
+    # invitation so the new account immediately picks up the role assigned
+    # by the inviter (e.g. moderator/editor on a specific blog).
+    def create
+      super do |resource|
+        consume_invitation_for(resource) if resource.persisted?
+      end
+    end
 
     protected
 
@@ -47,6 +64,28 @@ module Users
       allowed = SiteSetting.blog_available_locale_codes_for(resource)
       loc = permitted[:locale].to_s
       permitted[:locale] = allowed.include?(loc) ? loc : (allowed.include?("en") ? "en" : allowed.first)
+    end
+
+    def load_pending_invitation
+      token = params[:invitation_token].presence ||
+              params.dig(:user, :invitation_token).presence
+      return if token.blank?
+
+      @pending_invitation = Invitation.find_valid_by_token(token)
+    end
+
+    def email_from_invitation_or(defaults)
+      return defaults if @pending_invitation.nil?
+
+      defaults.reverse_merge(email: @pending_invitation.email)
+    end
+
+    def consume_invitation_for(user)
+      return if @pending_invitation.nil?
+      return unless @pending_invitation.valid_for_acceptance?
+      return unless @pending_invitation.email.casecmp?(user.email)
+
+      @pending_invitation.accept!(user)
     end
   end
 end

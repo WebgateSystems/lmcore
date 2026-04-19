@@ -1,6 +1,10 @@
 // Dashboard entry point - separate from the admin (Scutum) bundle
 import "bootstrap/dist/js/bootstrap.bundle"
 
+// Rich text editor (Posts dashboard form)
+import "./dashboard/attachment_library"
+import "./dashboard/post_editor"
+
 // Theme switcher (light/dark)
 const THEME_STORAGE_KEY = 'dashboard-theme'
 const rootElement = document.documentElement
@@ -99,5 +103,63 @@ document.addEventListener('DOMContentLoaded', () => {
       const closeBtn = alert.querySelector('[data-dismiss-alert]')
       if (closeBtn) closeBtn.click()
     }, 5000)
+  })
+
+  // Settings: language picker.
+  // Keeps the "Default language" dropdown in sync with the "Available languages"
+  // checkboxes -- only checked locales remain selectable as default; if the
+  // current default is unchecked, we fall back to the first available one.
+  document.querySelectorAll('[data-locale-picker]').forEach((picker) => {
+    const checkboxes = picker.querySelectorAll('[data-locale-picker-checkbox]')
+    const defaultSelect = picker.querySelector('[data-locale-picker-default]')
+    if (!checkboxes.length || !defaultSelect) return
+
+    // Snapshot the human-readable label for every locale option so we can
+    // re-create entries after the user re-checks a previously removed one.
+    const labels = new Map()
+    checkboxes.forEach((cb) => {
+      const card = cb.closest('.locale-option')
+      const tag = card?.querySelector('.locale-option__tag')?.textContent?.trim() || cb.value.toUpperCase()
+      const name = card?.querySelector('.locale-option__name')?.textContent?.trim() || ''
+      labels.set(cb.value, [tag, name].filter(Boolean).join(' '))
+    })
+
+    const refreshDefaultOptions = () => {
+      const previous = defaultSelect.value
+      const checked = Array.from(checkboxes).filter((cb) => cb.checked).map((cb) => cb.value)
+      defaultSelect.innerHTML = ''
+      checked.forEach((code) => {
+        const option = document.createElement('option')
+        option.value = code
+        option.textContent = labels.get(code) || code.toUpperCase()
+        defaultSelect.appendChild(option)
+      })
+      if (checked.includes(previous)) {
+        defaultSelect.value = previous
+      } else if (checked.length) {
+        defaultSelect.value = checked[0]
+      }
+    }
+
+    const refreshCardState = (cb) => {
+      const card = cb.closest('.locale-option')
+      if (card) card.classList.toggle('is-checked', cb.checked)
+    }
+
+    checkboxes.forEach((cb) => {
+      cb.addEventListener('change', () => {
+        if (cb.checked === false) {
+          // Disallow unchecking the last remaining locale -- the blog must
+          // always have at least one publication language.
+          const stillChecked = Array.from(checkboxes).filter((other) => other.checked)
+          if (stillChecked.length === 0) {
+            cb.checked = true
+            return
+          }
+        }
+        refreshCardState(cb)
+        refreshDefaultOptions()
+      })
+    })
   })
 })

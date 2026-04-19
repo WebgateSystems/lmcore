@@ -96,6 +96,21 @@
                 <div class="section-article__content-text">
                   {{ post.content }}
                 </div>
+                {% if post.documents and post.documents.size > 0 %}
+                <div class="section-article-item__documents">
+                  <h3 class="section-article-item__documents-title">{{ 'content.attached_documents' | t }}</h3>
+                  <ul class="section-article-item__documents-list">
+                    {% for doc in post.documents %}
+                    <li class="section-article-item__documents-item">
+                      <a href="{{ doc.url }}" target="_blank" rel="noopener noreferrer" download>
+                        <span class="section-article-item__documents-name">{{ doc.title | default: doc.file_name }}</span>
+                        {% if doc.size %}<span class="section-article-item__documents-size">({{ doc.size }})</span>{% endif %}
+                      </a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
                 {% if post.related_video %}
                 <div class="section-article-item__subtitle section-article-item__subtitle--red" style="margin-top: 24px;">
                   <h3>{{ 'content.related_video' | t }}</h3>
@@ -260,6 +275,33 @@
             </ul>
           </div>
         </div>
+
+        {% if post.comments_enabled %}
+          {% if current_user %}
+            {% if current_user.confirmed %}
+              <form class="section-article-item__comment-form" method="post" action="{{ base_path }}/posts/{{ post.slug }}/comments">
+                <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                <div class="section-article-item__comment-answer-textarea">
+                  <textarea name="comment[content]" required class="comment_area" placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                </div>
+                <div class="section-article-item__comment-answer-btn">
+                  <button type="submit">{{ 'comments.post' | t }}</button>
+                </div>
+              </form>
+            {% else %}
+              <div class="section-article-item__comment-cta">
+                {{ 'comments.confirm_email_required' | t }}
+              </div>
+            {% endif %}
+          {% else %}
+            <div class="section-article-item__comment-cta">
+              <p>{{ 'comments.cta_signup' | t }}</p>
+              <a class="section-article-item__btn-login" href="/register">{{ 'comments.cta_signup_button' | t }}</a>
+              &nbsp;
+              <a href="/login">{{ 'comments.cta_login' | t }}</a>
+            </div>
+          {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>

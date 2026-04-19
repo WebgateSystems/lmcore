@@ -161,6 +161,9 @@ class User < ApplicationRecord
     return true if admin?
     return true if blog_owner == self
     return true if has_role?("moderator", scope: blog_owner)
+    # A contributor on a blog gets the moderator's permission set in addition
+    # to publishing rights, so they can moderate that blog as well.
+    return true if has_role?("contributor", scope: blog_owner)
 
     # Check hierarchical - anyone with moderator+ priority on this blog
     has_role_with_priority?(70, scope: blog_owner)

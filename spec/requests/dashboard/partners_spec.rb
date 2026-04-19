@@ -50,12 +50,16 @@ RSpec.describe "Dashboard::Partners", type: :request do
   end
 
   describe "DELETE /dashboard/partners/:id" do
-    it "destroys the partner when the actor is a moderator" do
-      moderator = create(:user, :moderator)
-      partner = create(:partner, user: moderator)
-      sign_out author
-      sign_in moderator
-      expect { delete dashboard_partner_path(partner) }.to change(Partner, :count).by(-1)
+    it "destroys the partner when the actor owns it" do
+      own = create(:partner, user: author)
+      expect { delete dashboard_partner_path(own) }.to change(Partner, :count).by(-1)
+    end
+
+    it "404s for partners owned by another user (no cross-blog access on /dashboard)" do
+      foreign = create(:partner, user: create(:user, :author))
+      delete dashboard_partner_path(foreign)
+      expect(response).to have_http_status(:not_found)
+      expect(Partner.exists?(foreign.id)).to be true
     end
   end
 end

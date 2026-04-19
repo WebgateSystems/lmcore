@@ -23,8 +23,8 @@ section
         tbody
           - @comments.each do |comment|
             tr
-              td = comment.user&.full_name || comment.author_name || t("dashboard.common.anonymous")
-              td = truncate(comment.body, length: 80)
+              td = comment.author_name.presence || t("dashboard.common.anonymous")
+              td = truncate(comment.content.to_s, length: 80)
               td
                 - if comment.commentable
                   = comment.commentable_type.underscore.humanize

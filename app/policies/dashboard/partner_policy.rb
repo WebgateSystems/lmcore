@@ -21,7 +21,7 @@ module Dashboard
     end
 
     def update?
-      dashboard_user?
+      author_owns_record?
     end
 
     def edit?
@@ -32,8 +32,10 @@ module Dashboard
       dashboard_user?
     end
 
+    # Authors manage their own partner list. Cross-blog management lives
+    # in /admin if it's ever needed.
     def destroy?
-      moderator_or_admin?
+      author_owns_record?
     end
   end
 end

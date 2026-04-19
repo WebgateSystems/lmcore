@@ -48,6 +48,7 @@ en:
         back_to_videos: "back to videos"
         back_to_photos: "back to photos"
         blog_ayder: "Ayder Muzhdabaiev's Blog"
+        attached_documents: "Attached documents"
 
       newsletter:
         title: "Newsletter"
@@ -75,6 +76,11 @@ en:
         login_to_comment: "Log in or register to leave your comment"
         write_here: "Write here..."
         post_reply: "Post reply"
+        post: "Post comment"
+        confirm_email_required: "Please confirm your email address to comment."
+        cta_signup: "Want to comment? Create an account first — it only takes a moment."
+        cta_signup_button: "Create account"
+        cta_login: "or sign in"
 
       search:
         title: "Search"
