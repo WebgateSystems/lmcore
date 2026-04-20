@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 ruby "3.4.6"
 
-gem "rails", "~> 8.1.2"
+gem "rails", "~> 8.1.2", ">= 8.1.2.1" # CVE-2026-33658 (Active Storage proxy DoS)
 gem "propshaft"
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
@@ -12,14 +12,19 @@ gem "stimulus-rails"
 gem "jbuilder"
 gem "bootsnap", require: false
 
+# `actiontext` ships an unpinned `~> 2.1.15` constraint that resolves to the
+# vulnerable 2.1.16. Pin to >= 2.1.18 to pick up the XSS fixes
+# (GHSA-53p3-c7vp-4mcc, GHSA-qmpg-8xg6-ph5q).
+gem "action_text-trix", ">= 2.1.18"
+
 # Configuration
 gem "config"
 
 # Authentication & Authorization
-gem "devise"
+gem "devise", ">= 5.0.3" # CVE-2026-32700 (Confirmable email change race)
 gem "devise-jwt"
 gem "pundit"
-gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.7", ">= 3.1.22" # CVE-2026-33306 (zero-iteration overflow on JRuby)
 
 # API Documentation
 gem "rswag-api"
@@ -67,8 +72,16 @@ gem "discard", "~> 1.3"
 gem "aasm"
 
 # HTTP clients
-gem "faraday"
+gem "faraday", ">= 2.14.1" # CVE-2026-25765 (SSRF via protocol-relative URL)
 gem "faraday-retry"
+
+# Pinned transitive dependencies — these are pulled in by Rails / Sidekiq /
+# Nokogiri etc., but we hard-pin minimum versions here so `bundler-audit`
+# stays green on CI without waiting for an upstream release.
+gem "rack", ">= 3.2.5" # CVE-2026-22860 (directory traversal), CVE-2026-25500 (XSS)
+gem "nokogiri", ">= 1.19.1" # GHSA-wx95-c6cv-8532 (xmlC14NExecute return value)
+gem "loofah", ">= 2.25.1" # GHSA-46fp-8f5p-pf2m (allowed_uri? bypass)
+gem "json", ">= 2.19.2" # CVE-2026-33210 (format string injection)
 
 # Observability
 gem "lograge"

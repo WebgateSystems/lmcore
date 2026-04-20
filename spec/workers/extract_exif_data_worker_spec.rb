@@ -43,11 +43,12 @@ RSpec.describe ExtractExifDataWorker, type: :worker do
       file.write("fake")
       file.close
 
+      # Other EXIF tags (Make/Model/ISO populated, the rest left as nil) are
+      # expected to be stripped by `.compact` in the worker.
       fake_image = double("MiniMagick::Image", exif: {
         "Make" => "Canon",
         "Model" => "EOS 5D",
-        "ISO" => "200",
-        # The rest are nil and should be stripped by `.compact`
+        "ISO" => "200"
       })
       allow(MiniMagick::Image).to receive(:open).and_return(fake_image)
 

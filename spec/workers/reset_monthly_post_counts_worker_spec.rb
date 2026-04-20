@@ -18,8 +18,8 @@ RSpec.describe ResetMonthlyPostCountsWorker, type: :worker do
 
       expect {
         described_class.new.perform
-      }.to change { [a.reload.posts_this_month, b.reload.posts_this_month] }
-        .from([5, 12]).to([0, 0])
+      }.to change { [ a.reload.posts_this_month, b.reload.posts_this_month ] }
+        .from([ 5, 12 ]).to([ 0, 0 ])
     end
 
     it "logs that the reset happened (so ops can grep for it in production)" do
