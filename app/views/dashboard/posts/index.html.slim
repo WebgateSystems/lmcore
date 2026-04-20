@@ -1,13 +1,18 @@
 - content_for(:page_title) { "Posts" }
 
 section
-  .d-flex.justify-content-between.align-items-center.mb-4
-    div
+  .d-flex.justify-content-between.align-items-center.gap-3.mb-4.flex-wrap
+    .d-flex.align-items-center.gap-3.flex-grow-1.flex-wrap
+      = form_with url: dashboard_posts_path, method: :get, local: true, class: "dashboard-search-form", data: { dashboard_search_form: "true" } do |f|
+        - if params[:status].present?
+          = f.hidden_field :status
+        = f.search_field :q, value: params[:q], class: "form-control", placeholder: t("dashboard.common.search_placeholder"), autocomplete: "off", data: { dashboard_search_input: "true" }
       - if params[:status].present?
-        span.dashboard-badge class="dashboard-badge--#{params[:status]}" = params[:status].humanize
-        = " "
-        = link_to t("dashboard.common.clear_filter"), dashboard_posts_path, class: "text-body-3 text-decoration-none"
-    = link_to t("dashboard.posts.index.new"), new_dashboard_post_path, class: "btn-dashboard-primary"
+        div
+          span.dashboard-badge class="dashboard-badge--#{params[:status]}" = params[:status].humanize
+          = " "
+          = link_to t("dashboard.common.clear_filter"), dashboard_posts_path(q: params[:q]), class: "text-body-3 text-decoration-none"
+    = link_to t("dashboard.posts.index.new"), new_dashboard_post_path, class: "btn-dashboard-primary flex-shrink-0"
 
   - if @posts.any?
     .panel
@@ -29,9 +34,14 @@ section
               td.text-body-3 = post.created_at.strftime("%b %d, %Y")
               td.text-end
                 .dashboard-actions.justify-content-end
+                  - pin_class = post.featured? ? "icon-pill text-warning" : "icon-pill"
+                  - pin_title = post.featured? ? t("dashboard.common.unpin") : t("dashboard.common.pin")
+                  - pin_icon = post.featured? ? "bi bi-pin-fill" : "bi bi-pin-angle"
+                  = button_to pin_dashboard_post_path(post), method: :post, class: pin_class, title: pin_title do
+                    i class=pin_icon
                   = link_to edit_dashboard_post_path(post), class: "icon-pill", title: t("dashboard.common.edit") do
                     i.bi.bi-pencil
-                  = button_to dashboard_post_path(post), method: :delete, class: "icon-pill text-danger", title: t("dashboard.common.delete"), data: { turbo_confirm: t("dashboard.common.confirm_delete") } do
+                  = button_to dashboard_post_path(post), method: :delete, class: "icon-pill text-danger", title: t("dashboard.common.delete"), form: { data: { confirm_destroy: "true", confirm_destroy_title: t("dashboard.confirm.posts.title"), confirm_destroy_message: t("dashboard.confirm.posts.message", title: post.title), confirm_destroy_detail: t("dashboard.confirm.posts.detail"), confirm_destroy_action: t("dashboard.common.delete_forever") } } do
                     i.bi.bi-trash
     - if @pagy.pages > 1
       .d-flex.justify-content-center.mt-4

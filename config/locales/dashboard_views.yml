@@ -4,12 +4,16 @@ en:
     common:
       edit: "Edit"
       delete: "Delete"
+      pin: "Pin as Top"
+      unpin: "Unpin from Top"
       approve: "Approve"
       mark_spam: "Mark spam"
       details: "Details"
       confirm_delete: "Are you sure?"
       confirm_delete_category: "This will unlink all posts from this category. Are you sure?"
+      delete_forever: "Delete forever"
       clear_filter: "Clear filter"
+      search_placeholder: "Search by title…"
       cancel: "Cancel"
       none: "—"
       custom: "Custom"
@@ -234,18 +238,37 @@ en:
       show:
         back: "Back to audit log"
         changes: "Changes"
+    confirm:
+      default_title: "Confirm action"
+      default_message: "Are you sure you want to continue?"
+      posts:
+        title: "Delete this article forever?"
+        message: "You are about to delete \"%{title}\"."
+        detail: "This action is irreversible. The article and everything attached to it — comments and replies, reactions, inline images and document attachments, and tag associations — will be permanently removed."
+      videos:
+        title: "Delete this video forever?"
+        message: "You are about to delete \"%{title}\"."
+        detail: "This action is irreversible. The video and everything attached to it — comments and replies, reactions, attachments and tag associations — will be permanently removed. Posts that were generated from this video will be unlinked but kept."
+      photos:
+        title: "Delete this photo forever?"
+        message: "You are about to delete \"%{title}\"."
+        detail: "This action is irreversible. The photo file along with all of its comments and replies, reactions, attachments and tag associations will be permanently removed."
 
 pl:
   dashboard:
     common:
       edit: "Edytuj"
       delete: "Usuń"
+      pin: "Przypnij jako Top"
+      unpin: "Odepnij z Topu"
       approve: "Zatwierdź"
       mark_spam: "Oznacz jako spam"
       details: "Szczegóły"
       confirm_delete: "Na pewno?"
       confirm_delete_category: "To odłączy wszystkie posty od tej kategorii. Na pewno?"
+      delete_forever: "Usuń trwale"
       clear_filter: "Wyczyść filtr"
+      search_placeholder: "Szukaj po tytule…"
       cancel: "Anuluj"
       none: "—"
       custom: "Własna"
@@ -470,18 +493,37 @@ pl:
       show:
         back: "Powrót do dziennika audytu"
         changes: "Zmiany"
+    confirm:
+      default_title: "Potwierdź operację"
+      default_message: "Czy na pewno chcesz kontynuować?"
+      posts:
+        title: "Usunąć ten artykuł trwale?"
+        message: "Za chwilę usuniesz „%{title}\"."
+        detail: "Ta operacja jest nieodwracalna. Artykuł oraz wszystko, co jest z nim powiązane — komentarze i odpowiedzi, reakcje, zdjęcia inline, załączniki i powiązania z tagami — zostanie trwale usunięte."
+      videos:
+        title: "Usunąć to wideo trwale?"
+        message: "Za chwilę usuniesz „%{title}\"."
+        detail: "Ta operacja jest nieodwracalna. Wideo oraz wszystko, co jest z nim powiązane — komentarze i odpowiedzi, reakcje, załączniki i powiązania z tagami — zostanie trwale usunięte. Posty wygenerowane na podstawie tego wideo zostaną odpięte, ale pozostaną w bazie."
+      photos:
+        title: "Usunąć to zdjęcie trwale?"
+        message: "Za chwilę usuniesz „%{title}\"."
+        detail: "Ta operacja jest nieodwracalna. Plik zdjęcia wraz ze wszystkimi komentarzami i odpowiedziami, reakcjami, załącznikami i powiązaniami z tagami zostanie trwale usunięty."
 
 uk:
   dashboard:
     common:
       edit: "Редагувати"
       delete: "Видалити"
+      pin: "Закріпити як Top"
+      unpin: "Відкріпити з Top"
       approve: "Схвалити"
       mark_spam: "Позначити як спам"
       details: "Деталі"
       confirm_delete: "Ви впевнені?"
       confirm_delete_category: "Це від’єднає всі пости від цієї категорії. Ви впевнені?"
+      delete_forever: "Видалити назавжди"
       clear_filter: "Скинути фільтр"
+      search_placeholder: "Пошук за назвою…"
       cancel: "Скасувати"
       none: "—"
       custom: "Власний"
@@ -709,18 +751,37 @@ uk:
     settings:
       multilingual_label: "Багатомовне поле"
       multilingual_legend: "Підсвічені підписи перекладаються та зберігаються лише для активної мови інтерфейсу."
+    confirm:
+      default_title: "Підтвердьте дію"
+      default_message: "Ви впевнені, що хочете продовжити?"
+      posts:
+        title: "Видалити цю статтю назавжди?"
+        message: "Ви збираєтесь видалити «%{title}»."
+        detail: "Цю дію не можна скасувати. Статтю та все, що до неї прикріплене — коментарі й відповіді, реакції, вбудовані зображення, документи-вкладення й зв'язки з тегами — буде остаточно видалено."
+      videos:
+        title: "Видалити це відео назавжди?"
+        message: "Ви збираєтесь видалити «%{title}»."
+        detail: "Цю дію не можна скасувати. Відео та все, що до нього прикріплене — коментарі й відповіді, реакції, вкладення й зв'язки з тегами — буде остаточно видалено. Пости, створені з цього відео, буде відв'язано, але збережено."
+      photos:
+        title: "Видалити це фото назавжди?"
+        message: "Ви збираєтесь видалити «%{title}»."
+        detail: "Цю дію не можна скасувати. Файл фото разом з усіма коментарями й відповідями, реакціями, вкладеннями та зв'язками з тегами буде остаточно видалено."
 
 ru:
   dashboard:
     common:
       edit: "Редактировать"
       delete: "Удалить"
+      pin: "Закрепить как Top"
+      unpin: "Открепить из Top"
       approve: "Одобрить"
       mark_spam: "Пометить как спам"
       details: "Подробности"
       confirm_delete: "Вы уверены?"
       confirm_delete_category: "Это отвяжет все посты от этой категории. Вы уверены?"
+      delete_forever: "Удалить навсегда"
       clear_filter: "Сбросить фильтр"
+      search_placeholder: "Поиск по названию…"
       cancel: "Отмена"
       none: "—"
       custom: "Своя"
@@ -948,3 +1009,18 @@ ru:
     settings:
       multilingual_label: "Мультиязычное поле"
       multilingual_legend: "Выделенные подписи переводятся и сохраняются только для активного языка интерфейса."
+    confirm:
+      default_title: "Подтвердите действие"
+      default_message: "Вы уверены, что хотите продолжить?"
+      posts:
+        title: "Удалить эту статью навсегда?"
+        message: "Вы собираетесь удалить «%{title}»."
+        detail: "Это действие необратимо. Статья и всё, что с ней связано — комментарии и ответы, реакции, встроенные изображения, документы-вложения и связи с тегами — будет окончательно удалено."
+      videos:
+        title: "Удалить это видео навсегда?"
+        message: "Вы собираетесь удалить «%{title}»."
+        detail: "Это действие необратимо. Видео и всё, что с ним связано — комментарии и ответы, реакции, вложения и связи с тегами — будет окончательно удалено. Посты, созданные из этого видео, будут отвязаны, но сохранены."
+      photos:
+        title: "Удалить это фото навсегда?"
+        message: "Вы собираетесь удалить «%{title}»."
+        detail: "Это действие необратимо. Файл фото вместе со всеми комментариями и ответами, реакциями, вложениями и связями с тегами будет окончательно удалён."

@@ -5,7 +5,7 @@ section
     div
     .dashboard-actions
       = link_to t("dashboard.videos.index.back"), dashboard_videos_path, class: "btn-dashboard-secondary"
-      = button_to dashboard_video_path(@video), method: :delete, class: "btn-dashboard-danger", data: { turbo_confirm: t("dashboard.common.confirm_delete") } do
+      = button_to dashboard_video_path(@video), method: :delete, class: "btn-dashboard-danger", form: { data: { confirm_destroy: "true", confirm_destroy_title: t("dashboard.confirm.videos.title"), confirm_destroy_message: t("dashboard.confirm.videos.message", title: @video.title), confirm_destroy_detail: t("dashboard.confirm.videos.detail"), confirm_destroy_action: t("dashboard.common.delete_forever") } } do
         = t("dashboard.common.delete")
 
   = render "form", video: @video

@@ -37,5 +37,62 @@ RSpec.describe ExtractExifDataWorker, type: :worker do
       result = worker.send(:extract_exif, "/nonexistent/path")
       expect(result).to eq({})
     end
+
+    it "extracts and compacts EXIF data when MiniMagick succeeds" do
+      file = Tempfile.new(%w[exif .jpg])
+      file.write("fake")
+      file.close
+
+      fake_image = double("MiniMagick::Image", exif: {
+        "Make" => "Canon",
+        "Model" => "EOS 5D",
+        "ISO" => "200",
+        # The rest are nil and should be stripped by `.compact`
+      })
+      allow(MiniMagick::Image).to receive(:open).and_return(fake_image)
+
+      result = worker.send(:extract_exif, file.path)
+      expect(result).to eq(
+        "make" => "Canon",
+        "model" => "EOS 5D",
+        "iso" => "200"
+      )
+    ensure
+      file&.unlink
+    end
+
+    it "swallows MiniMagick errors and returns an empty hash" do
+      file = Tempfile.new(%w[exif .jpg])
+      file.write("fake")
+      file.close
+
+      allow(MiniMagick::Image).to receive(:open).and_raise(StandardError, "boom")
+
+      expect(worker.send(:extract_exif, file.path)).to eq({})
+    ensure
+      file&.unlink
+    end
+  end
+
+  describe "#perform happy path" do
+    it "writes exif_data via update_column when extract_exif returns data" do
+      photo = create(:photo, author: author)
+      worker = described_class.new
+      allow(File).to receive(:exist?).and_return(true)
+      allow(worker).to receive(:extract_exif).and_return("make" => "Sony")
+
+      expect {
+        worker.perform(photo.id)
+      }.to change { photo.reload.exif_data }.to("make" => "Sony")
+    end
+
+    it "rescues unexpected errors during perform and logs" do
+      photo = create(:photo, author: author)
+      worker = described_class.new
+      allow(worker).to receive(:extract_exif).and_raise(StandardError, "kaboom")
+      expect(Rails.logger).to receive(:error).with(/Failed to extract EXIF data/)
+
+      expect { worker.perform(photo.id) }.not_to raise_error
+    end
   end
 end

@@ -23,7 +23,7 @@
                 <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" fill="#959595"/>
               </svg>
               {% if post.source_url and post.source_url != blank and post.source_url != "" %}
-                <a href="{{ post.source_url }}" target="_blank" rel="noopener noreferrer" style="color: #959595; text-decoration: none;">{{ post.source_name }}</a>
+                <a href="{{ post.source_url }}" target="_blank" rel="nofollow noopener noreferrer" style="color: #959595; text-decoration: none;">{{ post.source_name }}</a>
               {% elsif post.source_name and post.source_name != blank and post.source_name != "" %}
                 <span style="color: #959595;">{{ post.source_name }}</span>
               {% else %}
@@ -83,7 +83,7 @@
                       <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" fill="#959595"/>
                     </svg>
                     {% if post.source_url and post.source_url != blank and post.source_url != "" %}
-                      <a href="{{ post.source_url }}" target="_blank" rel="noopener noreferrer" style="color: #959595; text-decoration: none;">{{ post.source_name }}</a>
+                      <a href="{{ post.source_url }}" target="_blank" rel="nofollow noopener noreferrer" style="color: #959595; text-decoration: none;">{{ post.source_name }}</a>
                     {% elsif post.source_name and post.source_name != blank and post.source_name != "" %}
                       <span style="color: #959595;">{{ post.source_name }}</span>
                     {% else %}
@@ -112,11 +112,10 @@
                 </div>
                 {% endif %}
                 {% if post.related_video %}
-                <div class="section-article-item__subtitle section-article-item__subtitle--red" style="margin-top: 24px;">
-                  <h3>{{ 'content.related_video' | t }}</h3>
-                </div>
-                <p>
-                  <a href="{{ base_path }}/videos/{{ post.related_video.slug }}">{{ post.related_video.title }}</a>
+                <p class="section-article-item__related-video">
+                  <a class="post-content-link"
+                     href="{{ base_path }}/videos/{{ post.related_video.slug }}"
+                     title="{{ post.related_video.title | escape }}">{{ 'content.related_video' | t }}.</a>
                 </p>
                 {% endif %}
                 {% if post.tags.size > 0 %}

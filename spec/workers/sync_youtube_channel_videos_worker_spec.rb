@@ -55,5 +55,41 @@ RSpec.describe SyncYoutubeChannelVideosWorker, type: :worker do
       expect(run.stage).to eq("failed")
       expect(run.error_message).to eq("kaboom")
     end
+
+    it "records the remaining progress events (heartbeat, error, skip, rate_limited)" do
+      run = create(:dashboard_job_run, user: author, job_type: "youtube_sync", status: "queued")
+      service = instance_double(Youtube::ChannelVideosSyncService)
+
+      allow(Youtube::ChannelVideosSyncService).to receive(:new) do |**kwargs|
+        progress = kwargs[:progress]
+        progress&.call(:phase_heartbeat, phase: "fetch_video_ids", elapsed_s: 5)
+        progress&.call(:error, video_id: "vBad", message: "boom",
+                               stage: "metadata_fetch",
+                               stats: { processed: 1, errors: 1 })
+        progress&.call(:skip, video_id: "vSkip", reason: :age_restricted, message: "skip me",
+                              stage: "metadata_fetch",
+                              stats: { processed: 2, skipped: 1, errors: 1 })
+        progress&.call(:rate_limited, video_id: "vSlow", attempt: 2, sleep_seconds: 30)
+        progress&.call(:finish, stats: { processed: 2, created: 0, updated: 0, skipped: 1, errors: 1 })
+        service
+      end
+      allow(service).to receive(:call).and_return(processed: 2, created: 0, updated: 0, skipped: 1, errors: 1)
+
+      described_class.new.perform(author.id, channel_url, nil, nil, run.id)
+
+      run.reload
+      expect(run.status).to eq("completed")
+      expect(run.error_count).to be >= 1
+      expect(run.last_video_id).to be_present
+    end
+
+    it "still calls the service even without a job_run id" do
+      service = instance_double(Youtube::ChannelVideosSyncService, call: { processed: 0 })
+      allow(Youtube::ChannelVideosSyncService).to receive(:new).and_return(service)
+
+      expect {
+        described_class.new.perform(author.id, channel_url)
+      }.not_to raise_error
+    end
   end
 end

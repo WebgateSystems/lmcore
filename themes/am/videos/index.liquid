@@ -274,63 +274,7 @@
         </div>
       {% endif %}
 
-      <!-- Pagination -->
-      {% if pagination and pagination.total_pages > 1 %}
-      <div class="section-articles__pagination row">
-        <div class="section-articles__pagination-content col">
-          {% assign current_page = pagination.current_page %}
-          {% assign total_pages = pagination.total_pages %}
-          {% assign window_start = current_page | minus: 2 %}
-          {% assign window_end = current_page | plus: 2 %}
-          {% assign penultimate_page = total_pages | minus: 1 %}
-          {% if window_start < 1 %}{% assign window_start = 1 %}{% endif %}
-          {% if window_end > total_pages %}{% assign window_end = total_pages %}{% endif %}
-
-          {% if current_page > 1 %}
-          <div class="section-articles__pagination-btn">
-            <div class="section-articles__pagination-btn-next">
-              <a href="?page={{ current_page | minus: 1 }}{{ filters_query }}">&lt;</a>
-            </div>
-          </div>
-          {% endif %}
-
-          <div class="section-articles__pagination-numbers">
-            <span>
-              <a {% if current_page == 1 %}class="_active"{% endif %} href="?page=1{{ filters_query }}">1</a>
-            </span>
-
-            {% if window_start > 2 %}
-              <span><a class="disabled" href="javascript:void(0)">...</a></span>
-            {% endif %}
-
-            {% for p in (window_start..window_end) %}
-              {% if p > 1 and p < total_pages %}
-              <span>
-                <a {% if p == current_page %}class="_active"{% endif %} href="?page={{ p }}{{ filters_query }}">{{ p }}</a>
-              </span>
-              {% endif %}
-            {% endfor %}
-
-            {% if total_pages > 1 %}
-              {% if window_end < penultimate_page %}
-                <span><a class="disabled" href="javascript:void(0)">...</a></span>
-              {% endif %}
-              <span>
-                <a {% if current_page == total_pages %}class="_active"{% endif %} href="?page={{ total_pages }}{{ filters_query }}">{{ total_pages }}</a>
-              </span>
-            {% endif %}
-          </div>
-
-          {% if current_page < total_pages %}
-          <div class="section-articles__pagination-btn">
-            <div class="section-articles__pagination-btn-next">
-              <a href="?page={{ current_page | plus: 1 }}{{ filters_query }}">&gt;</a>
-            </div>
-          </div>
-          {% endif %}
-        </div>
-      </div>
-      {% endif %}
+      {% include 'pagination' %}
     </div>
   </div>
 </div>
@@ -351,92 +295,6 @@
     background-size: 20px 20px;
   }
 
-  .section-articles__pagination-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .section-videos .section-articles__pagination {
-    position: static !important;
-    bottom: auto !important;
-    left: auto !important;
-    right: auto !important;
-    width: 100%;
-    min-height: 0;
-    padding: 0;
-    margin: -44px 0 90px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .section-articles__pagination-numbers {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .section-articles__pagination-numbers a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 40px;
-    height: 40px;
-    padding: 0 12px;
-    border: 1px solid #d5d5d5;
-    border-radius: 10px;
-    color: #111;
-    background: #fff;
-    font-family: FiraSansExtraCondensed-SemiBold, sans-serif;
-    font-size: 18px;
-    line-height: 1;
-    transition: all .18s ease;
-  }
-
-  .section-articles__pagination-numbers a:hover {
-    border-color: #111;
-    transform: translateY(-1px);
-  }
-
-  .section-articles__pagination-numbers a._active {
-    background: #111;
-    border-color: #111;
-    color: #fff;
-  }
-
-  .section-articles__pagination-numbers a.disabled {
-    pointer-events: none;
-    border-color: transparent;
-    background: transparent;
-    min-width: auto;
-    padding: 0 4px;
-  }
-
-  .section-articles__pagination-btn-next a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    border: 1px solid #111;
-    color: #111;
-    background: #fff;
-    font-size: 20px;
-    font-weight: 700;
-    transition: all .18s ease;
-  }
-
-  .section-articles__pagination-btn-next a:hover {
-    background: #111;
-    color: #fff;
-  }
-
   @media (max-width: 768px) {
     .section-content__filter--title {
       min-width: 100%;
@@ -445,29 +303,6 @@
 
     .section-content__filter-input--search input {
       min-width: 0;
-    }
-
-    .section-articles__pagination-content {
-      gap: 10px;
-    }
-
-    .section-videos .section-articles__pagination {
-      min-height: 0;
-      padding: 0;
-      margin: -20px 0 56px;
-    }
-
-    .section-articles__pagination-numbers {
-      gap: 6px;
-    }
-
-    .section-articles__pagination-numbers a,
-    .section-articles__pagination-btn-next a {
-      min-width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      font-size: 16px;
-      padding: 0 8px;
     }
   }
 </style>

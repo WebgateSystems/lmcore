@@ -520,6 +520,134 @@
 	&:hover { background: var(--state-error-soft); }
 }
 
+// Confirmation modal for destructive actions (delete post / video / photo
+// / category / …). Driven by [data-confirm-destroy-modal] in the layout
+// and the `setupConfirmDestroy` handler in app/javascript/dashboard.js.
+.confirm-destroy {
+	border: none;
+	border-radius: 16px;
+	overflow: hidden;
+	background: var(--surface-primary);
+	color: var(--content-primary);
+	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 20px 24px 16px;
+		border-bottom: 1px solid var(--border-primary);
+	}
+
+	&__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		flex-shrink: 0;
+		border-radius: 50%;
+		background: var(--state-error-soft);
+		color: var(--content-error);
+		font-size: 22px;
+	}
+
+	&__title {
+		flex: 1;
+		margin: 0;
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 1.3;
+		color: var(--content-primary);
+	}
+
+	&__body {
+		padding: 20px 24px 8px;
+	}
+
+	&__message {
+		margin: 0 0 16px;
+		font-size: 15px;
+		line-height: 1.5;
+		color: var(--content-primary);
+	}
+
+	// The "this is destructive" callout. Only rendered when a delete
+	// button passed `data-confirm-destroy-detail`.
+	&__detail {
+		margin: 0;
+		padding: 12px 14px;
+		border-left: 3px solid var(--content-error);
+		border-radius: 4px;
+		background: var(--state-error-soft);
+		color: var(--content-primary);
+		font-size: 13.5px;
+		line-height: 1.55;
+	}
+
+	&__footer {
+		gap: 8px;
+		padding: 16px 24px 20px;
+		border-top: 1px solid var(--border-primary);
+	}
+
+	.btn-close {
+		opacity: 0.55;
+		transition: opacity 0.15s ease;
+		&:hover { opacity: 1; }
+	}
+
+	.btn-dashboard-danger {
+		background: var(--content-error);
+		color: var(--button-on-primary, #fff);
+		border-color: var(--content-error);
+
+		&:hover {
+			background: var(--content-error);
+			filter: brightness(0.92);
+			color: var(--button-on-primary, #fff);
+		}
+	}
+}
+
+// Search form used at the top of every dashboard index (posts, videos,
+// photos, …). Sits on the left at the same level as the "New X" button.
+// JS auto-submits on 3+ characters via [data-dashboard-search-form] in
+// app/javascript/dashboard.js.
+.dashboard-search-form {
+	flex: 1 1 320px;
+	max-width: 420px;
+	margin: 0;
+
+	.form-control {
+		width: 100%;
+		padding: 9px 14px 9px 38px;
+		border-radius: 8px;
+		border: 1px solid var(--border-primary);
+		background-color: var(--surface-primary);
+		color: var(--content-primary);
+		font-size: 14px;
+		line-height: 1.4;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z' fill='%236f6f6f'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: 12px center;
+		background-size: 16px 16px;
+		transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+		&::placeholder { color: var(--content-tertiary); }
+
+		&:focus {
+			outline: none;
+			border-color: var(--button-primary);
+			box-shadow: 0 0 0 3px var(--state-focus-soft, rgba(13, 110, 253, 0.15));
+		}
+
+		// Hide the native clear button — our debounce already handles
+		// "value cleared" by re-submitting an empty query.
+		&::-webkit-search-cancel-button { display: none; }
+	}
+}
+
 // Alerts
 .alert {
 	display: flex;

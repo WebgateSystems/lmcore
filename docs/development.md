@@ -20,7 +20,29 @@ Przewodnik po konfiguracji lokalnego środowiska deweloperskiego dla LibreMedia.
 |-----------|------|
 | Elasticsearch 8.x | Wyszukiwanie pełnotekstowe |
 | FFmpeg | Przetwarzanie wideo |
-| ImageMagick | Przetwarzanie obrazów |
+| ImageMagick (z `libheif`) | Przetwarzanie obrazów; `libheif` jest wymagane do obsługi HEIC/HEIF z iPhone'ów |
+
+#### Obsługa zdjęć HEIC/HEIF
+
+`ImageUploader` automatycznie konwertuje pliki HEIC/HEIF do JPEG przy uploadzie
+(zob. `app/uploaders/image_uploader.rb`), bo żadna przeglądarka poza Safari nie
+renderuje HEIC natywnie. Konwersja wymaga ImageMagicka zbudowanego z delegatem
+`heic` (czyli z `libheif`).
+
+```bash
+# macOS (Homebrew)
+brew install libheif imagemagick
+
+# Debian / Ubuntu
+sudo apt install libheif1 libheif-dev imagemagick
+
+# Sprawdzenie, czy delegat HEIC jest dostępny
+magick -list format | grep -i heic
+```
+
+Jeśli `magick -list format | grep -i heic` nic nie zwraca, ImageMagick został
+zbudowany bez `libheif` i upload pliku HEIC rzuci wyjątek przy konwersji —
+zainstaluj `libheif` i przebuduj/zainstaluj ImageMagicka ponownie.
 
 ---
 

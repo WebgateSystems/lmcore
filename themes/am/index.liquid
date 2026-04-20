@@ -33,22 +33,25 @@
 <!-- TOP content section -->
 <div class="section-main-articles">
   <div class="container-fluid container">
-    <!-- TOP row: Video, Article, Photo -->
+    <!-- TOP row: Video, Article, Photo
+         Each cell renders the author-picked "top" item from its column
+         (cascade: featured -> most viewed -> most recent), computed in
+         BlogsController#show. We keep all three columns mounted even when
+         empty so the 3-column layout stays balanced — empty cells render a
+         minimal placeholder linking to the full listing. -->
     <div class="section-main-articles__content row">
       
       <!-- TOP Video -->
-      {% if videos.size > 0 %}
-      {% assign top_video = videos | first %}
-      {% assign top_video_thumb = top_video.thumbnail_url | default: '/themes/am/img/image/homepage/homepage-1.png' %}
       <div class="section-main-articles__article col">
         <div class="section-main-articles__article-title">
           <h2 class="article-title article-title--red">{{ 'content.top_video' | t }}</h2>
         </div>
+        {% if top_video %}
         <div class="section-main-articles__article-content">
           <a class="article-link" href="{{ top_video.slug | video_url }}"></a>
           <div class="section-main-articles__article-image">
             <picture>
-              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ top_video_thumb }}" alt="{{ top_video.title }}" width="380" height="230">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ top_video.thumbnail_url }}" alt="{{ top_video.title }}" width="380" height="230">
             </picture>
           </div>
           <div class="section-main-articles__article-date">
@@ -58,67 +61,89 @@
             <h2 class="site-text__large">{{ top_video.title }}</h2>
           </div>
         </div>
+        {% else %}
+        <div class="section-main-articles__article-content">
+          <a class="article-link" href="{{ base_path }}/videos"></a>
+          <div class="section-main-articles__article-description">
+            <p class="site-text__medium">{{ 'content.no_videos_yet' | t }}</p>
+          </div>
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
       
       <!-- TOP Article -->
-      {% if featured_post %}
       <div class="section-main-articles__article col">
         <div class="section-main-articles__article-title">
           <h2 class="article-title article-title--red">{{ 'content.top_article' | t }}</h2>
         </div>
+        {% if top_post %}
         <div class="section-main-articles__article-content">
-          <a class="article-link" href="{{ featured_post.slug | post_url }}"></a>
+          <a class="article-link" href="{{ top_post.slug | post_url }}"></a>
           <div class="section-main-articles__article-date">
-            <p class="article-date">{{ featured_post.published_at | date_format }}</p>
+            <p class="article-date">{{ top_post.published_at | date_format }}</p>
           </div>
           <div class="section-main-articles__article-description">
-            <h2 class="site-text__large">{{ featured_post.title }}</h2>
+            <h2 class="site-text__large">{{ top_post.title }}</h2>
           </div>
-          {% if featured_post.lead %}
+          {% if top_post.lead %}
           <div class="section-main-articles__article-info">
-            <p class="site-text__medium">{{ featured_post.lead | excerpt: 200 }}</p>
+            <p class="site-text__medium">{{ top_post.lead | excerpt: 200 }}</p>
           </div>
           {% endif %}
         </div>
+        {% else %}
+        <div class="section-main-articles__article-content">
+          <a class="article-link" href="{{ base_path }}/posts"></a>
+          <div class="section-main-articles__article-description">
+            <p class="site-text__medium">{{ 'content.no_articles_yet' | t }}</p>
+          </div>
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
       
-      <!-- TOP Photo (placeholder) -->
+      <!-- TOP Photo -->
       <div class="section-main-articles__article col">
         <div class="section-main-articles__article-title">
           <h2 class="article-title article-title--red">{{ 'content.top_photo' | t }}</h2>
         </div>
+        {% if top_photo %}
         <div class="section-main-articles__article-content">
-          <a class="article-link" href="{{ base_path }}/photos"></a>
+          <a class="article-link" href="{{ top_photo.slug | photo_url }}"></a>
+          {% if top_photo.image_url %}
           <div class="section-main-articles__article-image">
             <picture>
-              <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/homepage/homepage-2.webp" type="image/webp">
-              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/homepage/homepage-2.png" alt="TOP фото" width="380" height="230">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ top_photo.image_url }}" alt="{{ top_photo.title }}" width="380" height="230">
             </picture>
           </div>
+          {% endif %}
           <div class="section-main-articles__article-date">
-            <p class="article-date">{{ 'now' | date: '%d.%m.%Y' }}</p>
+            <p class="article-date">{{ top_photo.published_at | date_format }}</p>
           </div>
           <div class="section-main-articles__article-description">
-            <h2 class="site-text__large">{{ 'content.latest_photos' | t }}</h2>
+            <h2 class="site-text__large">{{ top_photo.title }}</h2>
           </div>
         </div>
+        {% else %}
+        <div class="section-main-articles__article-content">
+          <a class="article-link" href="{{ base_path }}/photos"></a>
+          <div class="section-main-articles__article-description">
+            <p class="site-text__medium">{{ 'content.no_photos_yet' | t }}</p>
+          </div>
+        </div>
+        {% endif %}
       </div>
       
     </div>
     
-    <!-- Second row: Latest content -->
+    <!-- Second row: Latest content (different item from the top row) -->
     <div class="section-main-articles__content row hidden-680">
       
       <!-- Latest Video -->
-      {% if videos.size > 1 %}
-      {% assign latest_video = videos[1] %}
-      {% assign latest_video_thumb = latest_video.thumbnail_url | default: '/themes/am/img/image/homepage/homepage-3.png' %}
       <div class="section-main-articles__article col">
         <div class="section-main-articles__article-title">
           <h2 class="article-title article-title--black">{{ 'content.latest_video' | t }}</h2>
         </div>
+        {% if latest_video %}
         <div class="section-main-articles__article-content">
           <a class="article-link" href="{{ latest_video.slug | video_url }}"></a>
           <div class="section-main-articles__article-title mobile-title">
@@ -126,7 +151,7 @@
           </div>
           <div class="section-main-articles__article-image">
             <picture>
-              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ latest_video_thumb }}" alt="{{ latest_video.title }}" width="380" height="230">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ latest_video.thumbnail_url }}" alt="{{ latest_video.title }}" width="380" height="230">
             </picture>
           </div>
           <div class="section-main-articles__article-date">
@@ -136,16 +161,15 @@
             <h2 class="site-text__large">{{ latest_video.title }}</h2>
           </div>
         </div>
+        {% endif %}
       </div>
-      {% endif %}
       
       <!-- Latest Article -->
-      {% if posts.size > 0 %}
-      {% assign latest_post = posts | first %}
       <div class="section-main-articles__article col">
         <div class="section-main-articles__article-title">
           <h2 class="article-title article-title--black">{{ 'content.latest_articles' | t }}</h2>
         </div>
+        {% if latest_post %}
         <div class="section-main-articles__article-content">
           <a class="article-link" href="{{ latest_post.slug | post_url }}"></a>
           <div class="section-main-articles__article-date">
@@ -160,29 +184,32 @@
           </div>
           {% endif %}
         </div>
+        {% endif %}
       </div>
-      {% endif %}
       
       <!-- Latest Photo -->
       <div class="section-main-articles__article col">
         <div class="section-main-articles__article-title">
           <h2 class="article-title article-title--black">{{ 'content.latest_photos' | t }}</h2>
         </div>
+        {% if latest_photo %}
         <div class="section-main-articles__article-content">
-          <a class="article-link" href="{{ base_path }}/photos"></a>
+          <a class="article-link" href="{{ latest_photo.slug | photo_url }}"></a>
+          {% if latest_photo.image_url %}
           <div class="section-main-articles__article-image">
             <picture>
-              <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/homepage/homepage-4.webp" type="image/webp">
-              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/homepage/homepage-4.png" alt="Photos" width="380" height="230">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ latest_photo.image_url }}" alt="{{ latest_photo.title }}" width="380" height="230">
             </picture>
           </div>
+          {% endif %}
           <div class="section-main-articles__article-date">
-            <p class="article-date">{{ 'now' | date: '%d.%m.%Y' }}</p>
+            <p class="article-date">{{ latest_photo.published_at | date_format }}</p>
           </div>
           <div class="section-main-articles__article-description">
-            <h2 class="site-text__large">{{ 'content.all_photos' | t }}</h2>
+            <h2 class="site-text__large">{{ latest_photo.title }}</h2>
           </div>
         </div>
+        {% endif %}
       </div>
       
     </div>

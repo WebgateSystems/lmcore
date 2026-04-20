@@ -1,0 +1,22 @@
+/ Single, layout-level modal that intercepts every form submission carrying
+  either the rich `data-confirm-destroy` attribute set or the legacy
+  `data-turbo-confirm` attribute. Wired up in app/javascript/dashboard.js
+  (look for `setupConfirmDestroy`). Copy is fully driven by the form's
+  data attributes so this markup is content-agnostic and shared across
+  posts, videos, photos and every other dashboard delete action.
+.modal.fade#confirmDestroyModal tabindex="-1" aria-labelledby="confirmDestroyModalTitle" aria-hidden="true" data-confirm-destroy-modal="" data-default-title=t("dashboard.confirm.default_title") data-default-message=t("dashboard.confirm.default_message") data-default-action=t("dashboard.common.delete_forever") data-cancel-label=t("dashboard.common.cancel")
+  .modal-dialog.modal-dialog-centered
+    .modal-content.confirm-destroy
+      .modal-header.confirm-destroy__header
+        .confirm-destroy__icon
+          i.bi.bi-exclamation-triangle-fill aria-hidden="true"
+        h2#confirmDestroyModalTitle.modal-title.confirm-destroy__title data-confirm-destroy-title=""
+        button.btn-close type="button" data-bs-dismiss="modal" aria-label=t("dashboard.a11y.close")
+      .modal-body.confirm-destroy__body
+        p.confirm-destroy__message data-confirm-destroy-message=""
+        .confirm-destroy__detail.d-none data-confirm-destroy-detail=""
+      .modal-footer.confirm-destroy__footer
+        button.btn-dashboard-secondary type="button" data-bs-dismiss="modal" data-confirm-destroy-cancel-btn="" = t("dashboard.common.cancel")
+        button.btn-dashboard-danger type="button" data-confirm-destroy-confirm-btn=""
+          i.bi.bi-trash3 aria-hidden="true"
+          span.ms-2 data-confirm-destroy-action-label="" = t("dashboard.common.delete_forever")

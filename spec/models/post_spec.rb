@@ -165,6 +165,28 @@ RSpec.describe Post do
     end
   end
 
+  describe '#source_url' do
+    it 'rebuilds the original blogs.pravda.com.ua URL for ukr_pravda_blog imports' do
+      post = build(:post, external_source: 'ukr_pravda_blog', external_id: 'muzhdabaev/69e3cf895b986')
+      expect(post.source_url).to eq('https://blogs.pravda.com.ua/authors/muzhdabaev/69e3cf895b986/')
+    end
+
+    it 'returns nil when the post has no external source' do
+      post = build(:post, external_source: nil, external_id: nil)
+      expect(post.source_url).to be_nil
+    end
+
+    it 'returns nil when the external_id is missing the author/hash split' do
+      post = build(:post, external_source: 'ukr_pravda_blog', external_id: 'broken')
+      expect(post.source_url).to be_nil
+    end
+
+    it 'returns nil for unknown external sources' do
+      post = build(:post, external_source: 'some_other_feed', external_id: 'a/b')
+      expect(post.source_url).to be_nil
+    end
+  end
+
   it_behaves_like 'sluggable'
   it_behaves_like 'publishable'
   it_behaves_like 'taggable'

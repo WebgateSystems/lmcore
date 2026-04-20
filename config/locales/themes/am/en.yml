@@ -41,6 +41,9 @@ en:
         related: "Related"
         related_video: "Related video"
         no_results: "No results found"
+        no_videos_yet: "No videos yet"
+        no_articles_yet: "No articles yet"
+        no_photos_yet: "No photos yet"
         all: "All"
         tag: "Tag"
         materials: "materials"
@@ -111,6 +114,13 @@ en:
         not_found: "Page not found"
         server_error: "Something went wrong"
         back_home: "Back to home"
+        generic_not_found: "We could not find what you were looking for. The link may be outdated or the content has been removed."
+        post_not_found: "This post is no longer available. It may have been unpublished or removed."
+        video_not_found: "This video is no longer available. It may have been unpublished or removed."
+        photo_not_found: "This photo is no longer available. It may have been unpublished or removed."
+        page_not_found: "This page is no longer available."
+        category_not_found: "This category does not exist."
+        tag_not_found: "This tag does not exist."
 
       footer:
         copyright: "All rights reserved"

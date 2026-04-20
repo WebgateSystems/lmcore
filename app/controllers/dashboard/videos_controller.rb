@@ -2,13 +2,14 @@
 
 module Dashboard
   class VideosController < BaseController
-    before_action :set_video, only: %i[show edit update destroy create_post_from_video]
+    before_action :set_video, only: %i[show edit update destroy create_post_from_video pin]
 
     def index
       authorize Video, policy_class: Dashboard::VideoPolicy
       videos = policy_scope(Video, policy_scope_class: Dashboard::VideoPolicy::Scope)
                .order(Arel.sql("COALESCE(published_at, created_at) DESC"))
       videos = videos.where(status: params[:status]) if params[:status].present?
+      videos = videos.search_by_title(params[:q]) if params[:q].present?
       @pagy, @videos = pagy(videos, items: 20)
       @latest_sync_run = current_user.dashboard_job_runs.youtube_sync.recent_first.first
       @video_post_runs = current_user.dashboard_job_runs.video_to_post
@@ -56,10 +57,16 @@ module Dashboard
       end
     end
 
+    # Hard-deletes the video, cascading comments + replies, reactions,
+    # taggings, content visibilities, and media attachments (which in turn
+    # deletes the underlying CarrierWave files). The dashboard surfaces this
+    # as an irreversible action behind a confirmation modal — see
+    # `data-confirm-destroy` in app/views/dashboard/videos/index.html.slim
+    # and the modal infra in app/javascript/dashboard.js.
     def destroy
       authorize @video, policy_class: Dashboard::VideoPolicy
-      @video.discard
-      redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.trashed")
+      @video.destroy!
+      redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.deleted")
     end
 
     def sync_youtube
@@ -96,6 +103,15 @@ module Dashboard
 
       run = current_user.dashboard_job_runs.youtube_sync.recent_first.first
       render json: serialize_job_run(run)
+    end
+
+    # Toggles this video as the single "Top video" on the public homepage
+    # for the current author. See Publishable#toggle_pinned!.
+    def pin
+      authorize @video, policy_class: Dashboard::VideoPolicy
+      pinned = @video.toggle_pinned!
+      flash_key = pinned ? "dashboard.flash.videos.pinned" : "dashboard.flash.videos.unpinned"
+      redirect_back fallback_location: dashboard_videos_path, notice: t(flash_key)
     end
 
     def create_post_from_video

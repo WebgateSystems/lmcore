@@ -19,6 +19,7 @@ LibreMedia jest wdrażana za pomocą Capistrano na serwery z Nginx + Puma.
 - Redis 7+
 - Nginx
 - Certbot (Let's Encrypt)
+- ImageMagick z `libheif` (konwersja HEIC/HEIF z iPhone'ów do JPEG przy uploadzie)
 
 ### Opcjonalne
 - Elasticsearch 8.x
@@ -94,6 +95,19 @@ sudo systemctl enable redis-server
 ```bash
 sudo apt install nginx
 sudo systemctl enable nginx
+```
+
+### 7. ImageMagick + libheif
+
+Wymagane do uploadu zdjęć (resize, optymalizacja) oraz do automatycznej
+konwersji HEIC/HEIF (format domyślny iPhone'ów) na JPEG. Bez `libheif`
+wgrywanie HEIC zakończy się wyjątkiem podczas przetwarzania.
+
+```bash
+sudo apt install imagemagick libheif1 libheif-dev
+
+# Weryfikacja, że delegat HEIC jest aktywny:
+magick -list format | grep -i heic
 ```
 
 ---

@@ -2,13 +2,14 @@
 
 module Dashboard
   class PostsController < BaseController
-    before_action :set_post, only: %i[show edit update destroy]
+    before_action :set_post, only: %i[show edit update destroy pin]
 
     def index
       authorize Post, policy_class: Dashboard::PostPolicy
       posts = policy_scope(Post, policy_scope_class: Dashboard::PostPolicy::Scope)
               .order(created_at: :desc)
       posts = posts.where(status: params[:status]) if params[:status].present?
+      posts = posts.search_by_title(params[:q]) if params[:q].present?
       @pagy, @posts = pagy(posts, items: 20)
     end
 
@@ -53,10 +54,28 @@ module Dashboard
       end
     end
 
+    # Hard-deletes the post, cascading comments + replies, reactions,
+    # taggings, content visibilities, and media attachments (which removes
+    # the underlying CarrierWave files). Linked Pravda imports continue to
+    # work after a hard delete — `Pravda::AuthorBlogImportService` does a
+    # `with_discarded.find_or_initialize_by(...)` which simply falls
+    # through to "initialize new" when the row is gone, so the next import
+    # creates a fresh record. The dashboard guards this with a
+    # confirmation modal — see `data-confirm-destroy` in
+    # app/views/dashboard/posts/index.html.slim.
     def destroy
       authorize @post, policy_class: Dashboard::PostPolicy
       @post.destroy!
-      redirect_to dashboard_posts_path, notice: t("dashboard.flash.posts.trashed")
+      redirect_to dashboard_posts_path, notice: t("dashboard.flash.posts.deleted")
+    end
+
+    # Toggles this post as the single "Top article" on the public homepage
+    # for the current author. See Publishable#toggle_pinned!.
+    def pin
+      authorize @post, policy_class: Dashboard::PostPolicy
+      pinned = @post.toggle_pinned!
+      flash_key = pinned ? "dashboard.flash.posts.pinned" : "dashboard.flash.posts.unpinned"
+      redirect_back fallback_location: dashboard_posts_path, notice: t(flash_key)
     end
 
     private

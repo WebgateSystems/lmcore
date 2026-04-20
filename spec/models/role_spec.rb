@@ -79,6 +79,31 @@ RSpec.describe Role do
     end
   end
 
+  describe 'class-level system role finders' do
+    it 'returns the role with the matching slug for each shortcut' do
+      mapping = {
+        super_admin: 'super-admin',
+        admin: 'admin',
+        moderator: 'moderator',
+        author: 'author',
+        user: 'user',
+        guest: 'guest'
+      }
+
+      mapping.each do |method, slug|
+        expected = create(:role, name: slug.titleize, slug: slug, system_role: true)
+        expect(described_class.public_send(method)).to eq(expected)
+      end
+    end
+  end
+
+  describe '#system?' do
+    it 'mirrors the system_role? boolean' do
+      expect(build(:role, system_role: true).system?).to be true
+      expect(build(:role, system_role: false).system?).to be false
+    end
+  end
+
   it_behaves_like 'sluggable'
   it_behaves_like 'translatable', :name, :description
 end

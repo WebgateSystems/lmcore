@@ -35,5 +35,9 @@ module Dashboard
     def destroy?
       author_owns_record?
     end
+
+    def pin?
+      author_owns_record?
+    end
   end
 end

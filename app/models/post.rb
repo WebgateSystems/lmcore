@@ -5,6 +5,7 @@ class Post < ApplicationRecord
   include Sluggable
   include Publishable
   include Translatable
+  include TitleSearchable
   include Taggable
   include Commentable
   include Reactable
@@ -105,6 +106,25 @@ class Post < ApplicationRecord
   # (PDFs etc.).
   def documents
     media_attachments.where(attachment_type: "document").order(:position)
+  end
+
+  # URL of the original article on the source site, when the post was
+  # imported from a known external source. Returns `nil` for organic posts
+  # so the public template falls back to plain text source name.
+  #
+  # Per-source rules:
+  #   * `ukr_pravda_blog` — `external_id` is stored as `"<author_slug>/<hash>"`
+  #     by `Pravda::AuthorBlogImportService`, so we can rebuild the public
+  #     blogs.pravda.com.ua URL deterministically.
+  def source_url
+    return nil if external_source.blank? || external_id.blank?
+
+    case external_source
+    when "ukr_pravda_blog"
+      author_slug, hash = external_id.to_s.split("/", 2)
+      return nil if author_slug.blank? || hash.blank?
+      "https://blogs.pravda.com.ua/authors/#{author_slug}/#{hash}/"
+    end
   end
 
   private

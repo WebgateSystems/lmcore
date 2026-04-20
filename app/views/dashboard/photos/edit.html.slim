@@ -5,7 +5,7 @@ section
     div
     .dashboard-actions
       = link_to t("dashboard.photos.form.back_to_list"), dashboard_photos_path, class: "btn-dashboard-secondary"
-      = button_to dashboard_photo_path(@photo), method: :delete, class: "btn-dashboard-danger", data: { turbo_confirm: t("dashboard.photos.form.delete_confirm") } do
+      = button_to dashboard_photo_path(@photo), method: :delete, class: "btn-dashboard-danger", form: { data: { confirm_destroy: "true", confirm_destroy_title: t("dashboard.confirm.photos.title"), confirm_destroy_message: t("dashboard.confirm.photos.message", title: @photo.title), confirm_destroy_detail: t("dashboard.confirm.photos.detail"), confirm_destroy_action: t("dashboard.common.delete_forever") } } do
         = t("dashboard.photos.form.delete")
 
   = render "form", photo: @photo

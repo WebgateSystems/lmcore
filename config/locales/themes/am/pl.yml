@@ -41,6 +41,9 @@ pl:
         related: "Podobne"
         related_video: "Powiazane wideo"
         no_results: "Nie znaleziono wyników"
+        no_videos_yet: "Brak filmów"
+        no_articles_yet: "Brak artykułów"
+        no_photos_yet: "Brak zdjęć"
         all: "Wszystko"
         tag: "Tag"
         materials: "materiałów"
@@ -105,6 +108,13 @@ pl:
         not_found: "Strona nie znaleziona"
         server_error: "Coś poszło nie tak"
         back_home: "Powrót do strony głównej"
+        generic_not_found: "Nie udało się znaleźć tego, czego szukasz. Link mógł stracić ważność albo treść została usunięta."
+        post_not_found: "Ten wpis nie jest już dostępny. Mógł zostać wycofany lub usunięty."
+        video_not_found: "To wideo nie jest już dostępne. Mogło zostać wycofane lub usunięte."
+        photo_not_found: "To zdjęcie nie jest już dostępne. Mogło zostać wycofane lub usunięte."
+        page_not_found: "Ta strona nie jest już dostępna."
+        category_not_found: "Taka kategoria nie istnieje."
+        tag_not_found: "Taki tag nie istnieje."
 
       footer:
         copyright: "Wszelkie prawa zastrzeżone"

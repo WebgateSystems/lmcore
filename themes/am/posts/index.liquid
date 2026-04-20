@@ -276,31 +276,7 @@
         </div>
       {% endif %}
 
-      <!-- Pagination -->
-      {% if pagination and pagination.total_pages > 1 %}
-      <div class="section-articles__pagination row">
-        <div class="section-articles__pagination-content col">
-          <div class="section-articles__pagination-numbers">
-            {% for p in (1..pagination.total_pages) %}
-              <span><a {% if p == pagination.current_page %}class="_active"{% endif %} href="?page={{ p }}{{ filters_query }}">{{ p | prepend: '0' | slice: -2, 2 }}</a></span>
-            {% endfor %}
-          </div>
-          {% if pagination.current_page < pagination.total_pages %}
-          <div class="section-articles__pagination-btn">
-            <div class="section-articles__pagination-btn-next"><a href="?page={{ pagination.current_page | plus: 1 }}{{ filters_query }}">{{ 'pagination.next' | t }}</a></div>
-            <div class="section-articles__pagination-btn-arrow"><a href="?page={{ pagination.total_pages }}{{ filters_query }}">
-                <svg width="7" height="14" viewBox="0 0 7 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0 12.355L4.32659 7L0 1.645L1.33198 0L7 7L1.33198 14L0 12.355Z" fill="white"/>
-                </svg>
-                <svg width="7" height="14" viewBox="0 0 7 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0 12.355L4.32659 7L0 1.645L1.33198 0L7 7L1.33198 14L0 12.355Z" fill="white"/>
-                </svg>
-              </a></div>
-          </div>
-          {% endif %}
-        </div>
-      </div>
-      {% endif %}
+      {% include 'pagination' %}
     </div>
   </div>
 </div>

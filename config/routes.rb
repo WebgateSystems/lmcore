@@ -86,7 +86,11 @@ Rails.application.routes.draw do
   namespace :dashboard do
     root "home#index"
     get "locale/:interface_locale", to: "base#switch_locale", as: :switch_locale
-    resources :posts
+    resources :posts do
+      member do
+        post :pin
+      end
+    end
     resources :videos do
       collection do
         post :sync_youtube
@@ -94,9 +98,14 @@ Rails.application.routes.draw do
       end
       member do
         post :create_post_from_video
+        post :pin
       end
     end
-    resources :photos
+    resources :photos do
+      member do
+        post :pin
+      end
+    end
     resources :pages
     resources :categories, only: %i[index show new create edit update destroy]
     resources :tags, only: %i[index show new create edit update destroy]

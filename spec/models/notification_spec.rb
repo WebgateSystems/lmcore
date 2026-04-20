@@ -85,5 +85,75 @@ RSpec.describe Notification do
       expect(build(:notification, notification_type: 'new_donation').icon).to eq('heart')
       expect(build(:notification, notification_type: 'system').icon).to eq('bell')
     end
+
+    it 'returns the right icon for less-common types' do
+      expect(build(:notification, notification_type: 'comment_reply').icon).to eq('comment')
+      expect(build(:notification, notification_type: 'post_published').icon).to eq('file-text')
+      expect(build(:notification, notification_type: 'post_featured').icon).to eq('file-text')
+      expect(build(:notification, notification_type: 'mention').icon).to eq('at-sign')
+      expect(build(:notification, notification_type: 'subscription_expiring').icon).to eq('alert-circle')
+      expect(build(:notification, notification_type: 'subscription_expired').icon).to eq('alert-circle')
+      expect(build(:notification, notification_type: 'payment_received').icon).to eq('credit-card')
+      expect(build(:notification, notification_type: 'payment_failed').icon).to eq('credit-card')
+    end
+  end
+
+  describe '#unsent / .unsent scope' do
+    it 'lists only notifications without sent_at' do
+      sent = create(:notification, sent_at: Time.current, delivery_method: 'email')
+      pending_send = create(:notification)
+      expect(described_class.unsent).to contain_exactly(pending_send)
+      expect(sent).to be_sent
+      expect(pending_send).not_to be_sent
+    end
+  end
+
+  describe '#unread?' do
+    it 'is the inverse of #read?' do
+      expect(build(:notification)).to be_unread
+      expect(build(:notification, :read)).not_to be_unread
+    end
+  end
+
+  describe '.create_notification' do
+    it 'creates a record with the supplied attributes' do
+      user = create(:user)
+      actor = create(:user)
+      n = described_class.create_notification(user: user, actor: actor, type: 'welcome', data: { foo: 'bar' })
+      expect(n).to be_persisted
+      expect(n.actor).to eq(actor)
+      expect(n.user).to eq(user)
+      expect(n.notification_type).to eq('welcome')
+      expect(n.data).to eq({ 'foo' => 'bar' })
+    end
+  end
+
+  describe '#title / #message' do
+    it 'falls back to a humanised default when no translation key matches' do
+      n = build(:notification, notification_type: 'system', data: {})
+      expect(n.title).to eq('System')
+      expect(n.message).to eq('')
+    end
+  end
+
+  describe '#url' do
+    let(:user) { create(:user) }
+    let(:actor) { create(:user) }
+
+    it 'is nil for types without a destination' do
+      n = build(:notification, notification_type: 'system', notifiable: nil)
+      expect(n.url).to be_nil
+    end
+
+    it 'returns the actor profile path for new_follower' do
+      n = build(:notification, notification_type: 'new_follower', user: user, actor: actor)
+      expect(n.url).to eq("/@#{actor.username}")
+    end
+
+    it 'returns the post path for post_published' do
+      post = create(:post, :published, author: user)
+      n = build(:notification, notification_type: 'post_published', user: user, notifiable: post)
+      expect(n.url).to eq("/posts/#{post.slug}")
+    end
   end
 end

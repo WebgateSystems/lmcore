@@ -5,6 +5,7 @@ class Video < ApplicationRecord
   include Sluggable
   include Publishable
   include Translatable
+  include TitleSearchable
   include Taggable
   include Commentable
   include Reactable

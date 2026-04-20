@@ -5,6 +5,7 @@ class Photo < ApplicationRecord
   include Sluggable
   include Publishable
   include Translatable
+  include TitleSearchable
   include Taggable
   include Commentable
   include Reactable
@@ -27,10 +28,13 @@ class Photo < ApplicationRecord
   mount_uploader :image, ImageUploader
 
   # Validations
+  # Photos are intentionally low-friction to upload: only the image file is
+  # required. Title/slug/description are all optional and inferred when blank
+  # (see `assign_default_title_if_blank`), so the user can just drop a file
+  # and submit.
   validates :slug, presence: true, uniqueness: { scope: :author_id }
   validates :image, presence: true
   validates :status, presence: true, inclusion: { in: %w[draft pending scheduled published archived] }
-  validate :title_presence_for_locale
 
   # Scopes
   scope :by_author, ->(author) { where(author: author) }
@@ -41,6 +45,9 @@ class Photo < ApplicationRecord
   scope :for_gallery, -> { published.visible.order(position: :asc, created_at: :desc) }
 
   # Callbacks
+  # Title is optional in the form; if the user didn't type anything we derive
+  # it from the uploaded filename so Sluggable has something to slugify.
+  before_validation :assign_default_title_if_blank
   after_save :extract_exif_data, if: :saved_change_to_image?
 
   # Instance methods
@@ -100,10 +107,23 @@ class Photo < ApplicationRecord
 
   private
 
-  def title_presence_for_locale
-    return if title_i18n.present? && title_i18n.values.any?(&:present?)
+  def assign_default_title_if_blank
+    return if title_i18n.is_a?(Hash) && title_i18n.values.any?(&:present?)
 
-    errors.add(:title_i18n, "must have at least one translation")
+    candidate = original_image_basename.presence ||
+                "Photo #{Time.current.strftime('%Y-%m-%d %H:%M')}"
+    self.title = candidate.to_s.tr("_-", " ").squeeze(" ").strip
+  end
+
+  def original_image_basename
+    return nil unless image.present?
+
+    raw = nil
+    raw = image.file.original_filename if image.file.respond_to?(:original_filename)
+    raw ||= image.identifier
+    return nil if raw.blank?
+
+    File.basename(raw.to_s, ".*").to_s
   end
 
   def extract_exif_data

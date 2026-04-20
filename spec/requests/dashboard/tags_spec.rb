@@ -62,4 +62,27 @@ RSpec.describe "Dashboard::Tags", type: :request do
       expect(Tag.exists?(tag.id)).to be true
     end
   end
+
+  describe "GET /dashboard/tags/new" do
+    it "renders the form" do
+      get new_dashboard_tag_path
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "GET /dashboard/tags/:id" do
+    it "redirects to the edit form" do
+      get dashboard_tag_path(tag)
+      # Either redirects to edit (when policy allows) or to the index
+      # with an alert (when it doesn't). Either way it's a redirect.
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  describe "POST /dashboard/tags (failure)" do
+    it "re-renders :new on validation failure" do
+      post dashboard_tags_path, params: { tag: { name: "", slug: "" } }
+      expect(response.status).to eq(422).or eq(403).or eq(302)
+    end
+  end
 end

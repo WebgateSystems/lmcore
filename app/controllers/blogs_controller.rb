@@ -8,14 +8,48 @@ class BlogsController < ApplicationController
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
 
+  # Any `find_by!` / `find` miss inside a blog action (post, video, photo,
+  # page, category, tag — and also `set_blog_owner` for an unknown blog
+  # username) is funnelled here. We render a themed 404 page when the active
+  # theme provides one, and fall back to the static `public/404.html` if the
+  # blog owner / renderer could not be resolved.
+  rescue_from ActiveRecord::RecordNotFound, with: :render_blog_not_found
+
   def show
-    featured_post = blog_posts.where(featured: true).first
-    recent_posts = blog_posts.where(featured: false).limit(6)
-    recent_videos = blog_videos.limit(4)
-    recent_photos = blog_photos.limit(6)
+    # Each column on the homepage (post / video / photo) gets a "top" pick
+    # (author-pinned via Publishable#toggle_pinned!, nil when nothing is
+    # pinned) and a "latest" pick (the most recent item).
+    #
+    # We try to avoid duplicating Top in Latest -- but only when there's
+    # something else to show. If the author has exactly one photo and it
+    # happens to be pinned as Top, the second-row Latest still shows that
+    # same photo instead of an empty state, which is what users expect
+    # ("the most recent photo IS this one, even if it's also pinned").
+    #
+    # The smaller `recent_*` strips below are intentionally stricter --
+    # they exclude Top with no fallback, because a strip of "more posts"
+    # genuinely shouldn't repeat the headline tile.
+    top_post  = pick_top(blog_posts)
+    top_video = pick_top(blog_videos)
+    top_photo = pick_top(blog_photos)
+
+    latest_post  = pick_latest(blog_posts,  top_post)
+    latest_video = pick_latest(blog_videos, top_video)
+    latest_photo = pick_latest(blog_photos, top_photo)
+
+    recent_posts  = exclude_record(blog_posts,  top_post).limit(6)
+    recent_videos = exclude_record(blog_videos, top_video).limit(4)
+    recent_photos = exclude_record(blog_photos, top_photo).limit(6)
 
     render_theme("index",
-      featured_post: serialize_post(featured_post),
+      top_post: serialize_post(top_post),
+      top_video: serialize_video(top_video),
+      top_photo: serialize_photo(top_photo),
+      latest_post: serialize_post(latest_post),
+      latest_video: serialize_video(latest_video),
+      latest_photo: serialize_photo(latest_photo),
+      # Backwards-compat alias for themes still referencing `featured_post`.
+      featured_post: serialize_post(top_post),
       posts: recent_posts.map { |p| serialize_post(p) },
       videos: recent_videos.map { |v| serialize_video(v) },
       photos: recent_photos.map { |p| serialize_photo(p) },
@@ -225,6 +259,60 @@ class BlogsController < ApplicationController
     render html: html.html_safe, layout: false
   end
 
+  # Renders a polite themed 404 page instead of letting an unhandled
+  # `ActiveRecord::RecordNotFound` (post unpublished, video deleted, wrong
+  # slug, unknown blog…) bubble up as a 500. Status is `:not_found` so
+  # crawlers and monitoring agree this URL is gone.
+  def render_blog_not_found(_exception = nil)
+    response.headers["X-Robots-Tag"] = "noindex"
+
+    if @blog_owner.present? && @renderer.present? && @renderer.template_exists?("404")
+      assigns = common_assigns.merge(
+        "page_title" => i18n_theme_translation("errors.not_found", default: "Not found"),
+        "not_found_message" => not_found_message_for(params[:action])
+      )
+      html = @renderer.render("404", assigns)
+      render html: html.html_safe, layout: false, status: :not_found
+    else
+      render html: static_404_html.html_safe, layout: false, status: :not_found
+    end
+  end
+
+  def static_404_html
+    @static_404_html ||= begin
+      Rails.public_path.join("404.html").read
+    rescue StandardError
+      "<!doctype html><meta charset=\"utf-8\"><title>404 Not Found</title>" \
+        "<h1>404 Not Found</h1>"
+    end
+  end
+
+  def not_found_message_for(action)
+    key = case action.to_s
+    when "post"    then "errors.post_not_found"
+    when "video"   then "errors.video_not_found"
+    when "photo"   then "errors.photo_not_found"
+    when "page"    then "errors.page_not_found"
+    when "category" then "errors.category_not_found"
+    when "tag"     then "errors.tag_not_found"
+    else "errors.generic_not_found"
+    end
+    i18n_theme_translation(key, default: nil)
+  end
+
+  # Looks up a key under the active theme's translation namespace
+  # (e.g. `themes.am.errors.post_not_found`) with a graceful fallback to the
+  # raw key under the global namespace and finally to the supplied default.
+  def i18n_theme_translation(key, default: nil)
+    scope = "themes.#{active_theme_slug}"
+    scoped = I18n.t("#{scope}.#{key}", default: nil)
+    return scoped if scoped.present?
+
+    I18n.t(key, default: default)
+  rescue I18n::MissingTranslationData
+    default
+  end
+
   def common_assigns
     {
       "site" => site_settings_hash,
@@ -271,6 +359,33 @@ class BlogsController < ApplicationController
 
   def blog_videos
     @blog_owner.videos.published.kept.includes(:category, :tags).recent
+  end
+
+  # Returns the "top" record from a blog scope — i.e. the single item the
+  # author explicitly pinned as Top from the dashboard
+  # (Publishable#toggle_pinned!). Pinning is single-select per content type
+  # per author, so `.first` is enough: there can only be one `featured: true`
+  # record at a time. Returns nil when nothing is pinned, in which case the
+  # homepage column renders an empty state instead of guessing for the user.
+  def pick_top(scope)
+    scope.where(featured: true).first
+  end
+
+  # Returns `scope` with `record` excluded, or the unchanged scope when
+  # `record` is nil. Used so that the "latest" slot doesn't duplicate the
+  # item already shown in the "top" slot.
+  def exclude_record(scope, record)
+    record ? scope.where.not(id: record.id) : scope
+  end
+
+  # Picks the most recent record from `scope`, preferring one that is NOT
+  # the given `top` record (so the headline tile and the second-row Latest
+  # tile don't duplicate). Falls back to `top` itself when it's the only
+  # thing the author has -- showing the same single photo twice is still
+  # better UX than rendering an empty "Latest" column on a blog that
+  # genuinely only has one photo.
+  def pick_latest(scope, top)
+    exclude_record(scope, top).first || top
   end
 
   def apply_video_filters(scope, query:, years:, tags:)
@@ -341,33 +456,14 @@ class BlogsController < ApplicationController
     params.empty? ? "" : "&#{params.join('&')}"
   end
 
+  # Delegates to the shared `TitleSearchable#search_by_title` scope on
+  # Post / Video / Photo. Kept as a thin wrapper because callers pass
+  # `query:` explicitly and we want the existing keyword-arg call sites
+  # (`apply_post_filters` etc.) to keep working.
   def filter_by_i18n_title(scope, query:)
-    q = query.to_s
-    patterns = [
-      q,
-      q.downcase,
-      q.upcase,
-      q.capitalize
-    ].map { |v| "%#{ActiveRecord::Base.sanitize_sql_like(v)}%" }
-    case scope.table_name
-    when "posts"
-      scope.where(
-        "EXISTS (SELECT 1 FROM jsonb_each_text(posts.title_i18n) AS title(locale, value) WHERE title.value LIKE ? OR title.value LIKE ? OR title.value LIKE ? OR title.value LIKE ?)",
-        *patterns
-      )
-    when "videos"
-      scope.where(
-        "EXISTS (SELECT 1 FROM jsonb_each_text(videos.title_i18n) AS title(locale, value) WHERE title.value LIKE ? OR title.value LIKE ? OR title.value LIKE ? OR title.value LIKE ?)",
-        *patterns
-      )
-    when "photos"
-      scope.where(
-        "EXISTS (SELECT 1 FROM jsonb_each_text(photos.title_i18n) AS title(locale, value) WHERE title.value LIKE ? OR title.value LIKE ? OR title.value LIKE ? OR title.value LIKE ?)",
-        *patterns
-      )
-    else
-      scope
-    end
+    return scope unless scope.respond_to?(:search_by_title)
+
+    scope.search_by_title(query)
   end
 
   def blog_video_years
@@ -480,13 +576,13 @@ class BlogsController < ApplicationController
       "category" => post.category ? serialize_category(post.category) : nil,
       "tags" => post.tags.map { |t| { "name" => t.name, "slug" => t.slug } },
       "author" => serialize_blog_owner,
-      "source_name" => post.external_source
+      "source_name" => post.external_source,
+      "source_url" => post.try(:source_url)
     }
     if full
       data["content"] = post.content_i18n[locale] || post.content_i18n.values.compact.first
       data["comments_enabled"] = post.comments_enabled?
       data["related_video"] = serialize_video(post.video, full: false) if post.video.present?
-      data["source_url"] = post.try(:source_url)
       data["documents"] = post.documents.map { |d| serialize_document(d) }
     end
     data

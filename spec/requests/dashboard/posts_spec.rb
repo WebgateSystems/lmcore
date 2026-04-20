@@ -143,5 +143,73 @@ RSpec.describe "Dashboard::Posts", type: :request do
       expect { delete dashboard_post_path(post_record) }.to change(Post, :count).by(-1)
       expect(response).to redirect_to(dashboard_posts_path)
     end
+
+    # Confirmation modal in the UI warns the author this is irreversible — the
+    # controller MUST follow through and cascade comments / reactions /
+    # taggings / media attachments via `dependent: :destroy`.
+    it "cascades comments, reactions, taggings and attachments" do
+      tag = Tag.create!(name: "Cascading", slug: "cascading")
+      post_record.tags << tag
+      reactor = create(:user)
+      comment = post_record.comments.create!(user: reactor, content: "first!", status: "approved")
+      reaction = post_record.reactions.create!(user: reactor, reaction_type: "like")
+      attachment = create(:media_attachment, user: author, attachable: post_record)
+
+      expect { delete dashboard_post_path(post_record) }.to change(Post, :count).by(-1)
+      expect(Comment.where(id: comment.id)).to be_empty
+      expect(Reaction.where(id: reaction.id)).to be_empty
+      expect(Tagging.where(taggable_type: "Post", taggable_id: post_record.id)).to be_empty
+      expect(MediaAttachment.where(id: attachment.id)).to be_empty
+    end
+  end
+
+  describe "GET /dashboard/posts with ?q= (search)" do
+    before { sign_in author }
+
+    it "filters posts by title across all stored locales" do
+      hit  = create(:post, author: author, title_i18n: { "en" => "Apricots Today", "pl" => "" })
+      miss = create(:post, author: author, title_i18n: { "en" => "Bananas",        "pl" => "" })
+
+      get dashboard_posts_path(q: "apricot")
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Apricots Today")
+      expect(response.body).not_to include("Bananas") if response.body.exclude?(miss.slug)
+    end
+
+    it "ignores blank queries (full collection visible)" do
+      create(:post, author: author, title_i18n: { "en" => "Anything" })
+      get dashboard_posts_path(q: "   ")
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "POST /dashboard/posts/:id/pin" do
+    before { sign_in author }
+
+    it "pins the post and unpins its sibling" do
+      old_top = create(:post, author: author, featured: true)
+      target  = create(:post, author: author, featured: false)
+
+      post pin_dashboard_post_path(target), headers: { "HTTP_REFERER" => dashboard_posts_path }
+
+      expect(response).to redirect_to(dashboard_posts_path)
+      expect(target.reload.featured?).to be true
+      expect(old_top.reload.featured?).to be false
+    end
+
+    it "unpins an already-pinned post" do
+      target = create(:post, author: author, featured: true)
+
+      post pin_dashboard_post_path(target), headers: { "HTTP_REFERER" => dashboard_posts_path }
+
+      expect(target.reload.featured?).to be false
+    end
+
+    it "404s when trying to pin another author's post" do
+      foreign = create(:post, author: other_author)
+      post pin_dashboard_post_path(foreign)
+      expect(response).to have_http_status(:not_found)
+    end
   end
 end

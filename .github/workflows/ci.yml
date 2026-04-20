@@ -81,10 +81,42 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Run tests
+      # package.json declares `"packageManager": "yarn@3.2.0"`. The runner ships
+      # Yarn Classic globally; without Corepack it would refuse to install
+      # ("the current global version of Yarn is 1.22.22"). Corepack provisions
+      # the exact Yarn version requested by the project.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Enable Corepack and activate Yarn 3
+        run: |
+          corepack enable
+          corepack prepare yarn@3.2.0 --activate
+          yarn --version
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-${{ runner.os }}-
+
+      - name: Install JS dependencies
+        run: yarn install --immutable
+
+      - name: Prepare test database
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+        run: bin/rails db:test:prepare
+
+      - name: Run RSpec
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test
+        run: bundle exec rspec

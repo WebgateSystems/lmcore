@@ -79,6 +79,73 @@
     .section-article-item__paragraph {
       margin-bottom: 20px;
     }
+
+    /* Inline links inside the post body (and the explicit `.post-content-link`
+       class used for the "Related video" link below the body). Bold, no
+       underline, switches to the site accent red on hover/focus. */
+    .section-article__content-text a,
+    .section-article-item__paragraph a,
+    .section-article-item__related-video a,
+    a.post-content-link {
+      color: inherit;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.15s ease-in-out;
+    }
+    .section-article__content-text a:hover,
+    .section-article__content-text a:focus,
+    .section-article-item__paragraph a:hover,
+    .section-article-item__paragraph a:focus,
+    .section-article-item__related-video a:hover,
+    .section-article-item__related-video a:focus,
+    a.post-content-link:hover,
+    a.post-content-link:focus {
+      color: #c52a2a;
+    }
+
+    /* "Related video" line: same baseline as paragraphs, with breathing room
+       above so it does not stick to the previous block and below so the social
+       icons row stays visually separate. */
+    .section-article-item__related-video {
+      margin-top: 32px;
+      margin-bottom: 28px;
+      font-size: 24px;
+      line-height: 1.4;
+    }
+
+    /* Inline images coming from imported posts (Pravda etc.). The renderer
+       wraps every image in <figure class="post-figure"> so we can size it
+       responsively without affecting the surrounding paragraph layout. */
+    .section-article__content-text figure.post-figure,
+    .section-article-item__paragraph figure.post-figure {
+      margin: 24px auto;
+      max-width: 100%;
+      text-align: center;
+    }
+    .section-article__content-text figure.post-figure img,
+    .section-article-item__paragraph figure.post-figure img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto;
+    }
+    .section-article__content-text figure.post-figure figcaption,
+    .section-article-item__paragraph figure.post-figure figcaption {
+      margin-top: 8px;
+      font-size: 16px;
+      line-height: 1.3;
+      color: #666;
+    }
+    /* Some imported posts wrap <img> in a bare <div>. Center the image and
+       keep it from blowing past the column width. */
+    .section-article__content-text > div > img,
+    .section-article-item__paragraph > div > img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 24px auto;
+    }
+
     
     /* Stats counters - icon + number only, fixed spacing, desktop only */
     .section-article-item__stats-counters {

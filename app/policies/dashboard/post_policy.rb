@@ -43,5 +43,9 @@ module Dashboard
     def unpublish?
       author_owns_record?
     end
+
+    def pin?
+      author_owns_record?
+    end
   end
 end
