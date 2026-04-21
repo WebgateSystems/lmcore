@@ -331,7 +331,8 @@ class BlogsController < ApplicationController
       "blog_locale_switcher_items" => blog_locale_switcher_items,
       "popular_tags" => popular_tags,
       "csrf_token" => form_authenticity_token,
-      "current_user" => serialize_current_user
+      "current_user" => serialize_current_user,
+      "show_dashboard_link" => show_dashboard_link?
     }
   end
 
@@ -346,6 +347,13 @@ class BlogsController < ApplicationController
       "confirmed" => current_user.confirmed?,
       "avatar_url" => current_user.avatar&.url
     }
+  end
+
+  def show_dashboard_link?
+    return false unless current_user
+    return true if current_user == @blog_owner
+
+    current_user.can_edit?(@blog_owner)
   end
 
   def active_theme_slug

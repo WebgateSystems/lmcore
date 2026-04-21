@@ -415,6 +415,10 @@
               </div>
               <div class="footer__social-contact desktop-contact js__popup_contact_open"><a href="javascript:void(0)">{{ 'footer.contact_me' | t }}</a></div>
               <div class="footer__social-contact mobile-contact js__popup_contact_open"><a href="javascript:void(0)">{{ 'footer.write_me' | t }}</a></div>
+              {% if show_dashboard_link %}
+              <div class="footer__social-contact desktop-contact"><a href="/dashboard">{{ 'admin.dashboard' | t }}</a></div>
+              <div class="footer__social-contact mobile-contact"><a href="/dashboard">{{ 'admin.dashboard' | t }}</a></div>
+              {% endif %}
             </div>
             
             <!-- Links -->
