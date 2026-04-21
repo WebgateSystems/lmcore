@@ -9,6 +9,8 @@ require "timeout"
 require "pathname"
 require "fileutils"
 require "set"
+require "net/http"
+require "uri"
 
 module Youtube
   class ChannelVideosSyncService
@@ -291,6 +293,7 @@ module Youtube
       published_at = parse_published_at(normalized)
       category = find_default_category
       thumbnail_url = best_thumbnail_url(normalized)
+      translation_locale = translation_locale_for_entry(normalized)
       local_thumbnail_path = resolve_local_thumbnail_path(normalized["thumbnail_local_path"])
       should_attach_local_thumbnail = local_thumbnail_path.present? && File.exist?(local_thumbnail_path) && video.thumbnail.blank?
 
@@ -318,8 +321,8 @@ module Youtube
         video.created_at = published_at
       end
 
-      video.title_i18n = upsert_translated_value(video.title_i18n, title)
-      video.description_i18n = upsert_translated_value(video.description_i18n, description) if description.present?
+      video.title_i18n = upsert_translated_value(video.title_i18n, title, translation_locale: translation_locale)
+      video.description_i18n = upsert_translated_value(video.description_i18n, description, translation_locale: translation_locale) if description.present?
 
       # Store all user-visible YouTube metadata we can access without auth.
       youtube_payload = {
@@ -352,7 +355,13 @@ module Youtube
       youtube_payload["source_signature"] = Digest::SHA256.hexdigest(JSON.generate(youtube_payload))
 
       needs_remote_thumbnail = download_thumbnails && video.thumbnail.blank? && thumbnail_url.present?
-      if unchanged_video?(video, created: created, youtube_payload: youtube_payload, title: title, description: description, published_at: published_at) && !should_attach_local_thumbnail && !needs_remote_thumbnail
+      if unchanged_video?(video,
+        created: created,
+        youtube_payload: youtube_payload,
+        title: title,
+        description: description,
+        published_at: published_at,
+        translation_locale: translation_locale) && !should_attach_local_thumbnail && !needs_remote_thumbnail
         return :skipped
       end
 
@@ -435,16 +444,23 @@ module Youtube
     end
 
     def best_thumbnail_url(entry)
-      thumbs = Array(entry["thumbnails"]).compact
+      video_id = entry["id"].to_s.presence
+      deterministic_thumbnail_candidates(video_id).each do |candidate|
+        return candidate if reachable_thumbnail_url?(candidate)
+      end
+
+      thumbs = Array(entry["thumbnails"]).compact.select do |thumb|
+        thumb["width"].to_i.positive? && thumb["height"].to_i.positive?
+      end
       return entry["thumbnail"] if thumbs.empty?
 
       candidate = thumbs.max_by { |thumb| thumb["width"].to_i * thumb["height"].to_i }
       candidate&.dig("url") || entry["thumbnail"]
     end
 
-    def upsert_translated_value(current_value, new_value)
+    def upsert_translated_value(current_value, new_value, translation_locale:)
       hash = current_value.is_a?(Hash) ? current_value.dup : {}
-      hash[locale] = new_value
+      hash[translation_locale] = new_value
       hash
     end
 
@@ -604,17 +620,57 @@ module Youtube
       entries
     end
 
-    def unchanged_video?(video, created:, youtube_payload:, title:, description:, published_at:)
+    def unchanged_video?(video, created:, youtube_payload:, title:, description:, published_at:, translation_locale:)
       return false if created
 
       stored_signature = video.video_data.dig("youtube", "source_signature")
-      localized_title = video.title_i18n.is_a?(Hash) ? video.title_i18n[locale] : nil
-      localized_description = video.description_i18n.is_a?(Hash) ? video.description_i18n[locale] : nil
+      localized_title = video.title_i18n.is_a?(Hash) ? video.title_i18n[translation_locale] : nil
+      localized_description = video.description_i18n.is_a?(Hash) ? video.description_i18n[translation_locale] : nil
 
       stored_signature == youtube_payload["source_signature"] &&
         localized_title.to_s == title.to_s &&
         localized_description.to_s == description.to_s &&
         video.published_at.to_i == published_at.to_i
+    end
+
+    def translation_locale_for_entry(entry)
+      normalize_translation_locale(entry["language"]) || locale
+    end
+
+    def normalize_translation_locale(value)
+      raw = value.to_s.strip.downcase.tr("_", "-")
+      return nil if raw.blank?
+
+      canonical = raw.split("-").first.to_s
+      return nil unless canonical.match?(/\A[a-z]{2,3}\z/)
+
+      canonical
+    end
+
+    def deterministic_thumbnail_candidates(video_id)
+      return [] if video_id.blank?
+
+      [
+        "https://i.ytimg.com/vi/#{video_id}/maxresdefault.jpg",
+        "https://i.ytimg.com/vi/#{video_id}/hqdefault.jpg"
+      ]
+    end
+
+    def reachable_thumbnail_url?(url)
+      uri = URI.parse(url.to_s)
+      return false unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = (uri.scheme == "https")
+      http.open_timeout = 3
+      http.read_timeout = 3
+
+      response = http.start do |client|
+        client.request(Net::HTTP::Head.new(uri.request_uri))
+      end
+      response.is_a?(Net::HTTPSuccess)
+    rescue StandardError
+      false
     end
 
     def generated_slug(title, video_id)

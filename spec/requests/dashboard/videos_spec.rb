@@ -13,15 +13,17 @@ RSpec.describe "Dashboard::Videos", type: :request do
   describe "POST /dashboard/videos/sync_youtube" do
     it "creates a sync run and enqueues worker" do
       allow(SiteSetting).to receive(:get).and_return("https://www.youtube.com/@AyderMuzhdabaev/videos")
+      allow(SiteSetting).to receive(:blog_available_locale_codes_for).with(author).and_return(%w[en ru])
       allow(SyncYoutubeChannelVideosWorker).to receive(:perform_async)
 
       expect {
-        post sync_youtube_dashboard_videos_path
+        post sync_youtube_dashboard_videos_path, params: { sync_locale: "ru" }
       }.to change(DashboardJobRun, :count).by(1)
 
       run = DashboardJobRun.last
       expect(run.job_type).to eq("youtube_sync")
       expect(SyncYoutubeChannelVideosWorker).to have_received(:perform_async)
+        .with(author.id, "https://www.youtube.com/@AyderMuzhdabaev/videos", "ru", nil, run.id)
     end
   end
 

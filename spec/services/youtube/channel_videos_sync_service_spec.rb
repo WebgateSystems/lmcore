@@ -42,6 +42,7 @@ RSpec.describe Youtube::ChannelVideosSyncService, type: :service do
         "id" => "abc123",
         "title" => "Example video",
         "description" => "Description body",
+        "language" => "ru",
         "upload_date" => "20240301",
         "thumbnails" => [ { "url" => "https://img/x.jpg", "width" => 640, "height" => 360 } ],
         "view_count" => 100,
@@ -60,8 +61,18 @@ RSpec.describe Youtube::ChannelVideosSyncService, type: :service do
       expect(video.video_external_id).to eq("abc123")
       expect(video.video_provider).to eq("youtube")
       expect(video.status).to eq("published")
-      expect(video.title_i18n).to include("en" => "Example video")
+      expect(video.title_i18n).to include("ru" => "Example video")
       expect(video.video_data.dig("youtube", "id")).to eq("abc123")
+    end
+
+    it "falls back to configured service locale when yt-dlp language is missing" do
+      allow(service).to receive(:fetch_video_ids).and_return([ "abc123" ])
+      allow(service).to receive(:fetch_video_metadata).and_return(entry.except("language"))
+
+      service.call
+
+      video = Video.order(:created_at).last
+      expect(video.title_i18n).to include("en" => "Example video")
     end
 
     it "skips ids already present for the user" do

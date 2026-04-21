@@ -74,6 +74,7 @@ module Dashboard
 
       channel_url = SiteSetting.get("youtube_url", user: current_user, default: nil).presence ||
                     SiteSetting.get("social_youtube", user: current_user, default: nil).presence
+      sync_locale = selected_sync_locale
 
       if channel_url.blank?
         redirect_to dashboard_videos_path, alert: t("dashboard.flash.videos.sync_channel_missing")
@@ -90,7 +91,7 @@ module Dashboard
       SyncYoutubeChannelVideosWorker.perform_async(
         current_user.id,
         channel_url,
-        nil,
+        sync_locale,
         nil,
         job_run.id
       )
@@ -160,6 +161,12 @@ module Dashboard
         started_at: run.started_at,
         finished_at: run.finished_at
       }
+    end
+
+    def selected_sync_locale
+      candidate = params[:sync_locale].to_s.strip.presence || I18n.locale.to_s
+      available = dashboard_available_locales.presence || I18n.available_locales.map(&:to_s)
+      available.include?(candidate) ? candidate : (current_user.locale.presence || I18n.default_locale.to_s)
     end
   end
 end

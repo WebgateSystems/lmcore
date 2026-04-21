@@ -22,7 +22,7 @@ section
             th = t("dashboard.common.table.title")
             th = t("dashboard.common.table.category")
             th = t("dashboard.common.table.status")
-            th = t("dashboard.common.table.created")
+            th = t("dashboard.common.table.published")
             th.text-end = t("dashboard.common.table.actions")
         tbody
           - @posts.each do |post|
@@ -31,7 +31,7 @@ section
               td = post.category&.name || t("dashboard.common.none")
               td
                 span class="dashboard-badge dashboard-badge--#{post.status}" = post.status.humanize
-              td.text-body-3 = post.created_at.strftime("%b %d, %Y")
+              td.text-body-3 = (post.published_at || post.created_at).strftime("%b %d, %Y")
               td.text-end
                 .dashboard-actions.justify-content-end
                   - pin_class = post.featured? ? "icon-pill text-warning" : "icon-pill"

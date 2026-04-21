@@ -12,8 +12,11 @@ section
           span.dashboard-badge class="dashboard-badge--#{params[:status]}" = params[:status].humanize
           = " "
           = link_to t("dashboard.common.clear_filter"), dashboard_videos_path(q: params[:q]), class: "text-body-3 text-decoration-none"
-    .d-flex.gap-2.flex-shrink-0
-      = button_to t("dashboard.videos.sync.action"), sync_youtube_dashboard_videos_path, method: :post, class: "btn-dashboard-secondary"
+    .d-flex.gap-2.flex-shrink-0.align-items-center
+      = form_with url: sync_youtube_dashboard_videos_path, method: :post, local: true, class: "d-flex gap-2 align-items-center flex-wrap" do |f|
+        - sync_locale_options = locale_select_options_for_user(current_user)
+        = f.select :sync_locale, options_for_select(sync_locale_options, I18n.locale.to_s), {}, class: "form-select form-select-sm", aria: { label: t("dashboard.videos.sync.locale_label", default: "Metadata language") }
+        = f.submit t("dashboard.videos.sync.action"), class: "btn-dashboard-secondary"
       = link_to t("dashboard.videos.index.new"), new_dashboard_video_path, class: "btn-dashboard-primary"
 
   - if @latest_sync_run.present?

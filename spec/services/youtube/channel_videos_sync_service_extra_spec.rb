@@ -50,12 +50,42 @@ RSpec.describe Youtube::ChannelVideosSyncService, type: :service do
   end
 
   describe "#best_thumbnail_url" do
+    before do
+      allow(service).to receive(:reachable_thumbnail_url?).and_return(false)
+    end
+
+    it "prefers deterministic YouTube URLs when available" do
+      allow(service).to receive(:reachable_thumbnail_url?) do |url|
+        url.include?("/maxresdefault.jpg")
+      end
+
+      url = service.send(:best_thumbnail_url, "id" => "abc123", "thumbnails" => [])
+      expect(url).to eq("https://i.ytimg.com/vi/abc123/maxresdefault.jpg")
+    end
+
+    it "falls back to deterministic hq URL when maxres is unavailable" do
+      allow(service).to receive(:reachable_thumbnail_url?) do |url|
+        url.include?("/hqdefault.jpg")
+      end
+
+      url = service.send(:best_thumbnail_url, "id" => "abc123", "thumbnails" => [])
+      expect(url).to eq("https://i.ytimg.com/vi/abc123/hqdefault.jpg")
+    end
+
     it "picks the largest thumbnail by area" do
       url = service.send(:best_thumbnail_url, "thumbnails" => [
         { "url" => "small", "width" => 100, "height" => 100 },
         { "url" => "big",   "width" => 1280, "height" => 720 }
       ])
       expect(url).to eq("big")
+    end
+
+    it "ignores thumbnails without known dimensions" do
+      url = service.send(:best_thumbnail_url, "thumbnails" => [
+        { "url" => "unknown-size", "width" => nil, "height" => nil },
+        { "url" => "known-size", "width" => 320, "height" => 180 }
+      ])
+      expect(url).to eq("known-size")
     end
 
     it "falls back to top-level thumbnail when array is empty" do
@@ -334,7 +364,7 @@ RSpec.describe Youtube::ChannelVideosSyncService, type: :service do
     it "returns false for newly-created records" do
       payload = { "source_signature" => "sig" }
       expect(service.send(:unchanged_video?, Video.new, created: true,
-        youtube_payload: payload, title: "t", description: "d", published_at: Time.current)).to be false
+        youtube_payload: payload, title: "t", description: "d", published_at: Time.current, translation_locale: service.locale)).to be false
     end
 
     it "returns true when signature, title, description and published_at all match" do
@@ -347,7 +377,7 @@ RSpec.describe Youtube::ChannelVideosSyncService, type: :service do
       )
       payload = { "source_signature" => "sig" }
       expect(service.send(:unchanged_video?, video, created: false,
-        youtube_payload: payload, title: "t", description: "d", published_at: published)).to be true
+        youtube_payload: payload, title: "t", description: "d", published_at: published, translation_locale: service.locale)).to be true
     end
   end
 

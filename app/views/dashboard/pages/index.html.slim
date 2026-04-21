@@ -17,7 +17,7 @@ section
             th = t("dashboard.common.table.title")
             th = t("dashboard.common.table.type")
             th = t("dashboard.common.table.status")
-            th = t("dashboard.common.table.created")
+            th = t("dashboard.common.table.published")
             th.text-end = t("dashboard.common.table.actions")
         tbody
           - @pages.each do |page|
@@ -26,7 +26,7 @@ section
               td = page.page_type&.humanize || t("dashboard.common.custom")
               td
                 span class="dashboard-badge dashboard-badge--#{page.status}" = page.status.humanize
-              td.text-body-3 = page.created_at.strftime("%b %d, %Y")
+              td.text-body-3 = (page.published_at || page.created_at).strftime("%b %d, %Y")
               td.text-end
                 .dashboard-actions.justify-content-end
                   = link_to edit_dashboard_page_path(page), class: "icon-pill", title: t("dashboard.common.edit") do

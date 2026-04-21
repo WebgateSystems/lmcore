@@ -7,7 +7,7 @@ module Dashboard
     def index
       authorize Post, policy_class: Dashboard::PostPolicy
       posts = policy_scope(Post, policy_scope_class: Dashboard::PostPolicy::Scope)
-              .order(created_at: :desc)
+              .order(Arel.sql("COALESCE(published_at, created_at) DESC"))
       posts = posts.where(status: params[:status]) if params[:status].present?
       posts = posts.search_by_title(params[:q]) if params[:q].present?
       @pagy, @posts = pagy(posts, items: 20)

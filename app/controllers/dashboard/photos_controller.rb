@@ -7,7 +7,7 @@ module Dashboard
     def index
       authorize Photo, policy_class: Dashboard::PhotoPolicy
       photos = policy_scope(Photo, policy_scope_class: Dashboard::PhotoPolicy::Scope)
-               .order(created_at: :desc)
+               .order(Arel.sql("COALESCE(published_at, created_at) DESC"))
       photos = photos.where(status: params[:status]) if params[:status].present?
       photos = photos.search_by_title(params[:q]) if params[:q].present?
       @pagy, @photos = pagy(photos, items: 20)
