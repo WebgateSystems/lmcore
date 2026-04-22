@@ -83,6 +83,32 @@
         }, 100);
       });
     });
+
+    // Mobile drawer action buttons.
+    document.querySelectorAll('.section__filet-submit-btn--mobile button').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        applyFilters();
+      });
+    });
+
+    document.querySelectorAll('.section__filet-cansel-btn--mobile button').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMobileFiltersDrawer();
+      });
+    });
+
+    // Mobile title search icon triggers filtering immediately.
+    document.querySelectorAll('.js_filter_title_submit_mobile').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        applyFilters();
+      });
+    });
   }
 
   /**
@@ -95,28 +121,21 @@
       q: ''
     };
 
-    // Get selected years
-    document.querySelectorAll('.js_filter_years_list .js_filter_option').forEach(function(label) {
-      var input = label.querySelector('input');
-      if (input && input.checked) {
-        var value = label.getAttribute('data-option');
-        if (value) filters.years.push(value);
-      }
-    });
+    filters.years = collectCheckedOptions([
+      '.js_filter_years_list .js_filter_option',
+      '.js_filter_years_list_mobile .js_filter_option'
+    ]);
 
-    // Get selected tags
-    document.querySelectorAll('.js_filter_tags_list .js_filter_option').forEach(function(label) {
-      var input = label.querySelector('input');
-      if (input && input.checked) {
-        var value = label.getAttribute('data-option');
-        if (value) filters.tags.push(value);
-      }
-    });
+    filters.tags = collectCheckedOptions([
+      '.js_filter_tags_list .js_filter_option',
+      '.js_filter_tags_list_mobile .js_filter_option'
+    ]);
 
-    var titleInput = document.querySelector('.js_filter_title_input');
-    if (titleInput) {
-      filters.q = (titleInput.value || '').trim();
-    }
+    var mobileTitleInput = document.querySelector('.js_filter_title_input_mobile');
+    var desktopTitleInput = document.querySelector('.js_filter_title_input');
+    var mobileValue = mobileTitleInput ? (mobileTitleInput.value || '').trim() : '';
+    var desktopValue = desktopTitleInput ? (desktopTitleInput.value || '').trim() : '';
+    filters.q = mobileValue || desktopValue;
 
     return filters;
   }
@@ -161,18 +180,33 @@
 
   function initTitleLiveFilter() {
     var titleInput = document.querySelector('.js_filter_title_input');
-    if (!titleInput) return;
+    var mobileTitleInput = document.querySelector('.js_filter_title_input_mobile');
+    if (!titleInput && !mobileTitleInput) return;
 
     var debounceId = null;
-    titleInput.addEventListener('input', function() {
-      clearTimeout(debounceId);
-      debounceId = setTimeout(function() {
-        var query = (titleInput.value || '').trim();
-        if (query.length === 0 || query.length >= 2) {
-          applyFilters();
-        }
-      }, 420);
-    });
+    if (titleInput) {
+      titleInput.addEventListener('input', function() {
+        clearTimeout(debounceId);
+        debounceId = setTimeout(function() {
+          var query = (titleInput.value || '').trim();
+          if (query.length === 0 || query.length >= 2) {
+            applyFilters();
+          }
+        }, 420);
+      });
+    }
+
+    // Mobile title field uses explicit "Apply" action.
+    if (mobileTitleInput && titleInput) {
+      mobileTitleInput.addEventListener('input', function() {
+        titleInput.value = mobileTitleInput.value;
+      });
+      mobileTitleInput.addEventListener('keydown', function(event) {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        applyFilters();
+      });
+    }
   }
 
   /**
@@ -191,23 +225,18 @@
     
     // Check years from URL
     params.getAll('year').forEach(function(year) {
-      var selector = '.js_filter_years_list .js_filter_option[data-option="' + year + '"] input';
-      var input = document.querySelector(selector);
-      if (input) {
+      document.querySelectorAll('.js_filter_years_list .js_filter_option[data-option="' + year + '"] input, .js_filter_years_list_mobile .js_filter_option[data-option="' + year + '"] input').forEach(function(input) {
         input.checked = true;
-        // Trigger change event to update UI
         triggerChange(input);
-      }
+      });
     });
     
     // Check tags from URL
     params.getAll('tag').forEach(function(tag) {
-      var selector = '.js_filter_tags_list .js_filter_option[data-option="' + tag + '"] input';
-      var input = document.querySelector(selector);
-      if (input) {
+      document.querySelectorAll('.js_filter_tags_list .js_filter_option[data-option="' + tag + '"] input, .js_filter_tags_list_mobile .js_filter_option[data-option="' + tag + '"] input').forEach(function(input) {
         input.checked = true;
         triggerChange(input);
-      }
+      });
     });
 
     var q = params.get('q');
@@ -215,6 +244,10 @@
       var titleInput = document.querySelector('.js_filter_title_input');
       if (titleInput) {
         titleInput.value = q;
+      }
+      var mobileTitleInput = document.querySelector('.js_filter_title_input_mobile');
+      if (mobileTitleInput) {
+        mobileTitleInput.value = q;
       }
     }
   }
@@ -251,6 +284,26 @@
   function triggerChange(element) {
     var event = new Event('change', { bubbles: true });
     element.dispatchEvent(event);
+  }
+
+  function collectCheckedOptions(selectors) {
+    var values = new Set();
+    selectors.forEach(function(selector) {
+      document.querySelectorAll(selector).forEach(function(label) {
+        var input = label.querySelector('input');
+        if (!input || !input.checked) return;
+        var value = label.getAttribute('data-option');
+        if (value) values.add(value);
+      });
+    });
+    return Array.from(values);
+  }
+
+  function closeMobileFiltersDrawer() {
+    var drawer = document.querySelector('.section__filter-wrapper--mobile');
+    if (!drawer) return;
+    drawer.classList.remove('_active');
+    document.body.classList.remove('disable-scroll');
   }
 
 })();

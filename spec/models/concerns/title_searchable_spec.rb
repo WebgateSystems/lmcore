@@ -37,6 +37,19 @@ RSpec.describe TitleSearchable, type: :model do
       expect(klass.search_by_title("apricots")).to include(english_match)
     end
 
+    it "matches Cyrillic regardless of case" do
+      klass = factory.to_s.classify.constantize
+      cyrillic = create(factory, author: author, title_i18n: { "ru" => "ШВЕДЫ ГОТОВЯТСЯ" })
+      expect(klass.search_by_title("шведы")).to include(cyrillic)
+      expect(klass.search_by_title("ШВЕДЫ")).to include(cyrillic)
+    end
+
+    it "matches lowercase query against capitalized Cyrillic title" do
+      klass = factory.to_s.classify.constantize
+      cyrillic = create(factory, author: author, title_i18n: { "uk" => "Кожен має право" })
+      expect(klass.search_by_title("кожен")).to include(cyrillic)
+    end
+
     it "returns the full relation when query is blank" do
       klass = factory.to_s.classify.constantize
       expect(klass.search_by_title("")).to include(english_match, polish_match, no_match)

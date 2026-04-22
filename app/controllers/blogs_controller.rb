@@ -89,6 +89,7 @@ class BlogsController < ApplicationController
     render_theme("posts/index",
       posts: all_posts.map { |p| serialize_post(p) },
       pagination: { current_page: page, per_page: per_page, total: total, total_pages: (total.to_f / per_page).ceil },
+      body_class: "articlespage",
       categories: serialize_categories,
       tags: blog_post_tags,
       years: blog_post_years,
@@ -133,6 +134,7 @@ class BlogsController < ApplicationController
     render_theme("videos/index",
       videos: all_videos.map { |v| serialize_video(v) },
       pagination: { current_page: page, per_page: per_page, total: total, total_pages: (total.to_f / per_page).ceil },
+      body_class: "videopage",
       categories: serialize_categories,
       years: blog_video_years,
       tags: blog_video_tags,
@@ -169,6 +171,7 @@ class BlogsController < ApplicationController
     render_theme("gallery/index",
       albums: all_photos.map { |p| serialize_album(p) },
       pagination: { current_page: page, per_page: per_page, total: total, total_pages: (total.to_f / per_page).ceil },
+      body_class: "photopage",
       categories: serialize_categories,
       tags: blog_photo_tags,
       years: blog_photo_years,
@@ -204,6 +207,7 @@ class BlogsController < ApplicationController
 
     render_theme("search/index",
       query: query,
+      body_class: "searchpage",
       results: results.map { |p| serialize_post(p) },
       categories: serialize_categories)
   end

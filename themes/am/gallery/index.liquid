@@ -132,6 +132,16 @@
           </svg>
         </div>
         <div class="section__filters--mobile">
+          <div class="section__filter--mobile section__filter--mobile-title">
+            <div class="section__filter-item--mobile section__filter-item--mobile-search">
+              <input type="text" name="q" value="{{ query }}" placeholder="{{ 'filters.title' | t | upcase }}" class="js_filter_title_input_mobile">
+              <button type="button" class="js_filter_title_submit_mobile section__filter-item-search-btn" aria-label="{{ 'search.title' | t }}">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="black"/>
+                </svg>
+              </button>
+            </div>
+          </div>
           <div class="section__filter--mobile">
             <div class="section__filter-item--mobile js_filter_tags_btn_mobile">
               <div class="section__filter-item-text--mobile"><p>{{ 'filters.tags' | t }}</p></div>
@@ -150,7 +160,7 @@
               <ul class="section-content__filter-list--mobile">
                 {% for tag in tags %}
                 <li class="section-content__filter-item">
-                  <label><input type="checkbox"><span class="section-content__filter-item-label">{{ tag.name }}</span></label>
+                  <label class="js_filter_option" data-option="{{ tag.name }}"><input type="checkbox"><span class="section-content__filter-item-label">{{ tag.name }}</span></label>
                 </li>
                 {% endfor %}
               </ul>
@@ -173,7 +183,7 @@
             <div class="section__filter-list-wrapper--mobile js_filter_years_list_mobile">
               <ul class="section-content__filter-list--mobile">
                 {% for year in years %}
-                <li class="section-content__filter-item"><label><input type="checkbox"><span class="section-content__filter-item-label">{{ year }}</span></label></li>
+                <li class="section-content__filter-item"><label class="js_filter_option" data-option="{{ year }}"><input type="checkbox"><span class="section-content__filter-item-label">{{ year }}</span></label></li>
                 {% endfor %}
               </ul>
             </div>
