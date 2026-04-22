@@ -35,6 +35,7 @@ class User < ApplicationRecord
 
   has_many :posts, foreign_key: :author_id, dependent: :destroy, inverse_of: :author
   has_many :videos, foreign_key: :author_id, dependent: :destroy, inverse_of: :author
+  has_many :albums, foreign_key: :author_id, dependent: :destroy, inverse_of: :author
   has_many :photos, foreign_key: :author_id, dependent: :destroy, inverse_of: :author
   has_many :pages, foreign_key: :author_id, dependent: :destroy, inverse_of: :author
   has_many :comments, dependent: :nullify

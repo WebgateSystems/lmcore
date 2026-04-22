@@ -12,7 +12,7 @@ module Dashboard
         taggable_subqueries = [
           Tagging.where(taggable_type: "Post",  taggable_id: Post.where(author_id: user.id).select(:id)),
           Tagging.where(taggable_type: "Video", taggable_id: Video.where(author_id: user.id).select(:id)),
-          Tagging.where(taggable_type: "Photo", taggable_id: Photo.where(author_id: user.id).select(:id))
+          Tagging.where(taggable_type: "Album", taggable_id: Album.where(author_id: user.id).select(:id))
         ]
         tag_ids = taggable_subqueries.map { |rel| rel.select(:tag_id) }
         scope.where(id: tag_ids.first).or(scope.where(id: tag_ids.second)).or(scope.where(id: tag_ids.third))

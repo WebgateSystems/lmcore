@@ -145,7 +145,7 @@ RSpec.describe ThemeRenderer do
     it "prefixes slugs with the context base_path" do
       out = renderer.render("links", { "base_path" => "/blogs/am" }, layout: nil)
       expect(out).to eq(
-        "/blogs/am/posts/x|/blogs/am/videos/v|/blogs/am/photos/p|" \
+        "/blogs/am/posts/x|/blogs/am/videos/v|/blogs/am/gallery/p|" \
         "/blogs/am/tags/t|/blogs/am/categories/c|/blogs/am/pages/s"
       )
     end

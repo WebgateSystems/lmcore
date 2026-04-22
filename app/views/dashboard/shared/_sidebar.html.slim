@@ -11,9 +11,9 @@ nav.dashboard-nav
   = link_to dashboard_videos_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/videos')}"
     i.bi.bi-camera-video aria-hidden="true"
     span.dashboard-nav__label = t("dashboard.navigation.videos")
-  = link_to dashboard_photos_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/photos')}"
+  = link_to dashboard_gallery_index_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/gallery')}"
     i.bi.bi-image aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.photos")
+    span.dashboard-nav__label = t("dashboard.navigation.gallery", default: t("dashboard.navigation.photos"))
   = link_to dashboard_pages_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/pages')}"
     i.bi.bi-file-earmark aria-hidden="true"
     span.dashboard-nav__label = t("dashboard.navigation.pages")

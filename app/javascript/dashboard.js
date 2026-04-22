@@ -162,6 +162,392 @@ document.addEventListener('DOMContentLoaded', () => {
       })
     })
   })
+
+  // Album tags: multi-select + quick create.
+  document.querySelectorAll('[data-album-tags]').forEach((wrapper) => {
+    if (wrapper.dataset.albumTagsInitialized === 'true') return
+    wrapper.dataset.albumTagsInitialized = 'true'
+
+    const select = wrapper.querySelector('[data-album-tags-select]')
+    const input = wrapper.querySelector('[data-album-tags-new-name]')
+    const createBtn = wrapper.querySelector('[data-album-tags-create-button]')
+    const error = wrapper.querySelector('[data-album-tags-error]')
+    const createUrl = wrapper.dataset.albumTagsCreateUrl
+    const emptyNameLabel = wrapper.dataset.albumTagsEmptyName || 'Enter a tag name.'
+    const createFailedLabel = wrapper.dataset.albumTagsCreateFailed || 'Could not create tag.'
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    if (!select || !input || !createBtn || !createUrl) return
+
+    const showError = (message) => {
+      if (!error) return
+      error.textContent = message
+      error.classList.remove('d-none')
+    }
+
+    const clearError = () => {
+      if (!error) return
+      error.textContent = ''
+      error.classList.add('d-none')
+    }
+
+    const upsertTagOption = (tag) => {
+      if (!tag?.id) return
+      const tagId = String(tag.id)
+      let option = Array.from(select.options).find((entry) => entry.value === tagId)
+      if (!option) {
+        option = document.createElement('option')
+        option.value = tagId
+        option.textContent = tag.name || tag.slug || tagId
+        select.appendChild(option)
+      }
+      option.selected = true
+    }
+
+    const createTag = async () => {
+      const name = (input.value || '').trim()
+      if (!name) {
+        showError(emptyNameLabel)
+        input.focus()
+        return
+      }
+
+      clearError()
+      createBtn.disabled = true
+      try {
+        const response = await fetch(createUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-Token': token || ''
+          },
+          body: JSON.stringify({ tag: { name } })
+        })
+
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok) {
+          const firstError = Array.isArray(payload.errors) ? payload.errors[0] : null
+          throw new Error(firstError || createFailedLabel)
+        }
+
+        upsertTagOption(payload)
+        input.value = ''
+      } catch (err) {
+        showError(err.message || createFailedLabel)
+      } finally {
+        createBtn.disabled = false
+      }
+    }
+
+    createBtn.addEventListener('click', createTag)
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return
+      event.preventDefault()
+      createTag()
+    })
+    input.addEventListener('input', clearError)
+  })
+
+  // Gallery bulk upload with progress bar.
+  document.querySelectorAll('[data-gallery-upload-form]').forEach((form) => {
+    if (form.dataset.galleryUploadInitialized === 'true') return
+    form.dataset.galleryUploadInitialized = 'true'
+
+    const input = form.querySelector('[data-gallery-upload-input]')
+    const progressWrap = form.querySelector('[data-gallery-upload-progress-wrap]')
+    const progressBar = form.querySelector('[data-gallery-upload-progress]')
+    const status = form.querySelector('[data-gallery-upload-status]')
+    const fileList = form.querySelector('[data-gallery-upload-file-list]')
+    const dropzone = form.querySelector('[data-gallery-dropzone]')
+    const submitBtn = form.querySelector('input[type="submit"], button[type="submit"]')
+    const uploadUrl = form.dataset.galleryUploadUrl
+    if (!input || !progressWrap || !progressBar || !status || !submitBtn || !uploadUrl) return
+    const progressLabel = form.dataset.galleryUploadTextProgress || 'Uploading'
+    const doneLabel = form.dataset.galleryUploadTextDone || 'Uploaded'
+    const failedLabel = form.dataset.galleryUploadTextFailed || 'Failed'
+    const heicUnavailableLabel = form.dataset.galleryUploadTextHeicFailed || 'Preview unavailable for this HEIC file.'
+
+    const isHeicFile = (file) => {
+      const name = (file?.name || '').toLowerCase()
+      const type = (file?.type || '').toLowerCase()
+      return name.endsWith('.heic') || name.endsWith('.heif') || type.includes('heic') || type.includes('heif')
+    }
+
+    const revokePreviewUrls = () => {
+      if (!fileList) return
+      fileList.querySelectorAll('[data-preview-object-url]').forEach((element) => {
+        const url = element.getAttribute('data-preview-object-url')
+        if (url) URL.revokeObjectURL(url)
+      })
+    }
+
+    const buildImageFromBlob = (blob, fileName) => {
+      if (!(blob instanceof Blob)) return null
+      const objectUrl = URL.createObjectURL(blob)
+      const img = document.createElement('img')
+      img.src = objectUrl
+      img.alt = fileName
+      img.style.maxWidth = '100%'
+      img.style.maxHeight = '110px'
+      img.style.objectFit = 'cover'
+      img.setAttribute('data-preview-object-url', objectUrl)
+      return img
+    }
+
+    const resolvePreviewImage = async (file) => {
+      if (isHeicFile(file)) return null
+      return buildImageFromBlob(file, file.name)
+    }
+
+    const renderSelectedFiles = async () => {
+      if (!fileList) return
+      revokePreviewUrls()
+      const files = Array.from(input.files || [])
+      if (files.length === 0) {
+        fileList.innerHTML = ''
+        return
+      }
+      fileList.innerHTML = ''
+      files.forEach((file) => {
+        const col = document.createElement('div')
+        col.className = 'col-6 col-md-4 col-xl-3'
+
+        const card = document.createElement('div')
+        card.className = 'border rounded p-2 h-100'
+
+        const mediaWrap = document.createElement('div')
+        mediaWrap.className = 'mb-2 d-flex align-items-center justify-content-center'
+        mediaWrap.style.minHeight = '100px'
+        mediaWrap.style.maxHeight = '120px'
+        mediaWrap.style.overflow = 'hidden'
+        mediaWrap.style.background = 'rgba(0,0,0,0.02)'
+
+        const name = document.createElement('div')
+        name.className = 'text-body-3'
+        name.style.wordBreak = 'break-all'
+        name.textContent = file.name
+
+        card.appendChild(mediaWrap)
+        card.appendChild(name)
+        col.appendChild(card)
+        fileList.appendChild(col)
+
+        if (isHeicFile(file)) {
+          mediaWrap.innerHTML = ''
+          const icon = document.createElement('i')
+          icon.className = 'bi bi-file-earmark-image'
+          icon.style.fontSize = '24px'
+          mediaWrap.appendChild(icon)
+          const msg = document.createElement('div')
+          msg.className = 'text-body-3 text-muted mt-1 text-center'
+          msg.textContent = heicUnavailableLabel
+          mediaWrap.appendChild(msg)
+          return
+        }
+
+        const isRenderableImage = file.type.startsWith('image/') || isHeicFile(file)
+        if (!isRenderableImage) {
+          mediaWrap.innerHTML = ''
+          const icon = document.createElement('i')
+          icon.className = 'bi bi-file-earmark-image'
+          icon.style.fontSize = '24px'
+          mediaWrap.appendChild(icon)
+          return
+        }
+
+        resolvePreviewImage(file).then((img) => {
+          mediaWrap.innerHTML = ''
+          if (img) {
+            mediaWrap.appendChild(img)
+            return
+          }
+
+          const icon = document.createElement('i')
+          icon.className = 'bi bi-file-earmark-break'
+          icon.style.fontSize = '24px'
+          mediaWrap.appendChild(icon)
+          if (isHeicFile(file)) {
+            const msg = document.createElement('div')
+            msg.className = 'text-body-3 text-muted mt-1'
+            msg.textContent = heicFailedLabel
+            mediaWrap.appendChild(msg)
+          }
+        })
+      })
+    }
+
+    input.addEventListener('change', renderSelectedFiles)
+
+    if (dropzone) {
+      const onDrag = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        dropzone.classList.add('border-primary')
+      }
+      const onLeave = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        dropzone.classList.remove('border-primary')
+      }
+      const onDrop = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        dropzone.classList.remove('border-primary')
+        const files = Array.from(event.dataTransfer?.files || [])
+        if (files.length === 0) return
+        const dt = new DataTransfer()
+        files.forEach((file) => dt.items.add(file))
+        input.files = dt.files
+        renderSelectedFiles()
+      }
+
+      dropzone.addEventListener('dragenter', onDrag)
+      dropzone.addEventListener('dragover', onDrag)
+      dropzone.addEventListener('dragleave', onLeave)
+      dropzone.addEventListener('drop', onDrop)
+    }
+
+    form.addEventListener('submit', (event) => {
+      const files = Array.from(input.files || [])
+      if (files.length === 0) return
+
+      event.preventDefault()
+      progressWrap.classList.remove('d-none')
+      submitBtn.disabled = true
+      progressBar.style.width = '0%'
+      status.textContent = `${progressLabel} 0/${files.length}`
+
+      const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+      let completed = 0
+      let failed = 0
+
+      const uploadOne = (file, done) => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', uploadUrl)
+        xhr.responseType = 'json'
+        if (token) xhr.setRequestHeader('X-CSRF-Token', token)
+
+        xhr.upload.addEventListener('progress', (e) => {
+          if (!e.lengthComputable) return
+          const fileProgress = e.loaded / e.total
+          const overall = ((completed + fileProgress) / files.length) * 100
+          progressBar.style.width = `${Math.round(overall)}%`
+          status.textContent = `${progressLabel} ${completed}/${files.length}`
+        })
+
+        xhr.addEventListener('load', () => {
+          completed += 1
+          if (xhr.status < 200 || xhr.status >= 300) failed += 1
+          const overall = (completed / files.length) * 100
+          progressBar.style.width = `${Math.round(overall)}%`
+          status.textContent = `${progressLabel} ${completed}/${files.length}`
+          done()
+        })
+
+        xhr.addEventListener('error', () => {
+          completed += 1
+          failed += 1
+          done()
+        })
+
+        const body = new FormData()
+        body.append('photos[images][]', file)
+        xhr.send(body)
+      }
+
+      const queue = files.slice()
+      const next = () => {
+        const file = queue.shift()
+        if (!file) {
+          if (failed > 0) {
+            status.textContent = `${failedLabel}: ${failed}/${files.length}`
+            submitBtn.disabled = false
+          } else {
+            status.textContent = `${doneLabel} ${completed}/${files.length}`
+            window.location.reload()
+          }
+          return
+        }
+        uploadOne(file, next)
+      }
+
+      next()
+    })
+  })
+
+  // Gallery row drag-and-drop sorting.
+  document.querySelectorAll('[data-gallery-sortable]').forEach((tbody) => {
+    if (tbody.dataset.gallerySortableInitialized === 'true') return
+    tbody.dataset.gallerySortableInitialized = 'true'
+
+    const reorderUrl = tbody.dataset.galleryReorderUrl
+    const status = document.querySelector('[data-gallery-sort-status]')
+    const savingLabel = status?.dataset.sortSaving || 'Saving order...'
+    const savedLabel = status?.dataset.sortSaved || 'Order saved.'
+    const failedLabel = status?.dataset.sortFailed || 'Failed to save order.'
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    let draggedRow = null
+    let orderChanged = false
+
+    const getRows = () => Array.from(tbody.querySelectorAll('tr[data-photo-id]'))
+
+    const persistOrder = async () => {
+      if (!reorderUrl || !orderChanged) return
+      const ids = getRows().map((row) => row.dataset.photoId).filter(Boolean)
+      if (ids.length === 0) return
+      try {
+        if (status) status.textContent = savingLabel
+        const response = await fetch(reorderUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-Token': token || ''
+          },
+          body: JSON.stringify({ photo_ids: ids })
+        })
+        if (!response.ok) throw new Error('reorder_failed')
+        if (status) status.textContent = savedLabel
+      } catch (_error) {
+        if (status) status.textContent = failedLabel
+      } finally {
+        orderChanged = false
+      }
+    }
+
+    const attachRowEvents = (row) => {
+      row.addEventListener('dragstart', () => {
+        draggedRow = row
+        row.classList.add('opacity-50')
+      })
+
+      row.addEventListener('dragend', async () => {
+        row.classList.remove('opacity-50')
+        draggedRow = null
+        await persistOrder()
+      })
+
+      row.addEventListener('dragover', (event) => {
+        event.preventDefault()
+        if (!draggedRow || draggedRow === row) return
+
+        const rect = row.getBoundingClientRect()
+        const before = event.clientY < rect.top + rect.height / 2
+
+        if (before) {
+          if (row.previousElementSibling !== draggedRow) {
+            tbody.insertBefore(draggedRow, row)
+            orderChanged = true
+          }
+        } else if (row.nextElementSibling !== draggedRow) {
+          tbody.insertBefore(draggedRow, row.nextElementSibling)
+          orderChanged = true
+        }
+      })
+    }
+
+    getRows().forEach(attachRowEvents)
+  })
 })
 
 // Dashboard index search.

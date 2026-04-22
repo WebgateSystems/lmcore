@@ -8,7 +8,7 @@ module Dashboard
 
       @posts_count = scoped_posts.count
       @videos_count = scoped_videos.count
-      @photos_count = scoped_photos.count
+      @photos_count = scoped_albums.count
       @pages_count = scoped_pages.count
       @comments_count = scoped_comments.count
 

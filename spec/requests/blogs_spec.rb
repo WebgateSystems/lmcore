@@ -3,7 +3,7 @@
 require "rails_helper"
 
 # Drives the public-facing blog through `BlogsController`. The controller is
-# heavyweight (it serializes posts/videos/photos/pages/categories/tags into
+# heavyweight (it serializes posts/videos/gallery/pages/categories/tags into
 # Liquid hashes for the Liquid `am` theme), so these tests exist mostly to
 # protect the wiring between controller actions and the theme renderer:
 #  - the right scope is fetched (published+kept+author-scoped)
@@ -22,12 +22,12 @@ RSpec.describe "Blogs", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
-    it "exposes pinned posts, videos and photos as Top + uses them as Latest fallback" do
+    it "exposes pinned posts, videos and gallery as Top + uses them as Latest fallback" do
       pinned_post  = create(:post,  :published, author: author, featured: true,
                                                 title_i18n: { "en" => "Top story" })
       pinned_video = create(:video, :published, author: author, featured: true,
                                                 title_i18n: { "en" => "Top video" })
-      pinned_photo = create(:photo, :published, author: author, featured: true,
+      pinned_photo = create(:album, :published, author: author, featured: true,
                                                 title_i18n: { "en" => "Top photo" })
 
       get "/blogs/#{author.username}"
@@ -161,20 +161,20 @@ RSpec.describe "Blogs", type: :request do
     end
   end
 
-  describe "GET /blogs/:blog_slug/photos and /photos/:slug" do
+  describe "GET /blogs/:blog_slug/gallery and /gallery/:slug" do
     let!(:photo_record) do
-      create(:photo, :published, author: author, slug: "snapshot",
+      create(:album, :published, author: author, slug: "snapshot",
                                  title_i18n: { "en" => "A Snapshot" })
     end
 
-    it "lists photos" do
-      get "/blogs/#{author.username}/photos"
+    it "lists albums" do
+      get "/blogs/#{author.username}/gallery"
       expect(response).to have_http_status(:ok)
     end
 
-    it "shows a single photo and bumps its views" do
+    it "shows a single album and bumps its views" do
       expect {
-        get "/blogs/#{author.username}/photos/#{photo_record.slug}"
+        get "/blogs/#{author.username}/gallery/#{photo_record.slug}"
       }.to change { photo_record.reload.views_count }.by(1)
       expect(response).to have_http_status(:ok)
     end
@@ -183,13 +183,13 @@ RSpec.describe "Blogs", type: :request do
       tag = Tag.create!(name: "Snaps", slug: "snaps")
       photo_record.tags << tag
 
-      get "/blogs/#{author.username}/photos", params: { q: "snapshot" }
+      get "/blogs/#{author.username}/gallery", params: { q: "snapshot" }
       expect(response).to have_http_status(:ok)
 
-      get "/blogs/#{author.username}/photos", params: { year: photo_record.published_at.year.to_s }
+      get "/blogs/#{author.username}/gallery", params: { year: photo_record.published_at.year.to_s }
       expect(response).to have_http_status(:ok)
 
-      get "/blogs/#{author.username}/photos", params: { tag: tag.name }
+      get "/blogs/#{author.username}/gallery", params: { tag: tag.name }
       expect(response).to have_http_status(:ok)
     end
   end

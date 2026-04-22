@@ -19,6 +19,7 @@ class Photo < ApplicationRecord
 
   # Associations
   belongs_to :author, class_name: "User", inverse_of: :photos
+  belongs_to :album, optional: true, counter_cache: true
   belongs_to :category, optional: true, counter_cache: true
   belongs_to :published_by, class_name: "User", optional: true
   has_many :media_attachments, as: :attachable, dependent: :destroy
@@ -42,7 +43,7 @@ class Photo < ApplicationRecord
   scope :recent, -> { order(published_at: :desc, created_at: :desc) }
   scope :popular, -> { order(views_count: :desc) }
   scope :for_feed, -> { published.visible.includes(:author, :category, :tags).recent }
-  scope :for_gallery, -> { published.visible.order(position: :asc, created_at: :desc) }
+  scope :for_gallery, -> { where.not(album_id: nil).order(position: :asc, created_at: :asc) }
 
   # Callbacks
   # Title is optional in the form; if the user didn't type anything we derive

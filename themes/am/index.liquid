@@ -109,10 +109,10 @@
         {% if top_photo %}
         <div class="section-main-articles__article-content">
           <a class="article-link" href="{{ top_photo.slug | photo_url }}"></a>
-          {% if top_photo.image_url %}
+          {% if top_photo.cover_image_url %}
           <div class="section-main-articles__article-image">
             <picture>
-              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ top_photo.image_url }}" alt="{{ top_photo.title }}" width="380" height="230">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ top_photo.cover_image_url }}" alt="{{ top_photo.title }}" width="380" height="230">
             </picture>
           </div>
           {% endif %}
@@ -125,7 +125,7 @@
         </div>
         {% else %}
         <div class="section-main-articles__article-content">
-          <a class="article-link" href="{{ base_path }}/photos"></a>
+          <a class="article-link" href="{{ base_path }}/gallery"></a>
           <div class="section-main-articles__article-description">
             <p class="site-text__medium">{{ 'content.no_photos_yet' | t }}</p>
           </div>
@@ -195,10 +195,10 @@
         {% if latest_photo %}
         <div class="section-main-articles__article-content">
           <a class="article-link" href="{{ latest_photo.slug | photo_url }}"></a>
-          {% if latest_photo.image_url %}
+          {% if latest_photo.cover_image_url %}
           <div class="section-main-articles__article-image">
             <picture>
-              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ latest_photo.image_url }}" alt="{{ latest_photo.title }}" width="380" height="230">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ latest_photo.cover_image_url }}" alt="{{ latest_photo.title }}" width="380" height="230">
             </picture>
           </div>
           {% endif %}
@@ -233,7 +233,7 @@
       <div class="section-main-articles__article col">
         <div class="section-main-articles__article-content">
           <div class="section-main-articles__article-title">
-            <a class="article-title article-title--black hover" href="{{ base_path }}/photos">{{ 'content.more_photos' | t }}</a>
+            <a class="article-title article-title--black hover" href="{{ base_path }}/gallery">{{ 'content.more_photos' | t }}</a>
           </div>
         </div>
       </div>

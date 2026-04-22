@@ -10,10 +10,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_17_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
+
+  create_table "albums", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.boolean "archived", default: false, null: false
+    t.uuid "author_id", null: false
+    t.uuid "category_id"
+    t.integer "comments_count", default: 0, null: false
+    t.boolean "comments_enabled", default: true, null: false
+    t.uuid "cover_photo_id"
+    t.datetime "created_at", null: false
+    t.jsonb "description_i18n", default: {}
+    t.datetime "discarded_at"
+    t.boolean "featured", default: false, null: false
+    t.jsonb "keywords_i18n", default: {}
+    t.integer "photos_count", default: 0, null: false
+    t.datetime "published_at"
+    t.uuid "published_by_id"
+    t.integer "reactions_count", default: 0, null: false
+    t.datetime "scheduled_at"
+    t.string "slug", null: false
+    t.string "status", default: "draft", null: false
+    t.jsonb "title_i18n", default: {}, null: false
+    t.datetime "updated_at", null: false
+    t.integer "views_count", default: 0, null: false
+    t.index ["author_id", "slug"], name: "index_albums_on_author_id_and_slug", unique: true
+    t.index ["author_id"], name: "index_albums_on_author_id"
+    t.index ["category_id"], name: "index_albums_on_category_id"
+    t.index ["cover_photo_id"], name: "index_albums_on_cover_photo_id"
+    t.index ["discarded_at"], name: "index_albums_on_discarded_at"
+    t.index ["featured"], name: "index_albums_on_featured"
+    t.index ["published_at"], name: "index_albums_on_published_at"
+    t.index ["published_by_id"], name: "index_albums_on_published_by_id"
+    t.index ["status"], name: "index_albums_on_status"
+  end
 
   create_table "api_keys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.boolean "active", default: true, null: false
@@ -321,6 +354,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_120000) do
   end
 
   create_table "photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "album_id"
     t.jsonb "alt_text_i18n", default: {}
     t.boolean "archived", default: false, null: false
     t.uuid "author_id", null: false
@@ -335,6 +369,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_120000) do
     t.string "image", null: false
     t.jsonb "image_data", default: {}
     t.jsonb "keywords_i18n", default: {}
+    t.integer "position", default: 0, null: false
     t.datetime "published_at"
     t.uuid "published_by_id"
     t.integer "reactions_count", default: 0, null: false
@@ -344,6 +379,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_120000) do
     t.jsonb "title_i18n", default: {}, null: false
     t.datetime "updated_at", null: false
     t.integer "views_count", default: 0, null: false
+    t.index ["album_id", "position"], name: "index_photos_on_album_id_and_position"
+    t.index ["album_id"], name: "index_photos_on_album_id"
     t.index ["author_id", "slug"], name: "index_photos_on_author_id_and_slug", unique: true
     t.index ["author_id"], name: "index_photos_on_author_id"
     t.index ["category_id"], name: "index_photos_on_category_id"
@@ -693,6 +730,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_120000) do
     t.index ["video_provider"], name: "index_videos_on_video_provider"
   end
 
+  add_foreign_key "albums", "categories", on_delete: :nullify
+  add_foreign_key "albums", "photos", column: "cover_photo_id", on_delete: :nullify
+  add_foreign_key "albums", "users", column: "author_id", on_delete: :cascade
+  add_foreign_key "albums", "users", column: "published_by_id", on_delete: :nullify
   add_foreign_key "api_keys", "users", on_delete: :cascade
   add_foreign_key "audit_logs", "users", on_delete: :nullify
   add_foreign_key "categories", "categories", column: "parent_id", on_delete: :nullify
@@ -718,6 +759,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_120000) do
   add_foreign_key "partners", "users"
   add_foreign_key "payments", "subscriptions", on_delete: :nullify
   add_foreign_key "payments", "users", on_delete: :cascade
+  add_foreign_key "photos", "albums", on_delete: :cascade
   add_foreign_key "photos", "categories", on_delete: :nullify
   add_foreign_key "photos", "users", column: "author_id", on_delete: :cascade
   add_foreign_key "photos", "users", column: "published_by_id", on_delete: :nullify

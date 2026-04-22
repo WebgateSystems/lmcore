@@ -10,8 +10,8 @@ section.dashboard-stats
       p.stat-label = t("dashboard.home.stat_videos")
       p.stat-value = @videos_count
   .stat-card
-    = link_to dashboard_photos_path, class: "stat-card--link" do
-      p.stat-label = t("dashboard.home.stat_photos")
+    = link_to dashboard_gallery_index_path, class: "stat-card--link" do
+      p.stat-label = t("dashboard.home.stat_gallery", default: t("dashboard.home.stat_photos"))
       p.stat-value = @photos_count
   .stat-card
     = link_to dashboard_pages_path, class: "stat-card--link" do

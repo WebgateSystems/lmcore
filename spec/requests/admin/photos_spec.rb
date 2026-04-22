@@ -80,7 +80,7 @@ RSpec.describe "Admin::Photos", type: :request do
     context "when authenticated as admin" do
       before { sign_in admin_user }
 
-      let(:test_image) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/test_image.jpg'), 'image/jpeg') }
+      let(:test_image) { fixture_image_upload }
       let(:valid_params) do
         {
           photo: {

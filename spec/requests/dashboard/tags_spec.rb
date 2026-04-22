@@ -30,6 +30,28 @@ RSpec.describe "Dashboard::Tags", type: :request do
       }.to change(Tag, :count).by(1)
       expect(response).to redirect_to(dashboard_tags_path)
     end
+
+    it "returns existing tag in json mode when name already exists (case-insensitive)" do
+      existing = create(:tag, name: "existingtag", slug: "existingtag")
+      post dashboard_tags_path(format: :json), params: { tag: { name: " ExistingTag " } }
+      expect(response).to have_http_status(:ok)
+      body = JSON.parse(response.body)
+      expect(body).to include("id" => existing.id, "name" => existing.name, "slug" => existing.slug)
+    end
+
+    it "creates tag and returns payload in json mode" do
+      post dashboard_tags_path(format: :json), params: { tag: { name: "json-tag", slug: "json-tag" } }
+      expect(response).to have_http_status(:created)
+      body = JSON.parse(response.body)
+      expect(body.fetch("name")).to eq("json-tag")
+      expect(body.fetch("slug")).to eq("json-tag")
+    end
+
+    it "returns json validation errors" do
+      post dashboard_tags_path(format: :json), params: { tag: { name: "", slug: "" } }
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(JSON.parse(response.body).fetch("errors")).to be_present
+    end
   end
 
   # Editing/deleting global tags is intentionally NOT exposed under /dashboard

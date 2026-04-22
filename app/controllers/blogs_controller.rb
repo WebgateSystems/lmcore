@@ -31,28 +31,28 @@ class BlogsController < ApplicationController
     # genuinely shouldn't repeat the headline tile.
     top_post  = pick_top(blog_posts)
     top_video = pick_top(blog_videos)
-    top_photo = pick_top(blog_photos)
+    top_photo = pick_top(blog_albums)
 
     latest_post  = pick_latest(blog_posts,  top_post)
     latest_video = pick_latest(blog_videos, top_video)
-    latest_photo = pick_latest(blog_photos, top_photo)
+    latest_photo = pick_latest(blog_albums, top_photo)
 
     recent_posts  = exclude_record(blog_posts,  top_post).limit(6)
     recent_videos = exclude_record(blog_videos, top_video).limit(4)
-    recent_photos = exclude_record(blog_photos, top_photo).limit(6)
+    recent_photos = exclude_record(blog_albums, top_photo).limit(6)
 
     render_theme("index",
       top_post: serialize_post(top_post),
       top_video: serialize_video(top_video),
-      top_photo: serialize_photo(top_photo),
+      top_photo: serialize_album(top_photo),
       latest_post: serialize_post(latest_post),
       latest_video: serialize_video(latest_video),
-      latest_photo: serialize_photo(latest_photo),
+      latest_photo: serialize_album(latest_photo),
       # Backwards-compat alias for themes still referencing `featured_post`.
       featured_post: serialize_post(top_post),
       posts: recent_posts.map { |p| serialize_post(p) },
       videos: recent_videos.map { |v| serialize_video(v) },
-      photos: recent_photos.map { |p| serialize_photo(p) },
+      photos: recent_photos.map { |p| serialize_album(p) },
       categories: serialize_categories,
       tags: popular_tags)
   end
@@ -142,23 +142,23 @@ class BlogsController < ApplicationController
       filters_query: filters_query_string(query: query, years: selected_years, tags: selected_tags))
   end
 
-  def photo
-    ph = blog_photos.find_by!(slug: params[:slug])
+  def album
+    ph = blog_albums.find_by!(slug: params[:slug])
     ph.increment_views!
 
-    render_theme("photos/show",
-      photo: serialize_photo(ph, full: true),
+    render_theme("gallery/show",
+      album: serialize_album(ph, full: true),
       categories: serialize_categories)
   end
 
-  def photos
+  def gallery
     query = params[:q].to_s.strip
     selected_years = Array(params[:year]).reject(&:blank?)
     selected_tags = Array(params[:tag]).reject(&:blank?)
     page = (params[:page] || 1).to_i
     per_page = 12
     filtered_photos = apply_photo_filters(
-      blog_photos,
+      blog_albums,
       query: query,
       years: selected_years,
       tags: selected_tags
@@ -166,8 +166,8 @@ class BlogsController < ApplicationController
     all_photos = filtered_photos.offset((page - 1) * per_page).limit(per_page)
     total = filtered_photos.count
 
-    render_theme("photos/index",
-      photos: all_photos.map { |p| serialize_photo(p) },
+    render_theme("gallery/index",
+      albums: all_photos.map { |p| serialize_album(p) },
       pagination: { current_page: page, per_page: per_page, total: total, total_pages: (total.to_f / per_page).ceil },
       categories: serialize_categories,
       tags: blog_photo_tags,
@@ -291,7 +291,7 @@ class BlogsController < ApplicationController
     key = case action.to_s
     when "post"    then "errors.post_not_found"
     when "video"   then "errors.video_not_found"
-    when "photo"   then "errors.photo_not_found"
+    when "photo", "album" then "errors.photo_not_found"
     when "page"    then "errors.page_not_found"
     when "category" then "errors.category_not_found"
     when "tag"     then "errors.tag_not_found"
@@ -445,7 +445,7 @@ class BlogsController < ApplicationController
 
     years = Array(years).map(&:to_s).reject(&:blank?)
     if years.present?
-      filtered = filtered.where("EXTRACT(YEAR FROM COALESCE(photos.published_at, photos.created_at))::integer IN (?)", years.map(&:to_i))
+      filtered = filtered.where("EXTRACT(YEAR FROM COALESCE(albums.published_at, albums.created_at))::integer IN (?)", years.map(&:to_i))
     end
 
     tags = Array(tags).map(&:to_s).reject(&:blank?)
@@ -511,7 +511,7 @@ class BlogsController < ApplicationController
   end
 
   def blog_photo_years
-    @blog_photo_years ||= @blog_owner.photos.published.kept
+    @blog_photo_years ||= @blog_owner.albums.published.kept
                                  .where("COALESCE(published_at, created_at) IS NOT NULL")
                                  .pluck(Arel.sql("DISTINCT EXTRACT(YEAR FROM COALESCE(published_at, created_at))::integer"))
                                  .compact
@@ -521,15 +521,15 @@ class BlogsController < ApplicationController
 
   def blog_photo_tags
     @blog_photo_tags ||= Tag.joins(:taggings)
-                            .where(taggings: { taggable_type: "Photo", taggable_id: @blog_owner.photos.published.kept.select(:id) })
+                            .where(taggings: { taggable_type: "Album", taggable_id: @blog_owner.albums.published.kept.select(:id) })
                             .select(:name, :slug)
                             .distinct
                             .order(:name)
                             .map { |tag| { "name" => tag.name, "slug" => tag.slug } }
   end
 
-  def blog_photos
-    @blog_owner.photos.published.kept.includes(:category, :tags).recent
+  def blog_albums
+    @blog_owner.albums.published.kept.includes(:category, :tags, :photos, :cover_photo).recent
   end
 
   def blog_setting(key, default = nil)
@@ -640,22 +640,39 @@ class BlogsController < ApplicationController
     "/images/fallback/video_thumbnail.png"
   end
 
-  def serialize_photo(photo, full: false)
-    return nil unless photo
+  def serialize_album(album, full: false)
+    return nil unless album
 
     locale = I18n.locale.to_s
-    {
-      "id" => photo.id,
-      "slug" => photo.slug,
-      "title" => photo.title_i18n[locale] || photo.title_i18n.values.compact.first,
-      "description" => photo.description_i18n[locale] || photo.description_i18n.values.compact.first,
-      "image_url" => photo.image&.url,
-      "featured" => photo.featured?,
-      "published_at" => photo.published_at,
-      "views_count" => photo.views_count,
-      "category" => photo.category ? serialize_category(photo.category) : nil,
-      "tags" => photo.tags.map { |t| { "name" => t.name, "slug" => t.slug } }
+    cover = album.display_cover
+    data = {
+      "id" => album.id,
+      "slug" => album.slug,
+      "title" => album.title_i18n[locale] || album.title_i18n.values.compact.first,
+      "description" => album.description_i18n[locale] || album.description_i18n.values.compact.first,
+      "cover_image_url" => cover&.image&.url,
+      "cover_thumb_url" => cover&.image&.thumb&.url || cover&.image&.url,
+      "featured" => album.featured?,
+      "published_at" => album.published_at,
+      "views_count" => album.views_count,
+      "photos_count" => album.photos_count,
+      "category" => album.category ? serialize_category(album.category) : nil,
+      "tags" => album.tags.map { |t| { "name" => t.name, "slug" => t.slug } }
     }
+    if full
+      data["photos"] = album.photos.map do |photo|
+        {
+          "id" => photo.id,
+          "slug" => photo.slug,
+          "title" => photo.title_i18n[locale] || photo.title_i18n.values.compact.first,
+          "description" => photo.description_i18n[locale] || photo.description_i18n.values.compact.first,
+          "alt" => photo.alt_text_i18n[locale] || photo.alt_text_i18n.values.compact.first,
+          "image_url" => photo.image&.url,
+          "thumb_url" => photo.image&.thumb&.url || photo.image&.url
+        }
+      end
+    end
+    data
   end
 
   def serialize_category(cat)

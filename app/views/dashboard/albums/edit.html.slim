@@ -1,0 +1,68 @@
+- content_for(:page_title) { t("dashboard.page_titles.edit_gallery", default: "Edit gallery") }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    .dashboard-actions
+      = link_to t("dashboard.gallery.form.back_to_list"), dashboard_gallery_index_path, class: "btn-dashboard-secondary"
+      = button_to dashboard_gallery_path(@album.slug), method: :delete, class: "btn-dashboard-danger", form: { data: { confirm_destroy: "true", confirm_destroy_title: t("dashboard.confirm.photos.title"), confirm_destroy_message: t("dashboard.confirm.photos.message", title: @album.title), confirm_destroy_detail: t("dashboard.confirm.photos.detail"), confirm_destroy_action: t("dashboard.common.delete_forever") } } do
+        = t("dashboard.gallery.form.delete")
+
+  = render "form", album: @album
+
+section.mt-4
+  .panel
+    .panel__header
+      h2 = t("dashboard.gallery.photos.section_title")
+    = form_with url: dashboard_gallery_photos_path(@album.slug), method: :post, local: true, html: { multipart: true, data: { gallery_upload_form: "true", gallery_upload_url: dashboard_gallery_photos_path(@album.slug, format: :json), gallery_album_slug: @album.slug, gallery_upload_text_progress: t("dashboard.gallery.photos.upload_progress"), gallery_upload_text_done: t("dashboard.gallery.photos.upload_done"), gallery_upload_text_failed: t("dashboard.gallery.photos.upload_failed"), gallery_upload_text_heic_converting: t("dashboard.gallery.photos.heic_converting"), gallery_upload_text_heic_failed: t("dashboard.gallery.photos.heic_failed") } } do |f|
+      .mb-3
+        .gallery-dropzone.border.rounded.p-4.text-center data-gallery-dropzone="true"
+          p.mb-2.fw-semibold = t("dashboard.gallery.photos.dropzone_title")
+          p.text-muted.small.mb-3 = t("dashboard.gallery.photos.dropzone_hint")
+          = file_field_tag "photos[images][]", multiple: true, accept: "image/*,.heic,.heif", class: "form-control", data: { gallery_upload_input: "true" }
+        .mt-2.row.g-2 data-gallery-upload-file-list="true"
+      .progress.mb-2.d-none data-gallery-upload-progress-wrap="true" style="height: 18px;"
+        .progress-bar role="progressbar" style="width: 0%;" data-gallery-upload-progress="true"
+      .text-body-3.mb-3 data-gallery-upload-status="true"
+      = f.submit t("dashboard.gallery.photos.upload_action"), class: "btn-dashboard-primary"
+
+  - if @photos.any?
+    .panel.mt-3
+      .text-body-3.mb-2.text-muted data-gallery-sort-status="true" data-sort-saving=t("dashboard.gallery.photos.sort_saving") data-sort-saved=t("dashboard.gallery.photos.sort_saved") data-sort-failed=t("dashboard.gallery.photos.sort_failed") = t("dashboard.gallery.photos.drag_hint")
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.gallery.photos.table.preview")
+            th = t("dashboard.gallery.photos.table.title")
+            th = t("dashboard.gallery.photos.table.slug")
+            th = t("dashboard.gallery.photos.table.cover")
+            th.text-end = t("dashboard.common.table.actions")
+        tbody data-gallery-sortable="true" data-gallery-reorder-url=reorder_dashboard_gallery_photos_path(@album.slug)
+          - @photos.each do |photo|
+            tr data-photo-id=photo.id draggable="true"
+              td
+                - if photo.image.present?
+                  = image_tag(photo.image.thumb.url.presence || photo.image.url, style: "max-height:72px")
+              - form_id = "photo-edit-#{photo.id}"
+              td
+                = text_field_tag "photo[title]", photo.title, class: "form-control form-control-sm", placeholder: t("dashboard.gallery.photos.table.title"), form: form_id
+              td
+                = text_field_tag "photo[slug]", photo.slug, class: "form-control form-control-sm", placeholder: t("dashboard.gallery.photos.table.slug"), form: form_id
+              td
+                - if @album.cover_photo_id == photo.id
+                  span.dashboard-badge.dashboard-badge--published = t("dashboard.gallery.photos.cover_badge")
+              td.text-end
+                .dashboard-actions.justify-content-end
+                  - cover_active = (@album.cover_photo_id == photo.id)
+                  - cover_btn_class = cover_active ? "icon-pill text-warning" : "icon-pill"
+                  - cover_icon_class = cover_active ? "bi bi-star-fill" : "bi bi-star"
+                  = button_to make_cover_dashboard_gallery_photo_path(@album.slug, photo), method: :post, class: cover_btn_class, title: t("dashboard.gallery.photos.set_cover") do
+                    i class=cover_icon_class
+                  = form_with url: dashboard_gallery_photo_path(@album.slug, photo), method: :patch, local: true, scope: :photo, id: form_id, class: "d-inline-flex gap-1 align-items-center" do |pf|
+                    = pf.submit t("dashboard.common.save", default: "Save"), class: "btn-dashboard-secondary btn-sm"
+                  = button_to dashboard_gallery_photo_path(@album.slug, photo), method: :delete, class: "icon-pill text-danger", title: t("dashboard.common.delete"), form: { data: { confirm_destroy: "true", confirm_destroy_title: t("dashboard.confirm.photos.title"), confirm_destroy_message: t("dashboard.confirm.photos.message", title: photo.title), confirm_destroy_detail: t("dashboard.confirm.photos.detail"), confirm_destroy_action: t("dashboard.common.delete_forever") } } do
+                    i.bi.bi-trash
+  - else
+    .dashboard-empty.mt-3
+      i.bi.bi-images
+      p = t("dashboard.gallery.photos.empty")

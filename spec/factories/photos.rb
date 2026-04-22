@@ -11,7 +11,7 @@ FactoryBot.define do
     featured { false }
     archived { false }
     comments_enabled { true }
-    image { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/test_image.jpg'), 'image/jpeg') }
+    image { fixture_image_upload }
 
     trait :published do
       status { 'published' }

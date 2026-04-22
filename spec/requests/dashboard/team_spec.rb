@@ -153,4 +153,31 @@ RSpec.describe "Dashboard::Team", type: :request do
       expect(foreign.reload.status).to eq("pending")
     end
   end
+
+  describe "POST /dashboard/team_invitations" do
+    it "returns method_not_allowed (creation handled in team controller)" do
+      post dashboard_team_invitations_path
+      expect(response).to have_http_status(:method_not_allowed)
+    end
+  end
+
+  describe "POST /dashboard/team_invitations/:id/resend" do
+    let!(:invitation) do
+      create(:invitation, :for_blog, inviter: owner, blog_owner_user: owner)
+    end
+
+    it "resends invitation and sets success flash" do
+      allow_any_instance_of(Invitation).to receive(:resend!).and_return(true)
+      post resend_dashboard_team_invitation_path(invitation)
+      expect(response).to redirect_to(dashboard_team_index_path)
+      expect(flash[:notice]).to be_present
+    end
+
+    it "shows alert when resend fails" do
+      allow_any_instance_of(Invitation).to receive(:resend!).and_return(false)
+      post resend_dashboard_team_invitation_path(invitation)
+      expect(response).to redirect_to(dashboard_team_index_path)
+      expect(flash[:alert]).to be_present
+    end
+  end
 end

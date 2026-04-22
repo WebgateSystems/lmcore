@@ -142,7 +142,12 @@ class ThemeRenderer
 
     def photo_url(slug)
       base = @context["base_path"].to_s
-      "#{base}/photos/#{slug}"
+      "#{base}/gallery/#{slug}"
+    end
+
+    def gallery_url(slug)
+      base = @context["base_path"].to_s
+      "#{base}/gallery/#{slug}"
     end
 
     def tag_url(slug)

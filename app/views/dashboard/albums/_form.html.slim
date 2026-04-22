@@ -1,0 +1,56 @@
+= form_with(model: [:dashboard, album], url: album.persisted? ? dashboard_gallery_path(album.slug) : dashboard_gallery_index_path, class: "dashboard-form") do |f|
+  - if album.errors.any?
+    .alert.alert-danger
+      ul.mb-0
+        - album.errors.full_messages.each do |msg|
+          li = msg
+
+  = render "dashboard/shared/i18n_legend"
+
+  .mb-3
+    = f.label :title, class: "form-label form-label--translatable" do
+      = t("dashboard.gallery.form.title")
+      span.form-label__locale = " (#{locale_ui_tag})"
+    = f.text_field :title, class: "form-control", placeholder: t("dashboard.gallery.form.title_placeholder")
+
+  .mb-3
+    = f.label :slug, class: "form-label" do
+      = t("dashboard.gallery.form.slug")
+      span.text-muted.ms-1.small = "(#{t('dashboard.gallery.form.optional')})"
+    = f.text_field :slug, class: "form-control", placeholder: t("dashboard.gallery.form.slug_placeholder")
+
+  .mb-3
+    = f.label :description, class: "form-label form-label--translatable" do
+      = t("dashboard.gallery.form.description")
+      span.form-label__locale = " (#{locale_ui_tag})"
+      span.text-muted.ms-1.small = "(#{t('dashboard.gallery.form.optional')})"
+    = f.text_area :description, class: "form-control", rows: 10, placeholder: t("dashboard.gallery.form.description_placeholder")
+
+  .row
+    .col-md-6.mb-3
+      = f.label :category_id, class: "form-label" do
+        = t("dashboard.gallery.form.category")
+        span.text-muted.ms-1.small = "(#{t('dashboard.gallery.form.optional')})"
+      = f.collection_select :category_id, @categories, :id, :name, { include_blank: t("dashboard.gallery.form.no_category") }, class: "form-select"
+    .col-md-6.mb-3
+      = f.label :status, t("dashboard.gallery.form.status"), class: "form-label"
+      = f.select :status, Album.aasm.states.map { |s| [s.name.to_s.humanize, s.name] }, {}, class: "form-select"
+
+  .mb-3
+    = f.label :published_at, t("dashboard.gallery.form.published_at"), class: "form-label"
+    = f.date_field :published_at, class: "form-control", value: (album.published_at&.to_date || Date.current)
+
+  .mb-3 data-album-tags="true" data-album-tags-create-url=dashboard_tags_path(format: :json) data-album-tags-empty-name=t("dashboard.gallery.form.tags.empty_name") data-album-tags-create-failed=t("dashboard.gallery.form.tags.create_failed")
+    = f.label :tag_ids, t("dashboard.gallery.form.tags.label"), class: "form-label"
+    = f.collection_select :tag_ids, @available_tags, :id, :name, {}, class: "form-select", multiple: true, data: { album_tags_select: "true" }
+    p.form-text = t("dashboard.gallery.form.tags.hint")
+
+    .input-group.mt-2
+      = text_field_tag :new_album_tag_name, nil, class: "form-control", placeholder: t("dashboard.gallery.form.tags.placeholder"), data: { album_tags_new_name: "true" }
+      button.btn.btn-outline-secondary type="button" data-album-tags-create-button="true"
+        = t("dashboard.gallery.form.tags.create_button")
+    .text-body-3.text-danger.mt-1.d-none data-album-tags-error="true"
+
+  .dashboard-actions
+    = f.submit album.persisted? ? t("dashboard.gallery.form.update") : t("dashboard.gallery.form.create"), class: "btn-dashboard-primary"
+    = link_to t("dashboard.gallery.form.cancel"), dashboard_gallery_index_path, class: "btn-dashboard-secondary"

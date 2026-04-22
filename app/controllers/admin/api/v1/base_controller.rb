@@ -31,18 +31,19 @@ module Admin
         def require_admin!
           return if current_user&.admin?
 
-          render_error(t("errors.admin_required", default: "Admin access required"), status: :forbidden)
+          render_error(I18n.t("errors.admin_required", default: "Admin access required"), status: :forbidden)
         end
 
         def require_super_admin!
           return if current_user&.super_admin?
 
-          render_error(t("errors.super_admin_required", default: "Super admin access required"), status: :forbidden)
+          render_error(I18n.t("errors.super_admin_required", default: "Super admin access required"), status: :forbidden)
         end
 
         # Standard JSON response helpers
-        def render_success(data = {}, status: :ok, meta: nil)
-          response = { success: true, data: data }
+        def render_success(data = nil, status: :ok, meta: nil, **named_data)
+          payload = named_data.presence || data || {}
+          response = { success: true, data: payload }
           response[:meta] = meta if meta.present?
           render json: response, status: status
         end
@@ -54,18 +55,18 @@ module Admin
         end
 
         def render_forbidden(exception = nil)
-          message = exception&.message || t("errors.forbidden", default: "Access denied")
+          message = exception&.message || I18n.t("errors.forbidden", default: "Access denied")
           render_error(message, status: :forbidden)
         end
 
         def render_not_found(exception = nil)
-          message = exception&.message || t("errors.not_found", default: "Resource not found")
+          message = exception&.message || I18n.t("errors.not_found", default: "Resource not found")
           render_error(message, status: :not_found)
         end
 
         def render_unprocessable_entity(exception)
           render_error(
-            t("errors.validation_failed", default: "Validation failed"),
+            I18n.t("errors.validation_failed", default: "Validation failed"),
             status: :unprocessable_entity,
             errors: exception.record.errors.full_messages
           )
@@ -89,9 +90,8 @@ module Admin
           AuditLog.create!(
             user: current_user,
             action: action,
-            resource_type: resource.class.name,
-            resource_id: resource.id,
-            details: details.merge(
+            auditable: resource,
+            metadata: details.merge(
               ip_address: request.remote_ip,
               user_agent: request.user_agent
             )

@@ -101,9 +101,18 @@ Rails.application.routes.draw do
         post :pin
       end
     end
-    resources :photos do
+    resources :gallery, controller: "albums", param: :slug do
       member do
         post :pin
+      end
+      resources :photos, controller: "gallery_photos", only: %i[create update destroy] do
+        collection do
+          post :reorder
+        end
+        member do
+          post :make_cover
+          post :move
+        end
       end
     end
     resources :pages
@@ -218,8 +227,8 @@ Rails.application.routes.draw do
     post "posts/:post_slug/comments", to: "comments#create", as: :post_comments
     get "videos", to: "blogs#videos", as: :videos
     get "videos/:slug", to: "blogs#video", as: :video
-    get "photos", to: "blogs#photos", as: :photos
-    get "photos/:slug", to: "blogs#photo", as: :photo
+    get "gallery", to: "blogs#gallery", as: :gallery
+    get "gallery/:slug", to: "blogs#album", as: :album
     get "categories/:slug", to: "blogs#category", as: :category
     get "tags/:slug", to: "blogs#tag", as: :tag
     get "pages/:slug", to: "blogs#page", as: :page

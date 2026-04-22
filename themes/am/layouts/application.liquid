@@ -45,6 +45,14 @@
         position: relative !important;
         top: 0 !important;
       }
+      /* Keep the white tagline strip flush with viewport edges on small screens. */
+      .section-name__text--white p {
+        display: block !important;
+        width: 100vw !important;
+        margin-left: calc(50% - 50vw) !important;
+        margin-right: calc(50% - 50vw) !important;
+        box-sizing: border-box !important;
+      }
     }
 
     /* Problem 3: Make article title links inherit color and hover red */
@@ -337,7 +345,7 @@
               <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/pages/about">{{ 'navigation.about' | t }}</a></div>
               <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/videos">{{ 'navigation.videos' | t }}</a></div>
               <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/posts">{{ 'navigation.articles' | t }}</a></div>
-              <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/photos">{{ 'navigation.photos' | t }}</a></div>
+              <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/gallery">{{ 'navigation.gallery' | t }}</a></div>
               
               <!-- Language switcher -->
               <div class="header__nav-item lang-list-wrapper">
@@ -436,7 +444,7 @@
                   <li class="footer__links-item"><a href="{{ base_path }}/pages/about">{{ 'navigation.about' | t }}</a></li>
                   <li class="footer__links-item"><a href="{{ base_path }}/videos">{{ 'navigation.videos' | t }}</a></li>
                   <li class="footer__links-item"><a href="{{ base_path }}/posts">{{ 'navigation.articles' | t }}</a></li>
-                  <li class="footer__links-item"><a href="{{ base_path }}/photos">{{ 'navigation.photos' | t }}</a></li>
+                  <li class="footer__links-item"><a href="{{ base_path }}/gallery">{{ 'navigation.gallery' | t }}</a></li>
                 </ul>
               </div>
               <div class="footer__links-info">
@@ -529,7 +537,7 @@
           <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/pages/about">{{ 'navigation.about' | t }}</a></div>
           <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/videos">{{ 'navigation.videos' | t }}</a></div>
           <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/posts">{{ 'navigation.articles' | t }}</a></div>
-          <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/photos">{{ 'navigation.photos' | t }}</a></div>
+          <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/gallery">{{ 'navigation.gallery' | t }}</a></div>
         </div>
       </div>
     </div>

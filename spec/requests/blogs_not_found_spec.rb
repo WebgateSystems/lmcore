@@ -3,7 +3,7 @@
 require "rails_helper"
 
 # Covers the 404 handling for the public-facing blog. Anything missing —
-# unpublished post, deleted video, wrong photo slug, unknown blog username —
+# unpublished post, deleted video, wrong gallery slug, unknown blog username —
 # must produce an HTTP 404 with a themed body, NOT bubble up as a 500.
 RSpec.describe "Blogs 404 handling", type: :request do
   let(:author) { create(:user, username: "ayder") }
@@ -42,9 +42,9 @@ RSpec.describe "Blogs 404 handling", type: :request do
     end
   end
 
-  describe "GET /blogs/:blog_slug/photos/:slug" do
-    it "returns 404 when the photo does not exist" do
-      get "/blogs/#{author.username}/photos/missing"
+  describe "GET /blogs/:blog_slug/gallery/:slug" do
+    it "returns 404 when the gallery does not exist" do
+      get "/blogs/#{author.username}/gallery/missing"
       expect(response).to have_http_status(:not_found)
     end
   end

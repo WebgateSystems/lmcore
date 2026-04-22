@@ -17,6 +17,7 @@ class Category < ApplicationRecord
   has_many :children, class_name: "Category", foreign_key: :parent_id, dependent: :nullify, inverse_of: :parent
   has_many :posts, dependent: :nullify
   has_many :videos, dependent: :nullify
+  has_many :albums, dependent: :nullify
   has_many :photos, dependent: :nullify
 
   # CarrierWave

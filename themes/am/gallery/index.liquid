@@ -1,4 +1,4 @@
-<!-- Photos listing page -->
+<!-- Gallery listing page -->
 <div class="section-photo">
   <div class="filter-icon">
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -10,7 +10,7 @@
       <path d="M27.4698 15.9997C27.4698 17.9003 26.0304 19.2997 24.4244 19.2997C22.8184 19.2997 21.3789 17.9003 21.3789 15.9997C21.3789 14.0991 22.8184 12.6997 24.4244 12.6997C26.0304 12.6997 27.4698 14.0991 27.4698 15.9997Z" fill="white" stroke="black" stroke-width="3"/>
     </svg>
   </div>
-  <div class="current-page mobile-current-page"><a href="{{ base_path }}/photos">{{ 'navigation.photos' | t }}</a></div>
+  <div class="current-page mobile-current-page"><a href="{{ base_path }}/gallery">{{ 'navigation.gallery' | t }}</a></div>
   <div class="container-fluid container">
     <div class="section-photo__inner row">
       <!-- Desktop Filters -->
@@ -54,6 +54,7 @@
             </div>
             <div class="section-content__filters-choose"></div>
           </div>
+
           <!-- Tags filter -->
           <div class="section-content__filter">
             <div class="section-content__filter-input">
@@ -82,6 +83,38 @@
                   <button type="submit">{{ 'filters.remove' | t }}<span class="section-content__filter-counter"></span></button>
                 </div>
               </div>
+            </div>
+            <div class="section-content__filters-choose _active"></div>
+          </div>
+
+          <!-- Type filter -->
+          <div class="section-content__filter js_filter_types_search_page">
+            <div class="section-content__filter-input">
+              <input type="text" placeholder="{{ 'filters.type' | t }}">
+              <div class="section-content__filter-ico js_filter_types_btn">
+                <svg width="19" height="11" viewBox="0 0 19 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L9.5 9L18 1" stroke="black" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+            <div class="section-content__filter-list-wrapper js_filter_types_list">
+              <ul class="section-content__filter-list">
+                <li class="section-content__filter-item">
+                  <label class="js_filter_option" data-option="video">
+                    <input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.videos' | t }}</span>
+                  </label>
+                </li>
+                <li class="section-content__filter-item">
+                  <label class="js_filter_option" data-option="article">
+                    <input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.articles' | t }}</span>
+                  </label>
+                </li>
+                <li class="section-content__filter-item">
+                  <label class="js_filter_option" data-option="photo">
+                    <input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.gallery' | t }}</span>
+                  </label>
+                </li>
+              </ul>
             </div>
             <div class="section-content__filters-choose _active"></div>
           </div>
@@ -163,7 +196,7 @@
               <ul class="section-content__filter-list--mobile">
                 <li class="section-content__filter-item"><label><input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.videos' | t }}</span></label></li>
                 <li class="section-content__filter-item"><label><input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.articles' | t }}</span></label></li>
-                <li class="section-content__filter-item"><label><input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.photos' | t }}</span></label></li>
+                <li class="section-content__filter-item"><label><input type="checkbox"><span class="section-content__filter-item-label">{{ 'navigation.gallery' | t }}</span></label></li>
               </ul>
             </div>
           </div>
@@ -178,39 +211,38 @@
         </div>
       </div>
 
-      <!-- Photos content -->
+      <!-- Gallery content -->
       <div class="section-photo__content row">
-        {% if photos.size > 0 %}
-          {% for photo in photos %}
+        {% if albums.size > 0 %}
+          {% for album in albums %}
           <div class="section-dashboard__item col">
             <div class="section-dashboard__item-tags">
               <div class="section-dashboard__item-tags-content">
-                {% for tag in photo.tags %}
+                {% for tag in album.tags %}
                 <span><a href="{{ base_path }}/tags/{{ tag.slug }}">#{{ tag.name }}</a></span>
                 {% endfor %}
               </div>
             </div>
             <div class="section-dashboard__item-content">
-              <a class="video-link" href="{{ base_path }}/photos/{{ photo.slug }}"></a>
+              <a class="video-link" href="{{ base_path }}/gallery/{{ album.slug }}"></a>
               <div class="section-dashboard__item-image">
                 <picture>
-                  <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/photo/photo-{{ forloop.index }}.webp" type="image/webp">
-                  <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/photo/photo-{{ forloop.index }}.png" alt="{{ photo.title }}" width="380" height="230">
+                  <img class="lazyload" src="{{ album.cover_thumb_url | default: album.cover_image_url }}" alt="{{ album.title }}" width="380" height="230">
                 </picture>
               </div>
               <div class="section-dashboard__item-date-rewiews">
-                <p class="article-date">{{ photo.published_at | date_format }}</p>
+                <p class="article-date">{{ album.published_at | date_format }}</p>
                 <div class="section-dashboard__item-date-rewiews-counter">
                   <div class="section-dashboard__item-rewiews">
                     <svg width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M2.16667 4.4H0V9.9H0.0108333L0 19.8C0 21.01 0.975 22 2.16667 22H21.6667V19.8H2.16667V4.4ZM23.8333 2.2H15.1667L13 0H6.5C5.30833 0 4.34417 0.99 4.34417 2.2L4.33333 15.4C4.33333 16.61 5.30833 17.6 6.5 17.6H23.8333C25.025 17.6 26 16.61 26 15.4V4.4C26 3.19 25.025 2.2 23.8333 2.2ZM7.58333 14.3L12.4583 7.7L16.25 12.661L18.9583 9.35L22.75 14.3H7.58333Z" fill="black"/>
                     </svg>
-                    <span>{{ photo.photos_count | default: 14 }}</span>
+                    <span>{{ album.photos_count | default: 1 }}</span>
                   </div>
                 </div>
               </div>
               <div class="section-dashboard__item-description">
-                <h2 class="site-text__large">{{ photo.title }}</h2>
+                <h2 class="site-text__large">{{ album.title }}</h2>
               </div>
             </div>
           </div>
@@ -220,7 +252,7 @@
             {% if query and query != blank %}
               <p class="site-text__large">{{ 'search.no_results' | t }}: "{{ query }}"</p>
             {% else %}
-              <p class="site-text__large">{{ 'content.no_results' | t }}</p>
+              <p class="site-text__large">{{ 'content.no_photos_yet' | t }}</p>
             {% endif %}
           </div>
         {% endif %}

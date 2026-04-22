@@ -21,13 +21,27 @@ module Dashboard
     end
 
     def create
+      normalized_name = tag_params[:name].to_s.strip
+      if request.format.json? && normalized_name.present?
+        existing_tag = Tag.find_by("LOWER(name) = ?", normalized_name.downcase)
+        if existing_tag
+          authorize existing_tag, policy_class: Dashboard::TagPolicy
+          render json: { id: existing_tag.id, name: existing_tag.name, slug: existing_tag.slug }, status: :ok
+          return
+        end
+      end
+
       @tag = Tag.new(tag_params)
       authorize @tag, policy_class: Dashboard::TagPolicy
 
-      if @tag.save
-        redirect_to dashboard_tags_path, notice: t("dashboard.flash.tags.created")
-      else
-        render :new, status: :unprocessable_entity
+      respond_to do |format|
+        if @tag.save
+          format.html { redirect_to dashboard_tags_path, notice: t("dashboard.flash.tags.created") }
+          format.json { render json: { id: @tag.id, name: @tag.name, slug: @tag.slug }, status: :created }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: { errors: @tag.errors.full_messages }, status: :unprocessable_entity }
+        end
       end
     end
 

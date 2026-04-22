@@ -1,0 +1,63 @@
+<!-- Album page -->
+<div class="current-page mobile-current-page"><a href="{{ base_path }}/gallery">{{ 'navigation.gallery' | t }}</a></div>
+<div class="section-article-item__btn-back section-article-item__btn-back-mobile">
+  <a href="{{ base_path }}/gallery">
+    <span>
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4.41861 7.5L17.7197 7.5L17.7197 4.5L4.41861 4.5L4.41861 -1.16282e-06L-0.000327539 6L4.41861 12L4.41861 7.5Z" fill="black"/>
+      </svg>
+    </span>
+    <span>{{ 'content.back' | t }}</span>
+  </a>
+</div>
+<div class="section-article-item__container">
+  <div class="container-fluid container">
+    <div class="section-article-item__body-container row">
+      <div class="section-article-item__title">
+        {% assign title_parts = album.title | split: '|' %}
+        {% for part in title_parts %}
+        <h2>{{ part }}</h2>
+        {% endfor %}
+      </div>
+
+      <div class="section-article-item__body">
+        <div class="section-article-item__description">
+          <div class="section-article-item__description-inner">
+            <div class="section-article-item__date">
+              <div class="section-dashboard__item-date-rewiews">
+                <p class="article-date">{{ album.published_at | date_format }}</p>
+              </div>
+            </div>
+            <div class="section-article-item__text">
+              {% if album.description %}
+              <div class="section-article-item__paragraph">{{ album.description }}</div>
+              {% endif %}
+              <div class="section-article-item__img-container row" id="lightgallery">
+                {% for photo in album.photos %}
+                <a href="{{ photo.image_url }}"><img class="lazyload" src="{{ photo.image_url }}" alt="{{ photo.alt | default: album.title }}" width="380" height="230"></a>
+                {% endfor %}
+              </div>
+              {% if album.tags.size > 0 %}
+              <div class="section-article-item__tags">
+                {% for tag in album.tags %}
+                <span><a href="{{ base_path }}/tags/{{ tag.slug }}">#{{ tag.name }}</a></span>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="section-article-item__btn-back">
+                <a href="{{ base_path }}/gallery">
+                  <span>
+                    <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.41861 7.5L17.7197 7.5L17.7197 4.5L4.41861 4.5L4.41861 -1.16282e-06L-0.000327539 6L4.41861 12L4.41861 7.5Z" fill="black"/>
+                    </svg>
+                  </span>
+                  <span>{{ 'content.back_to_photos' | t }}</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

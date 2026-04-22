@@ -10,6 +10,7 @@ class Tag < ApplicationRecord
   has_many :taggings, dependent: :destroy
   has_many :posts, through: :taggings, source: :taggable, source_type: "Post"
   has_many :videos, through: :taggings, source: :taggable, source_type: "Video"
+  has_many :albums, through: :taggings, source: :taggable, source_type: "Album"
   has_many :photos, through: :taggings, source: :taggable, source_type: "Photo"
 
   # Validations

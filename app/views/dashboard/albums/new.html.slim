@@ -1,0 +1,8 @@
+- content_for(:page_title) { t("dashboard.page_titles.new_gallery", default: "New gallery") }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4
+    div
+    = link_to t("dashboard.gallery.form.back_to_list"), dashboard_gallery_index_path, class: "btn-dashboard-secondary"
+
+  = render "form", album: @album

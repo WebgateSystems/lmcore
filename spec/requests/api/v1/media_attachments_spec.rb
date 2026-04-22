@@ -96,7 +96,7 @@ RSpec.describe "Api::V1::MediaAttachments", type: :request do
     it "returns 422 on invalid params" do
       params = { media_attachment: { attachment_type: "image" } }
       post "/api/v1/media_attachments", params: params, headers: headers
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 

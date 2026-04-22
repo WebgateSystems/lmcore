@@ -78,6 +78,10 @@ module Dashboard
       Photo.where(author: current_user)
     end
 
+    def scoped_albums
+      Album.where(author: current_user)
+    end
+
     def scoped_pages
       Page.where(author: current_user)
     end
@@ -91,7 +95,7 @@ module Dashboard
     def scoped_comments
       Comment.where(commentable_type: "Post", commentable_id: scoped_posts.select(:id))
              .or(Comment.where(commentable_type: "Video", commentable_id: scoped_videos.select(:id)))
-             .or(Comment.where(commentable_type: "Photo", commentable_id: scoped_photos.select(:id)))
+             .or(Comment.where(commentable_type: "Album", commentable_id: scoped_albums.select(:id)))
     end
   end
 end
