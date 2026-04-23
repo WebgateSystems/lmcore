@@ -71,7 +71,7 @@ jobs:
 
     steps:
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libpq-dev node-gyp
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libpq-dev node-gyp imagemagick
 
       - name: Checkout code
         uses: actions/checkout@v6
@@ -106,6 +106,13 @@ jobs:
 
       - name: Install JS dependencies
         run: yarn install --immutable
+
+      - name: Build frontend assets for test
+        env:
+          RAILS_ENV: test
+        run: |
+          yarn build
+          yarn build:css
 
       - name: Prepare test database
         env:

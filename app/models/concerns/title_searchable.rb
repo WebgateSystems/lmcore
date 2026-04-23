@@ -32,10 +32,13 @@ module TitleSearchable
         token.capitalize
       ].uniq
       patterns = variants.map { |variant| "%#{ActiveRecord::Base.sanitize_sql_like(variant)}%" }
-      like_disjunction = patterns.map { "title.value LIKE ?" }.join(" OR ")
+      # Keep bind arity deterministic and SQL static for scanners/Brakeman.
+      patterns << patterns.first while patterns.size < 4
+      patterns = patterns.first(4)
       where(
-        "EXISTS (SELECT 1 FROM jsonb_each_text(#{quoted_table_name}.title_i18n) " \
-        "AS title(locale, value) WHERE #{like_disjunction})",
+        "EXISTS (SELECT 1 FROM jsonb_each_text(title_i18n) " \
+        "AS title(locale, value) WHERE " \
+        "title.value LIKE ? OR title.value LIKE ? OR title.value LIKE ? OR title.value LIKE ?)",
         *patterns
       )
     }

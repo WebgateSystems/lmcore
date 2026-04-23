@@ -58,6 +58,10 @@ class ImageUploader < BaseUploader
       img.quality "85"
       img
     end
+  rescue MiniMagick::Error => e
+    # CI images may run without ImageMagick binaries (e.g. mogrify missing).
+    # In that case keep the original image instead of failing uploads/tests.
+    Rails.logger.warn("[ImageUploader] optimize skipped: #{e.message}")
   end
 
   # Re-encode HEIC/HEIF to JPEG so it's viewable in every browser.

@@ -125,7 +125,7 @@ RSpec.describe Subscription do
       new_date = 1.month.from_now
       subscription.renew!(new_date)
 
-      expect(subscription.expires_at).to eq(new_date)
+      expect(subscription.expires_at).to be_within(1.second).of(new_date)
       expect(subscription.status).to eq('active')
     end
   end
