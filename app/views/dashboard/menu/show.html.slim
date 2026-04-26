@@ -1,0 +1,45 @@
+- content_for(:page_title) { t("dashboard.navigation.menu", default: "Menu") }
+
+section
+  = form_with url: dashboard_menu_path, method: :patch, class: "panel", data: { menu_editor: true } do
+    .panel__header
+      h2 = t("dashboard.menu.heading", default: "Navigation menu")
+      .dashboard-actions
+        = submit_tag t("dashboard.menu.save", default: "Save menu"), class: "btn-dashboard-primary"
+
+    p.text-body-3.text-muted.mb-3 data-menu-editor-status=true
+      = t("dashboard.menu.hint", default: "Drag and drop items to reorder. Use the toggle to show or hide an item in the frontend navigation.")
+
+    table.dashboard-table
+      thead
+        tr
+          th style="width:50px" #
+          th = t("dashboard.common.table.title")
+          th = t("dashboard.common.table.type")
+          th = t("dashboard.menu.path", default: "Path")
+          th.text-end = t("dashboard.menu.visible", default: "Visible")
+      tbody data-menu-editor-sortable=true
+        - @menu_items.each do |item|
+          tr.sortable-row data-menu-item-id=item[:id] draggable="true"
+            td.sortable-handle
+              i.bi.bi-grip-vertical style="font-size:18px;color:var(--content-tertiary)"
+              = hidden_field_tag "menu[order][]", item[:id], data: { menu_editor_order_input: true }
+            td
+              span.fw-medium = item[:title]
+              - if item[:kind] == "page" && item[:page].present?
+                .text-body-3.text-muted
+                  = link_to t("dashboard.common.edit"), edit_dashboard_page_path(item[:page]), class: "text-decoration-none"
+            td
+              - if item[:kind] == "static"
+                span.dashboard-badge.dashboard-badge--published = t("dashboard.menu.types.static", default: "Static")
+              - else
+                span.dashboard-badge.dashboard-badge--draft = t("dashboard.menu.types.page", default: "Page")
+            td.text-body-3
+              code = item[:path]
+            td.text-end
+              - checked = item[:visible]
+              .form-check.form-switch.d-inline-flex.justify-content-end
+                input.form-check-input type="checkbox" name="menu[visibility][#{item[:id]}]" value="1" checked=checked
+
+    p.text-body-3.text-muted.mt-3.mb-0
+      = t("dashboard.menu.note", default: "Static items point to fixed routes (home/about/videos/posts/gallery). Pages come from published entries with 'Show in navigation menu'.")

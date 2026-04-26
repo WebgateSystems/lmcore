@@ -188,6 +188,20 @@ RSpec.describe "Dashboard::Gallery", type: :request do
       patch dashboard_gallery_path(album.slug), params: { album: { slug: "" } }
       expect([ 200, 302, 422 ]).to include(response.status)
     end
+
+    it "updates translated fields from i18n hashes" do
+      patch dashboard_gallery_path(album.slug), params: {
+        album: {
+          title_i18n: { "en" => "EN gallery", "uk" => "UK gallery" },
+          description_i18n: { "en" => "EN desc", "uk" => "UK desc" }
+        }
+      }
+
+      expect(response).to redirect_to(edit_dashboard_gallery_path(album.slug))
+      updated = album.reload
+      expect(updated.title_i18n.slice("en", "uk")).to eq({ "en" => "EN gallery", "uk" => "UK gallery" })
+      expect(updated.description_i18n.slice("en", "uk")).to eq({ "en" => "EN desc", "uk" => "UK desc" })
+    end
   end
 
   describe "GET /dashboard/gallery/:slug (show)" do

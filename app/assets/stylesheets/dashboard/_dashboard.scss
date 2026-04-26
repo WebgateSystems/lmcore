@@ -370,6 +370,25 @@
 	}
 }
 
+// Generic drag-and-drop row visuals for dashboard tables.
+.sortable-row {
+	transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.sortable-row.dragging {
+	opacity: 0.35;
+	background-color: var(--surface-hover, #f5f5f5);
+}
+
+.sortable-row.drag-over {
+	background-color: var(--surface-hover, #f0f0f0);
+}
+
+.sortable-handle {
+	cursor: move;
+	user-select: none;
+}
+
 // Badges
 .dashboard-badge {
 	display: inline-flex;

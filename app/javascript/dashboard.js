@@ -163,6 +163,31 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   })
 
+  // Content locale tabs for forms that edit multiple translations at once.
+  document.querySelectorAll('[data-locale-switcher]').forEach((root) => {
+    if (root.dataset.localeSwitcherInitialized === 'true') return
+    root.dataset.localeSwitcherInitialized = 'true'
+
+    const tabs = Array.from(root.querySelectorAll('[data-locale-tab]'))
+    const panels = Array.from(root.querySelectorAll('[data-locale-panel]'))
+    if (tabs.length === 0 || panels.length === 0) return
+
+    const activate = (locale) => {
+      tabs.forEach((tab) => tab.classList.toggle('active', tab.dataset.localeTab === locale))
+      panels.forEach((panel) => panel.classList.toggle('d-none', panel.dataset.localePanel !== locale))
+    }
+
+    const initialLocale = root.dataset.activeLocale || tabs[0].dataset.localeTab
+    activate(initialLocale)
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', (event) => {
+        event.preventDefault()
+        activate(tab.dataset.localeTab)
+      })
+    })
+  })
+
   // Album tags: multi-select + quick create.
   document.querySelectorAll('[data-album-tags]').forEach((wrapper) => {
     if (wrapper.dataset.albumTagsInitialized === 'true') return
@@ -548,6 +573,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
     getRows().forEach(attachRowEvents)
   })
+
+  // Blog menu editor drag-and-drop sorting.
+  document.querySelectorAll('[data-menu-editor-sortable]').forEach((tbody) => {
+    if (tbody.dataset.menuEditorInitialized === 'true') return
+    tbody.dataset.menuEditorInitialized = 'true'
+
+    let draggedRow = null
+
+    const rows = () => Array.from(tbody.querySelectorAll('tr[data-menu-item-id]'))
+
+    const attachRowEvents = (row) => {
+      row.addEventListener('dragstart', () => {
+        draggedRow = row
+        row.classList.add('dragging')
+      })
+
+      row.addEventListener('dragend', () => {
+        row.classList.remove('dragging')
+        row.classList.remove('drag-over')
+        draggedRow = null
+      })
+
+      row.addEventListener('dragover', (event) => {
+        event.preventDefault()
+        if (!draggedRow || draggedRow === row) return
+
+        row.classList.add('drag-over')
+        const rect = row.getBoundingClientRect()
+        const before = event.clientY < rect.top + rect.height / 2
+
+        if (before) {
+          if (row.previousElementSibling !== draggedRow) tbody.insertBefore(draggedRow, row)
+        } else if (row.nextElementSibling !== draggedRow) {
+          tbody.insertBefore(draggedRow, row.nextElementSibling)
+        }
+      })
+
+      row.addEventListener('dragleave', () => {
+        row.classList.remove('drag-over')
+      })
+
+      row.addEventListener('drop', (event) => {
+        event.preventDefault()
+        row.classList.remove('drag-over')
+      })
+    }
+
+    rows().forEach(attachRowEvents)
+  })
+
 })
 
 // Dashboard index search.

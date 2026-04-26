@@ -137,9 +137,25 @@ module Dashboard
     end
 
     def video_params
-      params.require(:video).permit(:title, :slug, :body, :excerpt, :status, :category_id,
-                                    :video_url, :video_provider, :thumbnail,
-                                    :meta_title, :meta_description, :published_at, tag_ids: [])
+      attrs = params.require(:video).permit(
+        :title, :slug, :body, :excerpt, :status, :category_id,
+        :video_url, :video_provider, :thumbnail,
+        :meta_title, :meta_description, :published_at,
+        title_i18n: {},
+        subtitle_i18n: {},
+        description_i18n: {},
+        keywords_i18n: {},
+        meta_description_i18n: {},
+        tag_ids: []
+      )
+
+      locale = I18n.locale.to_s
+      attrs[:title_i18n] = (attrs[:title_i18n] || {}).merge(locale => attrs[:title]) if attrs[:title].present?
+      attrs[:subtitle_i18n] = (attrs[:subtitle_i18n] || {}).merge(locale => attrs[:excerpt]) if attrs[:excerpt].present?
+      attrs[:description_i18n] = (attrs[:description_i18n] || {}).merge(locale => attrs[:body]) if attrs[:body].present?
+      attrs[:meta_description_i18n] = (attrs[:meta_description_i18n] || {}).merge(locale => attrs[:meta_description]) if attrs[:meta_description].present?
+
+      attrs.except(:title, :excerpt, :body, :meta_description, :meta_title)
     end
 
     def serialize_job_run(run)

@@ -49,6 +49,22 @@
     min-height: 2rem;
   }
 
+  &__toolbar-separator {
+    width: 1px;
+    min-height: 1.5rem;
+    background: var(--bs-border-color, #dee2e6);
+    margin: 0 0.125rem;
+    align-self: center;
+  }
+
+  &__tool-btn {
+    &.is-active {
+      background: var(--bs-primary-bg-subtle, #cfe2ff);
+      border-color: var(--bs-primary-border-subtle, #9ec5fe);
+      color: var(--bs-primary-text-emphasis, #084298);
+    }
+  }
+
   // The host is the slot where TipTap or EasyMDE gets mounted. Give it a
   // visible placeholder area before JS init so the user always sees an
   // edit surface (and can spot mount failures immediately).
@@ -70,6 +86,12 @@
   }
 
   &__fallback {
+    width: 100%;
+    min-height: 320px;
+    font-family: var(--bs-font-monospace, monospace);
+  }
+
+  &__source-view {
     width: 100%;
     min-height: 320px;
     font-family: var(--bs-font-monospace, monospace);
@@ -155,5 +177,28 @@
   &__actions {
     display: flex;
     gap: 0.25rem;
+  }
+}
+
+// Keep EasyMDE markdown toolbar on one row and aligned with dashboard UI.
+.EasyMDEContainer {
+  .editor-toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.125rem;
+    overflow-x: auto;
+  }
+
+  .editor-toolbar button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+  }
+
+  .editor-toolbar i.separator {
+    flex: 0 0 auto;
+    margin: 0 0.25rem;
   }
 }

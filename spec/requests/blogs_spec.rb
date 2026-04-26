@@ -61,6 +61,41 @@ RSpec.describe "Blogs", type: :request do
       get "/blogs/no-such-user"
       expect(response).to have_http_status(:not_found)
     end
+
+    it "renders navigation using stored menu order and visibility" do
+      donate = create(:page, :published, :in_menu, author: author, slug: "donate",
+                                             title_i18n: { "en" => "Donate" })
+      team = create(:page, :published, :in_menu, author: author, slug: "team",
+                                           title_i18n: { "en" => "Team" })
+
+      SiteSetting.set(
+        "navigation_menu",
+        [
+          { "id" => "home", "position" => 1, "visible" => true },
+          { "id" => "page:#{team.id}", "position" => 2, "visible" => true },
+          { "id" => "about", "position" => 3, "visible" => false },
+          { "id" => "videos", "position" => 4, "visible" => true },
+          { "id" => "posts", "position" => 5, "visible" => true },
+          { "id" => "gallery", "position" => 6, "visible" => true },
+          { "id" => "page:#{donate.id}", "position" => 7, "visible" => true }
+        ],
+        user: author,
+        value_type: "json"
+      )
+
+      get "/blogs/#{author.username}"
+      body = response.body
+      doc = Nokogiri::HTML5(body)
+      hrefs = doc.css(".header__nav-item.site-title__small.js_nav-item a")
+                 .map { |a| a["href"] }
+                 .compact
+
+      expect(response).to have_http_status(:ok)
+      expect(hrefs).to include("/blogs/#{author.username}/pages/team")
+      expect(hrefs).to include("/blogs/#{author.username}/pages/donate")
+      expect(hrefs).not_to include("/blogs/#{author.username}/pages/about")
+      expect(hrefs.index("/blogs/#{author.username}/pages/team")).to be < hrefs.index("/blogs/#{author.username}/videos")
+    end
   end
 
   describe "GET /blogs/:blog_slug/posts/:slug" do
@@ -224,6 +259,46 @@ RSpec.describe "Blogs", type: :request do
       get "/blogs/#{author.username}/pages/#{page_record.slug}"
       expect(response).to have_http_status(:ok)
     end
+
+    it "uses the theme default about image when page has no uploaded featured image" do
+      get "/blogs/#{author.username}/pages/#{page_record.slug}"
+      expect(response.body).to include("/themes/am/img/image/about/about-1.png")
+    end
+
+    it "falls back to first non-empty translation when selected locale is blank" do
+      SiteSetting.set("available_locales", %w[pl uk], user: author, value_type: "json")
+      SiteSetting.set("default_locale", "uk", user: author, value_type: "string")
+
+      fallback_page = create(
+        :page, :published, :in_menu, author: author, slug: "donate", show_in_menu: true,
+        title_i18n: { "pl" => "", "uk" => "Підтримати" },
+        content_i18n: { "pl" => "", "uk" => "<p>Український контент</p>" }
+      )
+
+      get "/blogs/#{author.username}/locale/pl"
+      redirect_uri = URI.parse(response.location)
+      expect(redirect_uri.path).to eq("/blogs/#{author.username}")
+      expect(Rack::Utils.parse_nested_query(redirect_uri.query).fetch("locale", nil)).to eq("pl")
+
+      get "/blogs/#{author.username}/pages/#{fallback_page.slug}"
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Підтримати")
+      expect(response.body).to include("Український контент")
+    end
+
+    it "renders pages marked as show_in_menu in navigation" do
+      menu_page = create(
+        :page, :published, :in_menu, author: author, slug: "donate", show_in_menu: true,
+        title_i18n: { "en" => "Donate" },
+        content_i18n: { "en" => "<p>Donate content</p>" }
+      )
+
+      get "/blogs/#{author.username}"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("/blogs/#{author.username}/pages/#{menu_page.slug}")
+      expect(response.body).to include("Donate")
+    end
   end
 
   describe "GET /blogs/:blog_slug/search" do
@@ -247,12 +322,14 @@ RSpec.describe "Blogs", type: :request do
   describe "GET /blogs/:blog_slug/locale/:locale" do
     it "switches I18n locale and redirects back to the blog root" do
       get "/blogs/#{author.username}/locale/pl"
-      expect(response).to redirect_to("/blogs/#{author.username}")
+      redirect_uri = URI.parse(response.location)
+      expect(redirect_uri.path).to eq("/blogs/#{author.username}")
     end
 
     it "falls back to a sensible locale when the requested one is not supported" do
       get "/blogs/#{author.username}/locale/xx"
-      expect(response).to redirect_to("/blogs/#{author.username}")
+      redirect_uri = URI.parse(response.location)
+      expect(redirect_uri.path).to eq("/blogs/#{author.username}")
     end
   end
 end

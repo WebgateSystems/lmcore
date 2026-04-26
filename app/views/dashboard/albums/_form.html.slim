@@ -1,3 +1,6 @@
+- locales = dashboard_available_locales.presence || I18n.available_locales.map(&:to_s)
+- locales = locales.map(&:to_s)
+- active_locale = locales.include?(I18n.locale.to_s) ? I18n.locale.to_s : locales.first
 = form_with(model: [:dashboard, album], url: album.persisted? ? dashboard_gallery_path(album.slug) : dashboard_gallery_index_path, class: "dashboard-form") do |f|
   - if album.errors.any?
     .alert.alert-danger
@@ -7,24 +10,31 @@
 
   = render "dashboard/shared/i18n_legend"
 
-  .mb-3
-    = f.label :title, class: "form-label form-label--translatable" do
-      = t("dashboard.gallery.form.title")
-      span.form-label__locale = " (#{locale_ui_tag})"
-    = f.text_field :title, class: "form-control", placeholder: t("dashboard.gallery.form.title_placeholder")
+  .post-editor data-locale-switcher="" data-active-locale=active_locale
+    .post-editor__tabs role="tablist"
+      - locales.each do |loc|
+        button.post-editor__tab type="button" data-locale-tab=loc class=(loc == active_locale ? "active" : "")
+          = locale_native_name(loc)
+          span.text-muted.ms-1.small = "(#{locale_ui_tag(loc)})"
+
+    - locales.each do |loc|
+      - panel_classes = ["post-editor__panel"]
+      - panel_classes << "d-none" unless loc == active_locale
+      .post-editor__panel class=panel_classes.join(" ") data-locale-panel=loc
+        .mb-3
+          = label_tag "album_title_i18n_#{loc}", t("dashboard.gallery.form.title"), class: "form-label form-label--translatable"
+          = text_field_tag "album[title_i18n][#{loc}]", album.title_i18n&.dig(loc), class: "form-control", placeholder: t("dashboard.gallery.form.title_placeholder")
+
+        .mb-3
+          = label_tag "album_description_i18n_#{loc}", t("dashboard.gallery.form.description"), class: "form-label form-label--translatable"
+          span.text-muted.ms-1.small = "(#{t('dashboard.gallery.form.optional')})"
+          = text_area_tag "album[description_i18n][#{loc}]", album.description_i18n&.dig(loc), class: "form-control", rows: 10, placeholder: t("dashboard.gallery.form.description_placeholder")
 
   .mb-3
     = f.label :slug, class: "form-label" do
       = t("dashboard.gallery.form.slug")
       span.text-muted.ms-1.small = "(#{t('dashboard.gallery.form.optional')})"
     = f.text_field :slug, class: "form-control", placeholder: t("dashboard.gallery.form.slug_placeholder")
-
-  .mb-3
-    = f.label :description, class: "form-label form-label--translatable" do
-      = t("dashboard.gallery.form.description")
-      span.form-label__locale = " (#{locale_ui_tag})"
-      span.text-muted.ms-1.small = "(#{t('dashboard.gallery.form.optional')})"
-    = f.text_area :description, class: "form-control", rows: 10, placeholder: t("dashboard.gallery.form.description_placeholder")
 
   .row
     .col-md-6.mb-3

@@ -329,6 +329,7 @@ class BlogsController < ApplicationController
       "theme_translation_scope" => "themes.#{active_theme_slug}",
       "current_url" => request.original_url,
       "pages_menu" => menu_pages,
+      "nav_menu_items" => nav_menu_items,
       "partners" => serialize_partners,
       "available_locales" => blog_available_locales,
       "locale_display" => LocaleTags.ui_tag(I18n.locale),
@@ -695,11 +696,12 @@ class BlogsController < ApplicationController
   end
 
   def serialize_page(pg)
-    locale = I18n.locale.to_s
+    featured_image_url = pg.featured_image_identifier.present? ? pg.featured_image&.url : nil
     {
       "slug" => pg.slug,
-      "title" => pg.title_i18n[locale] || pg.title_i18n.values.compact.first,
-      "content" => pg.content_i18n[locale] || pg.content_i18n.values.compact.first,
+      "title" => localized_i18n_value(pg.title_i18n),
+      "content" => localized_i18n_value(pg.content_i18n),
+      "featured_image_url" => featured_image_url,
       "page_type" => pg.page_type,
       "show_in_menu" => pg.show_in_menu?
     }
@@ -720,12 +722,70 @@ class BlogsController < ApplicationController
 
   def menu_pages
     @blog_owner.pages.published.in_menu.map do |pg|
-      locale = I18n.locale.to_s
       {
         "slug" => pg.slug,
-        "title" => pg.display_menu_title.is_a?(Hash) ? (pg.display_menu_title[locale] || pg.display_menu_title.values.compact.first) : pg.display_menu_title.to_s
+        "title" => localized_i18n_value(pg.display_menu_title)
       }
     end
+  end
+
+  def nav_menu_items
+    menu = BlogNavigationMenu.new(user: @blog_owner)
+
+    menu.items.filter_map do |item|
+      next unless item[:visible]
+
+      title = if item[:kind] == "static"
+                i18n_theme_translation("navigation.#{item[:navigation_key]}", default: item[:navigation_key].to_s.humanize)
+      else
+                page = item[:page]
+                next if page.blank?
+
+                localized_i18n_value(page.display_menu_title)
+      end
+
+      {
+        "id" => item[:id],
+        "title" => title,
+        "url" => navigation_item_url(item)
+      }
+    end
+  end
+
+  def navigation_item_url(item)
+    base = vanity_request? ? "" : "/blogs/#{@blog_owner.username}"
+
+    if item[:kind] == "static"
+      case item[:id]
+      when "home" then base.presence || "/"
+      when "about" then "#{base}/pages/about"
+      when "videos" then "#{base}/videos"
+      when "posts" then "#{base}/posts"
+      when "gallery" then "#{base}/gallery"
+      else base.presence || "/"
+      end
+    else
+      "#{base}/pages/#{item[:slug]}"
+    end
+  end
+
+  # Reads translated values with resilient fallback. Empty strings should not
+  # win over existing translations (e.g. pl="" should fall back to uk content).
+  def localized_i18n_value(value)
+    return value.to_s unless value.is_a?(Hash)
+
+    locale = I18n.locale.to_s
+    canonical_locale = LocaleTags.canonical_locale_code(locale).to_s
+    default_locale = LocaleTags.canonical_locale_code(blog_setting("default_locale", "")).to_s
+    fallback_locale = blog_locale_fallback(blog_available_locales).to_s
+    candidates = [ locale, canonical_locale, default_locale, fallback_locale ].compact.reject(&:blank?).uniq
+
+    candidates.each do |code|
+      translated = value[code].presence
+      return translated if translated.present?
+    end
+
+    value.values.find(&:present?).to_s
   end
 
   def popular_tags

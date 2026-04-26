@@ -130,6 +130,22 @@ RSpec.describe "Dashboard::Videos", type: :request do
       patch dashboard_video_path(video), params: { video: { slug: "" } }
       expect([ 200, 302, 422 ]).to include(response.status)
     end
+
+    it "updates translated fields from i18n hashes" do
+      patch dashboard_video_path(video), params: {
+        video: {
+          title_i18n: { "en" => "EN title", "uk" => "UK title" },
+          subtitle_i18n: { "en" => "EN subtitle", "uk" => "UK subtitle" },
+          description_i18n: { "en" => "EN description", "uk" => "UK description" }
+        }
+      }
+
+      expect(response).to redirect_to(dashboard_videos_path)
+      updated = video.reload
+      expect(updated.title_i18n.slice("en", "uk")).to eq({ "en" => "EN title", "uk" => "UK title" })
+      expect(updated.subtitle_i18n.slice("en", "uk")).to eq({ "en" => "EN subtitle", "uk" => "UK subtitle" })
+      expect(updated.description_i18n.slice("en", "uk")).to eq({ "en" => "EN description", "uk" => "UK description" })
+    end
   end
 
   describe "GET /dashboard/videos/sync_status with no run yet" do

@@ -116,6 +116,7 @@ Rails.application.routes.draw do
       end
     end
     resources :pages
+    resource :menu, only: %i[show update], controller: "menu"
     resources :categories, only: %i[index show new create edit update destroy]
     resources :tags, only: %i[index show new create edit update destroy]
     resource :settings, only: %i[show update]

@@ -40,7 +40,7 @@
 
             .mb-3
               = label_tag "post_content_source_i18n_#{loc}", t("dashboard.posts.form.content", default: "Content (%{lang})", lang: lang_tag), class: "form-label form-label--translatable"
-              .post-editor__toolbar data-post-editor-toolbar="" data-insert-image-label=t("dashboard.posts.form.insert_image", default: "Insert image")
+              .post-editor__toolbar data-post-editor-toolbar="" data-insert-image-label=t("dashboard.posts.form.insert_image", default: "Insert image") data-bold-label=t("dashboard.common.editor.bold", default: "B") data-italic-label=t("dashboard.common.editor.italic", default: "I") data-h2-label=t("dashboard.common.editor.h2", default: "H2") data-h3-label=t("dashboard.common.editor.h3", default: "H3") data-bullet-list-label=t("dashboard.common.editor.bullet_list", default: "List") data-ordered-list-label=t("dashboard.common.editor.ordered_list", default: "1.") data-quote-label=t("dashboard.common.editor.quote", default: "Quote") data-link-label=t("dashboard.common.editor.link", default: "Link") data-unlink-label=t("dashboard.common.editor.unlink", default: "Unlink") data-link-prompt=t("dashboard.common.editor.link_prompt", default: "Paste URL") data-undo-label=t("dashboard.common.editor.undo", default: "Undo") data-redo-label=t("dashboard.common.editor.redo", default: "Redo") data-source-label=t("dashboard.common.editor.source", default: "Source")
               .post-editor__host data-post-editor-host="" data-placeholder=t("dashboard.posts.form.content_placeholder", default: "")
               = text_area_tag "post[content_source_i18n][#{loc}]", post.content_source_i18n&.dig(loc), class: "d-none", data: { post_editor_source: true }
 

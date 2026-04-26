@@ -367,6 +367,29 @@
         margin-top: 0 !important;
       }
     }
+
+    /* Donate menu marker: animated heart shown only for /pages/donate link. */
+    .menu-donate-link {
+      position: relative;
+    }
+    .menu-donate-link::before {
+      content: "❤";
+      position: absolute;
+      right: 100%;
+      top: 50%;
+      margin-right: 5px;
+      color: rgb(242, 3, 3);
+      font-size: 1em;
+      line-height: 1;
+      transform-origin: center center;
+      animation: menuDonatePulse 1.4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes menuDonatePulse {
+      0%, 100% { transform: translateY(-50%) scale(0.8); }
+      40% { transform: translateY(-50%) scale(1); }
+      70% { transform: translateY(-50%) scale(0.9); }
+    }
   </style>
 </head>
 
@@ -389,11 +412,15 @@
           </div>
           <div class="header__nav-wrapper">
             <div class="header__nav">
-              <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path | default: '/' }}">{{ 'navigation.home' | t }}</a></div>
-              <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/pages/about">{{ 'navigation.about' | t }}</a></div>
-              <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/videos">{{ 'navigation.videos' | t }}</a></div>
-              <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/posts">{{ 'navigation.articles' | t }}</a></div>
-              <div class="header__nav-item site-title__small js_nav-item"><a href="{{ base_path }}/gallery">{{ 'navigation.gallery' | t }}</a></div>
+              {% for nav_item in nav_menu_items %}
+                <div class="header__nav-item site-title__small js_nav-item">
+                  {% if nav_item.url contains '/pages/donate' %}
+                  <a href="{{ nav_item.url }}" class="menu-donate-link">{{ nav_item.title }}</a>
+                  {% else %}
+                  <a href="{{ nav_item.url }}">{{ nav_item.title }}</a>
+                  {% endif %}
+                </div>
+              {% endfor %}
               
               <!-- Language switcher -->
               <div class="header__nav-item lang-list-wrapper">
@@ -489,10 +516,15 @@
                   </div>
                 </div>
                 <ul class="footer__links-list">
-                  <li class="footer__links-item"><a href="{{ base_path }}/pages/about">{{ 'navigation.about' | t }}</a></li>
-                  <li class="footer__links-item"><a href="{{ base_path }}/videos">{{ 'navigation.videos' | t }}</a></li>
-                  <li class="footer__links-item"><a href="{{ base_path }}/posts">{{ 'navigation.articles' | t }}</a></li>
-                  <li class="footer__links-item"><a href="{{ base_path }}/gallery">{{ 'navigation.gallery' | t }}</a></li>
+                  {% for nav_item in nav_menu_items %}
+                    <li class="footer__links-item">
+                      {% if nav_item.url contains '/pages/donate' %}
+                      <a href="{{ nav_item.url }}" class="menu-donate-link">{{ nav_item.title }}</a>
+                      {% else %}
+                      <a href="{{ nav_item.url }}">{{ nav_item.title }}</a>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
                 </ul>
               </div>
               <div class="footer__links-info">
@@ -581,11 +613,15 @@
             </svg>
           </div>
           <div class="mobile-menu__item js_search_mobile_btn"><a class="mobile-menu__link" href="#">{{ 'navigation.search' | t }}</a></div>
-          <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path | default: '/' }}">{{ 'navigation.home' | t }}</a></div>
-          <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/pages/about">{{ 'navigation.about' | t }}</a></div>
-          <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/videos">{{ 'navigation.videos' | t }}</a></div>
-          <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/posts">{{ 'navigation.articles' | t }}</a></div>
-          <div class="mobile-menu__item"><a class="mobile-menu__link" href="{{ base_path }}/gallery">{{ 'navigation.gallery' | t }}</a></div>
+          {% for nav_item in nav_menu_items %}
+            <div class="mobile-menu__item">
+              {% if nav_item.url contains '/pages/donate' %}
+              <a class="mobile-menu__link menu-donate-link" href="{{ nav_item.url }}">{{ nav_item.title }}</a>
+              {% else %}
+              <a class="mobile-menu__link" href="{{ nav_item.url }}">{{ nav_item.title }}</a>
+              {% endif %}
+            </div>
+          {% endfor %}
         </div>
       </div>
     </div>

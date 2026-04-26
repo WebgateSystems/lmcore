@@ -1,5 +1,9 @@
 - page_type_options = %w[custom about contact terms privacy].map { |k| [t("dashboard.pages.page_types.#{k}"), k] }
 - page_status_options = %w[draft published].map { |k| [t("dashboard.pages.statuses.#{k}"), k] }
+- locales = dashboard_available_locales.presence || I18n.available_locales.map(&:to_s)
+- locales = locales.map(&:to_s)
+- active_locale = locales.include?(I18n.locale.to_s) ? I18n.locale.to_s : locales.first
+- page_content_format = params.dig(:page, :content_format).presence || "html"
 = form_with(model: [:dashboard, page], class: "dashboard-form") do |f|
   - if page.errors.any?
     .alert.alert-danger
@@ -9,21 +13,55 @@
 
   = render "dashboard/shared/i18n_legend"
 
-  .mb-3
-    = f.label :title, class: "form-label form-label--translatable" do
-      = t("dashboard.common.table.title")
-      span.form-label__locale = " (#{locale_ui_tag})"
-    = f.text_field :title, class: "form-control", placeholder: t("dashboard.pages.form.title_placeholder")
+  .post-editor data-post-editor="" data-format-input-id="page_content_format"
+    .mb-3
+      = label_tag :page_content_format, t("dashboard.posts.form.content_format", default: "Content format"), class: "form-label"
+      = select_tag "page[content_format]",
+              options_for_select([["HTML (WYSIWYG)", "html"], ["Markdown", "markdown"]], page_content_format),
+              class: "form-select",
+              id: "page_content_format",
+              data: { switch_warning: t("dashboard.posts.form.switch_format_warning",
+                      default: "Switching format will convert your content. Some formatting may be lost. Continue?") }
+      p.form-text.small.mt-2 = t("dashboard.pages.form.about_hero_hint", default: "On public About page, the large name/tagline block comes from blog settings (site_name, site_tagline), not from page title.")
+
+    .post-editor__tabs role="tablist"
+      - locales.each do |loc|
+        button.post-editor__tab type="button" data-locale-tab=loc class=(loc == active_locale ? "active" : "")
+          = locale_native_name(loc)
+          span.text-muted.ms-1.small = "(#{locale_ui_tag(loc)})"
+
+    - locales.each do |loc|
+      - panel_classes = ["post-editor__panel", "dashboard-form__panel"]
+      - panel_classes << "d-none" unless loc == active_locale
+      .post-editor__panel.dashboard-form__panel class=panel_classes.join(" ") data-locale-panel=loc
+        .mb-3
+          = label_tag "page_title_i18n_#{loc}", t("dashboard.common.table.title"), class: "form-label form-label--translatable"
+          = text_field_tag "page[title_i18n][#{loc}]", page.title_i18n&.dig(loc), class: "form-control", placeholder: t("dashboard.pages.form.title_placeholder")
+
+        .mb-3
+          = label_tag "page_content_i18n_#{loc}", t("dashboard.pages.form.content"), class: "form-label form-label--translatable"
+          .post-editor__toolbar data-post-editor-toolbar="" data-bold-label=t("dashboard.common.editor.bold", default: "B") data-italic-label=t("dashboard.common.editor.italic", default: "I") data-h2-label=t("dashboard.common.editor.h2", default: "H2") data-h3-label=t("dashboard.common.editor.h3", default: "H3") data-bullet-list-label=t("dashboard.common.editor.bullet_list", default: "List") data-ordered-list-label=t("dashboard.common.editor.ordered_list", default: "1.") data-quote-label=t("dashboard.common.editor.quote", default: "Quote") data-link-label=t("dashboard.common.editor.link", default: "Link") data-unlink-label=t("dashboard.common.editor.unlink", default: "Unlink") data-link-prompt=t("dashboard.common.editor.link_prompt", default: "Paste URL") data-undo-label=t("dashboard.common.editor.undo", default: "Undo") data-redo-label=t("dashboard.common.editor.redo", default: "Redo") data-source-label=t("dashboard.common.editor.source", default: "Source")
+          .post-editor__host data-post-editor-host="" data-placeholder=t("dashboard.pages.form.content_placeholder")
+          = text_area_tag "page[content_i18n][#{loc}]", page.content_i18n&.dig(loc), class: "form-control", rows: 15, data: { post_editor_source: true }
+
+        .mb-3
+          = label_tag "page_meta_description_i18n_#{loc}", t("dashboard.pages.form.meta_description"), class: "form-label form-label--translatable"
+          = text_field_tag "page[meta_description_i18n][#{loc}]", page.meta_description_i18n&.dig(loc), class: "form-control", placeholder: t("dashboard.pages.form.meta_description_placeholder")
+
 
   .mb-3
     = f.label :slug, t("dashboard.common.table.slug"), class: "form-label"
     = f.text_field :slug, class: "form-control", placeholder: t("dashboard.pages.form.slug_placeholder")
 
   .mb-3
-    = f.label :body, class: "form-label form-label--translatable" do
-      = t("dashboard.pages.form.content")
-      span.form-label__locale = " (#{locale_ui_tag})"
-    = f.text_area :body, class: "form-control", rows: 15, placeholder: t("dashboard.pages.form.content_placeholder")
+    = f.label :featured_image, t("dashboard.common.table.thumbnail", default: "Image"), class: "form-label"
+    - if page.featured_image.present?
+      .mb-2
+        = image_tag(page.featured_image.url, class: "img-fluid rounded", style: "max-height: 180px;", alt: page.title.to_s)
+    - else
+      .mb-2
+        = image_tag("/themes/am/img/image/about/about-1.png", class: "img-fluid rounded opacity-50", style: "max-height: 180px;", alt: page.title.to_s)
+    = f.file_field :featured_image, class: "form-control", accept: "image/*"
 
   .row
     .col-md-6.mb-3
@@ -36,16 +74,6 @@
   .mb-3.form-check
     = f.check_box :show_in_menu, class: "form-check-input"
     = f.label :show_in_menu, t("dashboard.pages.form.show_in_menu"), class: "form-check-label"
-
-  .row
-    .col-md-6.mb-3
-      = f.label :meta_title, t("dashboard.pages.form.meta_title"), class: "form-label"
-      = f.text_field :meta_title, class: "form-control", placeholder: t("dashboard.pages.form.meta_title_placeholder")
-    .col-md-6.mb-3
-      = f.label :meta_description, class: "form-label form-label--translatable" do
-        = t("dashboard.pages.form.meta_description")
-        span.form-label__locale = " (#{locale_ui_tag})"
-      = f.text_field :meta_description, class: "form-control", placeholder: t("dashboard.pages.form.meta_description_placeholder")
 
   .dashboard-actions
     = f.submit page.persisted? ? t("dashboard.pages.form.update") : t("dashboard.pages.form.create"), class: "btn-dashboard-primary"

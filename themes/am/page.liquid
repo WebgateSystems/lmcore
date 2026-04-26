@@ -5,10 +5,14 @@
     <div class="section-article__inner row">
       <div class="section-article__image-wrapper col-4">
         <div class="section-article__image">
-          <picture>
-            <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/about/about-1.webp" type="image/webp">
-            <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/about/about-1.png" alt="{{ page.title }}" width="380" height="230">
-          </picture>
+          {% if page.featured_image_url and page.featured_image_url != blank %}
+            <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ page.featured_image_url }}" alt="{{ page.title }}" width="380" height="230">
+          {% else %}
+            <picture>
+              <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/am/img/image/about/about-1.webp" type="image/webp">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/am/img/image/about/about-1.png" alt="{{ page.title }}" width="380" height="230">
+            </picture>
+          {% endif %}
         </div>
         <!-- Mobile: name next to image -->
         <div class="section-article__title article-title-mobile">

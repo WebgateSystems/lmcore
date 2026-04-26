@@ -1,4 +1,7 @@
 - video_provider_options = %w[youtube vimeo self_hosted].map { |key| [t("dashboard.videos.provider_options.#{key}"), key] }
+- locales = dashboard_available_locales.presence || I18n.available_locales.map(&:to_s)
+- locales = locales.map(&:to_s)
+- active_locale = locales.include?(I18n.locale.to_s) ? I18n.locale.to_s : locales.first
 = form_with(model: [:dashboard, video], class: "dashboard-form") do |f|
   - if video.errors.any?
     .alert.alert-danger
@@ -8,11 +11,28 @@
 
   = render "dashboard/shared/i18n_legend"
 
-  .mb-3
-    = f.label :title, class: "form-label form-label--translatable" do
-      = t("dashboard.common.table.title")
-      span.form-label__locale = " (#{locale_ui_tag})"
-    = f.text_field :title, class: "form-control", placeholder: t("dashboard.videos.form.title_placeholder")
+  .post-editor data-locale-switcher="" data-active-locale=active_locale
+    .post-editor__tabs role="tablist"
+      - locales.each do |loc|
+        button.post-editor__tab type="button" data-locale-tab=loc class=(loc == active_locale ? "active" : "")
+          = locale_native_name(loc)
+          span.text-muted.ms-1.small = "(#{locale_ui_tag(loc)})"
+
+    - locales.each do |loc|
+      - panel_classes = ["post-editor__panel"]
+      - panel_classes << "d-none" unless loc == active_locale
+      .post-editor__panel class=panel_classes.join(" ") data-locale-panel=loc
+        .mb-3
+          = label_tag "video_title_i18n_#{loc}", t("dashboard.common.table.title"), class: "form-label form-label--translatable"
+          = text_field_tag "video[title_i18n][#{loc}]", video.title_i18n&.dig(loc), class: "form-control", placeholder: t("dashboard.videos.form.title_placeholder")
+
+        .mb-3
+          = label_tag "video_subtitle_i18n_#{loc}", t("dashboard.photos.form.excerpt"), class: "form-label form-label--translatable"
+          = text_area_tag "video[subtitle_i18n][#{loc}]", video.subtitle_i18n&.dig(loc), class: "form-control", rows: 3, placeholder: t("dashboard.videos.form.excerpt_placeholder")
+
+        .mb-3
+          = label_tag "video_description_i18n_#{loc}", t("dashboard.videos.form.description"), class: "form-label form-label--translatable"
+          = text_area_tag "video[description_i18n][#{loc}]", video.description_i18n&.dig(loc), class: "form-control", rows: 10, placeholder: t("dashboard.videos.form.description_placeholder")
 
   .mb-3
     = f.label :slug, t("dashboard.common.table.slug"), class: "form-label"
@@ -35,18 +55,6 @@
       .mb-2
         = image_tag("/images/fallback/video_thumbnail.png", class: "img-fluid rounded opacity-50", style: "max-height: 180px;", alt: video.title.to_s)
     = f.file_field :thumbnail, class: "form-control", accept: "image/*"
-
-  .mb-3
-    = f.label :excerpt, class: "form-label form-label--translatable" do
-      = t("dashboard.photos.form.excerpt")
-      span.form-label__locale = " (#{locale_ui_tag})"
-    = f.text_area :excerpt, class: "form-control", rows: 3, placeholder: t("dashboard.videos.form.excerpt_placeholder")
-
-  .mb-3
-    = f.label :body, class: "form-label form-label--translatable" do
-      = t("dashboard.videos.form.description")
-      span.form-label__locale = " (#{locale_ui_tag})"
-    = f.text_area :body, class: "form-control", rows: 10, placeholder: t("dashboard.videos.form.description_placeholder")
 
   .row
     .col-md-6.mb-3

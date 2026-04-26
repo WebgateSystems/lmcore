@@ -60,9 +60,61 @@ module Dashboard
     end
 
     def page_params
-      params.require(:page).permit(:title, :slug, :body, :status, :page_type,
-                                   :show_in_menu, :meta_title, :meta_description,
-                                   :published_at)
+      attrs = params.require(:page).permit(
+        :title, :slug, :content, :body, :status, :page_type, :featured_image,
+        :show_in_menu, :meta_title, :meta_description, :published_at, :content_format,
+        title_i18n: {},
+        content_i18n: {},
+        meta_description_i18n: {}
+      )
+      attrs[:title_i18n] = normalized_i18n_hash(attrs[:title_i18n])
+      attrs[:content_i18n] = normalized_i18n_hash(attrs[:content_i18n])
+      attrs[:meta_description_i18n] = normalized_i18n_hash(attrs[:meta_description_i18n])
+
+      locale = I18n.locale.to_s
+      if attrs[:title].present?
+        attrs[:title_i18n] ||= {}
+        attrs[:title_i18n][locale] = attrs[:title]
+      end
+      if attrs[:content].present?
+        attrs[:content_i18n] ||= {}
+        attrs[:content_i18n][locale] = attrs[:content]
+      end
+      if attrs[:body].present?
+        attrs[:content_i18n] ||= {}
+        attrs[:content_i18n][locale] = attrs[:body]
+      end
+      if attrs[:meta_description].present?
+        attrs[:meta_description_i18n] ||= {}
+        attrs[:meta_description_i18n][locale] = attrs[:meta_description]
+      end
+
+      # Backward compatibility: older dashboard forms used `body`.
+      # Return a plain Hash so `update` never receives nested strong-params
+      # wrappers that can raise ActionController::UnfilteredParameters.
+      payload = attrs.to_unsafe_h
+                     .except("title", "content", "body", "meta_description", "meta_title", "content_format")
+                     .compact
+
+      requested_content_format = params.dig(:page, :content_format).presence || attrs[:content_format]
+      if requested_content_format.to_s == "markdown"
+        source_i18n = normalized_i18n_hash(params.dig(:page, :content_i18n)) ||
+                      normalized_i18n_hash(payload["content_i18n"]) || {}
+        payload["content_i18n"] = source_i18n.each_with_object({}) do |(key, value), rendered|
+          rendered[key.to_s] = Posts::ContentRenderer.render_markdown(value.to_s)
+        end
+      end
+
+      payload
+    end
+
+    def normalized_i18n_hash(value)
+      case value
+      when nil then nil
+      when ActionController::Parameters then value.to_unsafe_h
+      when Hash then value
+      else nil
+      end
     end
   end
 end

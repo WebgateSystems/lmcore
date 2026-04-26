@@ -30,7 +30,7 @@ class Page < ApplicationRecord
   # Scopes
   scope :published, -> { where(status: "published") }
   scope :draft, -> { where(status: "draft") }
-  scope :in_menu, -> { where(show_in_menu: true).order(menu_position: :asc) }
+  scope :in_menu, -> { where(show_in_menu: true).order(menu_position: :asc, created_at: :asc) }
   scope :by_type, ->(type) { where(page_type: type) }
 
   # Instance methods

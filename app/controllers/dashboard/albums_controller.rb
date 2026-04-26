@@ -79,7 +79,20 @@ module Dashboard
     end
 
     def album_params
-      params.require(:album).permit(:title, :slug, :description, :status, :category_id, :keywords, :published_at, tag_ids: [])
+      attrs = params.require(:album).permit(
+        :title, :slug, :description, :status, :category_id, :keywords, :published_at,
+        title_i18n: {},
+        description_i18n: {},
+        keywords_i18n: {},
+        tag_ids: []
+      )
+
+      locale = I18n.locale.to_s
+      attrs[:title_i18n] = (attrs[:title_i18n] || {}).merge(locale => attrs[:title]) if attrs[:title].present?
+      attrs[:description_i18n] = (attrs[:description_i18n] || {}).merge(locale => attrs[:description]) if attrs[:description].present?
+      attrs[:keywords_i18n] = (attrs[:keywords_i18n] || {}).merge(locale => attrs[:keywords]) if attrs[:keywords].present?
+
+      attrs.except(:title, :description, :keywords)
     end
 
     def load_form_collections
