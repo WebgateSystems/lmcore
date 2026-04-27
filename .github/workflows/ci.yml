@@ -86,7 +86,7 @@ jobs:
       # ("the current global version of Yarn is 1.22.22"). Corepack provisions
       # the exact Yarn version requested by the project.
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
 
