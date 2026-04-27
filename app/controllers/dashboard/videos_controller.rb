@@ -139,7 +139,7 @@ module Dashboard
     def video_params
       attrs = params.require(:video).permit(
         :title, :slug, :body, :excerpt, :status, :category_id,
-        :video_url, :video_provider, :thumbnail,
+        :video_url, :video_provider, :video_file, :thumbnail,
         :meta_title, :meta_description, :published_at,
         title_i18n: {},
         subtitle_i18n: {},

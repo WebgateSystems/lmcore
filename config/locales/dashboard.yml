@@ -14,6 +14,7 @@ en:
       team: "Team"
       partners: "Partners"
       comments: "Comments"
+      audience: "Audience"
       audit_log: "Audit log"
     user_menu:
       my_blog: "My blog"
@@ -106,6 +107,26 @@ en:
       audit_log_entry: "Audit log entry"
       settings: "Blog settings"
       team: "Team"
+      audience: "Audience"
+    audience:
+      heading: "Subscribers and commenters"
+      search_placeholder: "Search by email, username, first name or last name"
+      search: "Search"
+      commenters: "Commenters"
+      subscribers: "Newsletter subscribers"
+      comments_count: "Comments"
+      last_activity: "Last activity"
+      subscribed_at: "Subscribed at"
+      trust: "Trusted commenter"
+      trust_action: "Trust"
+      untrust_action: "Revoke"
+      trusted_state: "Trusted"
+      ban: "Permanent ban"
+      reason_placeholder: "Reason for ban"
+      ban_action: "Ban"
+      already_banned: "Banned"
+      no_commenters: "No commenters yet."
+      no_subscribers: "No subscribers yet."
     locales:
       names:
         en: "English"
@@ -118,6 +139,9 @@ en:
         es: "Espanol"
     settings:
       general: "General"
+      comments_moderation_heading: "Comments moderation"
+      comments_premoderation_label: "Enable premoderation for comments"
+      comments_premoderation_hint: "When enabled, comments are pending by default. Trusted users can still post without premoderation."
       multilingual_label: "Multilingual field"
       multilingual_legend: "Highlighted labels are translated and saved only for the active interface language."
       site_name: "Site name"
@@ -305,6 +329,10 @@ en:
       comments:
         updated: "Comment updated."
         deleted: "Comment deleted."
+      audience:
+        banned: "User has been permanently banned from this blog."
+        trusted: "User can now comment without premoderation."
+        untrusted: "Trusted commenter permission has been revoked."
 
 pl:
   dashboard:
@@ -322,6 +350,7 @@ pl:
       team: "Zespół"
       partners: "Partnerzy"
       comments: "Komentarze"
+      audience: "Odbiorcy"
       audit_log: "Dziennik audytu"
     user_menu:
       my_blog: "Mój blog"
@@ -414,6 +443,26 @@ pl:
       audit_log_entry: "Wpis dziennika audytu"
       settings: "Ustawienia bloga"
       team: "Zespół"
+      audience: "Odbiorcy"
+    audience:
+      heading: "Subskrybenci i komentujący"
+      search_placeholder: "Szukaj po e-mailu, loginie, imieniu lub nazwisku"
+      search: "Szukaj"
+      commenters: "Komentujący"
+      subscribers: "Subskrybenci newslettera"
+      comments_count: "Komentarze"
+      last_activity: "Ostatnia aktywność"
+      subscribed_at: "Data subskrypcji"
+      trust: "Zaufany komentujący"
+      trust_action: "Zaufaj"
+      untrust_action: "Cofnij"
+      trusted_state: "Zaufany"
+      ban: "Permanentny ban"
+      reason_placeholder: "Powód bana"
+      ban_action: "Zbanuj"
+      already_banned: "Zbanowany"
+      no_commenters: "Brak komentujących."
+      no_subscribers: "Brak subskrybentów."
     locales:
       names:
         en: "English"
@@ -426,6 +475,9 @@ pl:
         es: "Espanol"
     settings:
       general: "Ogolne"
+      comments_moderation_heading: "Moderacja komentarzy"
+      comments_premoderation_label: "Włącz premoderację komentarzy"
+      comments_premoderation_hint: "Gdy opcja jest włączona, komentarze są domyślnie oczekujące. Zaufani użytkownicy mogą komentować bez premoderacji."
       multilingual_label: "Pole wielojezyczne"
       multilingual_legend: "Wyróżnione etykiety są tłumaczone i zapisywane tylko dla aktywnego języka interfejsu."
       site_name: "Nazwa strony"
@@ -613,6 +665,10 @@ pl:
       comments:
         updated: "Komentarz zostal zaktualizowany."
         deleted: "Komentarz zostal usuniety."
+      audience:
+        banned: "Użytkownik został permanentnie zbanowany na tym blogu."
+        trusted: "Użytkownik może teraz komentować bez premoderacji."
+        untrusted: "Uprawnienie zaufanego komentującego zostało cofnięte."
 
 uk:
   dashboard:

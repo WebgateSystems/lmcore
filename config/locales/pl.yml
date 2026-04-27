@@ -321,8 +321,14 @@ pl:
     guest_email: "Twój email"
     reply: "Odpowiedz"
     replies: "%{count} odpowiedzi"
+    posted: "Dziękujemy za komentarz."
     pending_approval: "Twój komentarz oczekuje na akceptację"
     no_comments: "Brak komentarzy. Bądź pierwszym komentującym!"
+    banned_from_blog: "Masz permanentnego bana na tym blogu."
+
+  devise:
+    registrations:
+      updated: "Twoje konto zostało zaktualizowane."
 
   # Notifications
   notifications:

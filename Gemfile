@@ -11,6 +11,8 @@ gem "turbo-rails"
 gem "stimulus-rails"
 gem "jbuilder"
 gem "bootsnap", require: false
+gem "mjml-rails", "~> 4.12"
+gem "mrml", "~> 1.10" # Rust MJML parser - faster, no Node.js required
 
 # `actiontext` ships an unpinned `~> 2.1.15` constraint that resolves to the
 # vulnerable 2.1.16. Pin to >= 2.1.18 to pick up the XSS fixes
@@ -109,8 +111,9 @@ end
 group :development do
   gem "web-console"
   gem "annotaterb"
-  gem "letter_opener"
+  gem "letter_opener", github: "ryanb/letter_opener"
   gem "bullet"
+  gem "rack-mini-profiler"
 
   # Deployment
   gem "capistrano", "~> 3.20", require: false

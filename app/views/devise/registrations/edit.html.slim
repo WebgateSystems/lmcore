@@ -6,7 +6,7 @@ h2.auth-title= t('users.edit_profile')
 - interface_language_label = locale_menu_label
 - identity_editable = resource.super_admin?
 
-= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'auth-form' }) do |f|
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'auth-form', multipart: true }) do |f|
   - if resource.errors.any?
     .auth-alert.auth-alert-error
       i.fa-solid.fa-circle-exclamation
@@ -45,6 +45,13 @@ h2.auth-title= t('users.edit_profile')
     .input-wrapper
       i.fa-solid.fa-envelope.input-icon
       = f.email_field :email, class: 'form-input', autocomplete: 'email'
+
+  .form-group
+    = f.label :avatar, t('activerecord.attributes.user.avatar', default: 'Avatar')
+    - if resource.avatar.present?
+      .mb-2
+        = image_tag resource.avatar.thumb.url, alt: resource.username, style: 'width: 64px; height: 64px; border-radius: 50%; object-fit: cover;'
+    = f.file_field :avatar, class: 'form-input', accept: 'image/*'
 
   .translatable-legend
     span.translatable-legend__badge= t('auth.multilingual_label')

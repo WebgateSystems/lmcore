@@ -332,4 +332,36 @@ RSpec.describe "Blogs", type: :request do
       expect(redirect_uri.path).to eq("/blogs/#{author.username}")
     end
   end
+
+  describe "blog theme flash rendering" do
+    let!(:post_record) do
+      create(:post, :published, author: author, slug: "flash-post", comments_enabled: true, title_i18n: { "en" => "Flash Post" })
+    end
+
+    it "does not render generic global flash notices on blog pages" do
+      sign_in author
+      video = create(:video, author: author, featured: false)
+
+      post pin_dashboard_video_path(video), headers: { "HTTP_REFERER" => "/blogs/#{author.username}" }
+      follow_redirect!
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include(I18n.t("dashboard.flash.videos.pinned"))
+      expect(response.body).not_to include("theme-flash--notice")
+    end
+
+    it "renders blog-specific flash notice after posting a comment" do
+      commenter = create(:user)
+      sign_in commenter
+      SiteSetting.set("comments_premoderation_enabled", false, user: author, value_type: "boolean")
+
+      post blog_post_comments_path(blog_slug: author.username, post_slug: post_record.slug),
+           params: { comment: { content: "Great post!" } }
+      follow_redirect!
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("comments.posted"))
+      expect(response.body).to include("theme-flash--notice")
+    end
+  end
 end

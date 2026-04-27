@@ -57,6 +57,7 @@ pl:
         title: "Newsletter"
         email_placeholder: "Podaj swój adres email"
         send: "Wyślij"
+        subscribed: "Zapisano do newslettera."
 
       contact:
         title: "Skontaktuj się ze mną"
@@ -64,6 +65,7 @@ pl:
         name_placeholder: "Napisz tutaj swoje pełne imię..."
         email_placeholder: "Napisz tutaj swój email..."
         send: "Wyślij wiadomość"
+        sent: "Wiadomość została wysłana."
 
       comments:
         title: "komentarzy"
@@ -79,6 +81,9 @@ pl:
         login_to_comment: "Zaloguj się lub zarejestruj, aby zostawić komentarz"
         write_here: "Pisz tutaj..."
         post_reply: "Wyślij odpowiedź"
+        post: "Dodaj komentarz"
+        confirm_email_required: "Potwierdź adres email, aby komentować."
+        banned_from_blog: "Masz permanentnego bana na tym blogu."
 
       search:
         title: "Szukaj"

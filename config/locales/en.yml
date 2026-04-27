@@ -329,6 +329,7 @@ en:
     cta_signup: "Want to comment? Create an account first — it only takes a moment."
     cta_signup_button: "Create account"
     cta_login: "or sign in"
+    banned_from_blog: "You are permanently banned from this blog."
 
   # Notifications
   notifications:

@@ -126,6 +126,13 @@ Rails.application.routes.draw do
       end
     end
     resources :comments, only: %i[index show update destroy]
+    resources :audience, only: %i[index] do
+      collection do
+        post :ban
+        post :trust
+        delete :untrust
+      end
+    end
     resources :audit_logs, only: %i[index show]
     resources :team, only: %i[index create destroy] do
       member do
@@ -144,7 +151,10 @@ Rails.application.routes.draw do
     sign_in: "login",
     sign_out: "logout",
     sign_up: "register"
-  }, controllers: { registrations: "users/registrations" }
+  }, controllers: {
+    registrations: "users/registrations",
+    sessions: "users/sessions"
+  }
 
   # API routes
   namespace :api do
@@ -226,10 +236,14 @@ Rails.application.routes.draw do
     get "posts", to: "blogs#posts", as: :posts
     get "posts/:slug", to: "blogs#post", as: :post
     post "posts/:post_slug/comments", to: "comments#create", as: :post_comments
+    post "contact_messages", to: "blog_contact_messages#create", as: :contact_messages
+    post "newsletter_subscriptions", to: "blog_newsletter_subscriptions#create", as: :newsletter_subscriptions
     get "videos", to: "blogs#videos", as: :videos
     get "videos/:slug", to: "blogs#video", as: :video
+    post "videos/:video_slug/comments", to: "comments#create", as: :video_comments
     get "gallery", to: "blogs#gallery", as: :gallery
     get "gallery/:slug", to: "blogs#album", as: :album
+    post "gallery/:album_slug/comments", to: "comments#create", as: :album_comments
     get "categories/:slug", to: "blogs#category", as: :category
     get "tags/:slug", to: "blogs#tag", as: :tag
     get "pages/:slug", to: "blogs#page", as: :page

@@ -43,6 +43,9 @@ nav.dashboard-nav
   = link_to dashboard_comments_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/comments')}"
     i.bi.bi-chat-dots aria-hidden="true"
     span.dashboard-nav__label = t("dashboard.navigation.comments")
+  = link_to dashboard_audience_index_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/audience')}"
+    i.bi.bi-person-lines-fill aria-hidden="true"
+    span.dashboard-nav__label = t("dashboard.navigation.audience", default: "Audience")
   = link_to dashboard_audit_logs_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/audit_logs')}"
     i.bi.bi-clock-history aria-hidden="true"
     span.dashboard-nav__label = t("dashboard.navigation.audit_log")

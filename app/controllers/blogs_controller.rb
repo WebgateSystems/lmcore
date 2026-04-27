@@ -110,9 +110,11 @@ class BlogsController < ApplicationController
   def video
     vid = blog_videos.find_by!(slug: params[:slug])
     vid.increment_views!
+    comments = vid.comments.approved.root_comments.includes(:replies, :user).oldest
 
     render_theme("videos/show",
       video: serialize_video(vid, full: true),
+      comments: comments.map { |c| serialize_comment(c) },
       categories: serialize_categories)
   end
 
@@ -147,9 +149,11 @@ class BlogsController < ApplicationController
   def album
     ph = blog_albums.find_by!(slug: params[:slug])
     ph.increment_views!
+    comments = ph.comments.approved.root_comments.includes(:replies, :user).oldest
 
     render_theme("gallery/show",
       album: serialize_album(ph, full: true),
+      comments: comments.map { |c| serialize_comment(c) },
       categories: serialize_categories)
   end
 
@@ -318,6 +322,13 @@ class BlogsController < ApplicationController
   end
 
   def common_assigns
+    current_ban = current_blog_ban
+    flash_payload = flash.to_hash
+    notice_message = normalized_flash_message(flash_payload["blog_notice"] || flash_payload[:blog_notice])
+    alert_message = normalized_flash_message(flash_payload["blog_alert"] || flash_payload[:blog_alert])
+    flash.delete(:blog_notice)
+    flash.delete(:blog_alert)
+
     {
       "site" => site_settings_hash,
       "blog" => serialize_blog_owner,
@@ -328,6 +339,7 @@ class BlogsController < ApplicationController
       "theme_slug" => active_theme_slug,
       "theme_translation_scope" => "themes.#{active_theme_slug}",
       "current_url" => request.original_url,
+      "current_path_with_query" => request.fullpath,
       "pages_menu" => menu_pages,
       "nav_menu_items" => nav_menu_items,
       "partners" => serialize_partners,
@@ -337,8 +349,31 @@ class BlogsController < ApplicationController
       "popular_tags" => popular_tags,
       "csrf_token" => form_authenticity_token,
       "current_user" => serialize_current_user,
-      "show_dashboard_link" => show_dashboard_link?
+      "show_dashboard_link" => show_dashboard_link?,
+      "current_user_blog_banned" => current_ban.present?,
+      "current_user_blog_ban_reason" => current_ban&.reason.to_s,
+      "login_url" => new_user_session_path,
+      "register_url" => new_user_registration_path,
+      "login_return_url" => "#{new_user_session_path}?return_to=#{CGI.escape(request.fullpath)}",
+      "register_return_url" => "#{new_user_registration_path}?return_to=#{CGI.escape(request.fullpath)}",
+      "flash_notice" => notice_message,
+      "flash_alert" => alert_message
     }
+  end
+
+  def normalized_flash_message(raw)
+    message = raw.to_s.strip
+    return "" if message.blank?
+    return "" if message == "#"
+    return "" if message.start_with?("#<")
+
+    message
+  end
+
+  def current_blog_ban
+    return nil unless current_user
+
+    @current_blog_ban ||= BlogBan.active.find_by(blog_owner: @blog_owner, user: current_user)
   end
 
   def serialize_current_user
@@ -708,10 +743,15 @@ class BlogsController < ApplicationController
   end
 
   def serialize_comment(comment)
+    avatar_url = if comment.user&.avatar_identifier.present?
+                   comment.user.avatar.url
+    end
+
     {
       "id" => comment.id,
       "content" => comment.content,
       "author_name" => comment.author_name,
+      "avatar_url" => avatar_url,
       "user_name" => comment.author_name,
       "guest_name" => comment.guest_name,
       "user" => (comment.user ? { "username" => comment.user.username, "name" => comment.user.full_name } : nil),

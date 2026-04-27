@@ -26,6 +26,59 @@ html lang=I18n.locale data-theme="light"
     /! Main stylesheet (compiled from app/assets/stylesheets/application.sass.scss, includes Font Awesome)
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
+    style
+      |
+        .landing-flash-stack {
+          position: fixed;
+          top: 14px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 3000;
+          width: min(92vw, 760px);
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .landing-flash {
+          border-radius: 10px;
+          padding: 12px 14px;
+          font-family: Inter, sans-serif;
+          font-size: 14px;
+          line-height: 1.35;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+          border: 1px solid transparent;
+        }
+        .landing-flash--notice {
+          background: #ecfdf3;
+          border-color: #86efac;
+          color: #14532d;
+        }
+        .landing-flash--alert {
+          background: #fef2f2;
+          border-color: #fca5a5;
+          color: #991b1b;
+        }
+        .landing-flash--hidden {
+          opacity: 0;
+          transform: translateY(-6px);
+          transition: opacity .25s ease, transform .25s ease;
+        }
 
   body.landing-page
+    - if notice || alert
+      .landing-flash-stack
+        - if notice
+          .landing-flash.landing-flash--notice data-landing-flash=""
+            = notice
+        - if alert
+          .landing-flash.landing-flash--alert data-landing-flash=""
+            = alert
     = yield
+    script
+      |
+        window.setTimeout(function () {
+          document.querySelectorAll('[data-landing-flash]').forEach(function (el) {
+            el.classList.add('landing-flash--hidden');
+            window.setTimeout(function () { el.remove(); }, 300);
+          });
+        }, 2600);

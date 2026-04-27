@@ -321,8 +321,14 @@ uk:
     guest_email: "Ваш email"
     reply: "Відповісти"
     replies: "%{count} відповідей"
+    posted: "Дякуємо за ваш коментар."
     pending_approval: "Ваш коментар очікує на схвалення"
     no_comments: "Коментарів поки немає. Будьте першим!"
+    banned_from_blog: "Ви отримали безстроковий бан на цьому блозі."
+
+  devise:
+    registrations:
+      updated: "Ваш обліковий запис успішно оновлено."
 
   # Notifications
   notifications:

@@ -2,6 +2,7 @@
 
 Devise.setup do |config|
   config.mailer_sender = Settings.services.smtp.from
+  config.mailer = "CustomDeviseMailer"
 
   require "devise/orm/active_record"
 

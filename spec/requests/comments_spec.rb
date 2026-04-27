@@ -28,6 +28,8 @@ RSpec.describe "Public comments", type: :request do
       before { sign_in commenter }
 
       it "creates an approved comment" do
+        SiteSetting.set("comments_premoderation_enabled", false, user: author, value_type: "boolean")
+
         expect {
           post base_url, params: { comment: { content: "Hello" } }
         }.to change(Comment, :count).by(1)
@@ -37,6 +39,29 @@ RSpec.describe "Public comments", type: :request do
         expect(comment.status).to eq("approved")
         expect(comment.approved_at).to be_present
         expect(comment.approved_by).to eq(commenter)
+      end
+
+      it "creates a pending comment when premoderation is enabled" do
+        SiteSetting.set("comments_premoderation_enabled", true, user: author, value_type: "boolean")
+
+        expect {
+          post base_url, params: { comment: { content: "Needs review" } }
+        }.to change(Comment, :count).by(1)
+
+        comment = Comment.last
+        expect(comment.status).to eq("pending")
+        expect(comment.approved_at).to be_nil
+      end
+
+      it "auto-approves trusted commenters even when premoderation is enabled" do
+        SiteSetting.set("comments_premoderation_enabled", true, user: author, value_type: "boolean")
+        create(:blog_trusted_commenter, blog_owner: author, user: commenter, granted_by: author)
+
+        expect {
+          post base_url, params: { comment: { content: "Trusted comment" } }
+        }.to change(Comment, :count).by(1)
+
+        expect(Comment.last.status).to eq("approved")
       end
 
       it "supports nested replies" do
@@ -50,6 +75,16 @@ RSpec.describe "Public comments", type: :request do
         expect {
           post base_url, params: { comment: { content: "Hello" } }
         }.not_to change(Comment, :count)
+      end
+
+      it "blocks users permanently banned from the blog" do
+        create(:blog_ban, blog_owner: author, user: commenter, banned_by: author, reason: "spam")
+
+        expect {
+          post base_url, params: { comment: { content: "Hello" } }
+        }.not_to change(Comment, :count)
+
+        expect(response).to redirect_to(blog_post_path(blog_slug: author.username, slug: post_record.slug))
       end
     end
 

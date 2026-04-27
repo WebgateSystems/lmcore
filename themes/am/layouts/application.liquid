@@ -390,6 +390,63 @@
       40% { transform: translateY(-50%) scale(1); }
       70% { transform: translateY(-50%) scale(0.9); }
     }
+
+    .theme-flash {
+      max-width: 1240px;
+      margin: 12px auto 0;
+      padding: 12px 16px;
+      font-family: "Fira Sans Extra Condensed", sans-serif;
+      font-size: 20px;
+      line-height: 1.2;
+      border-radius: 6px;
+      opacity: 1;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      transform: translateY(0);
+    }
+    .theme-flash.theme-flash--hidden {
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+    }
+    .theme-flash--notice {
+      background: #ecfdf3;
+      color: #14532d;
+      border: 1px solid #86efac;
+    }
+    .theme-flash--alert {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    .section-article-item__comments-item-wrapper {
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+      width: 100% !important;
+      max-width: none !important;
+    }
+    .section-article-item__comments-item-container > .section-article-item__comments-body-list {
+      margin-left: 36px !important;
+      padding-left: 14px !important;
+      border-left: 1px solid rgba(0, 0, 0, 0.14);
+    }
+    @media (max-width: 680px) {
+      .section-article-item__comments-item-container > .section-article-item__comments-body-list {
+        margin-left: 16px !important;
+        padding-left: 10px !important;
+      }
+    }
+    .section-article-item__comment-answer-form,
+    .section-article-item__comment-answer-textarea,
+    .section-article-item__comment-answer-textarea textarea {
+      width: 100% !important;
+      max-width: none !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+    .section-article-item__comment-answer-form._active {
+      display: block !important;
+    }
   </style>
 </head>
 
@@ -469,6 +526,12 @@
     
     <!-- Main content -->
     <main class="page__content">
+      {% if flash_notice and flash_notice != blank %}
+      <div class="theme-flash theme-flash--notice">{{ flash_notice }}</div>
+      {% endif %}
+      {% if flash_alert and flash_alert != blank %}
+      <div class="theme-flash theme-flash--alert">{{ flash_alert }}</div>
+      {% endif %}
       <div class="main-wrap">
         {{ content }}
       </div>
@@ -681,20 +744,36 @@
             </div>
             <div class="popup__content row">
               <div class="popup__title">{{ 'contact.title' | t }}</div>
-              <form class="popup__form" action="javascript:void(0)">
-                <div class="popup__textarea">
-                  <textarea class="js_validation_textarea" placeholder="{{ 'contact.message_placeholder' | t }}"></textarea>
+              {% if current_user and current_user_blog_banned %}
+                <div class="section-article-item__comment-cta">
+                  {{ 'comments.banned_from_blog' | t }}
+                  {% if current_user_blog_ban_reason and current_user_blog_ban_reason != blank %}
+                    <br/>{{ current_user_blog_ban_reason }}
+                  {% endif %}
                 </div>
-                <div class="popup__input">
-                  <div class="popup__input-title show">{{ 'contact.name_placeholder' | t }}</div>
-                  <input class="js_validation_name" type="text">
+              {% elsif current_user %}
+                <form class="popup__form" action="{{ canonical_base_path }}/contact_messages" method="post">
+                  <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                  <input type="hidden" name="return_to" value="{{ current_path_with_query }}">
+                  <div class="popup__textarea">
+                    <textarea name="contact_message[message]" class="js_validation_textarea" required placeholder="{{ 'contact.message_placeholder' | t }}"></textarea>
+                  </div>
+                  <div class="popup__input">
+                    <div class="popup__input-title show">{{ 'contact.name_placeholder' | t }}</div>
+                    <input name="contact_message[name]" class="js_validation_name" type="text" required value="{{ current_user.name }}">
+                  </div>
+                  <div class="popup__input">
+                    <input name="contact_message[email]" class="js_validation_email" type="email" required value="{{ current_user.email }}">
+                    <div class="popup__input-title show">{{ 'contact.email_placeholder' | t }}</div>
+                  </div>
+                  <button class="popup__btn white contact js_submit_form" type="submit">{{ 'contact.send' | t }}</button>
+                </form>
+              {% else %}
+                <div class="section-article-item__comment-cta">
+                  <a href="{{ login_return_url }}">{{ 'comments.login_to_comment' | t }}</a><br/>
+                  <a href="{{ register_return_url }}">{{ 'auth.sign_up' | t }}</a>
                 </div>
-                <div class="popup__input">
-                  <input class="js_validation_email" type="email">
-                  <div class="popup__input-title show">{{ 'contact.email_placeholder' | t }}</div>
-                </div>
-                <button class="popup__btn white contact js_submit_form" type="submit">{{ 'contact.send' | t }}</button>
-              </form>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -714,13 +793,29 @@
               </div>
             </div>
             <div class="popup__content row">
-              <form class="popup__form" action="javascript:void(0)">
-                <div class="popup__input">
-                  <input class="js_validation_email" type="email">
-                  <div class="popup__input-title contact-email">{{ 'newsletter.email_placeholder' | t }}</div>
+              {% if current_user and current_user_blog_banned %}
+                <div class="section-article-item__comment-cta">
+                  {{ 'comments.banned_from_blog' | t }}
+                  {% if current_user_blog_ban_reason and current_user_blog_ban_reason != blank %}
+                    <br/>{{ current_user_blog_ban_reason }}
+                  {% endif %}
                 </div>
-                <button class="popup__btn white email js_submit_form" type="submit">{{ 'newsletter.send' | t }}</button>
-              </form>
+              {% elsif current_user %}
+                <form class="popup__form" action="{{ canonical_base_path }}/newsletter_subscriptions" method="post">
+                  <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                  <input type="hidden" name="return_to" value="{{ current_path_with_query }}">
+                  <div class="popup__input">
+                    <input name="newsletter_subscription[email]" class="js_validation_email" type="email" required value="{{ current_user.email }}">
+                    <div class="popup__input-title contact-email">{{ 'newsletter.email_placeholder' | t }}</div>
+                  </div>
+                  <button class="popup__btn white email js_submit_form" type="submit">{{ 'newsletter.send' | t }}</button>
+                </form>
+              {% else %}
+                <div class="section-article-item__comment-cta">
+                  <a href="{{ login_return_url }}">{{ 'comments.login_to_comment' | t }}</a><br/>
+                  <a href="{{ register_return_url }}">{{ 'auth.sign_up' | t }}</a>
+                </div>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -741,5 +836,13 @@
   <script src="/themes/am/js/libs/tippy-bundle.umd.min.js"></script>
   <script src="/themes/am/js/main.js"></script>
   <script src="/themes/am/js/filters.js"></script>
+  <script>
+    window.setTimeout(function() {
+      document.querySelectorAll('.theme-flash').forEach(function(el) {
+        el.classList.add('theme-flash--hidden');
+        window.setTimeout(function() { el.remove(); }, 400);
+      });
+    }, 2600);
+  </script>
 </body>
 </html>

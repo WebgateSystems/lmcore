@@ -1,0 +1,98 @@
+- content_for(:page_title) { t("dashboard.page_titles.audience", default: "Audience") }
+
+section
+  .d-flex.justify-content-between.align-items-center.mb-4.gap-3.flex-wrap
+    h1.h4.mb-0 = t("dashboard.audience.heading", default: "Subscribers & commenters")
+    = form_with url: dashboard_audience_index_path, method: :get, local: true, class: "d-flex gap-2" do
+      = text_field_tag :q, @query, class: "form-control", placeholder: t("dashboard.audience.search_placeholder", default: "Search by email or name")
+      = submit_tag t("dashboard.audience.search", default: "Search"), class: "btn-dashboard-secondary"
+
+  .panel.mb-4
+    .panel__header
+      h2 = t("dashboard.audience.commenters", default: "Commenters")
+    - if @commenters.any?
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.author")
+            th Email
+            th = t("dashboard.audience.comments_count", default: "Comments")
+            th = t("dashboard.audience.last_activity", default: "Last activity")
+            th = t("dashboard.audience.trust", default: "Trusted commenter")
+            th = t("dashboard.audience.ban", default: "Permanent ban")
+        tbody
+          - @commenters.each do |user|
+            - existing_ban = @bans_by_user_id[user.id]
+            - trusted = @trusted_commenters_by_user_id[user.id]
+            tr
+              td = user.full_name
+              td = user.email
+              td = user.attributes["comments_count"].to_i
+              td = user.attributes["last_commented_at"]&.to_time&.strftime("%Y-%m-%d %H:%M")
+              td
+                - if trusted
+                  span.dashboard-badge.dashboard-badge--approved = t("dashboard.audience.trusted_state", default: "Trusted")
+                  = button_to t("dashboard.audience.untrust_action", default: "Revoke"), untrust_dashboard_audience_index_path, method: :delete, params: { user_id: user.id, q: @query }, class: "btn btn-sm btn-outline-secondary ms-2"
+                - else
+                  = button_to t("dashboard.audience.trust_action", default: "Trust"), trust_dashboard_audience_index_path, method: :post, params: { user_id: user.id, q: @query }, class: "btn btn-sm btn-outline-success"
+              td
+                - if existing_ban
+                  span.dashboard-badge.dashboard-badge--spam = t("dashboard.audience.already_banned", default: "Banned")
+                  .text-muted.small.mt-1 = existing_ban.reason
+                - else
+                  = form_with url: ban_dashboard_audience_index_path, method: :post, local: true, class: "d-flex gap-2 align-items-center" do
+                    = hidden_field_tag :user_id, user.id
+                    = hidden_field_tag :q, @query
+                    = text_field_tag :reason, nil, class: "form-control", required: true, minlength: 3, placeholder: t("dashboard.audience.reason_placeholder", default: "Reason for ban")
+                    = submit_tag t("dashboard.audience.ban_action", default: "Ban"), class: "btn btn-sm btn-danger"
+      - if @pagy_commenters.pages > 1
+        .d-flex.justify-content-center.mt-4
+          == pagy_nav(@pagy_commenters)
+    - else
+      .dashboard-empty
+        i.bi.bi-chat-dots
+        p = t("dashboard.audience.no_commenters", default: "No commenters yet.")
+
+  .panel
+    .panel__header
+      h2 = t("dashboard.audience.subscribers", default: "Newsletter subscribers")
+    - if @subscribers.any?
+      table.dashboard-table
+        thead
+          tr
+            th = t("dashboard.common.table.author")
+            th Email
+            th = t("dashboard.audience.subscribed_at", default: "Subscribed at")
+            th = t("dashboard.audience.trust", default: "Trusted commenter")
+            th = t("dashboard.audience.ban", default: "Permanent ban")
+        tbody
+          - @subscribers.each do |user|
+            - existing_ban = @bans_by_user_id[user.id]
+            - trusted = @trusted_commenters_by_user_id[user.id]
+            tr
+              td = user.full_name
+              td = user.email
+              td = user.attributes["subscribed_at"]&.to_time&.strftime("%Y-%m-%d %H:%M")
+              td
+                - if trusted
+                  span.dashboard-badge.dashboard-badge--approved = t("dashboard.audience.trusted_state", default: "Trusted")
+                  = button_to t("dashboard.audience.untrust_action", default: "Revoke"), untrust_dashboard_audience_index_path, method: :delete, params: { user_id: user.id, q: @query }, class: "btn btn-sm btn-outline-secondary ms-2"
+                - else
+                  = button_to t("dashboard.audience.trust_action", default: "Trust"), trust_dashboard_audience_index_path, method: :post, params: { user_id: user.id, q: @query }, class: "btn btn-sm btn-outline-success"
+              td
+                - if existing_ban
+                  span.dashboard-badge.dashboard-badge--spam = t("dashboard.audience.already_banned", default: "Banned")
+                  .text-muted.small.mt-1 = existing_ban.reason
+                - else
+                  = form_with url: ban_dashboard_audience_index_path, method: :post, local: true, class: "d-flex gap-2 align-items-center" do
+                    = hidden_field_tag :user_id, user.id
+                    = hidden_field_tag :q, @query
+                    = text_field_tag :reason, nil, class: "form-control", required: true, minlength: 3, placeholder: t("dashboard.audience.reason_placeholder", default: "Reason for ban")
+                    = submit_tag t("dashboard.audience.ban_action", default: "Ban"), class: "btn btn-sm btn-danger"
+      - if @pagy_subscribers.pages > 1
+        .d-flex.justify-content-center.mt-4
+          == pagy_nav(@pagy_subscribers)
+    - else
+      .dashboard-empty
+        i.bi.bi-envelope
+        p = t("dashboard.audience.no_subscribers", default: "No subscribers yet.")

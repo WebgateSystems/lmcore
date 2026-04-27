@@ -54,6 +54,16 @@ class User < ApplicationRecord
   has_many :api_keys, dependent: :destroy
   has_many :audit_logs, dependent: :nullify
   has_many :dashboard_job_runs, dependent: :destroy
+  has_many :contact_messages_received, class_name: "ContactMessage", foreign_key: :blog_owner_id, dependent: :destroy, inverse_of: :blog_owner
+  has_many :contact_messages_sent, class_name: "ContactMessage", dependent: :destroy, inverse_of: :user
+  has_many :newsletter_subscriptions_received, class_name: "NewsletterSubscription", foreign_key: :blog_owner_id, dependent: :destroy, inverse_of: :blog_owner
+  has_many :newsletter_subscriptions, dependent: :destroy
+  has_many :blog_bans_received, class_name: "BlogBan", foreign_key: :blog_owner_id, dependent: :destroy, inverse_of: :blog_owner
+  has_many :blog_bans, dependent: :destroy
+  has_many :blog_bans_granted, class_name: "BlogBan", foreign_key: :banned_by_id, dependent: :nullify, inverse_of: :banned_by
+  has_many :trusted_commenters, class_name: "BlogTrustedCommenter", foreign_key: :blog_owner_id, dependent: :destroy, inverse_of: :blog_owner
+  has_many :blog_trusted_commenterships, class_name: "BlogTrustedCommenter", dependent: :destroy, inverse_of: :user
+  has_many :trusted_commenters_granted, class_name: "BlogTrustedCommenter", foreign_key: :granted_by_id, dependent: :nullify, inverse_of: :granted_by
 
   # Following
   has_many :active_follows, class_name: "Follow", foreign_key: :follower_id, dependent: :destroy, inverse_of: :follower
@@ -311,6 +321,14 @@ class User < ApplicationRecord
 
   def followed_by?(user)
     followers.include?(user)
+  end
+
+  def banned_from_blog?(blog_owner)
+    BlogBan.active.exists?(blog_owner: blog_owner, user: self)
+  end
+
+  def trusted_for_blog_comments?(blog_owner)
+    BlogTrustedCommenter.exists?(blog_owner: blog_owner, user: self)
   end
 
   private

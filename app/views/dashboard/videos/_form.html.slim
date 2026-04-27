@@ -2,7 +2,7 @@
 - locales = dashboard_available_locales.presence || I18n.available_locales.map(&:to_s)
 - locales = locales.map(&:to_s)
 - active_locale = locales.include?(I18n.locale.to_s) ? I18n.locale.to_s : locales.first
-= form_with(model: [:dashboard, video], class: "dashboard-form") do |f|
+= form_with(model: [:dashboard, video], class: "dashboard-form", html: { multipart: true }) do |f|
   - if video.errors.any?
     .alert.alert-danger
       ul.mb-0
@@ -45,6 +45,14 @@
     .col-md-6.mb-3
       = f.label :video_provider, t("dashboard.videos.form.provider"), class: "form-label"
       = f.select :video_provider, video_provider_options, { include_blank: t("dashboard.videos.form.provider_blank") }, class: "form-select"
+
+  .mb-3
+    = f.label :video_file, t("dashboard.videos.form.video_file", default: "Video file"), class: "form-label"
+    = f.file_field :video_file, class: "form-control", accept: "video/*"
+    - if video.video_file.present?
+      .form-text = t("dashboard.videos.form.current_video", default: "Current file: %{name}", name: File.basename(video.video_file.url.to_s))
+    - else
+      .form-text = t("dashboard.videos.form.video_file_hint", default: "For self-hosted videos, upload a file here (you can also use a direct URL above).")
 
   .mb-3
     = f.label :thumbnail, t("dashboard.common.table.thumbnail", default: "Thumbnail"), class: "form-label"

@@ -17,10 +17,15 @@ RSpec.describe "Dashboard::Settings", type: :request do
   describe "PATCH /dashboard/settings" do
     it "saves editable settings for the current user" do
       patch dashboard_settings_path, params: {
-        settings: { site_name: "My Site", youtube_url: "https://www.youtube.com/@example/videos" }
+        settings: {
+          site_name: "My Site",
+          youtube_url: "https://www.youtube.com/@example/videos",
+          comments_premoderation_enabled: "0"
+        }
       }
       expect(response).to redirect_to(dashboard_settings_path)
       expect(SiteSetting.find_by(user: author, key: "youtube_url").typed_value).to eq("https://www.youtube.com/@example/videos")
+      expect(SiteSetting.find_by(user: author, key: "comments_premoderation_enabled").typed_value).to eq(false)
     end
 
     it "does not store YouTube cookies without acknowledgement" do

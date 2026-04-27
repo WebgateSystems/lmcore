@@ -6,9 +6,11 @@ module Dashboard
       site_name site_tagline site_description
       social_facebook social_twitter social_instagram social_youtube youtube_url
       available_locales default_locale
+      comments_premoderation_enabled
       theme_slug
     ].freeze
     TRANSLATABLE_KEYS = %w[site_name site_tagline site_description].freeze
+    BOOLEAN_KEYS = %w[comments_premoderation_enabled].freeze
 
     def show
       authorize :settings, policy_class: Dashboard::SettingsPolicy
@@ -44,6 +46,8 @@ module Dashboard
                       localized_value(raw_value, current_locale)
         elsif key == "available_locales"
                       normalize_available_locales(raw_value)
+        elsif BOOLEAN_KEYS.include?(key)
+                      normalize_boolean_value(key, raw_value)
         else
                       raw_value.to_s
         end
@@ -68,6 +72,9 @@ module Dashboard
           # the database before this fix.
           setting.value = { "data" => Array(value) }
           setting.value_type = "json"
+        elsif BOOLEAN_KEYS.include?(key)
+          setting.value = { "data" => normalize_setting_value(key, value) }
+          setting.value_type = "boolean"
         else
           setting.value = { "data" => normalize_setting_value(key, value) }
           setting.value_type = "string"
@@ -172,8 +179,20 @@ module Dashboard
       SiteSetting.parse_blog_available_locales(value)
     end
 
-    def normalize_setting_value(_key, value)
-      value
+    def normalize_setting_value(key, value)
+      if BOOLEAN_KEYS.include?(key)
+        ActiveModel::Type::Boolean.new.cast(value)
+      else
+        value
+      end
+    end
+
+    def normalize_boolean_value(key, raw_value)
+      default = case key
+      when "comments_premoderation_enabled" then true
+      else false
+      end
+      raw_value.nil? ? default : ActiveModel::Type::Boolean.new.cast(raw_value)
     end
   end
 end

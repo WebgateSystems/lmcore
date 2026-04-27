@@ -58,6 +58,7 @@ en:
         title: "Newsletter"
         email_placeholder: "Enter your email address"
         send: "Send"
+        subscribed: "You are subscribed to the newsletter."
 
       contact:
         title: "Contact me"
@@ -65,6 +66,7 @@ en:
         name_placeholder: "Write your full name here..."
         email_placeholder: "Write your email here..."
         send: "Send your message"
+        sent: "Message sent."
 
       comments:
         title: "comments"
@@ -82,6 +84,7 @@ en:
         post_reply: "Post reply"
         post: "Post comment"
         confirm_email_required: "Please confirm your email address to comment."
+        banned_from_blog: "You are permanently banned from this blog."
         cta_signup: "Want to comment? Create an account first — it only takes a moment."
         cta_signup_button: "Create account"
         cta_login: "or sign in"

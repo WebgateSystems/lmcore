@@ -105,6 +105,32 @@ RSpec.describe "Dashboard::Videos", type: :request do
     end
   end
 
+  describe "POST /dashboard/videos" do
+    it "creates a self-hosted video from uploaded file" do
+      video_file = Rack::Test::UploadedFile.new(
+        Rails.root.join("spec/fixtures/files/sample.mp4"),
+        "video/mp4"
+      )
+
+      expect do
+        post dashboard_videos_path, params: {
+          video: {
+            title: "Local hosted video",
+            slug: "local-hosted-video",
+            status: "draft",
+            video_provider: "self_hosted",
+            video_file: video_file
+          }
+        }
+      end.to change(Video, :count).by(1)
+
+      created = Video.order(:created_at).last
+      expect(response).to redirect_to(dashboard_videos_path)
+      expect(created.video_provider).to eq("self_hosted")
+      expect(created.video_file).to be_present
+    end
+  end
+
   describe "GET /dashboard/videos/:id (show)" do
     it "redirects to edit" do
       get dashboard_video_path(video)

@@ -111,6 +111,17 @@ section
 
     hr.my-4
 
+    h3.mb-4 = t("dashboard.settings.comments_moderation_heading", default: "Comments moderation")
+
+    .form-check.mb-4
+      - premoderation_enabled = @settings["comments_premoderation_enabled"]
+      input type="hidden" name="settings[comments_premoderation_enabled]" value="0"
+      input.form-check-input type="checkbox" name="settings[comments_premoderation_enabled]" id="settings_comments_premoderation_enabled" value="1" checked=(premoderation_enabled)
+      label.form-check-label for="settings_comments_premoderation_enabled" = t("dashboard.settings.comments_premoderation_label", default: "Enable premoderation for comments")
+      p.form-hint.mb-0.mt-1 = t("dashboard.settings.comments_premoderation_hint", default: "When enabled, comments are pending by default. Trusted users can still post without premoderation.")
+
+    hr.my-4
+
     h3.mb-4 = t("dashboard.settings.theme")
 
     .mb-3

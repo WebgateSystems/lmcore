@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_27_193000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -83,6 +83,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_090000) do
     t.index ["user_id"], name: "index_audit_logs_on_user_id"
   end
 
+  create_table "blog_bans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.uuid "banned_by_id"
+    t.uuid "blog_owner_id", null: false
+    t.datetime "created_at", null: false
+    t.boolean "permanent", default: true, null: false
+    t.text "reason", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["active"], name: "index_blog_bans_on_active"
+    t.index ["banned_by_id"], name: "index_blog_bans_on_banned_by_id"
+    t.index ["blog_owner_id", "user_id"], name: "index_blog_bans_on_blog_owner_id_and_user_id", unique: true
+    t.index ["blog_owner_id"], name: "index_blog_bans_on_blog_owner_id"
+    t.index ["user_id"], name: "index_blog_bans_on_user_id"
+  end
+
+  create_table "blog_trusted_commenters", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "blog_owner_id", null: false
+    t.datetime "created_at", null: false
+    t.uuid "granted_by_id"
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["blog_owner_id", "user_id"], name: "index_blog_trusted_commenters_on_owner_and_user", unique: true
+    t.index ["blog_owner_id"], name: "index_blog_trusted_commenters_on_blog_owner_id"
+    t.index ["granted_by_id"], name: "index_blog_trusted_commenters_on_granted_by_id"
+    t.index ["user_id"], name: "index_blog_trusted_commenters_on_user_id"
+  end
+
   create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "category_type", default: "general", null: false
     t.string "cover_image"
@@ -128,6 +156,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_090000) do
     t.index ["parent_id"], name: "index_comments_on_parent_id"
     t.index ["status"], name: "index_comments_on_status"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "contact_messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "blog_owner_id", null: false
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.text "message", null: false
+    t.string "name", null: false
+    t.string "status", default: "new", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["blog_owner_id"], name: "index_contact_messages_on_blog_owner_id"
+    t.index ["created_at"], name: "index_contact_messages_on_created_at"
+    t.index ["status"], name: "index_contact_messages_on_status"
+    t.index ["user_id"], name: "index_contact_messages_on_user_id"
   end
 
   create_table "content_visibilities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -257,6 +300,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_090000) do
     t.index ["created_at"], name: "idx_media_attachments_orphans", where: "(attachable_id IS NULL)"
     t.index ["position"], name: "index_media_attachments_on_position"
     t.index ["user_id"], name: "index_media_attachments_on_user_id"
+  end
+
+  create_table "newsletter_subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "blog_owner_id", null: false
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "status", default: "active", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["blog_owner_id", "email"], name: "index_newsletter_subscriptions_on_blog_owner_id_and_email", unique: true
+    t.index ["blog_owner_id"], name: "index_newsletter_subscriptions_on_blog_owner_id"
+    t.index ["status"], name: "index_newsletter_subscriptions_on_status"
+    t.index ["user_id"], name: "index_newsletter_subscriptions_on_user_id"
   end
 
   create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -736,11 +792,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_090000) do
   add_foreign_key "albums", "users", column: "published_by_id", on_delete: :nullify
   add_foreign_key "api_keys", "users", on_delete: :cascade
   add_foreign_key "audit_logs", "users", on_delete: :nullify
+  add_foreign_key "blog_bans", "users", column: "banned_by_id", on_delete: :nullify
+  add_foreign_key "blog_bans", "users", column: "blog_owner_id", on_delete: :cascade
+  add_foreign_key "blog_bans", "users", on_delete: :cascade
+  add_foreign_key "blog_trusted_commenters", "users", column: "blog_owner_id", on_delete: :cascade
+  add_foreign_key "blog_trusted_commenters", "users", column: "granted_by_id", on_delete: :nullify
+  add_foreign_key "blog_trusted_commenters", "users", on_delete: :cascade
   add_foreign_key "categories", "categories", column: "parent_id", on_delete: :nullify
   add_foreign_key "categories", "users", on_delete: :cascade
   add_foreign_key "comments", "comments", column: "parent_id", on_delete: :cascade
   add_foreign_key "comments", "users", column: "approved_by_id", on_delete: :nullify
   add_foreign_key "comments", "users", on_delete: :nullify
+  add_foreign_key "contact_messages", "users", column: "blog_owner_id", on_delete: :cascade
+  add_foreign_key "contact_messages", "users", on_delete: :cascade
   add_foreign_key "dashboard_job_runs", "posts", on_delete: :nullify
   add_foreign_key "dashboard_job_runs", "users", on_delete: :cascade
   add_foreign_key "dashboard_job_runs", "videos", on_delete: :cascade
@@ -752,6 +816,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_090000) do
   add_foreign_key "invitations", "users", column: "invitee_id", on_delete: :nullify
   add_foreign_key "invitations", "users", column: "inviter_id", on_delete: :cascade
   add_foreign_key "media_attachments", "users", on_delete: :cascade
+  add_foreign_key "newsletter_subscriptions", "users", column: "blog_owner_id", on_delete: :cascade
+  add_foreign_key "newsletter_subscriptions", "users", on_delete: :cascade
   add_foreign_key "notifications", "users", column: "actor_id", on_delete: :nullify
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "pages", "users", column: "author_id", on_delete: :cascade

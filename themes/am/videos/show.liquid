@@ -122,14 +122,22 @@
           </div>
           <div class="section-article-item__comments-title-text">{{ video.comments_count | default: 0 }} {{ 'comments.title' | t }}</div>
         </div>
-        <div class="section-article-item__btn-login--mobile">
-          <div class="section-article-item__btn-login--mobile-text js_authorization_open">{{ 'comments.login_to_comment' | t }}</div>
-          <div class="section-article-item__btn-login--mobile-ico">
-            <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13.7579 4.5H0.287109V7.5H13.7579V12L18.2332 6L13.7579 0V4.5Z" fill="white"/>
-            </svg>
+        {% unless current_user and current_user_blog_banned != true %}
+          <div class="section-article-item__btn-login--mobile">
+            <div class="section-article-item__btn-login--mobile-text">
+              {% if current_user and current_user_blog_banned %}
+                {{ 'comments.banned_from_blog' | t }}
+              {% else %}
+                <a href="{{ login_return_url }}">{{ 'comments.login_to_comment' | t }}</a>
+              {% endif %}
+            </div>
+            <div class="section-article-item__btn-login--mobile-ico">
+              <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.7579 4.5H0.287109V7.5H13.7579V12L18.2332 6L13.7579 0V4.5Z" fill="white"/>
+              </svg>
+            </div>
           </div>
-        </div>
+        {% endunless %}
       </div>
       <div class="section-article-item__comments-body-container">
         <div class="section-article-item__comments-body">
@@ -138,31 +146,37 @@
             <li class="section-article-item__comments-item-container">
               <div class="section-article-item__comments-item">
                 <div class="section-article-item__comments-item-user-ico">
-                  <a href="">
+                  {% if comment.avatar_url %}
+                    <img src="{{ comment.avatar_url }}" alt="{{ comment.author_name }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                  {% else %}
                     <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M48 0C21.504 0 0 21.504 0 48C0 74.496 21.504 96 48 96C74.496 96 96 74.496 96 48C96 21.504 74.496 0 48 0ZM48 14.4C55.968 14.4 62.4 20.832 62.4 28.8C62.4 36.768 55.968 43.2 48 43.2C40.032 43.2 33.6 36.768 33.6 28.8C33.6 20.832 40.032 14.4 48 14.4ZM48 82.56C36 82.56 25.392 76.416 19.2 67.104C19.344 57.552 38.4 52.32 48 52.32C57.552 52.32 76.656 57.552 76.8 67.104C70.608 76.416 60 82.56 48 82.56Z" fill="#959595"/>
                     </svg>
-                  </a>
+                  {% endif %}
                 </div>
                 <div class="section-article-item__comments-item-wrapper">
                   <div class="section-article-item__comments-item-info">
                     <div class="section-article-item__comments-item-user-name">
                       <span>{{ 'comments.added_by' | t }}</span>
-                      <span class="user-name"><a href="#">{{ comment.author_name }}</a></span>
+                      <span class="user-name">{{ comment.author_name }}</span>
                       <span>,</span>
                     </div>
                     <div class="section-article-item__comments-item-date">{{ comment.created_at | date: '%d %B %Y o %H:%M' }}</div>
                   </div>
                   <div class="section-article-item__comments-item-text">{{ comment.content }}</div>
-                  <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="#">{{ 'comments.reply' | t }}</a></div>
-                  <div class="section-article-item__comment-answer-form">
-                    <div class="section-article-item__comment-answer-textarea">
-                      <textarea class="comment_area" placeholder="{{ 'comments.write_here' | t }}"></textarea>
-                    </div>
-                    <div class="section-article-item__comment-answer-btn js_comment_submit js_submit">
-                      <button {% unless current_user %}disabled{% endunless %}>{{ 'comments.post_reply' | t }}</button>
-                    </div>
-                  </div>
+                  {% if current_user and current_user.confirmed and current_user_blog_banned != true %}
+                    <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="javascript:void(0)">{{ 'comments.reply' | t }}</a></div>
+                    <form class="section-article-item__comment-answer-form" method="post" action="{{ base_path }}/videos/{{ video.slug }}/comments">
+                      <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                      <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                      <div class="section-article-item__comment-answer-textarea">
+                        <textarea name="comment[content]" class="comment_area" required placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                      </div>
+                      <div class="section-article-item__comment-answer-btn">
+                        <button type="submit">{{ 'comments.post_reply' | t }}</button>
+                      </div>
+                    </form>
+                  {% endif %}
                 </div>
               </div>
               {% if comment.replies.size > 0 %}
@@ -171,33 +185,82 @@
                 <li class="section-article-item__comments-item-container">
                   <div class="section-article-item__comments-item">
                     <div class="section-article-item__comments-item-user-ico">
-                      <a href="">
+                      {% if reply.avatar_url %}
+                        <img src="{{ reply.avatar_url }}" alt="{{ reply.author_name }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                      {% else %}
                         <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M48 0C21.504 0 0 21.504 0 48C0 74.496 21.504 96 48 96C74.496 96 96 74.496 96 48C96 21.504 74.496 0 48 0ZM48 14.4C55.968 14.4 62.4 20.832 62.4 28.8C62.4 36.768 55.968 43.2 48 43.2C40.032 43.2 33.6 36.768 33.6 28.8C33.6 20.832 40.032 14.4 48 14.4ZM48 82.56C36 82.56 25.392 76.416 19.2 67.104C19.344 57.552 38.4 52.32 48 52.32C57.552 52.32 76.656 57.552 76.8 67.104C70.608 76.416 60 82.56 48 82.56Z" fill="#959595"/>
                         </svg>
-                      </a>
+                      {% endif %}
                     </div>
                     <div class="section-article-item__comments-item-wrapper">
                       <div class="section-article-item__comments-item-info">
                         <div class="section-article-item__comments-item-user-name">
                           <span>{{ 'comments.added_by' | t }}</span>
-                          <span class="user-name"><a href="#">{{ reply.author_name }}</a></span>
+                          <span class="user-name">{{ reply.author_name }}</span>
                           <span>,</span>
                         </div>
                         <div class="section-article-item__comments-item-date">{{ reply.created_at | date: '%d %B %Y o %H:%M' }}</div>
                       </div>
                       <div class="section-article-item__comments-item-text">{{ reply.content }}</div>
-                      <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="#">{{ 'comments.reply' | t }}</a></div>
-                      <div class="section-article-item__comment-answer-form">
-                        <div class="section-article-item__comment-answer-textarea">
-                          <textarea class="comment_area" placeholder="{{ 'comments.write_here' | t }}"></textarea>
-                        </div>
-                        <div class="section-article-item__comment-answer-btn js_comment_submit js_submit">
-                          <button {% unless current_user %}disabled{% endunless %}>{{ 'comments.post_reply' | t }}</button>
-                        </div>
-                      </div>
+                      {% if current_user and current_user.confirmed and current_user_blog_banned != true %}
+                        <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="javascript:void(0)">{{ 'comments.reply' | t }}</a></div>
+                        <form class="section-article-item__comment-answer-form" method="post" action="{{ base_path }}/videos/{{ video.slug }}/comments">
+                          <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                          <input type="hidden" name="parent_id" value="{{ reply.id }}">
+                          <div class="section-article-item__comment-answer-textarea">
+                            <textarea name="comment[content]" class="comment_area" required placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                          </div>
+                          <div class="section-article-item__comment-answer-btn">
+                            <button type="submit">{{ 'comments.post_reply' | t }}</button>
+                          </div>
+                        </form>
+                      {% endif %}
                     </div>
                   </div>
+                  {% if reply.replies.size > 0 %}
+                  <ul class="section-article-item__comments-body-list">
+                    {% for subreply in reply.replies %}
+                    <li class="section-article-item__comments-item-container">
+                      <div class="section-article-item__comments-item">
+                        <div class="section-article-item__comments-item-user-ico">
+                          {% if subreply.avatar_url %}
+                            <img src="{{ subreply.avatar_url }}" alt="{{ subreply.author_name }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                          {% else %}
+                            <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M48 0C21.504 0 0 21.504 0 48C0 74.496 21.504 96 48 96C74.496 96 96 74.496 96 48C96 21.504 74.496 0 48 0ZM48 14.4C55.968 14.4 62.4 20.832 62.4 28.8C62.4 36.768 55.968 43.2 48 43.2C40.032 43.2 33.6 36.768 33.6 28.8C33.6 20.832 40.032 14.4 48 14.4ZM48 82.56C36 82.56 25.392 76.416 19.2 67.104C19.344 57.552 38.4 52.32 48 52.32C57.552 52.32 76.656 57.552 76.8 67.104C70.608 76.416 60 82.56 48 82.56Z" fill="#959595"/>
+                            </svg>
+                          {% endif %}
+                        </div>
+                        <div class="section-article-item__comments-item-wrapper">
+                          <div class="section-article-item__comments-item-info">
+                            <div class="section-article-item__comments-item-user-name">
+                              <span>{{ 'comments.added_by' | t }}</span>
+                              <span class="user-name">{{ subreply.author_name }}</span>
+                              <span>,</span>
+                            </div>
+                            <div class="section-article-item__comments-item-date">{{ subreply.created_at | date: '%d %B %Y o %H:%M' }}</div>
+                          </div>
+                          <div class="section-article-item__comments-item-text">{{ subreply.content }}</div>
+                          {% if current_user and current_user.confirmed and current_user_blog_banned != true %}
+                            <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="javascript:void(0)">{{ 'comments.reply' | t }}</a></div>
+                            <form class="section-article-item__comment-answer-form" method="post" action="{{ base_path }}/videos/{{ video.slug }}/comments">
+                              <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                              <input type="hidden" name="parent_id" value="{{ subreply.id }}">
+                              <div class="section-article-item__comment-answer-textarea">
+                                <textarea name="comment[content]" class="comment_area" required placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                              </div>
+                              <div class="section-article-item__comment-answer-btn">
+                                <button type="submit">{{ 'comments.post_reply' | t }}</button>
+                              </div>
+                            </form>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
                 </li>
                 {% endfor %}
               </ul>
@@ -207,6 +270,37 @@
           </ul>
         </div>
       </div>
+
+      {% if current_user %}
+        {% if current_user_blog_banned %}
+          <div class="section-article-item__comment-cta">
+            {{ 'comments.banned_from_blog' | t }}
+            {% if current_user_blog_ban_reason and current_user_blog_ban_reason != blank %}
+              <br/>{{ current_user_blog_ban_reason }}
+            {% endif %}
+          </div>
+        {% elsif current_user.confirmed %}
+          <form class="section-article-item__comment-form" method="post" action="{{ base_path }}/videos/{{ video.slug }}/comments">
+            <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+            <div class="section-article-item__comment-answer-textarea">
+              <textarea name="comment[content]" required class="comment_area" placeholder="{{ 'comments.write_here' | t }}"></textarea>
+            </div>
+            <div class="section-article-item__comment-answer-btn">
+              <button type="submit">{{ 'comments.post' | t }}</button>
+            </div>
+          </form>
+        {% else %}
+          <div class="section-article-item__comment-cta">
+            {{ 'comments.confirm_email_required' | t }}
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="section-article-item__comment-cta">
+          <a class="section-article-item__btn-login" href="{{ login_return_url }}">{{ 'comments.login_to_comment' | t }}</a>
+          &nbsp;
+          <a href="{{ register_return_url }}">{{ 'auth.sign_up' | t }}</a>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>

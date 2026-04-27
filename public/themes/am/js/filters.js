@@ -135,7 +135,16 @@
     var desktopTitleInput = document.querySelector('.js_filter_title_input');
     var mobileValue = mobileTitleInput ? (mobileTitleInput.value || '').trim() : '';
     var desktopValue = desktopTitleInput ? (desktopTitleInput.value || '').trim() : '';
-    filters.q = mobileValue || desktopValue;
+    var activeElement = document.activeElement;
+
+    if (activeElement === desktopTitleInput) {
+      filters.q = desktopValue;
+    } else if (activeElement === mobileTitleInput) {
+      filters.q = mobileValue;
+    } else {
+      // Prefer desktop value for desktop flow, fallback to mobile value.
+      filters.q = desktopValue || mobileValue;
+    }
 
     return filters;
   }
@@ -186,6 +195,10 @@
     var debounceId = null;
     if (titleInput) {
       titleInput.addEventListener('input', function() {
+        // Keep both fields in sync to avoid stale value overrides.
+        if (mobileTitleInput && mobileTitleInput.value !== titleInput.value) {
+          mobileTitleInput.value = titleInput.value;
+        }
         clearTimeout(debounceId);
         debounceId = setTimeout(function() {
           var query = (titleInput.value || '').trim();
@@ -199,7 +212,9 @@
     // Mobile title field uses explicit "Apply" action.
     if (mobileTitleInput && titleInput) {
       mobileTitleInput.addEventListener('input', function() {
-        titleInput.value = mobileTitleInput.value;
+        if (titleInput.value !== mobileTitleInput.value) {
+          titleInput.value = mobileTitleInput.value;
+        }
       });
       mobileTitleInput.addEventListener('keydown', function(event) {
         if (event.key !== 'Enter') return;
