@@ -394,7 +394,9 @@ RSpec.describe "Blogs", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("#{Settings.sso.issuer}/sso/login")
+      expect(response.body).to include("#{Settings.sso.issuer}/register")
       expect(response.body).to include("return_to=")
+      expect(response.body).not_to include("?locale=ua?return_to=")
     end
   end
 end

@@ -3,7 +3,7 @@
 Doorkeeper.configure do
   orm :active_record
 
-  base_controller "ApplicationController"
+  base_controller "DoorkeeperBaseController"
 
   resource_owner_authenticator do
     current_user || warden.authenticate!(scope: :user)

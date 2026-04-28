@@ -332,9 +332,13 @@ class BlogsController < ApplicationController
     login_path = if vanity_request?
                    sso_login_url_for(request.fullpath)
     else
-                   "#{new_user_session_path}?return_to=#{CGI.escape(request.fullpath)}"
+                   auth_url_with_return_to(new_user_session_path, request.fullpath)
     end
-    register_path = "#{new_user_registration_path}?return_to=#{CGI.escape(request.fullpath)}"
+    register_path = if vanity_request?
+                      sso_registration_url_for(request.fullpath)
+    else
+                      auth_url_with_return_to(new_user_registration_path, request.fullpath)
+    end
 
     {
       "site" => site_settings_hash,
@@ -360,7 +364,7 @@ class BlogsController < ApplicationController
       "current_user_blog_banned" => current_ban.present?,
       "current_user_blog_ban_reason" => current_ban&.reason.to_s,
       "login_url" => (vanity_request? ? sso_login_url_for : new_user_session_path),
-      "register_url" => new_user_registration_path,
+      "register_url" => (vanity_request? ? sso_registration_url_for : new_user_registration_path),
       "login_return_url" => login_path,
       "register_return_url" => register_path,
       "flash_notice" => notice_message,
@@ -377,6 +381,25 @@ class BlogsController < ApplicationController
     return "#{sso_login_path}?#{Rack::Utils.build_query(query)}" if issuer.blank?
 
     "#{issuer}/sso/login?#{Rack::Utils.build_query(query)}"
+  end
+
+  def sso_registration_url_for(return_to = nil)
+    issuer = Settings.sso.issuer.to_s.chomp("/")
+    return_to_value = return_to.to_s
+    query = { locale: I18n.locale.to_s }
+    query[:return_to] = return_to_value if return_to_value.present?
+
+    return auth_url_with_return_to(new_user_registration_path, return_to_value) if issuer.blank?
+
+    "#{issuer}/register?#{Rack::Utils.build_query(query)}"
+  end
+
+  def auth_url_with_return_to(base_path, return_to = nil)
+    return_to_value = return_to.to_s
+    return base_path if return_to_value.blank?
+
+    separator = base_path.include?("?") ? "&" : "?"
+    "#{base_path}#{separator}return_to=#{CGI.escape(return_to_value)}"
   end
 
   def normalized_flash_message(raw)
