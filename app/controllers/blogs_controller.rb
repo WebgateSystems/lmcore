@@ -330,7 +330,7 @@ class BlogsController < ApplicationController
     flash.delete(:blog_alert)
 
     login_path = if vanity_request?
-                   sso_login_path(return_to: request.fullpath)
+                   sso_login_url_for(request.fullpath)
     else
                    "#{new_user_session_path}?return_to=#{CGI.escape(request.fullpath)}"
     end
@@ -359,13 +359,24 @@ class BlogsController < ApplicationController
       "show_dashboard_link" => show_dashboard_link?,
       "current_user_blog_banned" => current_ban.present?,
       "current_user_blog_ban_reason" => current_ban&.reason.to_s,
-      "login_url" => (vanity_request? ? sso_login_path : new_user_session_path),
+      "login_url" => (vanity_request? ? sso_login_url_for : new_user_session_path),
       "register_url" => new_user_registration_path,
       "login_return_url" => login_path,
       "register_return_url" => register_path,
       "flash_notice" => notice_message,
       "flash_alert" => alert_message
     }
+  end
+
+  def sso_login_url_for(return_to = nil)
+    issuer = Settings.sso.issuer.to_s.chomp("/")
+    return_to_value = return_to.to_s
+    query = { locale: I18n.locale.to_s }
+    query[:return_to] = return_to_value if return_to_value.present?
+
+    return "#{sso_login_path}?#{Rack::Utils.build_query(query)}" if issuer.blank?
+
+    "#{issuer}/sso/login?#{Rack::Utils.build_query(query)}"
   end
 
   def normalized_flash_message(raw)
