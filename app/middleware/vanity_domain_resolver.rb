@@ -36,9 +36,11 @@ class VanityDomainResolver
       username = lookup_username(host)
       if username
         original_path = env["PATH_INFO"].to_s
+        original_query = env["QUERY_STRING"].to_s
         suffix = (original_path == "" || original_path == "/") ? "" : original_path
         env["PATH_INFO"] = "/blogs/#{username}#{suffix}"
         env["ORIGINAL_HOST"] = host
+        env["ORIGINAL_FULLPATH"] = original_query.present? ? "#{original_path}?#{original_query}" : original_path
       end
     end
 

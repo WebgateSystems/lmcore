@@ -247,12 +247,6 @@
           {{ 'comments.confirm_email_required' | t }}
         </div>
       {% endif %}
-    {% else %}
-      <div class="section-article-item__comment-cta">
-        <a class="section-article-item__btn-login" href="{{ login_return_url }}">{{ 'comments.login_to_comment' | t }}</a>
-        &nbsp;
-        <a href="{{ register_return_url }}">{{ 'auth.sign_up' | t }}</a>
-      </div>
     {% endif %}
   </div>
 </div>

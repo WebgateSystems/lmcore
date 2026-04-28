@@ -330,12 +330,12 @@ class BlogsController < ApplicationController
     flash.delete(:blog_alert)
 
     login_path = if vanity_request?
-                   sso_login_url_for(request.fullpath)
+                   sso_login_path(locale: I18n.locale, return_to: vanity_return_to_path)
     else
                    auth_url_with_return_to(new_user_session_path, request.fullpath)
     end
     register_path = if vanity_request?
-                      sso_registration_url_for(request.fullpath)
+                      auth_url_with_return_to(new_user_registration_path, vanity_return_to_path)
     else
                       auth_url_with_return_to(new_user_registration_path, request.fullpath)
     end
@@ -363,35 +363,13 @@ class BlogsController < ApplicationController
       "show_dashboard_link" => show_dashboard_link?,
       "current_user_blog_banned" => current_ban.present?,
       "current_user_blog_ban_reason" => current_ban&.reason.to_s,
-      "login_url" => (vanity_request? ? sso_login_url_for : new_user_session_path),
-      "register_url" => (vanity_request? ? sso_registration_url_for : new_user_registration_path),
+      "login_url" => (vanity_request? ? sso_login_path(locale: I18n.locale) : new_user_session_path),
+      "register_url" => (vanity_request? ? new_user_registration_path(locale: I18n.locale) : new_user_registration_path),
       "login_return_url" => login_path,
       "register_return_url" => register_path,
       "flash_notice" => notice_message,
       "flash_alert" => alert_message
     }
-  end
-
-  def sso_login_url_for(return_to = nil)
-    issuer = Settings.sso.issuer.to_s.chomp("/")
-    return_to_value = return_to.to_s
-    query = { locale: I18n.locale.to_s }
-    query[:return_to] = return_to_value if return_to_value.present?
-
-    return "#{sso_login_path}?#{Rack::Utils.build_query(query)}" if issuer.blank?
-
-    "#{issuer}/sso/login?#{Rack::Utils.build_query(query)}"
-  end
-
-  def sso_registration_url_for(return_to = nil)
-    issuer = Settings.sso.issuer.to_s.chomp("/")
-    return_to_value = return_to.to_s
-    query = { locale: I18n.locale.to_s }
-    query[:return_to] = return_to_value if return_to_value.present?
-
-    return auth_url_with_return_to(new_user_registration_path, return_to_value) if issuer.blank?
-
-    "#{issuer}/register?#{Rack::Utils.build_query(query)}"
   end
 
   def auth_url_with_return_to(base_path, return_to = nil)
@@ -400,6 +378,10 @@ class BlogsController < ApplicationController
 
     separator = base_path.include?("?") ? "&" : "?"
     "#{base_path}#{separator}return_to=#{CGI.escape(return_to_value)}"
+  end
+
+  def vanity_return_to_path
+    request.env["ORIGINAL_FULLPATH"].presence || request.fullpath
   end
 
   def normalized_flash_message(raw)

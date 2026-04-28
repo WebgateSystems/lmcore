@@ -393,8 +393,8 @@ RSpec.describe "Blogs", type: :request do
       get "/", headers: { "HTTP_HOST" => "muzhdabaiev.com" }
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("#{Settings.sso.issuer}/sso/login")
-      expect(response.body).to include("#{Settings.sso.issuer}/register")
+      expect(response.body).to include("/sso/login?")
+      expect(response.body).to include("/register?")
       expect(response.body).to include("return_to=")
       expect(response.body).not_to include("?locale=ua?return_to=")
     end

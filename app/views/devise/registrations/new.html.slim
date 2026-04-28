@@ -1,4 +1,6 @@
 - content_for :title, t('auth.sign_up')
+- oauth_provider_keys = Devise.omniauth_configs.keys.map(&:to_s)
+- has_social_oauth = (%w[apple google_oauth2 facebook] & oauth_provider_keys).any?
 
 h2.auth-title= t('auth.sign_up')
 
@@ -67,13 +69,23 @@ h2.auth-title= t('auth.sign_up')
     span.text-muted= t('auth.have_account')
     = link_to t('auth.sign_in'), new_session_path(resource_name), class: 'auth-link auth-link-bold'
 
+- if has_social_oauth
   .auth-divider
     span= t('auth.or_continue_with', default: 'or Continue with')
 
-  .social-auth
-    = button_to user_apple_omniauth_authorize_path, method: :post, class: 'social-auth__provider-btn', form: { class: 'social-auth__provider-form', data: { turbo: false } }, "aria-label": t('auth.sign_up_with_apple', default: 'Sign up with Apple') do
-      i.fa-brands.fa-apple
-    = button_to user_google_oauth2_omniauth_authorize_path, method: :post, class: 'social-auth__provider-btn', form: { class: 'social-auth__provider-form', data: { turbo: false } }, "aria-label": t('auth.sign_up_with_google', default: 'Sign up with Google') do
-      i.fa-brands.fa-google
-    = button_to user_facebook_omniauth_authorize_path, method: :post, class: 'social-auth__provider-btn', form: { class: 'social-auth__provider-form', data: { turbo: false } }, "aria-label": t('auth.sign_up_with_facebook', default: 'Sign up with Facebook') do
-      i.fa-brands.fa-facebook
+  .social-auth data-turbo="false"
+    - if oauth_provider_keys.include?("apple")
+      form.social-auth__provider-form action="/auth/apple" method="post" target="_top" data-turbo="false" data-turbo-frame="_top"
+        input type="hidden" name="authenticity_token" value=form_authenticity_token
+        button.social-auth__provider-btn type="submit" aria-label=t('auth.sign_up_with_apple', default: 'Sign up with Apple')
+          i.fa-brands.fa-apple
+    - if oauth_provider_keys.include?("google_oauth2")
+      form.social-auth__provider-form action="/auth/google_oauth2" method="post" target="_top" data-turbo="false" data-turbo-frame="_top"
+        input type="hidden" name="authenticity_token" value=form_authenticity_token
+        button.social-auth__provider-btn type="submit" aria-label=t('auth.sign_up_with_google', default: 'Sign up with Google')
+          i.fa-brands.fa-google
+    - if oauth_provider_keys.include?("facebook")
+      form.social-auth__provider-form action="/auth/facebook" method="post" target="_top" data-turbo="false" data-turbo-frame="_top"
+        input type="hidden" name="authenticity_token" value=form_authenticity_token
+        button.social-auth__provider-btn type="submit" aria-label=t('auth.sign_up_with_facebook', default: 'Sign up with Facebook')
+          i.fa-brands.fa-facebook

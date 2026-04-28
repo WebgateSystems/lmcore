@@ -27,7 +27,9 @@ SecureHeaders::Configuration.default do |config|
     media_src: %w['self' https: blob:],
     object_src: %w['none'],
     base_uri: %w['self'],
-    form_action: %w['self'],
+    # In development we allow all form targets to avoid localhost/127.0.0.1
+    # origin mismatches while testing external OAuth redirects.
+    form_action: Rails.env.development? ? %w[*] : %w['self'],
     frame_ancestors: %w['self'],
     upgrade_insecure_requests: !Rails.env.development?
   }
