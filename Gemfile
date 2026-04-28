@@ -61,7 +61,7 @@ gem "mobility-ransack"
 
 # Search
 gem "pg_search"
-gem "elasticsearch", "~> 8.0"
+gem "elasticsearch", "~> 9.3"
 gem "searchkick"
 
 # Caching & Performance
