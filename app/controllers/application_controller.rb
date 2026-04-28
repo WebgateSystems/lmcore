@@ -64,6 +64,10 @@ class ApplicationController < ActionController::Base
     { locale: LocaleTags.path_segment_for_canonical(I18n.locale.to_s) }
   end
 
+  def after_sign_in_path_for(resource)
+    session.delete(:user_return_to).presence || super
+  end
+
   private
 
   def extract_locale_from_header

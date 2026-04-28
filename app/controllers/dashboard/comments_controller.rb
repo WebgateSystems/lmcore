@@ -7,6 +7,7 @@ module Dashboard
     def index
       authorize Comment, policy_class: Dashboard::CommentPolicy
       comments = policy_scope(Comment, policy_scope_class: Dashboard::CommentPolicy::Scope)
+                 .kept.where.not(status: "deleted")
                  .includes(:user, :commentable).order(created_at: :desc)
       comments = comments.where(status: params[:status]) if params[:status].present?
       @pagy, @comments = pagy(comments, items: 25)
@@ -27,7 +28,7 @@ module Dashboard
 
     def destroy
       authorize @comment, policy_class: Dashboard::CommentPolicy
-      @comment.discard
+      @comment.reject!
       redirect_to dashboard_comments_path, notice: t("dashboard.flash.comments.deleted")
     end
 

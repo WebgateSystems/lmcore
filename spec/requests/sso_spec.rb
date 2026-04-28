@@ -27,6 +27,30 @@ RSpec.describe "Sso", type: :request do
       expect(query["nonce"]).to be_present
     end
 
+    it "redirects signed-in central users back to a vanity handoff endpoint" do
+      user = create(:user, status: "active")
+      create(:user, username: "amg", vanity_domain: "amg.example", status: "active")
+      sign_in user
+
+      get sso_login_path(target_origin: "http://amg.example", return_to: "/videos/story")
+
+      expect(response).to have_http_status(:found)
+      location = URI.parse(response.headers["Location"])
+      expect("#{location.scheme}://#{location.host}").to eq("http://amg.example")
+      expect(location.path).to eq("/sso/consume")
+      expect(Rack::Utils.parse_query(location.query)["token"]).to be_present
+    end
+
+    it "sends logged-out central users through login before vanity handoff" do
+      create(:user, username: "amg", vanity_domain: "amg.example", status: "active")
+
+      get sso_login_path(target_origin: "http://amg.example", return_to: "/videos/story")
+
+      expect(URI.parse(response.headers["Location"]).path).to eq("/login")
+      expect(response.headers["Location"]).to include("return_to=")
+      expect(response.headers["Location"]).to include("target_origin")
+    end
+
     it "sanitizes external return_to values" do
       user = create(:user, status: "active")
       get sso_login_path(return_to: "//evil.example")
@@ -117,6 +141,35 @@ RSpec.describe "Sso", type: :request do
 
       expect(response).to redirect_to(new_user_session_path)
       expect(flash[:alert]).to be_present
+    end
+  end
+
+  describe "GET /sso/consume" do
+    it "signs in on the vanity domain and redirects to the original path" do
+      user = create(:user, status: "active")
+      create(:user, username: "amg", vanity_domain: "amg.example", status: "active")
+      sign_in user
+
+      get sso_login_path(target_origin: "http://amg.example", return_to: "/videos/story")
+      token = Rack::Utils.parse_query(URI.parse(response.headers["Location"]).query).fetch("token")
+
+      get sso_consume_path(token: token), headers: { "HTTP_HOST" => "amg.example" }
+
+      expect(response).to redirect_to("/videos/story")
+    end
+
+    it "rejects a handoff token on the wrong vanity domain" do
+      user = create(:user, status: "active")
+      create(:user, username: "amg", vanity_domain: "amg.example", status: "active")
+      create(:user, username: "other", vanity_domain: "other.example", status: "active")
+      sign_in user
+
+      get sso_login_path(target_origin: "http://amg.example", return_to: "/videos/story")
+      token = Rack::Utils.parse_query(URI.parse(response.headers["Location"]).query).fetch("token")
+
+      get sso_consume_path(token: token), headers: { "HTTP_HOST" => "other.example" }
+
+      expect(response).to redirect_to(root_path)
     end
   end
 end

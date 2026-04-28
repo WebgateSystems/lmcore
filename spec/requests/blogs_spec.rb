@@ -395,9 +395,9 @@ RSpec.describe "Blogs", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("#{Settings.sso.issuer}/sso/login?")
       expect(response.body).to include("#{Settings.sso.issuer}/register?")
+      expect(response.body).to include("target_origin=")
       expect(response.body).to include("return_to=")
       expect(response.body).not_to include('href="/sso/login?')
-      expect(response.body).not_to include('href="/register?')
       expect(response.body).not_to include("?locale=ua?return_to=")
     end
 
@@ -421,6 +421,17 @@ RSpec.describe "Blogs", type: :request do
       expect(response.body).to include("mobile-contact js__popup_contact_open")
       expect(response.body).to include("contact_message[name]")
       expect(response.body).to include("contact_message[email]")
+    end
+
+    it "links the dashboard footer action to the central host on vanity domains" do
+      author.update!(vanity_domain: "muzhdabaiev.com", vanity_domain_verified: true)
+      sign_in author
+
+      get "/", headers: { "HTTP_HOST" => "muzhdabaiev.com" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(%(href="#{Settings.sso.issuer}/dashboard"))
+      expect(response.body).not_to include(%(href="/dashboard"))
     end
   end
 end

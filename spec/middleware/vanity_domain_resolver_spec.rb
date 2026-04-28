@@ -45,6 +45,12 @@ RSpec.describe VanityDomainResolver do
       expect(result[:path]).to eq("/blogs/amg/posts/hello")
     end
 
+    it "does not rewrite SSO client endpoints" do
+      result = call_with(host: "amg.libremedia.org", path: "/sso/login")
+      expect(result[:path]).to eq("/sso/login")
+      expect(result[:original_host]).to eq("amg.libremedia.org")
+    end
+
     it "ignores the port in the Host header" do
       result = call_with(host: "amg.libremedia.org:3000", path: "/videos")
       expect(result[:path]).to eq("/blogs/amg/videos")

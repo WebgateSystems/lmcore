@@ -112,6 +112,6 @@ class Comment < ApplicationRecord
   end
 
   def update_commentable_count
-    commentable.update_column(:comments_count, commentable.comments.approved.count)
+    commentable.update_column(:comments_count, commentable.comments.kept.approved.count)
   end
 end

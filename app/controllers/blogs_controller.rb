@@ -62,7 +62,7 @@ class BlogsController < ApplicationController
     post.increment_views!
 
     related = post.related_posts(limit: 4).map { |p| serialize_post(p) }
-    comments = post.comments.approved.root_comments.includes(:replies, :user).oldest
+    comments = post.comments.kept.approved.root_comments.includes(:replies, :user).oldest
 
     render_theme("post",
       post: serialize_post(post, full: true),
@@ -110,7 +110,7 @@ class BlogsController < ApplicationController
   def video
     vid = blog_videos.find_by!(slug: params[:slug])
     vid.increment_views!
-    comments = vid.comments.approved.root_comments.includes(:replies, :user).oldest
+    comments = vid.comments.kept.approved.root_comments.includes(:replies, :user).oldest
 
     render_theme("videos/show",
       video: serialize_video(vid, full: true),
@@ -149,7 +149,7 @@ class BlogsController < ApplicationController
   def album
     ph = blog_albums.find_by!(slug: params[:slug])
     ph.increment_views!
-    comments = ph.comments.approved.root_comments.includes(:replies, :user).oldest
+    comments = ph.comments.kept.approved.root_comments.includes(:replies, :user).oldest
 
     render_theme("gallery/show",
       album: serialize_album(ph, full: true),
@@ -332,32 +332,32 @@ class BlogsController < ApplicationController
     flash.delete(:blog_alert)
 
     login_path = if vanity_request?
-                   central_auth_url(sso_login_path(locale: I18n.locale, return_to: current_path_with_query))
+                   central_auth_url(sso_login_path(locale: I18n.locale, target_origin: vanity_origin, return_to: current_path_with_query))
     else
                    auth_url_with_return_to(new_user_session_path, current_path_with_query)
     end
     register_path = if vanity_request?
-                      central_auth_url(auth_url_with_return_to(new_user_registration_path(locale: I18n.locale), current_path_with_query))
+                      central_auth_url(new_user_registration_path(locale: I18n.locale, return_to: sso_login_path(locale: I18n.locale, target_origin: vanity_origin, return_to: current_path_with_query)))
     else
                       auth_url_with_return_to(new_user_registration_path, current_path_with_query)
     end
     contact_login_path = if vanity_request?
-                           central_auth_url(sso_login_path(locale: I18n.locale, return_to: contact_modal_return_to))
+                           central_auth_url(sso_login_path(locale: I18n.locale, target_origin: vanity_origin, return_to: contact_modal_return_to))
     else
                            sso_login_path(locale: I18n.locale, return_to: contact_modal_return_to)
     end
     contact_register_path = if vanity_request?
-                              central_auth_url(auth_url_with_return_to(new_user_registration_path(locale: I18n.locale), contact_modal_return_to))
+                              central_auth_url(new_user_registration_path(locale: I18n.locale, return_to: sso_login_path(locale: I18n.locale, target_origin: vanity_origin, return_to: contact_modal_return_to)))
     else
                               auth_url_with_return_to(new_user_registration_path, contact_modal_return_to)
     end
     plain_login_url = if vanity_request?
-                        central_auth_url(sso_login_path(locale: I18n.locale))
+                        central_auth_url(sso_login_path(locale: I18n.locale, target_origin: vanity_origin, return_to: vanity_return_to_path))
     else
                         new_user_session_path
     end
     plain_register_url = if vanity_request?
-                           central_auth_url(new_user_registration_path(locale: I18n.locale))
+                           central_auth_url(new_user_registration_path(locale: I18n.locale, return_to: sso_login_path(locale: I18n.locale, target_origin: vanity_origin, return_to: vanity_return_to_path)))
     else
                            new_user_registration_path
     end
@@ -383,6 +383,7 @@ class BlogsController < ApplicationController
       "csrf_token" => form_authenticity_token,
       "current_user" => serialize_current_user,
       "show_dashboard_link" => show_dashboard_link?,
+      "dashboard_url" => central_auth_url(dashboard_root_path),
       "current_user_blog_banned" => current_ban.present?,
       "current_user_blog_ban_reason" => current_ban&.reason.to_s,
       "login_url" => plain_login_url,
@@ -410,6 +411,14 @@ class BlogsController < ApplicationController
     path_value = "/#{path_value}" unless path_value.start_with?("/")
 
     "#{issuer}#{path_value}"
+  end
+
+  def vanity_origin
+    host = request.env["ORIGINAL_HOST"].to_s
+    return "" if host.blank?
+
+    scheme = Rails.env.production? ? "https://" : request.protocol
+    "#{scheme}#{host}"
   end
 
   def vanity_return_to_path
@@ -819,7 +828,7 @@ class BlogsController < ApplicationController
       "guest_name" => comment.guest_name,
       "user" => (comment.user ? { "username" => comment.user.username, "name" => comment.user.full_name } : nil),
       "created_at" => comment.created_at,
-      "replies" => comment.replies.approved.oldest.map { |r| serialize_comment(r) }
+      "replies" => comment.replies.kept.approved.oldest.map { |r| serialize_comment(r) }
     }
   end
 

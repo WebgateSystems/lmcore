@@ -567,8 +567,8 @@
               <div class="footer__social-contact mobile-contact"><a href="{{ contact_login_return_url | default: login_return_url }}">{{ 'footer.write_me' | t }}</a></div>
               {% endif %}
               {% if show_dashboard_link %}
-              <div class="footer__social-contact desktop-contact"><a href="/dashboard">{{ 'admin.dashboard' | t }}</a></div>
-              <div class="footer__social-contact mobile-contact"><a href="/dashboard">{{ 'admin.dashboard' | t }}</a></div>
+              <div class="footer__social-contact desktop-contact"><a href="{{ dashboard_url | default: '/dashboard' }}">{{ 'admin.dashboard' | t }}</a></div>
+              <div class="footer__social-contact mobile-contact"><a href="{{ dashboard_url | default: '/dashboard' }}">{{ 'admin.dashboard' | t }}</a></div>
               {% endif %}
             </div>
             

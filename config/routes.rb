@@ -164,6 +164,7 @@ Rails.application.routes.draw do
 
   get "sso/login", to: "sso#login", as: :sso_login
   get "sso/callback", to: "sso#callback", as: :sso_callback
+  get "sso/consume", to: "sso#consume", as: :sso_consume
   delete "sso/logout", to: "sso#logout", as: :sso_logout
 
   # API routes

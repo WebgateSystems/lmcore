@@ -26,7 +26,11 @@ RSpec.describe "Dashboard::Comments", type: :request do
     it "discards a comment on own content" do
       delete dashboard_comment_path(my_comment)
       expect(response).to redirect_to(dashboard_comments_path)
-      expect(my_comment.reload.discarded?).to be true
+      expect(my_comment.reload.status).to eq("deleted")
+      expect(my_comment.discarded?).to be true
+
+      get dashboard_comments_path
+      expect(response.body).not_to include(my_comment.content[0, 30])
     end
   end
 

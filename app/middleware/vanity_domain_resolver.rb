@@ -37,10 +37,13 @@ class VanityDomainResolver
       if username
         original_path = env["PATH_INFO"].to_s
         original_query = env["QUERY_STRING"].to_s
-        suffix = (original_path == "" || original_path == "/") ? "" : original_path
-        env["PATH_INFO"] = "/blogs/#{username}#{suffix}"
         env["ORIGINAL_HOST"] = host
         env["ORIGINAL_FULLPATH"] = original_query.present? ? "#{original_path}?#{original_query}" : original_path
+
+        unless passthrough_path?(original_path)
+          suffix = (original_path == "" || original_path == "/") ? "" : original_path
+          env["PATH_INFO"] = "/blogs/#{username}#{suffix}"
+        end
       end
     end
 
@@ -61,6 +64,10 @@ class VanityDomainResolver
     return true if MAIN_HOSTS.include?(host)
     return true if host.match?(/\A[\d.:a-f]+\z/) && host.match?(/\A\d|\A::|:/) # IPv4/IPv6-ish
     false
+  end
+
+  def passthrough_path?(path)
+    path.to_s.start_with?("/sso/")
   end
 
   def lookup_username(host)

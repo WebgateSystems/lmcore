@@ -4,6 +4,7 @@ module Users
   class RegistrationsController < Devise::RegistrationsController
     before_action :clamp_locale_to_blog_settings!, only: %i[edit update]
     before_action :load_pending_invitation, only: %i[new create]
+    before_action :store_return_to_location, only: %i[new create]
 
     # GET /register
     def new
@@ -31,6 +32,10 @@ module Users
     end
 
     protected
+
+    def after_sign_up_path_for(resource)
+      session.delete(:user_return_to).presence || super
+    end
 
     def after_update_path_for(_resource)
       root_path
@@ -99,6 +104,15 @@ module Users
       return unless @pending_invitation.email.casecmp?(user.email)
 
       @pending_invitation.accept!(user)
+    end
+
+    def store_return_to_location
+      return_to = params[:return_to].to_s
+      return if return_to.blank?
+      return unless return_to.start_with?("/")
+      return if return_to.start_with?("//")
+
+      session[:user_return_to] = return_to
     end
   end
 end
