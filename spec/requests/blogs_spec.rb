@@ -398,5 +398,27 @@ RSpec.describe "Blogs", type: :request do
       expect(response.body).to include("return_to=")
       expect(response.body).not_to include("?locale=ua?return_to=")
     end
+
+    it "routes logged-out footer contact links through SSO instead of opening the popup" do
+      get "/blogs/#{author.username}"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("/sso/login?")
+      expect(response.body).to include("open_modal%3Dcontact")
+      expect(response.body).not_to include("desktop-contact js__popup_contact_open")
+      expect(response.body).not_to include("mobile-contact js__popup_contact_open")
+    end
+
+    it "opens the contact popup directly for signed-in users" do
+      sign_in create(:user)
+
+      get "/blogs/#{author.username}"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("desktop-contact js__popup_contact_open")
+      expect(response.body).to include("mobile-contact js__popup_contact_open")
+      expect(response.body).to include("contact_message[name]")
+      expect(response.body).to include("contact_message[email]")
+    end
   end
 end

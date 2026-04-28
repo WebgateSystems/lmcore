@@ -323,6 +323,8 @@ class BlogsController < ApplicationController
 
   def common_assigns
     current_ban = current_blog_ban
+    current_path_with_query = vanity_request? ? vanity_return_to_path : request.fullpath
+    contact_modal_return_to = append_query_param(current_path_with_query, "open_modal", "contact")
     flash_payload = flash.to_hash
     notice_message = normalized_flash_message(flash_payload["blog_notice"] || flash_payload[:blog_notice])
     alert_message = normalized_flash_message(flash_payload["blog_alert"] || flash_payload[:blog_alert])
@@ -330,14 +332,20 @@ class BlogsController < ApplicationController
     flash.delete(:blog_alert)
 
     login_path = if vanity_request?
-                   sso_login_path(locale: I18n.locale, return_to: vanity_return_to_path)
+                   sso_login_path(locale: I18n.locale, return_to: current_path_with_query)
     else
-                   auth_url_with_return_to(new_user_session_path, request.fullpath)
+                   auth_url_with_return_to(new_user_session_path, current_path_with_query)
     end
     register_path = if vanity_request?
-                      auth_url_with_return_to(new_user_registration_path, vanity_return_to_path)
+                      auth_url_with_return_to(new_user_registration_path, current_path_with_query)
     else
-                      auth_url_with_return_to(new_user_registration_path, request.fullpath)
+                      auth_url_with_return_to(new_user_registration_path, current_path_with_query)
+    end
+    contact_login_path = sso_login_path(locale: I18n.locale, return_to: contact_modal_return_to)
+    contact_register_path = if vanity_request?
+                              auth_url_with_return_to(new_user_registration_path, contact_modal_return_to)
+    else
+                              auth_url_with_return_to(new_user_registration_path, contact_modal_return_to)
     end
 
     {
@@ -350,7 +358,7 @@ class BlogsController < ApplicationController
       "theme_slug" => active_theme_slug,
       "theme_translation_scope" => "themes.#{active_theme_slug}",
       "current_url" => request.original_url,
-      "current_path_with_query" => request.fullpath,
+      "current_path_with_query" => current_path_with_query,
       "pages_menu" => menu_pages,
       "nav_menu_items" => nav_menu_items,
       "partners" => serialize_partners,
@@ -367,6 +375,8 @@ class BlogsController < ApplicationController
       "register_url" => (vanity_request? ? new_user_registration_path(locale: I18n.locale) : new_user_registration_path),
       "login_return_url" => login_path,
       "register_return_url" => register_path,
+      "contact_login_return_url" => contact_login_path,
+      "contact_register_return_url" => contact_register_path,
       "flash_notice" => notice_message,
       "flash_alert" => alert_message
     }
@@ -382,6 +392,14 @@ class BlogsController < ApplicationController
 
   def vanity_return_to_path
     request.env["ORIGINAL_FULLPATH"].presence || request.fullpath
+  end
+
+  def append_query_param(path, key, value)
+    path_value = path.to_s
+    return path_value if path_value.blank?
+
+    separator = path_value.include?("?") ? "&" : "?"
+    "#{path_value}#{separator}#{CGI.escape(key.to_s)}=#{CGI.escape(value.to_s)}"
   end
 
   def normalized_flash_message(raw)

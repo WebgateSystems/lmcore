@@ -559,8 +559,13 @@
                 <!-- Bluesky -->
                 <div class="footer__social-icon"><a href="{{ site.bluesky_url | default: '#' }}" target="_blank" rel="noopener" title="Bluesky"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.3 4.2C8.5 6.1 10.9 10 12 12C13.1 10 15.5 6.1 17.7 4.2C19.2 2.9 21.7 2 21.7 4.8C21.7 5.4 21.4 10.2 21.2 10.9C20.5 13.5 17.8 14.2 15.4 13.8C19.5 14.5 20.6 16.8 18.4 19.1C14.2 23.4 12.5 18 12 16.5C11.5 18 9.8 23.4 5.6 19.1C3.4 16.8 4.5 14.5 8.6 13.8C6.2 14.2 3.5 13.5 2.8 10.9C2.6 10.2 2.3 5.4 2.3 4.8C2.3 2 4.8 2.9 6.3 4.2Z" fill="#959595"/></svg></a></div>
               </div>
+              {% if current_user %}
               <div class="footer__social-contact desktop-contact js__popup_contact_open"><a href="javascript:void(0)">{{ 'footer.contact_me' | t }}</a></div>
               <div class="footer__social-contact mobile-contact js__popup_contact_open"><a href="javascript:void(0)">{{ 'footer.write_me' | t }}</a></div>
+              {% else %}
+              <div class="footer__social-contact desktop-contact"><a href="{{ contact_login_return_url | default: login_return_url }}">{{ 'footer.contact_me' | t }}</a></div>
+              <div class="footer__social-contact mobile-contact"><a href="{{ contact_login_return_url | default: login_return_url }}">{{ 'footer.write_me' | t }}</a></div>
+              {% endif %}
               {% if show_dashboard_link %}
               <div class="footer__social-contact desktop-contact"><a href="/dashboard">{{ 'admin.dashboard' | t }}</a></div>
               <div class="footer__social-contact mobile-contact"><a href="/dashboard">{{ 'admin.dashboard' | t }}</a></div>
@@ -752,7 +757,7 @@
                   {% endif %}
                 </div>
               {% elsif current_user %}
-                <form class="popup__form" action="{{ canonical_base_path }}/contact_messages" method="post">
+                <form class="popup__form" action="{{ base_path }}/contact_messages" method="post">
                   <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
                   <input type="hidden" name="return_to" value="{{ current_path_with_query }}">
                   <div class="popup__textarea">
@@ -770,8 +775,8 @@
                 </form>
               {% else %}
                 <div class="section-article-item__comment-cta">
-                  <a href="{{ login_return_url }}">{{ 'comments.login_to_comment' | t }}</a><br/>
-                  <a href="{{ register_return_url }}">{{ 'auth.sign_up' | t }}</a>
+                  <a href="{{ contact_login_return_url | default: login_return_url }}">{{ 'comments.login_to_comment' | t }}</a><br/>
+                  <a href="{{ contact_register_return_url | default: register_return_url }}">{{ 'auth.sign_up' | t }}</a>
                 </div>
               {% endif %}
             </div>
@@ -801,7 +806,7 @@
                   {% endif %}
                 </div>
               {% elsif current_user %}
-                <form class="popup__form" action="{{ canonical_base_path }}/newsletter_subscriptions" method="post">
+                <form class="popup__form" action="{{ base_path }}/newsletter_subscriptions" method="post">
                   <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
                   <input type="hidden" name="return_to" value="{{ current_path_with_query }}">
                   <div class="popup__input">
@@ -843,6 +848,15 @@
         window.setTimeout(function() { el.remove(); }, 400);
       });
     }, 2600);
+  </script>
+  <script>
+    (function() {
+      var openModal = new URLSearchParams(window.location.search).get('open_modal');
+      if (openModal !== 'contact') return;
+
+      var contactTrigger = document.querySelector('.js__popup_contact_open');
+      if (contactTrigger) contactTrigger.click();
+    })();
   </script>
 </body>
 </html>
