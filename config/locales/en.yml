@@ -262,6 +262,16 @@ en:
     current_password_hint: "Only required when you choose a new password above."
     update_profile: "Update profile"
     invitation_intro: "You were invited to join. Sign up using %{email} -- your team role will be granted automatically."
+    sign_in_with_google: "Continue with Google"
+    sign_in_with_facebook: "Continue with Facebook"
+    sign_in_with_apple: "Continue with Apple"
+    sign_up_with_google: "Sign up with Google"
+    sign_up_with_facebook: "Sign up with Facebook"
+    sign_up_with_apple: "Sign up with Apple"
+    oauth_failed: "Social login failed. Please try again."
+    sso_state_mismatch: "Invalid SSO state. Please retry login."
+    sso_failed: "SSO sign in failed."
+    sso_user_not_found: "Could not map SSO user."
 
   # User
   users:

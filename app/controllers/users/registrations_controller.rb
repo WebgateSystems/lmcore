@@ -21,7 +21,20 @@ module Users
       end
     end
 
+    # Ensure profile updates always end on landing page with a visible flash.
+    def update
+      super do |resource|
+        next unless resource.errors.empty?
+
+        flash[:notice] = t("devise.registrations.updated", default: "Your account has been updated successfully.")
+      end
+    end
+
     protected
+
+    def after_update_path_for(_resource)
+      root_path
+    end
 
     def clamp_locale_to_blog_settings!
       return unless user_signed_in?

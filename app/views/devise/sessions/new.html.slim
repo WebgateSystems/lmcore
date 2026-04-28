@@ -33,6 +33,20 @@ h2.auth-title= t('auth.sign_in')
   .auth-divider
     span= t('common.or')
 
+  .form-actions
+    = button_to user_google_oauth2_omniauth_authorize_path, method: :post, class: 'btn btn-outline btn-block', form: { data: { turbo: false } } do
+      i.fa-brands.fa-google.me-2
+      = t('auth.sign_in_with_google', default: 'Continue with Google')
+    = button_to user_facebook_omniauth_authorize_path, method: :post, class: 'btn btn-outline btn-block mt-2', form: { data: { turbo: false } } do
+      i.fa-brands.fa-facebook.me-2
+      = t('auth.sign_in_with_facebook', default: 'Continue with Facebook')
+    = button_to user_apple_omniauth_authorize_path, method: :post, class: 'btn btn-outline btn-block mt-2', form: { data: { turbo: false } } do
+      i.fa-brands.fa-apple.me-2
+      = t('auth.sign_in_with_apple', default: 'Continue with Apple')
+
+  .auth-divider
+    span= t('common.or')
+
   .auth-footer-text
     span.text-muted= t('auth.no_account')
     = link_to t('auth.sign_up'), new_registration_path(resource_name), class: 'auth-link auth-link-bold'

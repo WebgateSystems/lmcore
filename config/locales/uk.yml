@@ -262,6 +262,16 @@ uk:
     current_password_hint: "Потрібен лише коли ви вказуєте новий пароль вище."
     update_profile: "Оновити профіль"
     invitation_intro: "Вас запросили долучитися. Зареєструйтесь, використовуючи %{email} — вашу роль у команді буде надано автоматично."
+    sign_in_with_google: "Продовжити з Google"
+    sign_in_with_facebook: "Продовжити з Facebook"
+    sign_in_with_apple: "Продовжити з Apple"
+    sign_up_with_google: "Зареєструватися через Google"
+    sign_up_with_facebook: "Зареєструватися через Facebook"
+    sign_up_with_apple: "Зареєструватися через Apple"
+    oauth_failed: "Соціальний вхід не вдався. Спробуйте ще раз."
+    sso_state_mismatch: "Некоректний стан SSO. Будь ласка, спробуйте увійти знову."
+    sso_failed: "Вхід через SSO не вдався."
+    sso_user_not_found: "Не вдалося зіставити користувача SSO."
 
   # User
   users:

@@ -21,6 +21,24 @@ sidekiq:
   password: 'admin'
 
 services:
+  oauth:
+    google:
+      # Example values from Google Cloud OAuth client
+      client_id: "google-client-id.apps.googleusercontent.com"
+      client_secret: "google-client-secret"
+    facebook:
+      # Example values from Facebook App dashboard
+      app_id: "facebook-app-id"
+      app_secret: "facebook-app-secret"
+    apple:
+      # Example values from Apple Sign In setup
+      client_id: "org.libremedia.web"
+      team_id: "APPLE_TEAM_ID"
+      key_id: "APPLE_KEY_ID"
+      private_key: |
+        -----BEGIN PRIVATE KEY-----
+        replace-with-apple-private-key
+        -----END PRIVATE KEY-----
   twilio:
     account_sid: <%= ENV.fetch('TWILIO_ACCOUNT_SID') { '' } %>
     auth_token: <%= ENV.fetch('TWILIO_AUTH_TOKEN') { '' } %>
@@ -50,3 +68,15 @@ services:
     enabled: <%= ENV.fetch('UMAMI_ENABLED') { Rails.env.production? } %>
     script_url: https://cloud.umami.is/script.js
     website_id: <%= ENV.fetch('UMAMI_WEBSITE_ID') { 'b2469e0d-example' } %>
+
+sso:
+  issuer: "https://libremedia.org"
+  # For production use a real RSA private key for OIDC ID token signing.
+  # If this value is empty or invalid, app falls back to an ephemeral key in-memory.
+  oidc_signing_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    replace-with-real-rsa-private-key
+    -----END RSA PRIVATE KEY-----
+  client_name: "LibreMedia Web Client"
+  client_uid: "libremedia-web"
+  client_secret: "replace-me-with-real-secret"

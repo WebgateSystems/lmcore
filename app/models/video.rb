@@ -31,6 +31,8 @@ class Video < ApplicationRecord
   mount_uploader :og_image, ImageUploader
   mount_uploader :video_file, VideoUploader
 
+  after_commit :sync_self_hosted_video_url!, on: %i[create update]
+
   # Validations
   validates :slug, presence: true, uniqueness: { scope: :author_id }
   validates :status, presence: true, inclusion: { in: %w[draft pending scheduled published archived] }
@@ -121,5 +123,16 @@ class Video < ApplicationRecord
     return if video_url.present? || video_file.present? || video_external_id.present?
 
     errors.add(:base, "must have a video source (URL, file, or external ID)")
+  end
+
+  def sync_self_hosted_video_url!
+    return unless self_hosted?
+    return unless video_file.present?
+
+    hosted_url = video_file.url.to_s
+    return if hosted_url.blank?
+    return if video_url == hosted_url
+
+    update_column(:video_url, hosted_url)
   end
 end

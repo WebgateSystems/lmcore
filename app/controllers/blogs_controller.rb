@@ -329,6 +329,13 @@ class BlogsController < ApplicationController
     flash.delete(:blog_notice)
     flash.delete(:blog_alert)
 
+    login_path = if vanity_request?
+                   sso_login_path(return_to: request.fullpath)
+    else
+                   "#{new_user_session_path}?return_to=#{CGI.escape(request.fullpath)}"
+    end
+    register_path = "#{new_user_registration_path}?return_to=#{CGI.escape(request.fullpath)}"
+
     {
       "site" => site_settings_hash,
       "blog" => serialize_blog_owner,
@@ -352,10 +359,10 @@ class BlogsController < ApplicationController
       "show_dashboard_link" => show_dashboard_link?,
       "current_user_blog_banned" => current_ban.present?,
       "current_user_blog_ban_reason" => current_ban&.reason.to_s,
-      "login_url" => new_user_session_path,
+      "login_url" => (vanity_request? ? sso_login_path : new_user_session_path),
       "register_url" => new_user_registration_path,
-      "login_return_url" => "#{new_user_session_path}?return_to=#{CGI.escape(request.fullpath)}",
-      "register_return_url" => "#{new_user_registration_path}?return_to=#{CGI.escape(request.fullpath)}",
+      "login_return_url" => login_path,
+      "register_return_url" => register_path,
       "flash_notice" => notice_message,
       "flash_alert" => alert_message
     }

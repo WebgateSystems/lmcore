@@ -262,6 +262,16 @@ pl:
     current_password_hint: "Wymagane tylko przy ustawianiu nowego hasła powyżej."
     update_profile: "Zapisz profil"
     invitation_intro: "Zaproszono Cię do współpracy. Zarejestruj się używając adresu %{email} — Twoja rola w zespole zostanie nadana automatycznie."
+    sign_in_with_google: "Kontynuuj z Google"
+    sign_in_with_facebook: "Kontynuuj z Facebook"
+    sign_in_with_apple: "Kontynuuj z Apple"
+    sign_up_with_google: "Zarejestruj się przez Google"
+    sign_up_with_facebook: "Zarejestruj się przez Facebook"
+    sign_up_with_apple: "Zarejestruj się przez Apple"
+    oauth_failed: "Logowanie społecznościowe nie powiodło się. Spróbuj ponownie."
+    sso_state_mismatch: "Niepoprawny stan SSO. Spróbuj zalogować się ponownie."
+    sso_failed: "Logowanie SSO nie powiodło się."
+    sso_user_not_found: "Nie udało się przypisać konta z SSO."
 
   # User
   users:

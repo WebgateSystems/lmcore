@@ -153,14 +153,24 @@ Rails.application.routes.draw do
     sign_up: "register"
   }, controllers: {
     registrations: "users/registrations",
-    sessions: "users/sessions"
+    sessions: "users/sessions",
+    omniauth_callbacks: "users/omniauth_callbacks"
   }
+
+  use_doorkeeper do
+    skip_controllers :authorized_applications
+  end
+  use_doorkeeper_openid_connect
+
+  get "sso/login", to: "sso#login", as: :sso_login
+  get "sso/callback", to: "sso#callback", as: :sso_callback
+  delete "sso/logout", to: "sso#logout", as: :sso_logout
 
   # API routes
   namespace :api do
     namespace :v1 do
       # Authentication
-      devise_for :users, path: "auth", controllers: {
+      devise_for :users, path: "auth", skip: %i[omniauth_callbacks], controllers: {
         sessions: "api/v1/sessions",
         registrations: "api/v1/registrations"
       }

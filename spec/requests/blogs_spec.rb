@@ -178,6 +178,27 @@ RSpec.describe "Blogs", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "renders poster thumbnail for self-hosted video player" do
+      thumbnail = Rack::Test::UploadedFile.new(
+        Rails.root.join("spec/fixtures/files/sample.png"),
+        "image/png"
+      )
+      self_hosted_video = create(
+        :video,
+        :published,
+        :self_hosted,
+        author: author,
+        slug: "self-hosted-player",
+        thumbnail: thumbnail
+      )
+
+      get "/blogs/#{author.username}/videos/#{self_hosted_video.slug}"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(%(source src="#{self_hosted_video.video_url}"))
+      expect(response.body).to match(/poster="[^"]+"/)
+    end
+
     it "filters videos by query" do
       get "/blogs/#{author.username}/videos", params: { q: "promo" }
       expect(response).to have_http_status(:ok)
@@ -362,6 +383,17 @@ RSpec.describe "Blogs", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(I18n.t("comments.posted"))
       expect(response.body).to include("theme-flash--notice")
+    end
+  end
+
+  describe "vanity domain auth links" do
+    it "uses SSO login link on vanity domain pages" do
+      author.update!(vanity_domain: "muzhdabaiev.com", vanity_domain_verified: true)
+
+      get "/", headers: { "HTTP_HOST" => "muzhdabaiev.com" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("/sso/login?return_to=")
     end
   end
 end

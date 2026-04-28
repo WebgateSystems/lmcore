@@ -87,7 +87,7 @@ class ApplicationController < ActionController::Base
   end
 
   def skip_authorization?
-    devise_controller? || controller_name.in?(%w[health home locale legal]) || action_name == "stop_impersonating"
+    devise_controller? || controller_name.in?(%w[health home locale legal]) || action_name == "stop_impersonating" || controller_path.start_with?("doorkeeper/")
   end
 
   def skip_pundit_verify?

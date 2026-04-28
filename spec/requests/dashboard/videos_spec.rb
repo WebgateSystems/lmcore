@@ -128,6 +128,7 @@ RSpec.describe "Dashboard::Videos", type: :request do
       expect(response).to redirect_to(dashboard_videos_path)
       expect(created.video_provider).to eq("self_hosted")
       expect(created.video_file).to be_present
+      expect(created.reload.video_url).to eq(created.video_file.url)
     end
   end
 
@@ -171,6 +172,26 @@ RSpec.describe "Dashboard::Videos", type: :request do
       expect(updated.title_i18n.slice("en", "uk")).to eq({ "en" => "EN title", "uk" => "UK title" })
       expect(updated.subtitle_i18n.slice("en", "uk")).to eq({ "en" => "EN subtitle", "uk" => "UK subtitle" })
       expect(updated.description_i18n.slice("en", "uk")).to eq({ "en" => "EN description", "uk" => "UK description" })
+    end
+
+    it "sets hosted url when switched to self-hosted upload" do
+      video_file = Rack::Test::UploadedFile.new(
+        Rails.root.join("spec/fixtures/files/sample.mp4"),
+        "video/mp4"
+      )
+
+      patch dashboard_video_path(video), params: {
+        video: {
+          video_provider: "self_hosted",
+          video_file: video_file
+        }
+      }
+
+      expect(response).to redirect_to(dashboard_videos_path)
+      updated = video.reload
+      expect(updated.video_provider).to eq("self_hosted")
+      expect(updated.video_file).to be_present
+      expect(updated.video_url).to eq(updated.video_file.url)
     end
   end
 

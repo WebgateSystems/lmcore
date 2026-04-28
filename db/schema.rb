@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_27_193000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_27_234600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -333,6 +333,62 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_193000) do
     t.index ["notification_type"], name: "index_notifications_on_notification_type"
     t.index ["read_at"], name: "index_notifications_on_read_at"
     t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "oauth_access_grants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "application_id", null: false
+    t.string "code_challenge"
+    t.string "code_challenge_method"
+    t.datetime "created_at", null: false
+    t.integer "expires_in", null: false
+    t.string "nonce"
+    t.text "redirect_uri", null: false
+    t.uuid "resource_owner_id", null: false
+    t.string "resource_owner_type", null: false
+    t.datetime "revoked_at"
+    t.string "scopes", default: "", null: false
+    t.string "token", null: false
+    t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
+    t.index ["resource_owner_type", "resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner"
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
+  end
+
+  create_table "oauth_access_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "application_id"
+    t.datetime "created_at", null: false
+    t.integer "expires_in"
+    t.string "previous_refresh_token", default: "", null: false
+    t.string "refresh_token"
+    t.uuid "resource_owner_id"
+    t.string "resource_owner_type"
+    t.datetime "revoked_at"
+    t.string "scopes"
+    t.string "token", null: false
+    t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_type", "resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner"
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
+  end
+
+  create_table "oauth_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.boolean "confidential", default: true, null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.text "redirect_uri", null: false
+    t.string "scopes", default: "", null: false
+    t.string "secret", null: false
+    t.string "uid", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+  end
+
+  create_table "oauth_openid_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "access_grant_id", null: false
+    t.string "claims"
+    t.datetime "created_at", null: false
+    t.string "nonce", null: false
+    t.datetime "updated_at", null: false
+    t.index ["access_grant_id"], name: "index_oauth_openid_requests_on_access_grant_id"
   end
 
   create_table "pages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -669,6 +725,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_193000) do
     t.index ["visibility"], name: "index_user_groups_on_visibility"
   end
 
+  create_table "user_identities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.jsonb "data", default: {}, null: false
+    t.string "email"
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["provider", "uid"], name: "index_user_identities_on_provider_and_uid", unique: true
+    t.index ["user_id", "provider"], name: "index_user_identities_on_user_id_and_provider", unique: true
+    t.index ["user_id"], name: "index_user_identities_on_user_id"
+  end
+
   create_table "user_themes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.boolean "active", default: false, null: false
     t.datetime "created_at", null: false
@@ -820,6 +889,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_193000) do
   add_foreign_key "newsletter_subscriptions", "users", on_delete: :cascade
   add_foreign_key "notifications", "users", column: "actor_id", on_delete: :nullify
   add_foreign_key "notifications", "users", on_delete: :cascade
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id", on_delete: :cascade
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id", on_delete: :cascade
+  add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id", on_delete: :cascade
   add_foreign_key "pages", "users", column: "author_id", on_delete: :cascade
   add_foreign_key "pages", "users", column: "published_by_id", on_delete: :nullify
   add_foreign_key "partners", "users"
@@ -844,6 +916,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_193000) do
   add_foreign_key "user_group_memberships", "user_groups", on_delete: :cascade
   add_foreign_key "user_group_memberships", "users", on_delete: :cascade
   add_foreign_key "user_groups", "users", column: "owner_id", on_delete: :cascade
+  add_foreign_key "user_identities", "users"
   add_foreign_key "user_themes", "themes", on_delete: :cascade
   add_foreign_key "user_themes", "users", on_delete: :cascade
   add_foreign_key "users", "price_plans"

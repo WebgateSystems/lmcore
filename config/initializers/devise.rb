@@ -44,6 +44,27 @@ Devise.setup do |config|
   # Use parent controller for layout
   config.parent_controller = "DeviseParentController"
 
+  config.omniauth :google_oauth2,
+                  Settings.services.oauth.google.client_id,
+                  Settings.services.oauth.google.client_secret,
+                  scope: "email profile",
+                  access_type: "online",
+                  prompt: "select_account"
+
+  config.omniauth :facebook,
+                  Settings.services.oauth.facebook.app_id,
+                  Settings.services.oauth.facebook.app_secret,
+                  scope: "email,public_profile",
+                  info_fields: "id,name,email,first_name,last_name"
+
+  config.omniauth :apple,
+                  Settings.services.oauth.apple.client_id,
+                  "",
+                  scope: "name email",
+                  team_id: Settings.services.oauth.apple.team_id,
+                  key_id: Settings.services.oauth.apple.key_id,
+                  pem: Settings.services.oauth.apple.private_key
+
   # Warden configuration
   config.warden do |manager|
     manager.failure_app = DeviseCustomFailure

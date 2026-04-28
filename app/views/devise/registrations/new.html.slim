@@ -60,6 +60,20 @@ h2.auth-title= t('auth.sign_up')
   .form-actions
     = f.submit t('auth.sign_up'), class: 'btn btn-primary btn-lg btn-block'
 
+  .auth-divider
+    span= t('common.or')
+
+  .form-actions
+    = button_to user_google_oauth2_omniauth_authorize_path, method: :post, class: 'btn btn-outline btn-block', form: { data: { turbo: false } } do
+      i.fa-brands.fa-google.me-2
+      = t('auth.sign_up_with_google', default: 'Sign up with Google')
+    = button_to user_facebook_omniauth_authorize_path, method: :post, class: 'btn btn-outline btn-block mt-2', form: { data: { turbo: false } } do
+      i.fa-brands.fa-facebook.me-2
+      = t('auth.sign_up_with_facebook', default: 'Sign up with Facebook')
+    = button_to user_apple_omniauth_authorize_path, method: :post, class: 'btn btn-outline btn-block mt-2', form: { data: { turbo: false } } do
+      i.fa-brands.fa-apple.me-2
+      = t('auth.sign_up_with_apple', default: 'Sign up with Apple')
+
   .auth-footer-text
     span.text-muted= t('auth.have_account')
     = link_to t('auth.sign_in'), new_session_path(resource_name), class: 'auth-link auth-link-bold'

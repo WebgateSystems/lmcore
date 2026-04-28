@@ -65,7 +65,7 @@
                   <iframe src="{{ video.embed_url }}" allowfullscreen allowtransparency allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" style="width: 100%; aspect-ratio: 16/9; border: none;"></iframe>
                 </div>
                 {% else %}
-                <video id="video_player" playsinline controls style="width: 100%;">
+                <video id="video_player" playsinline controls poster="{{ video.thumbnail_url }}" preload="metadata" style="width: 100%;">
                   <source src="{{ video.embed_url }}" type="video/mp4">
                 </video>
                 {% endif %}

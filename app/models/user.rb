@@ -9,7 +9,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :confirmable, :lockable, :trackable,
-         :jwt_authenticatable, jwt_revocation_strategy: JwtDenylist
+         :jwt_authenticatable, :omniauthable,
+         omniauth_providers: %i[google_oauth2 facebook apple],
+         jwt_revocation_strategy: JwtDenylist
 
   # Translations
   translates :bio
@@ -52,6 +54,7 @@ class User < ApplicationRecord
   has_many :media_attachments, dependent: :destroy
   has_many :site_settings, dependent: :destroy
   has_many :api_keys, dependent: :destroy
+  has_many :user_identities, dependent: :destroy
   has_many :audit_logs, dependent: :nullify
   has_many :dashboard_job_runs, dependent: :destroy
   has_many :contact_messages_received, class_name: "ContactMessage", foreign_key: :blog_owner_id, dependent: :destroy, inverse_of: :blog_owner

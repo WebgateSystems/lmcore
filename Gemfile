@@ -25,6 +25,13 @@ gem "config"
 # Authentication & Authorization
 gem "devise", ">= 5.0.3" # CVE-2026-32700 (Confirmable email change race)
 gem "devise-jwt"
+gem "omniauth"
+gem "omniauth-rails_csrf_protection"
+gem "omniauth-google-oauth2"
+gem "omniauth-facebook"
+gem "omniauth-apple"
+gem "doorkeeper"
+gem "doorkeeper-openid_connect"
 gem "pundit"
 gem "bcrypt", "~> 3.1.7", ">= 3.1.22" # CVE-2026-33306 (zero-iteration overflow on JRuby)
 
