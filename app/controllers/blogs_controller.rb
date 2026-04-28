@@ -332,20 +332,34 @@ class BlogsController < ApplicationController
     flash.delete(:blog_alert)
 
     login_path = if vanity_request?
-                   sso_login_path(locale: I18n.locale, return_to: current_path_with_query)
+                   central_auth_url(sso_login_path(locale: I18n.locale, return_to: current_path_with_query))
     else
                    auth_url_with_return_to(new_user_session_path, current_path_with_query)
     end
     register_path = if vanity_request?
-                      auth_url_with_return_to(new_user_registration_path, current_path_with_query)
+                      central_auth_url(auth_url_with_return_to(new_user_registration_path(locale: I18n.locale), current_path_with_query))
     else
                       auth_url_with_return_to(new_user_registration_path, current_path_with_query)
     end
-    contact_login_path = sso_login_path(locale: I18n.locale, return_to: contact_modal_return_to)
+    contact_login_path = if vanity_request?
+                           central_auth_url(sso_login_path(locale: I18n.locale, return_to: contact_modal_return_to))
+    else
+                           sso_login_path(locale: I18n.locale, return_to: contact_modal_return_to)
+    end
     contact_register_path = if vanity_request?
-                              auth_url_with_return_to(new_user_registration_path, contact_modal_return_to)
+                              central_auth_url(auth_url_with_return_to(new_user_registration_path(locale: I18n.locale), contact_modal_return_to))
     else
                               auth_url_with_return_to(new_user_registration_path, contact_modal_return_to)
+    end
+    plain_login_url = if vanity_request?
+                        central_auth_url(sso_login_path(locale: I18n.locale))
+    else
+                        new_user_session_path
+    end
+    plain_register_url = if vanity_request?
+                           central_auth_url(new_user_registration_path(locale: I18n.locale))
+    else
+                           new_user_registration_path
     end
 
     {
@@ -371,8 +385,8 @@ class BlogsController < ApplicationController
       "show_dashboard_link" => show_dashboard_link?,
       "current_user_blog_banned" => current_ban.present?,
       "current_user_blog_ban_reason" => current_ban&.reason.to_s,
-      "login_url" => (vanity_request? ? sso_login_path(locale: I18n.locale) : new_user_session_path),
-      "register_url" => (vanity_request? ? new_user_registration_path(locale: I18n.locale) : new_user_registration_path),
+      "login_url" => plain_login_url,
+      "register_url" => plain_register_url,
       "login_return_url" => login_path,
       "register_return_url" => register_path,
       "contact_login_return_url" => contact_login_path,
@@ -388,6 +402,14 @@ class BlogsController < ApplicationController
 
     separator = base_path.include?("?") ? "&" : "?"
     "#{base_path}#{separator}return_to=#{CGI.escape(return_to_value)}"
+  end
+
+  def central_auth_url(path)
+    issuer = Settings.sso.issuer.to_s.chomp("/")
+    path_value = path.to_s
+    path_value = "/#{path_value}" unless path_value.start_with?("/")
+
+    "#{issuer}#{path_value}"
   end
 
   def vanity_return_to_path
