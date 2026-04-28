@@ -268,10 +268,31 @@ uk:
     sign_up_with_google: "Зареєструватися через Google"
     sign_up_with_facebook: "Зареєструватися через Facebook"
     sign_up_with_apple: "Зареєструватися через Apple"
+    or_continue_with: "або продовжити через"
     oauth_failed: "Соціальний вхід не вдався. Спробуйте ще раз."
     sso_state_mismatch: "Некоректний стан SSO. Будь ласка, спробуйте увійти знову."
     sso_failed: "Вхід через SSO не вдався."
     sso_user_not_found: "Не вдалося зіставити користувача SSO."
+
+  doorkeeper:
+    authorizations:
+      buttons:
+        authorize: "Надати доступ"
+        deny: "Скасувати"
+
+  sso_authorize:
+    page_title: "Авторизація доступу"
+    title: "Авторизація доступу"
+    subtitle: "Перевірте дозволи, які запитує застосунок."
+    unknown_app: "Невідомий застосунок"
+    redirect_label: "URI перенаправлення"
+    scopes_title: "Запитані дозволи"
+    footer_note: "Цей доступ можна буде відкликати пізніше в налаштуваннях облікового запису."
+    scopes:
+      openid: "Підтвердження вашої особи"
+      profile: "Читання базових даних профілю"
+      email: "Читання вашої електронної пошти"
+      offline_access: "Збереження доступу, коли ви офлайн"
 
   # User
   users:

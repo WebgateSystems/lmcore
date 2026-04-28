@@ -268,10 +268,31 @@ pl:
     sign_up_with_google: "Zarejestruj się przez Google"
     sign_up_with_facebook: "Zarejestruj się przez Facebook"
     sign_up_with_apple: "Zarejestruj się przez Apple"
+    or_continue_with: "lub kontynuuj przez"
     oauth_failed: "Logowanie społecznościowe nie powiodło się. Spróbuj ponownie."
     sso_state_mismatch: "Niepoprawny stan SSO. Spróbuj zalogować się ponownie."
     sso_failed: "Logowanie SSO nie powiodło się."
     sso_user_not_found: "Nie udało się przypisać konta z SSO."
+
+  doorkeeper:
+    authorizations:
+      buttons:
+        authorize: "Autoryzuj dostęp"
+        deny: "Anuluj"
+
+  sso_authorize:
+    page_title: "Autoryzacja dostępu"
+    title: "Autoryzacja dostępu"
+    subtitle: "Sprawdź uprawnienia, o które prosi aplikacja."
+    unknown_app: "Nieznana aplikacja"
+    redirect_label: "URI przekierowania"
+    scopes_title: "Żądane uprawnienia"
+    footer_note: "Ten dostęp możesz później cofnąć w ustawieniach konta."
+    scopes:
+      openid: "Weryfikacja Twojej tożsamości"
+      profile: "Odczyt podstawowych danych profilu"
+      email: "Odczyt adresu e-mail"
+      offline_access: "Utrzymanie dostępu, gdy jesteś offline"
 
   # User
   users:

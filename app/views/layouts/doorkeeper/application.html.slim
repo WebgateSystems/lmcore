@@ -1,0 +1,102 @@
+/ Minimal dedicated layout for OAuth consent pages.
+doctype html
+html lang=I18n.locale
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width,initial-scale=1"
+    title = t("sso_authorize.page_title", default: "Authorize access")
+    = csrf_meta_tags
+    = csp_meta_tag
+    style
+      |
+        :root {
+          --sso-bg: #0f172a;
+          --sso-card: #ffffff;
+          --sso-text: #0f172a;
+          --sso-muted: #64748b;
+          --sso-accent: #2563eb;
+          --sso-border: #e2e8f0;
+        }
+        * { box-sizing: border-box; }
+        body {
+          margin: 0;
+          font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+          background: radial-gradient(circle at top, #1e293b, var(--sso-bg));
+          color: var(--sso-text);
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+        }
+        .sso-card {
+          width: 100%;
+          max-width: 640px;
+          background: var(--sso-card);
+          border-radius: 16px;
+          padding: 28px;
+          box-shadow: 0 16px 50px rgba(15, 23, 42, 0.35);
+          border: 1px solid var(--sso-border);
+        }
+        .sso-title {
+          margin: 0 0 8px;
+          font-size: 1.5rem;
+        }
+        .sso-subtitle {
+          margin: 0 0 18px;
+          color: var(--sso-muted);
+        }
+        .sso-app {
+          border: 1px solid var(--sso-border);
+          border-radius: 12px;
+          padding: 14px;
+          margin-bottom: 18px;
+          background: #f8fafc;
+        }
+        .sso-app__name {
+          font-weight: 700;
+          margin-bottom: 6px;
+        }
+        .sso-scope-list {
+          list-style: none;
+          padding: 0;
+          margin: 0 0 18px;
+          border: 1px solid var(--sso-border);
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        .sso-scope-list li {
+          padding: 10px 14px;
+          border-bottom: 1px solid var(--sso-border);
+          font-size: 0.95rem;
+        }
+        .sso-scope-list li:last-child { border-bottom: none; }
+        .sso-actions {
+          display: flex;
+          gap: 10px;
+          justify-content: flex-end;
+          margin-top: 16px;
+        }
+        .sso-btn {
+          border: 0;
+          border-radius: 10px;
+          padding: 10px 16px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .sso-btn--primary {
+          background: var(--sso-accent);
+          color: #fff;
+        }
+        .sso-btn--secondary {
+          background: #e2e8f0;
+          color: #1e293b;
+        }
+        .sso-footer {
+          margin-top: 16px;
+          font-size: 0.85rem;
+          color: var(--sso-muted);
+        }
+  body
+    .sso-card
+      = yield

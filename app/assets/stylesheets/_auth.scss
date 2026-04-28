@@ -381,3 +381,42 @@
   font-size: 0.8125rem;
   color: var(--color-text-muted);
 }
+
+/* ===== Social Auth (icon row) ===== */
+.social-auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.social-auth__provider-form {
+  margin: 0;
+}
+
+.social-auth__provider-btn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.social-auth__provider-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.social-auth__provider-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+}

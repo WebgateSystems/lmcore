@@ -1,0 +1,36 @@
+- app_name = @pre_auth.client&.name.to_s
+- redirect_uri = @pre_auth.redirect_uri.to_s
+- scopes = @pre_auth.scopes.respond_to?(:to_a) ? @pre_auth.scopes.to_a : @pre_auth.scope.to_s.split
+
+h1.sso-title = t("sso_authorize.title", default: "Authorize access")
+p.sso-subtitle = t("sso_authorize.subtitle", default: "Review the permissions requested by this application.")
+
+.sso-app
+  .sso-app__name = app_name.presence || t("sso_authorize.unknown_app", default: "Unknown application")
+  div
+    strong = "#{t('sso_authorize.redirect_label', default: 'Redirect URI')}: "
+    span = redirect_uri
+
+- if scopes.present?
+  p.sso-subtitle style="margin-top:0;" = t("sso_authorize.scopes_title", default: "Requested permissions")
+  ul.sso-scope-list
+    - scopes.each do |scope|
+      li = t("sso_authorize.scopes.#{scope}", default: scope.to_s.humanize)
+
+= form_tag oauth_authorization_path, method: :post do
+  = hidden_field_tag :client_id, @pre_auth.client.uid
+  = hidden_field_tag :redirect_uri, @pre_auth.redirect_uri
+  = hidden_field_tag :state, @pre_auth.state
+  = hidden_field_tag :response_type, @pre_auth.response_type
+  = hidden_field_tag :response_mode, @pre_auth.response_mode
+  = hidden_field_tag :scope, @pre_auth.scope
+  = hidden_field_tag :code_challenge, @pre_auth.code_challenge
+  = hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method
+  = hidden_field_tag :nonce, @pre_auth.nonce if @pre_auth.respond_to?(:nonce)
+  = hidden_field_tag :locale, I18n.locale
+
+  .sso-actions
+    = submit_tag t("doorkeeper.authorizations.buttons.deny", default: "Deny"), name: "commit", class: "sso-btn sso-btn--secondary"
+    = submit_tag t("doorkeeper.authorizations.buttons.authorize", default: "Authorize"), name: "commit", class: "sso-btn sso-btn--primary"
+
+p.sso-footer = t("sso_authorize.footer_note", default: "You can revoke this access later in your account settings.")

@@ -268,10 +268,31 @@ en:
     sign_up_with_google: "Sign up with Google"
     sign_up_with_facebook: "Sign up with Facebook"
     sign_up_with_apple: "Sign up with Apple"
+    or_continue_with: "or Continue with"
     oauth_failed: "Social login failed. Please try again."
     sso_state_mismatch: "Invalid SSO state. Please retry login."
     sso_failed: "SSO sign in failed."
     sso_user_not_found: "Could not map SSO user."
+
+  doorkeeper:
+    authorizations:
+      buttons:
+        authorize: "Authorize access"
+        deny: "Cancel"
+
+  sso_authorize:
+    page_title: "Authorize access"
+    title: "Authorize access"
+    subtitle: "Review the permissions requested by this application."
+    unknown_app: "Unknown application"
+    redirect_label: "Redirect URI"
+    scopes_title: "Requested permissions"
+    footer_note: "You can revoke this access later in your account settings."
+    scopes:
+      openid: "Verify your identity"
+      profile: "Read your basic profile"
+      email: "Read your email address"
+      offline_access: "Maintain access when you are offline"
 
   # User
   users:
