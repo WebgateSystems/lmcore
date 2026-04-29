@@ -27,8 +27,14 @@ SecureHeaders::Configuration.default do |config|
     media_src: %w['self' https: blob:],
     object_src: %w['none'],
     base_uri: %w['self'],
-    # Allow OAuth form posts from vanity-domain pages to the central SSO host.
-    form_action: Rails.env.development? ? %w[*] : [ "'self'", Settings.sso.issuer.to_s.chomp("/") ],
+    # Allow OAuth redirects that are initiated by local POST forms.
+    form_action: Rails.env.development? ? %w[*] : [
+      "'self'",
+      Settings.sso.issuer.to_s.chomp("/"),
+      "https://accounts.google.com",
+      "https://appleid.apple.com",
+      "https://www.facebook.com"
+    ],
     frame_ancestors: %w['self'],
     upgrade_insecure_requests: !Rails.env.development?
   }
