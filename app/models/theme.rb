@@ -9,6 +9,8 @@ class Theme < ApplicationRecord
   # Associations
   has_many :user_themes, dependent: :destroy
   has_many :users, through: :user_themes
+  has_many :theme_accesses, dependent: :destroy
+  has_many :exclusive_users, through: :theme_accesses, source: :user
 
   # CarrierWave
   mount_uploader :preview_image, ImageUploader
@@ -27,11 +29,23 @@ class Theme < ApplicationRecord
   scope :premium, -> { where(is_premium: true) }
   scope :free, -> { where(is_premium: false) }
   scope :ordered, -> { order(name: :asc) }
+  scope :available_for, ->(user) {
+    if user
+      left_joins(:theme_accesses)
+        .where("theme_accesses.id IS NULL OR theme_accesses.user_id = ?", user.id)
+        .distinct
+    else
+      left_joins(:theme_accesses).where(theme_accesses: { id: nil })
+    end
+  }
 
   # Class methods
   class << self
     def default_theme
-      find_by(status: "default") || system_themes.active.first
+      active.detect { |theme| theme.default? && theme.template_available? } ||
+        system_themes.active.detect(&:template_available?) ||
+        find_by(status: "default") ||
+        system_themes.active.first
     end
   end
 
@@ -64,6 +78,10 @@ class Theme < ApplicationRecord
     %w[active default].include?(status)
   end
 
+  def available_for?(user)
+    theme_accesses.none? || (user.present? && theme_accesses.exists?(user_id: user.id))
+  end
+
   def activate!
     update!(status: "active")
   end
@@ -79,6 +97,10 @@ class Theme < ApplicationRecord
 
   def template_path
     Rails.root.join("themes", path || slug)
+  end
+
+  def template_available?
+    template_path.join("layouts/application.liquid").exist? && template_path.join("index.liquid").exist?
   end
 
   def layout_template

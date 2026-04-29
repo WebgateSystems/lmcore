@@ -5,8 +5,8 @@ ayder = User.find_by!(email: 'ayder@gmail.com')
 log('  [Blog AM] Setting up theme...')
 
 theme = Theme.find_or_create_by!(slug: 'am') do |t|
-  t.name = 'Ayder Muzhdabaev Blog'
-  t.description = 'Custom theme for Ayder Muzhdabaev\'s blog — dark editorial style with multilingual support'
+  t.name = 'AM'
+  t.description = 'Dedicated custom theme for Ayder Muzhdabaev\'s blog — editorial style with multilingual support'
   t.author = 'LibreMedia Team'
   t.version = '1.0.0'
   t.path = 'am'
@@ -37,6 +37,14 @@ theme = Theme.find_or_create_by!(slug: 'am') do |t|
     'header_text' => '#ffffff'
   }
 end
+theme.update!(
+  name: 'AM',
+  description: 'Dedicated custom theme for Ayder Muzhdabaev\'s blog — editorial style with multilingual support',
+  path: 'am',
+  status: 'active',
+  is_system: false,
+  is_premium: false
+)
 
 user_theme = UserTheme.find_or_create_by!(user: ayder, theme: theme)
 user_theme.update!(active: true)

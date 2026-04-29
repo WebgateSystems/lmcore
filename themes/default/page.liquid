@@ -1,0 +1,9 @@
+<article>
+  <h1 class="section-title">{{ page.title }}</h1>
+  {% if page.featured_image_url and page.featured_image_url != blank %}
+    <img src="{{ page.featured_image_url }}" alt="{{ page.title }}">
+  {% endif %}
+  <div class="article-body">
+    {{ page.content }}
+  </div>
+</article>

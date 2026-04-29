@@ -126,7 +126,11 @@ section
 
     .mb-3
       label.form-label for="settings_theme_slug" = t("dashboard.settings.theme")
-      input.form-control type="text" name="settings[theme_slug]" id="settings_theme_slug" value=@settings["theme_slug"] placeholder="default"
+      .form-select-wrapper
+        select#settings_theme_slug.form-select name="settings[theme_slug]"
+          - @available_themes.each do |theme|
+            option value=theme.slug selected=(theme.slug == @settings["theme_slug"])
+              = theme.name
       small.text-body-3.text-muted = t("dashboard.settings.theme_hint")
 
     .dashboard-actions

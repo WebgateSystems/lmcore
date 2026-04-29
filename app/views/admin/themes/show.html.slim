@@ -1,0 +1,52 @@
+- content_for :title, "#{@theme.name} - Admin Panel"
+
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to "Themes", admin_themes_path
+  li
+    span= @theme.name
+
+.uk-flex.uk-flex-middle.uk-margin-top
+  .uk-flex-1
+    h2.uk-heading-small.uk-margin-remove= @theme.name
+    p.uk-text-meta= @theme.description
+  = link_to edit_admin_theme_path(@theme), class: "sc-button sc-button-primary"
+    i.mdi.mdi-pencil.uk-margin-small-right
+    | Edit Theme
+
+.uk-grid-match.uk-margin-top data-uk-grid=""
+  div(class="uk-width-2-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Details
+      .uk-card-body
+        dl.uk-description-list
+          dt Slug
+          dd
+            code= @theme.slug
+          dt Folder
+          dd
+            code= @theme.path.presence || @theme.slug
+          dt Status
+          dd= @theme.status
+          dt Version
+          dd= @theme.version
+          dt Author
+          dd= @theme.author.presence || "-"
+          dt Template folder
+          dd
+            - if @theme.template_available?
+              span.uk-label.uk-label-success Available
+            - else
+              span.uk-label.uk-label-danger Missing required files
+
+  div(class="uk-width-1-3@m")
+    .uk-card
+      .uk-card-header
+        h3.uk-card-title Access
+      .uk-card-body
+        - if @theme.exclusive_users.any?
+          ul.uk-list.uk-list-divider
+            - @theme.exclusive_users.order(:username, :email).each do |user|
+              li= link_to "#{user.username.presence || user.email} (#{user.email})", admin_user_path(user)
+        - else
+          p.uk-text-muted Public: available to all blogs.

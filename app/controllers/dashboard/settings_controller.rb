@@ -7,13 +7,13 @@ module Dashboard
       social_facebook social_twitter social_instagram social_youtube youtube_url
       available_locales default_locale
       comments_premoderation_enabled
-      theme_slug
     ].freeze
     TRANSLATABLE_KEYS = %w[site_name site_tagline site_description].freeze
     BOOLEAN_KEYS = %w[comments_premoderation_enabled].freeze
 
     def show
       authorize :settings, policy_class: Dashboard::SettingsPolicy
+      load_theme_options
       @settings = load_settings
     end
 
@@ -21,6 +21,7 @@ module Dashboard
       authorize :settings, policy_class: Dashboard::SettingsPolicy
 
       ActiveRecord::Base.transaction do
+        apply_theme_selection!
         apply_youtube_integration!
         save_site_settings!
       end
@@ -38,6 +39,7 @@ module Dashboard
       user_settings = SiteSetting.where(user: current_user).index_by(&:key)
       global_settings = SiteSetting.global.index_by(&:key)
       current_locale = I18n.locale.to_s
+      active_theme = active_theme_for(current_user)
 
       EDITABLE_KEYS.each_with_object({}) do |key, hash|
         setting = user_settings[key] || global_settings[key]
@@ -51,7 +53,32 @@ module Dashboard
         else
                       raw_value.to_s
         end
-      end
+      end.merge("theme_slug" => active_theme&.slug.to_s)
+    end
+
+    def load_theme_options
+      @available_themes = Theme.active.available_for(current_user).ordered.select(&:template_available?)
+      @active_theme = active_theme_for(current_user)
+    end
+
+    def active_theme_for(user)
+      theme = user.user_themes.active.includes(:theme).first&.theme
+      return theme if theme&.active? && theme.available_for?(user) && theme.template_available?
+
+      Theme.default_theme
+    end
+
+    def apply_theme_selection!
+      theme_slug = params.dig(:settings, :theme_slug).to_s.strip
+      return if theme_slug.blank?
+
+      theme = Theme.active.available_for(current_user).find_by(slug: theme_slug)
+      theme = nil unless theme&.template_available?
+      raise ArgumentError, t("dashboard.settings.theme_unavailable", default: "This theme is not available for your blog.") unless theme
+
+      user_theme = current_user.user_themes.find_or_initialize_by(theme: theme)
+      user_theme.active = true
+      user_theme.save!
     end
 
     def save_site_settings!

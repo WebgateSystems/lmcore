@@ -25,7 +25,7 @@ RSpec.describe User do
     end
 
     it 'validates username length' do
-      user = build(:user, username: 'ab')
+      user = build(:user, username: 'a')
       expect(user).not_to be_valid
     end
   end

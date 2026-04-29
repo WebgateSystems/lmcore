@@ -1,0 +1,21 @@
+<h1 class="section-title">Posts</h1>
+
+{% if posts and posts.size > 0 %}
+  <div class="item-list">
+    {% for post in posts %}
+      <article class="item-card">
+        <p class="meta">{{ post.published_at | date_format: "%d %b %Y" }}{% if post.category %} / {{ post.category.name }}{% endif %}</p>
+        <h2><a href="{{ post.slug | post_url }}">{{ post.title }}</a></h2>
+        {% if post.lead and post.lead != blank %}
+          <p>{{ post.lead | strip_html | excerpt: 220 }}</p>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No posts yet.</p>
+{% endif %}
+
+{% if pagination and pagination.total_pages > 1 %}
+  <p class="meta">Page {{ pagination.current_page }} of {{ pagination.total_pages }}</p>
+{% endif %}

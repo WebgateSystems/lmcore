@@ -1,0 +1,33 @@
+name: "Default"
+slug: "default"
+author: "LibreMedia"
+version: "1.0.0"
+description: "Clean editorial blog theme with sidebar, language switcher, and light/dark modes"
+
+locales:
+  - en
+  - pl
+  - uk
+  - ru
+
+templates:
+  index: "index.liquid"
+  post: "post.liquid"
+  video: "videos/show.liquid"
+  photo: "gallery/show.liquid"
+  page: "page.liquid"
+  category: "categories/show.liquid"
+  tag: "tags/show.liquid"
+  search: "search/index.liquid"
+  404: "404.liquid"
+
+layouts:
+  default: "layouts/application.liquid"
+
+config:
+  layout_style: "classic"
+  sidebar_position: "right"
+  show_author: true
+  show_date: true
+  show_comments: true
+  posts_per_page: 10

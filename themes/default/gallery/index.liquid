@@ -1,0 +1,20 @@
+<h1 class="section-title">Gallery</h1>
+
+{% if albums and albums.size > 0 %}
+  <div class="item-list">
+    {% for album in albums %}
+      <article class="item-card">
+        {% if album.cover_thumb_url and album.cover_thumb_url != blank %}
+          <a href="{{ album.slug | gallery_url }}"><img src="{{ album.cover_thumb_url }}" alt="{{ album.title }}"></a>
+        {% endif %}
+        <p class="meta">{{ album.published_at | date_format: "%d %b %Y" }}</p>
+        <h2><a href="{{ album.slug | gallery_url }}">{{ album.title }}</a></h2>
+        {% if album.description and album.description != blank %}
+          <p>{{ album.description | strip_html | excerpt: 180 }}</p>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No gallery albums yet.</p>
+{% endif %}

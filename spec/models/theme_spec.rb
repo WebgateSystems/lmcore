@@ -117,6 +117,42 @@ RSpec.describe Theme, type: :model do
     end
   end
 
+  describe ".available_for" do
+    let!(:default_theme) { create(:theme, :default, slug: "default") }
+    let!(:am_theme) { create(:theme, slug: "am", name: "AM", status: "active") }
+    let!(:am_owner) { create(:user, username: "am") }
+
+    before do
+      ThemeAccess.create!(theme: am_theme, user: am_owner)
+    end
+
+    it "hides the AM theme from regular users" do
+      user = create(:user, username: "regular")
+      expect(described_class.available_for(user)).to include(default_theme)
+      expect(described_class.available_for(user)).not_to include(am_theme)
+    end
+
+    it "allows the AM theme for the am blog owner" do
+      expect(described_class.available_for(am_owner)).to include(am_theme)
+    end
+  end
+
+  describe "#available_for?" do
+    it "allows public themes with no exclusive users" do
+      theme = create(:theme)
+      expect(theme.available_for?(create(:user))).to be true
+    end
+
+    it "restricts exclusive themes to assigned users" do
+      theme = create(:theme, slug: "am")
+      owner = create(:user, username: "am")
+      ThemeAccess.create!(theme: theme, user: owner)
+
+      expect(theme.available_for?(create(:user, username: "regular"))).to be false
+      expect(theme.available_for?(owner)).to be true
+    end
+  end
+
   describe "status transitions" do
     it "#activate! sets status to active" do
       theme = create(:theme, :inactive)
@@ -176,5 +212,7 @@ RSpec.describe Theme, type: :model do
   describe "associations" do
     it { is_expected.to have_many(:user_themes).dependent(:destroy) }
     it { is_expected.to have_many(:users).through(:user_themes) }
+    it { is_expected.to have_many(:theme_accesses).dependent(:destroy) }
+    it { is_expected.to have_many(:exclusive_users).through(:theme_accesses).source(:user) }
   end
 end

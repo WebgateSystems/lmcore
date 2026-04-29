@@ -1,0 +1,10 @@
+- content_for :title, "New Theme - Admin Panel"
+
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to "Themes", admin_themes_path
+  li
+    span New Theme
+
+h2.uk-heading-small.uk-margin-top New Theme
+
+= render "form"

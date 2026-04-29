@@ -88,6 +88,12 @@ aside#sc-sidebar-main.sc-sidebar-info-fixed
               i.mdi.mdi-tag-outline
             span.uk-nav-title Tags
 
+        li title="Themes" class=("sc-page-active" if controller_name == 'themes')
+          = link_to admin_themes_path
+            span.uk-nav-icon
+              i.mdi.mdi-palette-outline
+            span.uk-nav-title Themes
+
         /! System Section
         li.sc-sidebar-menu-heading
           span System

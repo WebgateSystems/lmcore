@@ -65,6 +65,7 @@ Rails.application.routes.draw do
 
     resources :categories
     resources :tags
+    resources :themes
     resources :audit_logs, only: %i[index show]
 
     namespace :api, defaults: { format: :json } do

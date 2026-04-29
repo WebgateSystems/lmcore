@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_27_234600) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_29_000100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -672,6 +672,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_234600) do
     t.index ["taggings_count"], name: "index_tags_on_taggings_count"
   end
 
+  create_table "theme_accesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "theme_id", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["theme_id", "user_id"], name: "index_theme_accesses_on_theme_id_and_user_id", unique: true
+    t.index ["theme_id"], name: "index_theme_accesses_on_theme_id"
+    t.index ["user_id"], name: "index_theme_accesses_on_user_id"
+  end
+
   create_table "themes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "author"
     t.jsonb "color_scheme", default: {}
@@ -913,6 +923,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_234600) do
   add_foreign_key "subscriptions", "price_plans"
   add_foreign_key "subscriptions", "users", on_delete: :cascade
   add_foreign_key "taggings", "tags", on_delete: :cascade
+  add_foreign_key "theme_accesses", "themes", on_delete: :cascade
+  add_foreign_key "theme_accesses", "users", on_delete: :cascade
   add_foreign_key "user_group_memberships", "user_groups", on_delete: :cascade
   add_foreign_key "user_group_memberships", "users", on_delete: :cascade
   add_foreign_key "user_groups", "users", column: "owner_id", on_delete: :cascade

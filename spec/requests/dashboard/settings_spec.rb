@@ -4,13 +4,36 @@ require "rails_helper"
 
 RSpec.describe "Dashboard::Settings", type: :request do
   let(:author) { create(:user, :author) }
+  let!(:default_theme) { create(:theme, :default, name: "Default", slug: "default", path: "default") }
+  let!(:am_theme) { create(:theme, name: "AM", slug: "am", path: "am", status: "active") }
+  let!(:am_author) { create(:user, :author, username: "am") }
 
-  before { sign_in author }
+  before do
+    ThemeAccess.create!(theme: am_theme, user: am_author)
+    sign_in author
+  end
+
 
   describe "GET /dashboard/settings" do
     it "renders successfully" do
       get dashboard_settings_path
       expect(response).to have_http_status(:success)
+    end
+
+    it "shows only themes available to the current blog" do
+      get dashboard_settings_path
+
+      expect(response.body).to include(%(value="default"))
+      expect(response.body).not_to include(%(value="am"))
+    end
+
+    it "shows the AM theme only to the am blog owner" do
+      sign_in am_author
+
+      get dashboard_settings_path
+
+      expect(response.body).to include(%(value="default"))
+      expect(response.body).to include(%(value="am"))
     end
   end
 
@@ -26,6 +49,37 @@ RSpec.describe "Dashboard::Settings", type: :request do
       expect(response).to redirect_to(dashboard_settings_path)
       expect(SiteSetting.find_by(user: author, key: "youtube_url").typed_value).to eq("https://www.youtube.com/@example/videos")
       expect(SiteSetting.find_by(user: author, key: "comments_premoderation_enabled").typed_value).to eq(false)
+    end
+
+    it "activates an available theme through UserTheme" do
+      patch dashboard_settings_path, params: {
+        settings: { theme_slug: "default" }
+      }
+
+      expect(response).to redirect_to(dashboard_settings_path)
+      expect(author.user_themes.active.includes(:theme).first.theme).to eq(default_theme)
+      expect(SiteSetting.find_by(user: author, key: "theme_slug")).to be_nil
+    end
+
+    it "rejects AM theme activation for regular users" do
+      patch dashboard_settings_path, params: {
+        settings: { theme_slug: "am" }
+      }
+
+      expect(response).to redirect_to(dashboard_settings_path)
+      expect(flash[:alert]).to be_present
+      expect(author.user_themes.active.joins(:theme).where(themes: { slug: "am" })).to be_empty
+    end
+
+    it "allows AM theme activation for the am blog owner" do
+      sign_in am_author
+
+      patch dashboard_settings_path, params: {
+        settings: { theme_slug: "am" }
+      }
+
+      expect(response).to redirect_to(dashboard_settings_path)
+      expect(am_author.user_themes.active.includes(:theme).first.theme).to eq(am_theme)
     end
 
     it "does not store YouTube cookies without acknowledgement" do

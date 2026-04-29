@@ -1,0 +1,60 @@
+<h1 class="section-title">{{ site.site_name | default: blog.name }}</h1>
+
+{% if top_post %}
+  <article class="item-card">
+    <p class="meta">Featured post</p>
+    <h2><a href="{{ top_post.slug | post_url }}">{{ top_post.title }}</a></h2>
+    {% if top_post.lead and top_post.lead != blank %}
+      <p>{{ top_post.lead | strip_html | excerpt: 220 }}</p>
+    {% endif %}
+  </article>
+{% endif %}
+
+{% if posts and posts.size > 0 %}
+  <section style="margin-top:32px">
+    <h2>Latest posts</h2>
+    <div class="item-list">
+      {% for post in posts %}
+        <article class="item-card">
+          <p class="meta">{{ post.published_at | date_format: "%d %b %Y" }}</p>
+          <h3><a href="{{ post.slug | post_url }}">{{ post.title }}</a></h3>
+          {% if post.lead and post.lead != blank %}
+            <p>{{ post.lead | strip_html | excerpt: 180 }}</p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if videos and videos.size > 0 %}
+  <section style="margin-top:32px">
+    <h2>Latest videos</h2>
+    <div class="item-list">
+      {% for video in videos %}
+        <article class="item-card">
+          <h3><a href="{{ video.slug | video_url }}">{{ video.title }}</a></h3>
+          {% if video.thumbnail_url and video.thumbnail_url != blank %}
+            <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}">
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if photos and photos.size > 0 %}
+  <section style="margin-top:32px">
+    <h2>Latest gallery</h2>
+    <div class="item-list">
+      {% for album in photos %}
+        <article class="item-card">
+          <h3><a href="{{ album.slug | gallery_url }}">{{ album.title }}</a></h3>
+          {% if album.cover_thumb_url and album.cover_thumb_url != blank %}
+            <img src="{{ album.cover_thumb_url }}" alt="{{ album.title }}">
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

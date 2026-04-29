@@ -1,0 +1,20 @@
+<h1 class="section-title">Videos</h1>
+
+{% if videos and videos.size > 0 %}
+  <div class="item-list">
+    {% for video in videos %}
+      <article class="item-card">
+        {% if video.thumbnail_url and video.thumbnail_url != blank %}
+          <a href="{{ video.slug | video_url }}"><img src="{{ video.thumbnail_url }}" alt="{{ video.title }}"></a>
+        {% endif %}
+        <p class="meta">{{ video.published_at | date_format: "%d %b %Y" }}</p>
+        <h2><a href="{{ video.slug | video_url }}">{{ video.title }}</a></h2>
+        {% if video.subtitle and video.subtitle != blank %}
+          <p>{{ video.subtitle | strip_html | excerpt: 180 }}</p>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No videos yet.</p>
+{% endif %}

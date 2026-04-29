@@ -12,14 +12,24 @@ require "rails_helper"
 #  - filters (q / year / tag / page) shape the resulting collection
 #  - 404s for unknown slugs, locale switching, redirect targets
 RSpec.describe "Blogs", type: :request do
-  let!(:author) { create(:user, username: "ayder") }
-  let!(:theme) { create(:theme, slug: "am", path: "am", status: "default", is_system: true) }
+  let!(:author) { create(:user, username: "am") }
+  let!(:theme) { create(:theme, slug: "am", path: "am", status: "active", is_system: false, name: "AM") }
   let!(:user_theme) { UserTheme.create!(user: author, theme: theme, active: true) }
 
   describe "GET /blogs/:blog_slug (homepage)" do
     it "renders 200 with no content at all" do
       get "/blogs/#{author.username}"
       expect(response).to have_http_status(:ok)
+    end
+
+    it "falls back to the Default theme when the user has no active theme" do
+      plain_author = create(:user, username: "plain")
+
+      get "/blogs/#{plain_author.username}"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(%(data-theme-toggle))
+      expect(response.body).to include("Light/Dark")
     end
 
     it "exposes pinned posts, videos and gallery as Top + uses them as Latest fallback" do

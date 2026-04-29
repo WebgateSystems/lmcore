@@ -1,11 +1,11 @@
-# Theme configuration for the default BlogAm theme
-# This theme is based on the original Ayder Muzhdabaiev blog design
+# Theme configuration for the AM theme
+# Dedicated custom theme for Ayder Muzhdabaiev's blog
 
-name: "Default"
-slug: "default"
+name: "AM"
+slug: "am"
 author: "LibreMedia"
 version: "1.0.0"
-description: "Default blog theme based on the original Ayder Muzhdabaiev blog design"
+description: "Dedicated editorial theme for Ayder Muzhdabaiev's blog"
 
 # Theme supports these languages
 locales:

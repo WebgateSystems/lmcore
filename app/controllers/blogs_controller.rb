@@ -246,7 +246,9 @@ class BlogsController < ApplicationController
 
   def set_theme_renderer
     user_theme = @blog_owner.user_themes.active.includes(:theme).first
-    theme_slug = user_theme&.theme&.path || user_theme&.theme&.slug || "default"
+    theme = user_theme&.theme
+    theme = nil unless theme&.active? && theme.available_for?(@blog_owner) && theme.template_available?
+    theme_slug = theme&.path || theme&.slug || "default"
     @renderer = ThemeRenderer.new(theme_slug)
   end
 
@@ -470,7 +472,9 @@ class BlogsController < ApplicationController
 
   def active_theme_slug
     user_theme = @blog_owner.user_themes.active.includes(:theme).first
-    user_theme&.theme&.slug || "default"
+    theme = user_theme&.theme
+    theme = nil unless theme&.active? && theme.available_for?(@blog_owner) && theme.template_available?
+    theme&.slug || "default"
   end
 
   def blog_posts

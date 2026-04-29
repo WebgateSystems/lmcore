@@ -88,7 +88,7 @@ class User < ApplicationRecord
   validates :username, uniqueness: { case_sensitive: false }, allow_nil: true
   validates :username,
             format: { with: /\A[a-zA-Z0-9_]+\z/, message: "only allows letters, numbers, and underscores" },
-            length: { minimum: 3, maximum: 30 },
+            length: { minimum: 2, maximum: 30 },
             allow_nil: true,
             if: :validating_username_constraints?
   validates :phone, uniqueness: true, allow_nil: true

@@ -11,6 +11,7 @@ Theme.create!(
   description: 'Clean and modern default theme with responsive design',
   author: 'LibreMedia Team',
   version: '1.0.0',
+  path: 'default',
   status: 'default',
   is_system: true,
   is_premium: false,

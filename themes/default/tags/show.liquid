@@ -1,0 +1,17 @@
+<h1 class="section-title">#{{ tag.name }}</h1>
+
+{% if posts and posts.size > 0 %}
+  <div class="item-list">
+    {% for post in posts %}
+      <article class="item-card">
+        <p class="meta">{{ post.published_at | date_format: "%d %b %Y" }}</p>
+        <h2><a href="{{ post.slug | post_url }}">{{ post.title }}</a></h2>
+        {% if post.lead and post.lead != blank %}
+          <p>{{ post.lead | strip_html | excerpt: 180 }}</p>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No posts tagged with this topic yet.</p>
+{% endif %}

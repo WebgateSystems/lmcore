@@ -1,0 +1,25 @@
+<h1 class="section-title">Search</h1>
+
+<form class="search-form" action="{{ base_path }}/search" method="get" style="margin-bottom:28px">
+  <input type="search" name="q" value="{{ query }}" placeholder="Search">
+  <button type="submit">Search</button>
+</form>
+
+{% if query and query != blank %}
+  <p class="meta">Results for "{{ query }}"</p>
+{% endif %}
+
+{% if results and results.size > 0 %}
+  <div class="item-list">
+    {% for post in results %}
+      <article class="item-card">
+        <h2><a href="{{ post.slug | post_url }}">{{ post.title }}</a></h2>
+        {% if post.lead and post.lead != blank %}
+          <p>{{ post.lead | strip_html | excerpt: 180 }}</p>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No results.</p>
+{% endif %}

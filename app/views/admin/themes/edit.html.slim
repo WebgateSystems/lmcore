@@ -1,0 +1,11 @@
+- content_for :title, "Edit Theme - Admin Panel"
+
+ul.uk-breadcrumb.uk-margin-remove-bottom
+  li= link_to "Themes", admin_themes_path
+  li= link_to @theme.name, admin_theme_path(@theme)
+  li
+    span Edit
+
+h2.uk-heading-small.uk-margin-top= "Edit #{@theme.name}"
+
+= render "form"

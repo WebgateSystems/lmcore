@@ -732,6 +732,7 @@ DEPENDENCIES
   rswag-specs
   rswag-ui
   rubocop-rails-omakase
+  rubyzip
   searchkick
   secure_headers
   selenium-webdriver

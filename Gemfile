@@ -47,6 +47,7 @@ gem "connection_pool", "< 3.0"
 # File Uploads
 gem "carrierwave", "~> 3.0"
 gem "mini_magick"
+gem "rubyzip"
 
 # Views & Templates
 gem "slim-rails"

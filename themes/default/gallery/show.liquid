@@ -1,0 +1,39 @@
+<article>
+  <p class="meta">{{ album.published_at | date_format: "%d %b %Y" }}</p>
+  <h1 class="section-title">{{ album.title }}</h1>
+  {% if album.description and album.description != blank %}
+    <div class="article-body">{{ album.description }}</div>
+  {% endif %}
+  {% if album.photos and album.photos.size > 0 %}
+    <div class="item-list" style="margin-top:26px">
+      {% for photo in album.photos %}
+        <figure class="item-card">
+          <img src="{{ photo.image_url }}" alt="{{ photo.alt | default: photo.title }}">
+          {% if photo.title and photo.title != blank %}
+            <figcaption class="meta">{{ photo.title }}</figcaption>
+          {% endif %}
+        </figure>
+      {% endfor %}
+    </div>
+  {% endif %}
+</article>
+
+<section style="margin-top:36px">
+  <h2>Comments</h2>
+  {% if current_user and current_user_blog_banned != true %}
+    <form class="comment-form" action="{{ base_path }}/gallery/{{ album.slug }}/comments" method="post">
+      <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+      <input type="hidden" name="return_to" value="{{ current_path_with_query }}">
+      <textarea name="comment[content]" required placeholder="Write a comment"></textarea>
+      <p><button class="button" type="submit">Publish comment</button></p>
+    </form>
+  {% else %}
+    <p><a href="{{ login_return_url }}">Sign in to comment</a></p>
+  {% endif %}
+  {% for comment in comments %}
+    <article class="comment">
+      <strong>{{ comment.author_name }}</strong>
+      <p>{{ comment.content }}</p>
+    </article>
+  {% endfor %}
+</section>

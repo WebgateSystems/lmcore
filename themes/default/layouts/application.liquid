@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="{{ locale | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page_title %}{{ page_title }} | {% endif %}{{ site.site_name | default: blog.name }}</title>
+  <meta name="description" content="{{ page_description | default: site.site_description }}">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f8f7f3;
+      --panel: #ffffff;
+      --text: #1d1d1d;
+      --muted: #6b675f;
+      --line: #ded9cf;
+      --accent: #8f2d1f;
+      --accent-strong: #5f1d15;
+      --shadow: 0 18px 45px rgba(37, 32, 24, 0.08);
+    }
+    [data-theme="dark"] {
+      --bg: #171716;
+      --panel: #22211f;
+      --text: #f1eee8;
+      --muted: #b7aea2;
+      --line: #3a3732;
+      --accent: #e88d73;
+      --accent-strong: #ffb19c;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.62;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-strong); text-decoration: underline; }
+    img, iframe, video { max-width: 100%; }
+    .site-shell { max-width: 1180px; margin: 0 auto; padding: 28px 22px 44px; }
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+      margin-bottom: 32px;
+    }
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .brand { color: var(--text); text-decoration: none; }
+    .brand__name {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(34px, 6vw, 62px);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+    .brand__tagline { display: block; color: var(--muted); margin-top: 8px; }
+    .theme-toggle {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      padding: 9px 13px;
+      font: inherit;
+    }
+    .navrow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .nav, .languages { display: flex; gap: 14px; flex-wrap: wrap; }
+    .nav a, .languages a {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 34px;
+      align-items: start;
+    }
+    .content, .sidebar-card, .site-footer {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .content { padding: clamp(22px, 4vw, 42px); }
+    .sidebar { display: grid; gap: 18px; }
+    .sidebar-card { padding: 22px; }
+    .sidebar-card h2 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .search-form { display: flex; gap: 8px; }
+    .search-form input {
+      min-width: 0;
+      flex: 1;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+      padding: 10px;
+    }
+    .button, .search-form button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .button:hover, .search-form button:hover { color: #fff; text-decoration: none; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag-list a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--text);
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+    .site-footer {
+      margin-top: 34px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+      gap: 24px;
+    }
+    .site-footer h2 {
+      margin: 0 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 26px;
+    }
+    .footer-links { display: grid; gap: 8px; }
+    .theme-flash {
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .theme-flash--alert { border-color: var(--accent); }
+    .section-title {
+      margin: 0 0 20px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+    }
+    .item-list { display: grid; gap: 22px; }
+    .item-card {
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+    .item-card:first-child { border-top: 0; padding-top: 0; }
+    .item-card h2, .item-card h3 {
+      margin: 0 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.15;
+    }
+    .meta { color: var(--muted); font-size: 14px; }
+    .article-body { font-size: 18px; }
+    .article-body img { height: auto; }
+    .comment {
+      border-top: 1px solid var(--line);
+      padding: 16px 0;
+    }
+    .comment-form textarea {
+      width: 100%;
+      min-height: 130px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+      padding: 12px;
+      font: inherit;
+    }
+    @media (max-width: 860px) {
+      .layout, .site-footer { grid-template-columns: 1fr; }
+      .site-shell { padding-inline: 16px; }
+    }
+  </style>
+  <script>
+    (function() {
+      var saved = localStorage.getItem('lm-theme-mode');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+    })();
+  </script>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="topline">
+        <a class="brand" href="{{ base_path | default: '/' }}">
+          <span class="brand__name">{{ site.site_name | default: blog.name }}</span>
+          {% if site.site_tagline and site.site_tagline != blank %}
+            <span class="brand__tagline">{{ site.site_tagline }}</span>
+          {% endif %}
+        </a>
+        <button class="theme-toggle" type="button" data-theme-toggle>Light/Dark</button>
+      </div>
+      <div class="navrow">
+        <nav class="nav" aria-label="Main navigation">
+          {% for nav_item in nav_menu_items %}
+            <a href="{{ nav_item.url }}">{{ nav_item.title }}</a>
+          {% endfor %}
+        </nav>
+        <nav class="languages" aria-label="Languages">
+          {% for item in blog_locale_switcher_items %}
+            <a href="{{ base_path }}/locale/{{ item.path_segment }}">{{ item.ui_tag }}</a>
+          {% endfor %}
+        </nav>
+      </div>
+    </header>
+
+    {% if flash_notice and flash_notice != blank %}
+      <div class="theme-flash theme-flash--notice">{{ flash_notice }}</div>
+    {% endif %}
+    {% if flash_alert and flash_alert != blank %}
+      <div class="theme-flash theme-flash--alert">{{ flash_alert }}</div>
+    {% endif %}
+
+    <div class="layout">
+      <main class="content">
+        {{ content }}
+      </main>
+      <aside class="sidebar">
+        <section class="sidebar-card">
+          <h2>Search</h2>
+          <form class="search-form" action="{{ base_path }}/search" method="get">
+            <input type="search" name="q" value="{{ query }}" placeholder="Search">
+            <button type="submit">Go</button>
+          </form>
+        </section>
+        {% if popular_tags and popular_tags.size > 0 %}
+          <section class="sidebar-card">
+            <h2>Topics</h2>
+            <div class="tag-list">
+              {% for tag in popular_tags %}
+                <a href="{{ base_path }}/tags/{{ tag.slug }}">{{ tag.name }}</a>
+              {% endfor %}
+            </div>
+          </section>
+        {% endif %}
+        <section class="sidebar-card">
+          <h2>Account</h2>
+          {% if current_user %}
+            <p class="meta">Signed in as {{ current_user.name | default: current_user.email }}</p>
+            {% if show_dashboard_link %}
+              <p><a class="button" href="{{ dashboard_url }}">Dashboard</a></p>
+            {% endif %}
+          {% else %}
+            <p><a class="button" href="{{ login_return_url }}">Sign in</a></p>
+          {% endif %}
+        </section>
+      </aside>
+    </div>
+
+    <footer class="site-footer">
+      <div>
+        <h2>{{ site.site_name | default: blog.name }}</h2>
+        <p>{{ site.site_description | default: blog.bio }}</p>
+      </div>
+      <div class="footer-links">
+        {% for nav_item in nav_menu_items %}
+          <a href="{{ nav_item.url }}">{{ nav_item.title }}</a>
+        {% endfor %}
+        {% if show_dashboard_link %}
+          <a href="{{ dashboard_url }}">Dashboard</a>
+        {% endif %}
+      </div>
+    </footer>
+  </div>
+  <script>
+    document.querySelector('[data-theme-toggle]')?.addEventListener('click', function() {
+      var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('lm-theme-mode', next);
+    });
+  </script>
+</body>
+</html>
