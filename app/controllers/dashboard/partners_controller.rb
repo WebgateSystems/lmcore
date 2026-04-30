@@ -7,7 +7,7 @@ module Dashboard
     def index
       authorize Partner, policy_class: Dashboard::PartnerPolicy
       @partners = policy_scope(Partner, policy_scope_class: Dashboard::PartnerPolicy::Scope)
-                  .for_user(current_user).ordered
+                  .for_user(dashboard_blog_user).ordered
     end
 
     def new
@@ -17,8 +17,8 @@ module Dashboard
 
     def create
       @partner = Partner.new(partner_params)
-      @partner.user = current_user
-      @partner.position ||= (Partner.for_user(current_user).maximum(:position) || 0) + 1
+      @partner.user = dashboard_blog_user
+      @partner.position ||= (Partner.for_user(dashboard_blog_user).maximum(:position) || 0) + 1
       authorize @partner, policy_class: Dashboard::PartnerPolicy
 
       if @partner.save
@@ -55,11 +55,11 @@ module Dashboard
       uuid_regex = /\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/i
       return head :bad_request unless partner_ids.all? { |id| uuid_regex.match?(id) }
 
-      user_partner_ids = Partner.for_user(current_user).pluck(:id)
+      user_partner_ids = Partner.for_user(dashboard_blog_user).pluck(:id)
       return head :bad_request unless partner_ids.all? { |id| user_partner_ids.include?(id) }
 
       partner_ids.each_with_index do |id, index|
-        Partner.where(id: id, user: current_user).update_all(position: index + 1) # rubocop:disable Rails/SkipsModelValidations
+        Partner.where(id: id, user: dashboard_blog_user).update_all(position: index + 1) # rubocop:disable Rails/SkipsModelValidations
       end
 
       head :ok
@@ -68,7 +68,7 @@ module Dashboard
     private
 
     def set_partner
-      @partner = Partner.for_user(current_user).find(params[:id])
+      @partner = Partner.for_user(dashboard_blog_user).find(params[:id])
     end
 
     def partner_params

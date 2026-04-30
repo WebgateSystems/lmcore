@@ -20,7 +20,7 @@ module Dashboard
       authorize :audience, policy_class: Dashboard::AudiencePolicy
 
       target_user = User.find(params.require(:user_id))
-      ban = BlogBan.find_or_initialize_by(blog_owner: current_user, user: target_user)
+      ban = BlogBan.find_or_initialize_by(blog_owner: dashboard_blog_user, user: target_user)
       ban.banned_by = current_user
       ban.reason = params.require(:reason).to_s.strip
       ban.active = true
@@ -37,7 +37,7 @@ module Dashboard
       authorize :audience, policy_class: Dashboard::AudiencePolicy
 
       target_user = User.find(params.require(:user_id))
-      trusted = BlogTrustedCommenter.find_or_initialize_by(blog_owner: current_user, user: target_user)
+      trusted = BlogTrustedCommenter.find_or_initialize_by(blog_owner: dashboard_blog_user, user: target_user)
       trusted.granted_by = current_user
 
       if trusted.save
@@ -50,7 +50,7 @@ module Dashboard
     def untrust
       authorize :audience, policy_class: Dashboard::AudiencePolicy
 
-      trusted = BlogTrustedCommenter.find_by!(blog_owner: current_user, user_id: params.require(:user_id))
+      trusted = BlogTrustedCommenter.find_by!(blog_owner: dashboard_blog_user, user_id: params.require(:user_id))
       trusted.destroy!
       redirect_to dashboard_audience_index_path(q: params[:q]), notice: t("dashboard.flash.audience.untrusted", default: "Trusted commenter permission has been revoked.")
     end
@@ -72,7 +72,7 @@ module Dashboard
 
     def subscribers_scope
       scope = User.joins(:newsletter_subscriptions)
-                  .where(newsletter_subscriptions: { blog_owner_id: current_user.id })
+                  .where(newsletter_subscriptions: { blog_owner_id: dashboard_blog_user.id })
                   .select("users.*, MAX(newsletter_subscriptions.created_at) AS subscribed_at")
                   .group("users.id")
                   .order(Arel.sql("MAX(newsletter_subscriptions.created_at) DESC"))
@@ -92,12 +92,12 @@ module Dashboard
 
     def load_bans_by_user_id
       user_ids = (@commenters.map(&:id) + @subscribers.map(&:id)).uniq
-      @bans_by_user_id = BlogBan.active.for_blog(current_user).where(user_id: user_ids).index_by(&:user_id)
+      @bans_by_user_id = BlogBan.active.for_blog(dashboard_blog_user).where(user_id: user_ids).index_by(&:user_id)
     end
 
     def load_trusted_commenters_by_user_id
       user_ids = (@commenters.map(&:id) + @subscribers.map(&:id)).uniq
-      @trusted_commenters_by_user_id = BlogTrustedCommenter.for_blog(current_user).where(user_id: user_ids).index_by(&:user_id)
+      @trusted_commenters_by_user_id = BlogTrustedCommenter.for_blog(dashboard_blog_user).where(user_id: user_ids).index_by(&:user_id)
     end
   end
 end

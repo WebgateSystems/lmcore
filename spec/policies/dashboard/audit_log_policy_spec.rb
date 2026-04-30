@@ -14,8 +14,8 @@ RSpec.describe Dashboard::AuditLogPolicy, type: :policy do
       expect(described_class.new(moderator, AuditLog).index?).to be true
     end
 
-    it "is not permitted without a dashboard role" do
-      expect(described_class.new(visitor, AuditLog).index?).to be false
+    it "is permitted for active regular users in their own workspace" do
+      expect(described_class.new(visitor, AuditLog).index?).to be true
     end
   end
 

@@ -26,7 +26,7 @@ module Dashboard
 
     def create
       @post = Post.new(post_params)
-      @post.author = current_user
+      @post.author = dashboard_blog_user
       authorize @post, policy_class: Dashboard::PostPolicy
 
       if @post.save

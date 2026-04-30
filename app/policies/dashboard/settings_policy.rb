@@ -3,11 +3,11 @@
 module Dashboard
   class SettingsPolicy < BasePolicy
     def show?
-      dashboard_user?
+      can_edit_dashboard_workspace?
     end
 
     def update?
-      dashboard_user?
+      can_edit_dashboard_workspace?
     end
   end
 end

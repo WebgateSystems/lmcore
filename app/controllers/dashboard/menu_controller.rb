@@ -11,7 +11,7 @@ module Dashboard
       authorize :menu, policy_class: Dashboard::MenuPolicy
 
       payload = menu_params
-      BlogNavigationMenu.new(user: current_user).save!(
+      BlogNavigationMenu.new(user: dashboard_blog_user).save!(
         order_ids: payload[:order],
         visibility_by_id: payload[:visibility] || {}
       )
@@ -30,7 +30,7 @@ module Dashboard
     end
 
     def editor_menu_items
-      BlogNavigationMenu.new(user: current_user).items.map do |item|
+      BlogNavigationMenu.new(user: dashboard_blog_user).items.map do |item|
         {
           id: item[:id],
           kind: item[:kind],

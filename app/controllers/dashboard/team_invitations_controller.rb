@@ -29,7 +29,7 @@ module Dashboard
     private
 
     def load_invitation
-      @invitation = Invitation.where(blog_owner_id: current_user.id).find(params[:id])
+      @invitation = Invitation.where(blog_owner_id: dashboard_blog_user.id).find(params[:id])
     end
   end
 end

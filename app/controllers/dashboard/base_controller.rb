@@ -8,7 +8,13 @@ module Dashboard
     skip_after_action :verify_policy_scoped, only: :switch_locale
 
     layout "dashboard"
-    helper_method :dashboard_available_locales, :dashboard_locale_name
+    helper_method :dashboard_available_locales, :dashboard_locale_name,
+                  :dashboard_blog_user, :dashboard_workspace_options,
+                  :dashboard_workspace_role_names, :own_dashboard_workspace?,
+                  :dashboard_can_author?, :dashboard_can_edit?,
+                  :dashboard_can_moderate?
+
+    DashboardPunditContext = Struct.new(:user, :dashboard_blog_user, keyword_init: true)
 
     def switch_locale
       locale = LocaleTags.canonical_locale_code(params[:interface_locale])
@@ -23,16 +29,74 @@ module Dashboard
 
     private
 
+    def pundit_user
+      DashboardPunditContext.new(user: current_user, dashboard_blog_user: dashboard_blog_user)
+    end
+
     def default_url_options
       super.except(:locale)
     end
 
     def dashboard_available_locales
-      @dashboard_available_locales ||= SiteSetting.blog_available_locale_codes_for(current_user)
+      @dashboard_available_locales ||= SiteSetting.blog_available_locale_codes_for(dashboard_blog_user)
     end
 
     def dashboard_locale_name(locale_code)
       LocaleTags.native_name(locale_code)
+    end
+
+    def dashboard_blog_user
+      @dashboard_blog_user ||= begin
+        selected = dashboard_workspace_options.find { |user| user.id == session[:dashboard_blog_user_id] }
+        selected || current_user
+      end
+    end
+
+    def dashboard_workspace_options
+      @dashboard_workspace_options ||= begin
+        blog_user_ids = RoleAssignment
+                        .active
+                        .where(user: current_user, scope_type: "User")
+                        .where.not(scope_id: nil)
+                        .distinct
+                        .pluck(:scope_id)
+
+        others = User.active.where(id: blog_user_ids).order(:username, :email).to_a
+        ([ current_user ] + others).uniq(&:id)
+      end
+    end
+
+    def dashboard_workspace_role_names
+      return [ I18n.t("dashboard.workspace.owner", default: "Owner") ] if own_dashboard_workspace?
+
+      dashboard_role_assignments.includes(:role).map { |assignment| assignment.role.name }.compact
+    end
+
+    def own_dashboard_workspace?
+      current_user == dashboard_blog_user
+    end
+
+    def dashboard_can_author?
+      own_dashboard_workspace? || current_user.can_author?(dashboard_blog_user)
+    end
+
+    def dashboard_can_edit?
+      own_dashboard_workspace? || current_user.can_edit?(dashboard_blog_user)
+    end
+
+    def dashboard_can_moderate?
+      own_dashboard_workspace? || current_user.can_moderate?(dashboard_blog_user)
+    end
+
+    def dashboard_role_assignments
+      @dashboard_role_assignments ||= RoleAssignment
+                                      .active
+                                      .for_blog(dashboard_blog_user)
+                                      .where(user: current_user)
+    end
+
+    def can_access_dashboard_workspace?
+      own_dashboard_workspace? || dashboard_role_assignments.exists?
     end
 
     def dashboard_return_path_without_locale
@@ -52,42 +116,42 @@ module Dashboard
     end
 
     def require_dashboard_access!
-      unless current_user.author? || current_user.moderator? || current_user.admin?
+      unless current_user.dashboard_user? && can_access_dashboard_workspace?
+        session.delete(:dashboard_blog_user_id)
         redirect_to root_path, alert: I18n.t("dashboard.access_denied", default: "You don't have permission to access the dashboard.")
       end
     end
 
     def require_moderator!
-      unless current_user.moderator? || current_user.admin?
+      unless own_dashboard_workspace? || current_user.can_moderate?(dashboard_blog_user)
         redirect_to dashboard_root_path, alert: I18n.t("dashboard.moderator_required", default: "This section requires moderator privileges.")
       end
     end
 
-    # The /dashboard area is the per-blog workspace. Even moderators and
-    # admins only see their OWN content here -- cross-blog moderation lives
-    # under /admin. Do NOT add a role-based bypass to these scopes.
+    # The /dashboard area is a per-blog workspace. `current_user` is always the
+    # actor; `dashboard_blog_user` is the blog currently being managed.
     def scoped_posts
-      Post.where(author: current_user)
+      Post.where(author: dashboard_blog_user)
     end
 
     def scoped_videos
-      Video.where(author: current_user)
+      Video.where(author: dashboard_blog_user)
     end
 
     def scoped_photos
-      Photo.where(author: current_user)
+      Photo.where(author: dashboard_blog_user)
     end
 
     def scoped_albums
-      Album.where(author: current_user)
+      Album.where(author: dashboard_blog_user)
     end
 
     def scoped_pages
-      Page.where(author: current_user)
+      Page.where(author: dashboard_blog_user)
     end
 
     def scoped_categories
-      Category.where(user: current_user)
+      Category.where(user: dashboard_blog_user)
     end
 
     # "My comments" on the dashboard means comments left under MY content

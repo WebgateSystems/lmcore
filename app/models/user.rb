@@ -118,6 +118,14 @@ class User < ApplicationRecord
     update!(status: "suspended")
   end
 
+  def active?
+    status == "active"
+  end
+
+  def dashboard_user?
+    active?
+  end
+
   def soft_delete!
     update!(status: "deleted")
     discard!

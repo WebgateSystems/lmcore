@@ -5,14 +5,14 @@ module Dashboard
     # Tags themselves are a global vocabulary (shared across the platform),
     # but on the per-blog /dashboard view we only surface tags that the
     # author has actually used on their own posts/videos/photos.
-    class Scope < ApplicationPolicy::Scope
+    class Scope < BasePolicy::Scope
       def resolve
-        return scope.none unless user
+        return scope.none unless user && dashboard_blog_user
 
         taggable_subqueries = [
-          Tagging.where(taggable_type: "Post",  taggable_id: Post.where(author_id: user.id).select(:id)),
-          Tagging.where(taggable_type: "Video", taggable_id: Video.where(author_id: user.id).select(:id)),
-          Tagging.where(taggable_type: "Album", taggable_id: Album.where(author_id: user.id).select(:id))
+          Tagging.where(taggable_type: "Post",  taggable_id: Post.where(author_id: dashboard_blog_user.id).select(:id)),
+          Tagging.where(taggable_type: "Video", taggable_id: Video.where(author_id: dashboard_blog_user.id).select(:id)),
+          Tagging.where(taggable_type: "Album", taggable_id: Album.where(author_id: dashboard_blog_user.id).select(:id))
         ]
         tag_ids = taggable_subqueries.map { |rel| rel.select(:tag_id) }
         scope.where(id: tag_ids.first).or(scope.where(id: tag_ids.second)).or(scope.where(id: tag_ids.third))
@@ -28,7 +28,7 @@ module Dashboard
     end
 
     def create?
-      dashboard_user?
+      can_author_dashboard_workspace?
     end
 
     def new?

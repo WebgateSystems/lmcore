@@ -11,8 +11,8 @@ module Dashboard
       videos = videos.where(status: params[:status]) if params[:status].present?
       videos = videos.search_by_title(params[:q]) if params[:q].present?
       @pagy, @videos = pagy(videos, items: 20)
-      @latest_sync_run = current_user.dashboard_job_runs.youtube_sync.recent_first.first
-      @video_post_runs = current_user.dashboard_job_runs.video_to_post
+      @latest_sync_run = dashboard_blog_user.dashboard_job_runs.youtube_sync.recent_first.first
+      @video_post_runs = dashboard_blog_user.dashboard_job_runs.video_to_post
                                    .where(video_id: @videos.map(&:id))
                                    .recent_first
                                    .group_by(&:video_id)
@@ -31,7 +31,7 @@ module Dashboard
 
     def create
       @video = Video.new(video_params)
-      @video.author = current_user
+      @video.author = dashboard_blog_user
       authorize @video, policy_class: Dashboard::VideoPolicy
 
       if @video.save
@@ -72,8 +72,8 @@ module Dashboard
     def sync_youtube
       authorize Video, :sync_youtube?, policy_class: Dashboard::VideoPolicy
 
-      channel_url = SiteSetting.get("youtube_url", user: current_user, default: nil).presence ||
-                    SiteSetting.get("social_youtube", user: current_user, default: nil).presence
+      channel_url = SiteSetting.get("youtube_url", user: dashboard_blog_user, default: nil).presence ||
+                    SiteSetting.get("social_youtube", user: dashboard_blog_user, default: nil).presence
       sync_locale = selected_sync_locale
 
       if channel_url.blank?
@@ -81,7 +81,7 @@ module Dashboard
         return
       end
 
-      job_run = current_user.dashboard_job_runs.create!(
+      job_run = dashboard_blog_user.dashboard_job_runs.create!(
         job_type: "youtube_sync",
         status: "queued",
         stage: "queued",
@@ -89,7 +89,7 @@ module Dashboard
       )
 
       SyncYoutubeChannelVideosWorker.perform_async(
-        current_user.id,
+        dashboard_blog_user.id,
         channel_url,
         sync_locale,
         nil,
@@ -102,7 +102,7 @@ module Dashboard
     def sync_status
       authorize Video, :sync_youtube?, policy_class: Dashboard::VideoPolicy
 
-      run = current_user.dashboard_job_runs.youtube_sync.recent_first.first
+      run = dashboard_blog_user.dashboard_job_runs.youtube_sync.recent_first.first
       render json: serialize_job_run(run)
     end
 
@@ -118,7 +118,7 @@ module Dashboard
     def create_post_from_video
       authorize @video, :create_post_from_video?, policy_class: Dashboard::VideoPolicy
 
-      job_run = current_user.dashboard_job_runs.create!(
+      job_run = dashboard_blog_user.dashboard_job_runs.create!(
         job_type: "video_to_post",
         video: @video,
         status: "queued",
@@ -126,7 +126,7 @@ module Dashboard
         payload: { video_id: @video.id, video_external_id: @video.video_external_id }
       )
 
-      CreatePostFromVideoSubtitlesWorker.perform_async(current_user.id, @video.id, job_run.id)
+      CreatePostFromVideoSubtitlesWorker.perform_async(dashboard_blog_user.id, @video.id, job_run.id)
       redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.create_post_enqueued")
     end
 
@@ -182,7 +182,7 @@ module Dashboard
     def selected_sync_locale
       candidate = params[:sync_locale].to_s.strip.presence || I18n.locale.to_s
       available = dashboard_available_locales.presence || I18n.available_locales.map(&:to_s)
-      available.include?(candidate) ? candidate : (current_user.locale.presence || I18n.default_locale.to_s)
+      available.include?(candidate) ? candidate : (dashboard_blog_user.locale.presence || I18n.default_locale.to_s)
     end
   end
 end

@@ -19,10 +19,10 @@ RSpec.describe Dashboard::SettingsPolicy, type: :policy do
     it { is_expected.to permit_action(:update) }
   end
 
-  context "when user is not a dashboard user" do
+  context "when user is an active regular user" do
     let(:user) { create(:user) }
 
-    it { is_expected.not_to permit_action(:show) }
-    it { is_expected.not_to permit_action(:update) }
+    it { is_expected.to permit_action(:show) }
+    it { is_expected.to permit_action(:update) }
   end
 end

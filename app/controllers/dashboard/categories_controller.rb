@@ -23,7 +23,7 @@ module Dashboard
 
     def create
       @category = Category.new(category_params)
-      @category.user = current_user
+      @category.user = dashboard_blog_user
       authorize @category, policy_class: Dashboard::CategoryPolicy
 
       if @category.save

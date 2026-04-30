@@ -5,47 +5,54 @@ nav.dashboard-nav
 
   .dashboard-nav__divider
 
-  = link_to dashboard_menu_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/menu')}"
-    i.bi.bi-list-ul aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.menu", default: "Menu")
-  = link_to dashboard_posts_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/posts')}"
-    i.bi.bi-file-text aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.posts")
-  = link_to dashboard_videos_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/videos')}"
-    i.bi.bi-camera-video aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.videos")
-  = link_to dashboard_gallery_index_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/gallery')}"
-    i.bi.bi-image aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.gallery", default: t("dashboard.navigation.photos"))
-  = link_to dashboard_pages_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/pages')}"
-    i.bi.bi-file-earmark aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.pages")
+  - if dashboard_can_edit?
+    = link_to dashboard_menu_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/menu')}"
+      i.bi.bi-list-ul aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.menu", default: "Menu")
+  - if dashboard_can_author?
+    = link_to dashboard_posts_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/posts')}"
+      i.bi.bi-file-text aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.posts")
+    = link_to dashboard_videos_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/videos')}"
+      i.bi.bi-camera-video aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.videos")
+    = link_to dashboard_gallery_index_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/gallery')}"
+      i.bi.bi-image aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.gallery", default: t("dashboard.navigation.photos"))
+    = link_to dashboard_pages_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/pages')}"
+      i.bi.bi-file-earmark aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.pages")
 
   .dashboard-nav__divider
 
-  = link_to dashboard_categories_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/categories')}"
-    i.bi.bi-folder aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.categories")
-  = link_to dashboard_tags_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/tags')}"
-    i.bi.bi-tags aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.tags")
+  - if dashboard_can_edit?
+    = link_to dashboard_categories_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/categories')}"
+      i.bi.bi-folder aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.categories")
+  - if dashboard_can_author?
+    = link_to dashboard_tags_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/tags')}"
+      i.bi.bi-tags aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.tags")
 
   .dashboard-nav__divider
 
-  = link_to dashboard_team_index_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/team')}"
-    i.bi.bi-people-fill aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.team")
-  = link_to dashboard_partners_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/partners')}"
-    i.bi.bi-people aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.partners")
+  - if own_dashboard_workspace?
+    = link_to dashboard_team_index_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/team')}"
+      i.bi.bi-people-fill aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.team")
+  - if dashboard_can_edit?
+    = link_to dashboard_partners_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/partners')}"
+      i.bi.bi-people aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.partners")
 
   .dashboard-nav__divider
-  = link_to dashboard_comments_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/comments')}"
-    i.bi.bi-chat-dots aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.comments")
-  = link_to dashboard_audience_index_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/audience')}"
-    i.bi.bi-person-lines-fill aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.audience", default: "Audience")
-  = link_to dashboard_audit_logs_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/audit_logs')}"
-    i.bi.bi-clock-history aria-hidden="true"
-    span.dashboard-nav__label = t("dashboard.navigation.audit_log")
+  - if dashboard_can_moderate?
+    = link_to dashboard_comments_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/comments')}"
+      i.bi.bi-chat-dots aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.comments")
+    = link_to dashboard_audience_index_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/audience')}"
+      i.bi.bi-person-lines-fill aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.audience", default: "Audience")
+    = link_to dashboard_audit_logs_path, class: "dashboard-nav__button #{'is-active' if request.path.include?('/dashboard/audit_logs')}"
+      i.bi.bi-clock-history aria-hidden="true"
+      span.dashboard-nav__label = t("dashboard.navigation.audit_log")

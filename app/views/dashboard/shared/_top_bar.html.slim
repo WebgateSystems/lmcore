@@ -6,6 +6,15 @@ header.dashboard-top-bar
   - translated_page_title = page_title_key.present? ? t("dashboard.page_titles.#{page_title_key}", default: raw_page_title) : raw_page_title
   h1 = translated_page_title.is_a?(Hash) ? t("dashboard.navigation.dashboard") : (translated_page_title.presence || t("dashboard.navigation.dashboard"))
   .dashboard-top-actions
+    - if dashboard_workspace_options.size > 1
+      = form_with url: dashboard_workspace_path, method: :patch, class: "d-none d-md-block", data: { turbo: false } do
+        label.visually-hidden for="dashboard_blog_user_id" = t("dashboard.workspace.label", default: "Dashboard workspace")
+        select#dashboard_blog_user_id.form-select.form-select-sm name="blog_user_id" onchange="this.form.submit()"
+          - dashboard_workspace_options.each do |blog_user|
+            - selected = blog_user.id == dashboard_blog_user.id
+            - label = blog_user == current_user ? t("dashboard.workspace.my_blog", default: "My blog") : blog_user.full_name
+            option value=blog_user.id selected=selected
+              = label
     .dropdown
       button.icon-pill.dropdown-toggle type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label=t("dashboard.a11y.interface_language")
         = locale_ui_tag
@@ -23,9 +32,10 @@ header.dashboard-top-bar
             = current_user.initials
         ul.dropdown-menu.dropdown-menu-end
           li
-            = link_to t("dashboard.user_menu.my_blog"), "/blogs/#{current_user.username}", class: "dropdown-item", target: "_blank"
-          li
-            = link_to t("dashboard.user_menu.blog_settings"), dashboard_settings_path, class: "dropdown-item"
+            = link_to t("dashboard.user_menu.my_blog"), "/blogs/#{dashboard_blog_user.username}", class: "dropdown-item", target: "_blank"
+          - if dashboard_can_edit?
+            li
+              = link_to t("dashboard.user_menu.blog_settings"), dashboard_settings_path, class: "dropdown-item"
           li
             = link_to t("dashboard.user_menu.profile"), edit_user_registration_path, class: "dropdown-item"
           - if current_user.admin?

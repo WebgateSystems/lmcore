@@ -27,12 +27,11 @@ RSpec.describe "ApplicationController", type: :request do
 
   describe "Pundit authorization failure (HTML)" do
     let(:user) { create(:user) }
-    let(:other) { create(:user, :author) }
-    let(:other_post) { create(:post, author: other, status: "draft") }
+    let(:tag) { create(:tag) }
 
     it "redirects back with a flash alert" do
       sign_in user
-      get edit_dashboard_post_path(other_post), headers: { "HTTP_REFERER" => "/" }
+      get edit_dashboard_tag_path(tag), headers: { "HTTP_REFERER" => "/" }
       expect(response).to have_http_status(:redirect)
       expect(flash[:alert]).to be_present
     end

@@ -46,11 +46,11 @@ RSpec.describe Dashboard::PostPolicy, type: :policy do
     it { is_expected.not_to permit_action(:publish) }
   end
 
-  context "when user has no dashboard role" do
+  context "when user is an active regular user" do
     let(:user) { visitor }
 
-    it { is_expected.not_to permit_action(:index) }
-    it { is_expected.not_to permit_action(:create) }
+    it { is_expected.to permit_action(:index) }
+    it { is_expected.to permit_action(:create) }
     it { is_expected.not_to permit_action(:show) }
   end
 

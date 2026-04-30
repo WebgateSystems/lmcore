@@ -4,10 +4,21 @@ require "rails_helper"
 
 RSpec.describe "Dashboard::BaseController", type: :request do
   describe "GET /dashboard (access guard)" do
-    it "redirects regular users with an alert" do
+    it "allows active regular users into their own dashboard" do
       regular = create(:user)
       sign_in regular
+
       get dashboard_root_path
+
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects suspended users with an alert" do
+      suspended = create(:user, :suspended)
+      sign_in suspended
+
+      get dashboard_root_path
+
       expect(response).to redirect_to(root_path)
       expect(flash[:alert]).to be_present
     end
@@ -15,6 +26,44 @@ RSpec.describe "Dashboard::BaseController", type: :request do
     it "redirects unauthenticated visitors to sign-in" do
       get dashboard_root_path
       expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  describe "PATCH /dashboard/workspace" do
+    it "switches to a blog where the current user has a scoped role" do
+      owner = create(:user, username: "owner")
+      actor = create(:user, username: "actor")
+      role = create(:role, slug: "editor", priority: 40, system_role: true)
+      actor.assign_role!(role, scope: owner, granted_by: owner)
+      create(:post, author: owner, title_i18n: { "en" => "Owner workspace post" })
+      create(:post, author: actor, title_i18n: { "en" => "Actor workspace post" })
+
+      sign_in actor
+
+      patch dashboard_workspace_path, params: { blog_user_id: owner.id }
+
+      expect(response).to have_http_status(:redirect)
+      get dashboard_posts_path
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Owner workspace post")
+      expect(response.body).not_to include("Actor workspace post")
+    end
+
+    it "does not switch to a blog without a scoped role" do
+      owner = create(:user, username: "owner")
+      actor = create(:user, username: "actor")
+      create(:post, author: owner, title_i18n: { "en" => "Inaccessible workspace post" })
+      create(:post, author: actor, title_i18n: { "en" => "Own workspace post" })
+
+      sign_in actor
+
+      patch dashboard_workspace_path, params: { blog_user_id: owner.id }
+
+      expect(response).to have_http_status(:redirect)
+      get dashboard_posts_path
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Own workspace post")
+      expect(response.body).not_to include("Inaccessible workspace post")
     end
   end
 

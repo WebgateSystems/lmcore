@@ -36,10 +36,10 @@ module Dashboard
     private
 
     def load_settings
-      user_settings = SiteSetting.where(user: current_user).index_by(&:key)
+      user_settings = SiteSetting.where(user: dashboard_blog_user).index_by(&:key)
       global_settings = SiteSetting.global.index_by(&:key)
       current_locale = I18n.locale.to_s
-      active_theme = active_theme_for(current_user)
+      active_theme = active_theme_for(dashboard_blog_user)
 
       EDITABLE_KEYS.each_with_object({}) do |key, hash|
         setting = user_settings[key] || global_settings[key]
@@ -57,8 +57,8 @@ module Dashboard
     end
 
     def load_theme_options
-      @available_themes = Theme.active.available_for(current_user).ordered.select(&:template_available?)
-      @active_theme = active_theme_for(current_user)
+      @available_themes = Theme.active.available_for(dashboard_blog_user).ordered.select(&:template_available?)
+      @active_theme = active_theme_for(dashboard_blog_user)
     end
 
     def active_theme_for(user)
@@ -72,11 +72,11 @@ module Dashboard
       theme_slug = params.dig(:settings, :theme_slug).to_s.strip
       return if theme_slug.blank?
 
-      theme = Theme.active.available_for(current_user).find_by(slug: theme_slug)
+      theme = Theme.active.available_for(dashboard_blog_user).find_by(slug: theme_slug)
       theme = nil unless theme&.template_available?
       raise ArgumentError, t("dashboard.settings.theme_unavailable", default: "This theme is not available for your blog.") unless theme
 
-      user_theme = current_user.user_themes.find_or_initialize_by(theme: theme)
+      user_theme = dashboard_blog_user.user_themes.find_or_initialize_by(theme: theme)
       user_theme.active = true
       user_theme.save!
     end
@@ -89,7 +89,7 @@ module Dashboard
       processed.each do |key, value|
         next unless EDITABLE_KEYS.include?(key)
 
-        setting = SiteSetting.find_or_initialize_by(user: current_user, key: key)
+        setting = SiteSetting.find_or_initialize_by(user: dashboard_blog_user, key: key)
         if TRANSLATABLE_KEYS.include?(key)
           setting.value = { "data" => merge_translation(setting, value) }
           setting.value_type = "json"
@@ -117,7 +117,7 @@ module Dashboard
       yt = params.require(:youtube_integration).permit(:netscape_cookies, :age_acknowledged, :remove_cookies)
 
       if truthy?(yt[:remove_cookies])
-        current_user.clear_youtube_cookies!
+        dashboard_blog_user.clear_youtube_cookies!
       end
 
       cookies_text = yt[:netscape_cookies].to_s.strip
@@ -127,7 +127,7 @@ module Dashboard
         raise ArgumentError, t("dashboard.settings.youtube_integration.age_required")
       end
 
-      current_user.store_youtube_cookies!(cookies_text)
+      dashboard_blog_user.store_youtube_cookies!(cookies_text)
     end
 
     def truthy?(value)
@@ -154,7 +154,7 @@ module Dashboard
       end
 
       if result.key?("default_locale")
-        effective_locales = result["available_locales"] || SiteSetting.blog_available_locale_codes_for(current_user)
+        effective_locales = result["available_locales"] || SiteSetting.blog_available_locale_codes_for(dashboard_blog_user)
         candidate = LocaleTags.canonical_locale_code(result["default_locale"]).to_s
         result["default_locale"] = effective_locales.include?(candidate) ? candidate : (effective_locales.first || "en")
       end

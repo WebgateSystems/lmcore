@@ -3,19 +3,19 @@
 module Dashboard
   class AudiencePolicy < BasePolicy
     def index?
-      dashboard_user?
+      can_moderate_dashboard_workspace?
     end
 
     def ban?
-      dashboard_user?
+      can_moderate_dashboard_workspace?
     end
 
     def trust?
-      dashboard_user?
+      can_moderate_dashboard_workspace?
     end
 
     def untrust?
-      dashboard_user?
+      can_moderate_dashboard_workspace?
     end
   end
 end

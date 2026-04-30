@@ -2,16 +2,16 @@
 
 module Dashboard
   class TeamInvitationPolicy < BasePolicy
-    class Scope < ApplicationPolicy::Scope
+    class Scope < BasePolicy::Scope
       def resolve
-        return scope.none unless user
+        return scope.none unless user && dashboard_blog_user
 
-        scope.for_blog(user).where(status: %w[pending])
+        scope.for_blog(dashboard_blog_user).where(status: %w[pending])
       end
     end
 
     def create?
-      dashboard_user?
+      own_dashboard_workspace?
     end
 
     def destroy?
@@ -26,7 +26,7 @@ module Dashboard
 
     def owns_invitation?
       return false unless user && record
-      record.blog_owner_id == user.id
+      own_dashboard_workspace? && record.blog_owner_id == user.id
     end
   end
 end

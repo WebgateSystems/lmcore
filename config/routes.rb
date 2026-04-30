@@ -87,6 +87,7 @@ Rails.application.routes.draw do
   namespace :dashboard do
     root "home#index"
     get "locale/:interface_locale", to: "base#switch_locale", as: :switch_locale
+    resource :workspace, only: :update, controller: "workspace"
     resources :posts do
       member do
         post :pin

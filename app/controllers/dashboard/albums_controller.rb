@@ -27,7 +27,7 @@ module Dashboard
 
     def create
       @album = Album.new(album_params)
-      @album.author = current_user
+      @album.author = dashboard_blog_user
       authorize @album, policy_class: Dashboard::AlbumPolicy
 
       if @album.save
@@ -72,10 +72,6 @@ module Dashboard
 
     def set_album
       @album = scoped_albums.find_by!(slug: params[:slug])
-    end
-
-    def scoped_albums
-      Album.where(author: current_user)
     end
 
     def album_params

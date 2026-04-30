@@ -17,7 +17,7 @@ module Dashboard
     end
 
     def create?
-      dashboard_user?
+      can_edit_dashboard_workspace?
     end
 
     def new?

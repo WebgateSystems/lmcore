@@ -24,7 +24,7 @@ module Dashboard
 
     def create
       @page = Page.new(page_params)
-      @page.author = current_user
+      @page.author = dashboard_blog_user
       authorize @page, policy_class: Dashboard::PagePolicy
 
       if @page.save

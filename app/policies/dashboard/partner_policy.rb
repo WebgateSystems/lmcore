@@ -2,9 +2,9 @@
 
 module Dashboard
   class PartnerPolicy < BasePolicy
-    class Scope < ApplicationPolicy::Scope
+    class Scope < BasePolicy::Scope
       def resolve
-        scope.where(user: user)
+        scope.where(user: dashboard_blog_user)
       end
     end
 
@@ -13,7 +13,7 @@ module Dashboard
     end
 
     def create?
-      dashboard_user?
+      can_edit_dashboard_workspace?
     end
 
     def new?
@@ -29,7 +29,7 @@ module Dashboard
     end
 
     def reorder?
-      dashboard_user?
+      can_edit_dashboard_workspace?
     end
 
     # Authors manage their own partner list. Cross-blog management lives

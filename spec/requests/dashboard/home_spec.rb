@@ -12,13 +12,14 @@ RSpec.describe "Dashboard::Home", type: :request do
     end
 
     context "when signed in as a regular user" do
-      before { sign_in create(:user) }
+      let(:user) { create(:user) }
+      before { sign_in user }
 
-      it "redirects back to the root with an alert" do
+      it "returns success for their own dashboard" do
+        create(:post, author: user)
+
         get dashboard_root_path
-        expect(response).to redirect_to(root_path)
-        follow_redirect!
-        expect(flash[:alert]).to eq(I18n.t("dashboard.access_denied"))
+        expect(response).to have_http_status(:success)
       end
     end
 

@@ -8,21 +8,21 @@ module Dashboard
   # /dashboard side -- that would re-introduce the role bypass we explicitly
   # removed everywhere else under /dashboard).
   class TeamPolicy < BasePolicy
-    class Scope < ApplicationPolicy::Scope
+    class Scope < BasePolicy::Scope
       # Returns the RoleAssignments for the current user's own blog scope.
       def resolve
-        return scope.none unless user
+        return scope.none unless user && dashboard_blog_user
 
-        scope.for_blog(user).active.includes(:user, :role)
+        scope.for_blog(dashboard_blog_user).active.includes(:user, :role)
       end
     end
 
     def index?
-      dashboard_user?
+      own_dashboard_workspace?
     end
 
     def create?
-      dashboard_user?
+      own_dashboard_workspace?
     end
 
     def update_role?
@@ -37,7 +37,7 @@ module Dashboard
 
     def owns_blog_assignment?
       return false unless user && record
-      record.scope_type == "User" && record.scope_id == user.id
+      own_dashboard_workspace? && record.scope_type == "User" && record.scope_id == user.id
     end
   end
 end

@@ -13,11 +13,11 @@ module Dashboard
     end
 
     def show?
-      author_owns_record?
+      can_manage_dashboard_content?
     end
 
     def create?
-      dashboard_user?
+      can_author_dashboard_workspace?
     end
 
     def new?
@@ -25,7 +25,7 @@ module Dashboard
     end
 
     def update?
-      author_owns_record?
+      can_manage_dashboard_content?
     end
 
     def edit?
@@ -33,19 +33,19 @@ module Dashboard
     end
 
     def destroy?
-      author_owns_record?
+      can_manage_dashboard_content?
     end
 
     def publish?
-      author_owns_record?
+      can_manage_dashboard_content?
     end
 
     def unpublish?
-      author_owns_record?
+      can_manage_dashboard_content?
     end
 
     def pin?
-      author_owns_record?
+      can_manage_dashboard_content?
     end
   end
 end

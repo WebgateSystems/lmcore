@@ -35,8 +35,8 @@ RSpec.describe Dashboard::TeamPolicy, type: :policy do
       expect(described_class.new(moderator, :team).index?).to be true
     end
 
-    it "is not permitted for users without dashboard role" do
-      expect(described_class.new(visitor, :team).index?).to be false
+    it "is permitted for active regular users managing their own workspace" do
+      expect(described_class.new(visitor, :team).index?).to be true
     end
   end
 

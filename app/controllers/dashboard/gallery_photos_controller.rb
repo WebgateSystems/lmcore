@@ -16,7 +16,7 @@ module Dashboard
         basename = File.basename(file.original_filename.to_s, ".*")
         photo = @album.photos.build(
           image: file,
-          author: current_user,
+          author: dashboard_blog_user,
           title: basename,
           slug: normalized_file_slug(basename),
           status: normalized_photo_status,
@@ -134,7 +134,7 @@ module Dashboard
     private
 
     def set_album
-      @album = Album.find_by!(author: current_user, slug: params[:gallery_slug] || params[:gallery_id])
+      @album = Album.find_by!(author: dashboard_blog_user, slug: params[:gallery_slug] || params[:gallery_id])
     end
 
     def set_photo

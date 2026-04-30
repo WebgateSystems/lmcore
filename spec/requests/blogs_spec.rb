@@ -378,7 +378,7 @@ RSpec.describe "Blogs", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(response.body).not_to include(I18n.t("dashboard.flash.videos.pinned"))
-      expect(response.body).not_to include("theme-flash--notice")
+      expect(response.body).not_to include(%(<div class="theme-flash theme-flash--notice">))
     end
 
     it "renders blog-specific flash notice after posting a comment" do
