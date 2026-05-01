@@ -140,6 +140,7 @@ en:
 
       admin:
         dashboard: "Dashboard"
+        logout: "Log out"
         posts: "Posts"
         videos: "Videos"
         photos: "Photos"

@@ -441,7 +441,32 @@ RSpec.describe "Blogs", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(%(href="#{Settings.sso.issuer}/dashboard"))
+      expect(response.body).to include(%(action="/sso/logout" method="post"))
+      expect(response.body).to include(%(name="_method" value="delete"))
       expect(response.body).not_to include(%(href="/dashboard"))
+    end
+
+    it "renders a working newsletter form for signed-in users" do
+      subscriber = create(:user, email: "reader@example.com")
+      sign_in subscriber
+
+      get "/blogs/#{author.username}"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(%(action="/blogs/#{author.username}/newsletter_subscriptions" method="post"))
+      expect(response.body).to include(%(name="newsletter_subscription[email]"))
+      expect(response.body).to include(%(readonly value="#{subscriber.email}"))
+      expect(response.body).not_to include(%(action="javascript:void(0)"))
+    end
+
+    it "routes logged-out vanity newsletter submits through SSO" do
+      author.update!(vanity_domain: "muzhdabaiev.com", vanity_domain_verified: true)
+
+      get "/", headers: { "HTTP_HOST" => "muzhdabaiev.com" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(%(section-news-mailing__form col" action="#{Settings.sso.issuer}/sso/login?))
+      expect(response.body).not_to include(%(action="javascript:void(0)"))
     end
   end
 end

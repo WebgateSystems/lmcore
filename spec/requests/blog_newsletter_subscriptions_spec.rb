@@ -29,6 +29,20 @@ RSpec.describe "BlogNewsletterSubscriptions", type: :request do
       expect(record.email).to eq(subscriber.email)
     end
 
+    it "shows the themed success flash only on the redirected render" do
+      sign_in subscriber
+      message = I18n.t("themes.am.newsletter.subscribed", default: "Zapisano do newslettera.")
+
+      post blog_newsletter_subscriptions_path(blog_slug: blog_owner.username)
+      follow_redirect!
+
+      expect(response.body).to include(message)
+
+      get blog_path(blog_slug: blog_owner.username)
+
+      expect(response.body).not_to include(message)
+    end
+
     it "does not duplicate existing subscription for same blog and email" do
       sign_in subscriber
       create(:newsletter_subscription, blog_owner: blog_owner, user: subscriber, email: subscriber.email)

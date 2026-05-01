@@ -159,6 +159,28 @@
       color: #c52a2a;
     }
 
+    .footer__social-contact {
+      margin: 0;
+    }
+    .footer__social-contact a,
+    .footer__social-contact button {
+      background: transparent;
+      border: 0;
+      color: inherit;
+      cursor: pointer;
+      font-family: FiraSansExtraCondensed-Bold, sans-serif;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      padding: 0;
+      text-align: inherit;
+      text-transform: inherit;
+    }
+    .footer__social-contact button:hover,
+    .footer__social-contact button:focus {
+      color: inherit;
+    }
+
     /* "Related video" line: same baseline as paragraphs, with breathing room
        above so it does not stick to the previous block and below so the social
        icons row stays visually separate. */
@@ -569,6 +591,16 @@
               {% if show_dashboard_link %}
               <div class="footer__social-contact desktop-contact"><a href="{{ dashboard_url | default: '/dashboard' }}">{{ 'admin.dashboard' | t }}</a></div>
               <div class="footer__social-contact mobile-contact"><a href="{{ dashboard_url | default: '/dashboard' }}">{{ 'admin.dashboard' | t }}</a></div>
+              <form class="footer__social-contact desktop-contact" action="{{ logout_url | default: '/logout' }}" method="post">
+                <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit">{{ 'admin.logout' | t }}</button>
+              </form>
+              <form class="footer__social-contact mobile-contact" action="{{ logout_url | default: '/logout' }}" method="post">
+                <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit">{{ 'admin.logout' | t }}</button>
+              </form>
               {% endif %}
             </div>
             
@@ -810,7 +842,7 @@
                   <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
                   <input type="hidden" name="return_to" value="{{ current_path_with_query }}">
                   <div class="popup__input">
-                    <input name="newsletter_subscription[email]" class="js_validation_email" type="email" required value="{{ current_user.email }}">
+                    <input name="newsletter_subscription[email]" class="js_validation_email" type="email" required readonly value="{{ current_user.email }}">
                     <div class="popup__input-title contact-email">{{ 'newsletter.email_placeholder' | t }}</div>
                   </div>
                   <button class="popup__btn white email js_submit_form" type="submit">{{ 'newsletter.send' | t }}</button>

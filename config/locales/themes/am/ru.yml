@@ -131,6 +131,7 @@ ru:
 
       admin:
         dashboard: "Панель управления"
+        logout: "Выйти"
         posts: "Статьи"
         videos: "Видео"
         photos: "Фото"

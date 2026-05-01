@@ -136,6 +136,7 @@ uk:
 
       admin:
         dashboard: "Панель керування"
+        logout: "Вийти"
         posts: "Статті"
         videos: "Відео"
         photos: "Фото"

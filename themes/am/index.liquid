@@ -249,12 +249,23 @@
       <div class="section-news-mailing__text col">
         <h2 class="site-title__medium-64">{{ 'newsletter.title' | t }}</h2>
       </div>
-      <form class="section-news-mailing__form col" action="javascript:void(0)">
+      {% if current_user %}
+      <form class="section-news-mailing__form col" action="{{ base_path }}/newsletter_subscriptions" method="post">
+        <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+        <input type="hidden" name="return_to" value="{{ current_path_with_query }}">
+        <div class="section-news-mailing__form-input">
+          <input name="newsletter_subscription[email]" class="js_validation_email" type="email" required readonly value="{{ current_user.email }}">
+          <button class="js_submit_form" type="submit">{{ 'newsletter.send' | t }}</button>
+        </div>
+      </form>
+      {% else %}
+      <form class="section-news-mailing__form col" action="{{ login_return_url }}" method="get">
         <div class="section-news-mailing__form-input">
           <input class="js_validation_email" type="email" placeholder="{{ 'newsletter.email_placeholder' | t }}">
           <button class="js_submit_form" type="submit">{{ 'newsletter.send' | t }}</button>
         </div>
       </form>
+      {% endif %}
     </div>
   </div>
 </div>

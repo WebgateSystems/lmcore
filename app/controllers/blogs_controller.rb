@@ -330,8 +330,10 @@ class BlogsController < ApplicationController
     flash_payload = flash.to_hash
     notice_message = normalized_flash_message(flash_payload["blog_notice"] || flash_payload[:blog_notice])
     alert_message = normalized_flash_message(flash_payload["blog_alert"] || flash_payload[:blog_alert])
-    flash.delete(:blog_notice)
-    flash.delete(:blog_alert)
+    %i[blog_notice blog_alert].each do |key|
+      flash.discard(key)
+      flash.delete(key)
+    end
 
     login_path = if vanity_request?
                    central_auth_url(sso_login_path(locale: I18n.locale, target_origin: vanity_origin, return_to: current_path_with_query))
@@ -363,6 +365,7 @@ class BlogsController < ApplicationController
     else
                            new_user_registration_path
     end
+    logout_path = vanity_request? ? sso_logout_path : destroy_user_session_path
 
     {
       "site" => site_settings_hash,
@@ -386,6 +389,7 @@ class BlogsController < ApplicationController
       "current_user" => serialize_current_user,
       "show_dashboard_link" => show_dashboard_link?,
       "dashboard_url" => central_auth_url(dashboard_root_path),
+      "logout_url" => logout_path,
       "current_user_blog_banned" => current_ban.present?,
       "current_user_blog_ban_reason" => current_ban&.reason.to_s,
       "login_url" => plain_login_url,

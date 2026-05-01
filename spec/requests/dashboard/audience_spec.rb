@@ -23,6 +23,27 @@ RSpec.describe "Dashboard::Audience", type: :request do
       expect(response.body).to include(subscriber.email)
     end
 
+    it "renders a subscriber created through the public blog form" do
+      public_subscriber = create(:user, email: "public-subscriber@example.com")
+      sign_in public_subscriber
+      post blog_newsletter_subscriptions_path(blog_slug: author.username)
+
+      sign_in author
+      get dashboard_audience_index_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(public_subscriber.email)
+    end
+
+    it "renders the blog owner when they subscribe to their own newsletter" do
+      post blog_newsletter_subscriptions_path(blog_slug: author.username)
+
+      get dashboard_audience_index_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(author.email)
+    end
+
     it "filters by search query" do
       get dashboard_audience_index_path, params: { q: "subscriber@" }
 

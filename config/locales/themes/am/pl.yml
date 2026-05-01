@@ -136,6 +136,7 @@ pl:
 
       admin:
         dashboard: "Panel"
+        logout: "Wyloguj się"
         posts: "Artykuły"
         videos: "Wideo"
         photos: "Zdjęcia"

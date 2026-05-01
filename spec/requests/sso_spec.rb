@@ -172,4 +172,17 @@ RSpec.describe "Sso", type: :request do
       expect(response).to redirect_to(root_path)
     end
   end
+
+  describe "DELETE /sso/logout" do
+    it "signs out the session on the vanity domain" do
+      user = create(:user, status: "active")
+      create(:user, username: "amg", vanity_domain: "amg.example", status: "active")
+      sign_in user
+
+      delete sso_logout_path, headers: { "HTTP_HOST" => "amg.example" }
+
+      expect(response).to redirect_to(root_path)
+      expect(request.env["warden"].user(:user)).to be_nil
+    end
+  end
 end
