@@ -105,6 +105,11 @@ RSpec.describe Youtube::CreatePostFromVideoSubtitlesService, type: :service do
       expect(svc.send(:yt_dlp_cookie_args)).to eq([ "--cookies", "/tmp/c.txt" ])
     end
 
+    it "builds player_client extractor args only when requested" do
+      expect(service.send(:extractor_args, nil)).to eq([])
+      expect(service.send(:extractor_args, %w[tv ios])).to eq([ "--extractor-args", "youtube:player_client=tv,ios" ])
+    end
+
     it "lower-cases and dash-normalizes language tags" do
       expect(service.send(:normalize_language, "EN_US")).to eq("en-us")
       expect(service.send(:normalize_language, "  PL  ")).to eq("pl")
@@ -154,6 +159,41 @@ RSpec.describe Youtube::CreatePostFromVideoSubtitlesService, type: :service do
       allow(svc).to receive(:fetch_transcript).and_return("")
 
       expect { svc.call }.to raise_error(/Subtitles were not found/)
+    end
+  end
+
+  describe "#fetch_transcript" do
+    it "does not request video formats when downloading subtitles" do
+      commands = []
+      allow(service).to receive(:run_command) do |*command|
+        commands << command
+        output_template = command[command.index("--output") + 1]
+        File.write(File.join(File.dirname(output_template), "#{video.video_external_id}.en.vtt"), "WEBVTT\n\n00:00.000 --> 00:01.000\nhello\n")
+        [ "", "", instance_double(Process::Status, success?: true) ]
+      end
+
+      expect(service.send(:fetch_transcript, "en")).to eq("hello")
+      expect(commands.first).not_to include("--allow-unplayable-formats")
+      expect(commands.first).not_to include("--format")
+    end
+
+    it "retries subtitles with player_client fallback when YouTube returns bot challenge" do
+      commands = []
+      attempts = 0
+      allow(service).to receive(:run_command) do |*command|
+        commands << command
+        attempts += 1
+        if attempts == 1
+          [ "", "ERROR: Sign in to confirm you’re not a bot", instance_double(Process::Status, success?: false) ]
+        else
+          output_template = command[command.index("--output") + 1]
+          File.write(File.join(File.dirname(output_template), "#{video.video_external_id}.en.vtt"), "WEBVTT\n\n00:00.000 --> 00:01.000\nhello\n")
+          [ "", "", instance_double(Process::Status, success?: true) ]
+        end
+      end
+
+      expect(service.send(:fetch_transcript, "en")).to eq("hello")
+      expect(commands.second).to include("--extractor-args", "youtube:player_client=tv")
     end
   end
 end

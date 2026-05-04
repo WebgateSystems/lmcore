@@ -755,13 +755,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailEl  = modalEl.querySelector('[data-confirm-destroy-detail]')
     const actionLabelEl = modalEl.querySelector('[data-confirm-destroy-action-label]')
     const confirmBtn = modalEl.querySelector('[data-confirm-destroy-confirm-btn]')
+    const confirmIcon = confirmBtn?.querySelector('i')
     const cancelBtn  = modalEl.querySelector('[data-confirm-destroy-cancel-btn]')
     if (!titleEl || !messageEl || !detailEl || !actionLabelEl || !confirmBtn) return
 
     const defaults = {
       title:   modalEl.dataset.defaultTitle   || 'Confirm action',
       message: modalEl.dataset.defaultMessage || 'Are you sure?',
-      action:  modalEl.dataset.defaultAction  || 'Delete'
+      action:  modalEl.dataset.defaultAction  || 'Delete',
+      variant: 'danger',
+      icon: 'bi bi-trash3'
     }
 
     const modal = bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: 'static' })
@@ -771,6 +774,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // distinguish "user explicitly cancelled" from "user confirmed and we
     // already re-submitted" inside `hidden.bs.modal`.
     let confirmed = false
+
+    const applyConfirmButtonStyle = (variant, iconClass) => {
+      confirmBtn.classList.remove('btn-dashboard-danger', 'btn-dashboard-primary', 'btn-dashboard-secondary')
+      const safeVariant = ['danger', 'primary', 'secondary'].includes(variant) ? variant : defaults.variant
+      confirmBtn.classList.add(`btn-dashboard-${safeVariant}`)
+      if (confirmIcon) confirmIcon.className = iconClass || defaults.icon
+    }
 
     document.addEventListener('submit', function(event) {
       const form = event.target
@@ -799,12 +809,14 @@ document.addEventListener('DOMContentLoaded', () => {
           detailEl.classList.add('d-none')
         }
         actionLabelEl.textContent = form.dataset.confirmDestroyAction || defaults.action
+        applyConfirmButtonStyle(form.dataset.confirmDestroyVariant, form.dataset.confirmDestroyActionIcon)
       } else {
         titleEl.textContent   = defaults.title
         messageEl.textContent = legacyMessage
         detailEl.textContent  = ''
         detailEl.classList.add('d-none')
         actionLabelEl.textContent = defaults.action
+        applyConfirmButtonStyle(defaults.variant, defaults.icon)
       }
 
       modal.show()

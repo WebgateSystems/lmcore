@@ -8,6 +8,12 @@ require "tmpdir"
 module Youtube
   class CreatePostFromVideoSubtitlesService
     DEFAULT_TIMEOUT = 180
+    BOT_BYPASS_CLIENT_SETS = [
+      %w[tv],
+      %w[tv_embedded ios],
+      %w[ios web_safari],
+      %w[mweb android_vr tv_embedded]
+    ].freeze
 
     attr_reader :user, :video, :progress, :command_timeout, :cookies_path
 
@@ -52,16 +58,22 @@ module Youtube
     end
 
     def fetch_video_metadata
-      stdout, stderr, status = run_command(
-        "yt-dlp",
-        "--dump-json",
-        "--skip-download",
-        "--ignore-no-formats-error",
-        "--no-warnings",
-        *yt_dlp_cookie_args,
-        youtube_url
-      )
-      raise "Failed to fetch video metadata: #{stderr}" unless status.success?
+      stdout = with_bot_bypass_fallbacks do |player_clients|
+        command = [
+          "yt-dlp",
+          "--dump-json",
+          "--skip-download",
+          "--ignore-no-formats-error",
+          "--no-warnings",
+          *extractor_args(player_clients),
+          *yt_dlp_cookie_args,
+          youtube_url
+        ]
+        stdout, stderr, status = run_command(*command)
+        raise "Failed to fetch video metadata: #{stderr}" unless status.success?
+
+        stdout
+      end
 
       JSON.parse(stdout)
     end
@@ -78,20 +90,23 @@ module Youtube
     def fetch_transcript(language)
       Dir.mktmpdir("yt-subtitles-") do |dir|
         output_template = File.join(dir, "%(id)s.%(ext)s")
-        stdout, stderr, status = run_command(
-          "yt-dlp",
-          "--skip-download",
-          "--allow-unplayable-formats",
-          "--format", YtDlpDefaults::FORMAT_SELECTOR,
-          "--write-sub",
-          "--write-auto-sub",
-          "--sub-format", "vtt",
-          "--sub-langs", language,
-          "--output", output_template,
-          *yt_dlp_cookie_args,
-          youtube_url
-        )
-        raise "Failed to download subtitles: #{stderr.presence || stdout}" unless status.success?
+        with_bot_bypass_fallbacks do |player_clients|
+          command = [
+            "yt-dlp",
+            "--skip-download",
+            "--ignore-no-formats-error",
+            "--write-sub",
+            "--write-auto-sub",
+            "--sub-format", "vtt",
+            "--sub-langs", language,
+            "--output", output_template,
+            *extractor_args(player_clients),
+            *yt_dlp_cookie_args,
+            youtube_url
+          ]
+          stdout, stderr, status = run_command(*command)
+          raise "Failed to download subtitles: #{stderr.presence || stdout}" unless status.success?
+        end
 
         files = Dir.glob(File.join(dir, "#{video.video_external_id}*.vtt"))
         return "" if files.empty?
@@ -164,6 +179,40 @@ module Youtube
       return [] if cookies_path.blank?
 
       [ "--cookies", cookies_path.to_s ]
+    end
+
+    def extractor_args(player_clients)
+      return [] if player_clients.blank?
+
+      [ "--extractor-args", "youtube:player_client=#{Array(player_clients).join(',')}" ]
+    end
+
+    def with_bot_bypass_fallbacks
+      attempts = [ nil ] + bot_bypass_client_sets
+      last_error = nil
+
+      attempts.each do |player_clients|
+        return yield(player_clients)
+      rescue StandardError => e
+        last_error = e
+        raise unless bot_check_error?(e.message)
+      end
+
+      raise last_error
+    end
+
+    def bot_bypass_client_sets
+      from_env = ENV["YT_PLAYER_CLIENTS"].to_s.strip
+      return BOT_BYPASS_CLIENT_SETS if from_env.blank?
+
+      from_env.split("|").map { |set| set.split(",").map(&:strip).reject(&:blank?) }.reject(&:empty?)
+    end
+
+    def bot_check_error?(message)
+      text = message.to_s.downcase
+      text.include?("sign in to confirm you're not a bot") ||
+        text.include?("sign in to confirm you\u2019re not a bot") ||
+        text.include?("confirm you are not a bot")
     end
 
     def run_command(*command)

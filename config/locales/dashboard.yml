@@ -190,7 +190,10 @@ en:
         stats: "Stats"
       create_post:
         action: "Create post"
+        confirm_title: "Create post from subtitles"
         confirm: "Create draft post from video subtitles?"
+        confirm_detail: "LibreMedia will queue a background job that downloads subtitles and creates a draft post linked to this video."
+        confirm_action: "Create draft"
         status: "Post draft job"
     gallery:
       index:
@@ -526,7 +529,10 @@ pl:
         stats: "Statystyki"
       create_post:
         action: "Utworz post"
+        confirm_title: "Utworz post z napisow"
         confirm: "Utworzyc szkic posta z napisow wideo?"
+        confirm_detail: "LibreMedia doda zadanie w tle, pobierze napisy i utworzy szkic posta powiazany z tym wideo."
+        confirm_action: "Utworz szkic"
         status: "Status szkicu"
     gallery:
       index:
@@ -822,7 +828,10 @@ uk:
         stats: "Статистика"
       create_post:
         action: "Створити пост"
+        confirm_title: "Створити пост із субтитрів"
         confirm: "Створити чернетку поста з субтитрів відео?"
+        confirm_detail: "LibreMedia додасть фонове завдання, завантажить субтитри та створить чернетку поста, повʼязану з цим відео."
+        confirm_action: "Створити чернетку"
         status: "Статус чернетки"
     gallery:
       index:
@@ -1114,7 +1123,10 @@ ru:
         stats: "Статистика"
       create_post:
         action: "Создать пост"
+        confirm_title: "Создать пост из субтитров"
         confirm: "Создать черновик поста из субтитров видео?"
+        confirm_detail: "LibreMedia добавит фоновую задачу, загрузит субтитры и создаст черновик поста, связанный с этим видео."
+        confirm_action: "Создать черновик"
         status: "Статус черновика"
     gallery:
       index:
