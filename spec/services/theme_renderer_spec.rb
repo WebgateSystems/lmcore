@@ -184,5 +184,25 @@ RSpec.describe ThemeRenderer do
       out = renderer.render("i18n", {}, layout: nil)
       expect(out).to eq("Posts")
     end
+
+    it "loads translations packaged inside the theme folder" do
+      FileUtils.mkdir_p(theme_path.join("locales"))
+      File.write(theme_path.join("locales/en.yml"), <<~YAML)
+        en:
+          themes:
+            #{theme_slug}:
+              content:
+                top_video: "Theme-local TOP video"
+      YAML
+      File.write(theme_path.join("i18n.liquid"), "{{ 'content.top_video' | t }}")
+
+      out = described_class.new(theme_slug).render(
+        "i18n",
+        { "theme_translation_scope" => "themes.#{theme_slug}" },
+        layout: nil
+      )
+
+      expect(out).to eq("Theme-local TOP video")
+    end
   end
 end

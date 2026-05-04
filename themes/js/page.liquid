@@ -1,0 +1,46 @@
+<!-- Page: About / Terms / etc -->
+<div class="current-page mobile-current-page"><a href="#">{{ page.title }}</a></div>
+<div class="section-article">
+  <div class="container-fluid container">
+    <div class="section-article__inner row">
+      <div class="section-article__image-wrapper col-4">
+        <div class="section-article__image">
+          {% if page.featured_image_url and page.featured_image_url != blank %}
+            <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ page.featured_image_url }}" alt="{{ page.title }}" width="380" height="230">
+          {% else %}
+            <picture>
+              <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/js/img/image/about/about-1.webp" type="image/webp">
+              <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/js/img/image/about/about-1.jpg" alt="{{ page.title }}" width="380" height="230">
+            </picture>
+          {% endif %}
+        </div>
+        <!-- Mobile: name next to image -->
+        <div class="section-article__title article-title-mobile">
+          <div class="section-article__title-text">
+            <h1>{{ site.site_name | replace: ' ', '<br>' }}</h1>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile: tagline under image -->
+      <div class="section-article__subtitle-text article-subtitle-mobile">
+        <h2>{{ site.site_tagline }}</h2>
+      </div>
+      <div class="section-article__text col-8">
+        <!-- Desktop: name and tagline on the right side -->
+        <div class="section-article__title">
+          <div class="section-article__title-text">
+            <h1>{{ site.site_name | replace: ' ', '<br>' }}</h1>
+          </div>
+          <div class="section-article__subtitle-text">
+            <h2>{{ site.site_tagline }}</h2>
+          </div>
+        </div>
+        <div class="section-article__content">
+          <div class="section-article__content-text">
+            {{ page.content }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

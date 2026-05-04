@@ -22,6 +22,19 @@ RSpec.describe "Blogs", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
+    it "uses the theme folder path for Liquid translations when it differs from the theme slug" do
+      author.update!(username: "superadmin")
+      js_theme = create(:theme, slug: "jerzy-sladkowski", path: "js", status: "active", is_system: false, name: "JS")
+      user_theme.update!(active: false)
+      UserTheme.create!(user: author, theme: js_theme, active: true)
+
+      get "/blogs/superadmin"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("TOP video")
+      expect(response.body).not_to include("content.top_video")
+    end
+
     it "falls back to the Default theme when the user has no active theme" do
       plain_author = create(:user, username: "plain")
 

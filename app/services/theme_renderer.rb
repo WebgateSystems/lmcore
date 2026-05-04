@@ -9,6 +9,7 @@ class ThemeRenderer
   def initialize(theme_slug)
     @theme_path = Rails.root.join("themes", theme_slug)
     @file_system = ThemeFileSystem.new(@theme_path)
+    self.class.load_theme_translations!(@theme_path)
     @environment = build_environment(theme_slug)
   end
 
@@ -29,6 +30,35 @@ class ThemeRenderer
   end
 
   private
+
+  THEME_LOCALE_GLOB = "locales/**/*.{rb,yml}"
+
+  class << self
+    def load_theme_translations!(theme_path)
+      files = Dir[theme_path.join(THEME_LOCALE_GLOB)].sort
+      return if files.empty?
+
+      signature = files.to_h { |path| [ path, File.mtime(path).to_f ] }
+
+      theme_locale_mutex.synchronize do
+        return if loaded_theme_locale_signatures[theme_path.to_s] == signature
+
+        I18n.load_path |= files
+        I18n.backend.load_translations(*files)
+        loaded_theme_locale_signatures[theme_path.to_s] = signature
+      end
+    end
+
+    private
+
+    def theme_locale_mutex
+      @theme_locale_mutex ||= Mutex.new
+    end
+
+    def loaded_theme_locale_signatures
+      @loaded_theme_locale_signatures ||= {}
+    end
+  end
 
   def build_environment(theme_slug)
     Liquid::Environment.build do |env|

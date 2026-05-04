@@ -1,0 +1,72 @@
+# Theme configuration for the JS theme
+# Dedicated custom theme for Ayder Muzhdabaiev's blog
+
+name: "JS"
+slug: "js"
+author: "LibreMedia"
+version: "1.0.0"
+description: "Dedicated editorial theme for Jerzy Sladkowski's blog"
+
+# Theme supports these languages
+locales:
+  - en
+  - uk
+  - ru
+  - pl
+
+# Template mappings
+templates:
+  index: "index.liquid"
+  post: "post.liquid"
+  video: "video.liquid"
+  photo: "photo.liquid"
+  page: "page.liquid"
+  category: "category.liquid"
+  tag: "tag.liquid"
+  search: "search.liquid"
+  404: "404.liquid"
+
+# Layout mappings
+layouts:
+  default: "layouts/application.liquid"
+  post: "layouts/post.liquid"
+
+# Theme configuration options (can be customized in admin)
+config:
+  # Colors
+  primary_color: "#050032"
+  accent_color: "#FF9700"
+  background_color: "#ffffff"
+  text_color: "#050032"
+  
+  # Typography
+  font_family: "Fira Sans Extra Condensed"
+  heading_font: "Fira Sans Extra Condensed"
+  
+  # Layout
+  layout_style: "wide"  # wide, boxed
+  sidebar_position: "none"  # left, right, none
+  
+  # Features
+  show_author: true
+  show_date: true
+  show_comments: true
+  show_share_buttons: true
+  show_related_posts: true
+  posts_per_page: 10
+
+# Assets to be loaded
+assets:
+  css:
+    - "css/normalize.min.css"
+    - "css/main.min.css"
+  js:
+    - "js/lazysizes.min.js"
+    - "js/main.js"
+  fonts:
+    - "fonts/FiraSansExtraCondensed-Regular.woff2"
+    - "fonts/FiraSansExtraCondensed-Medium.woff2"
+    - "fonts/FiraSansExtraCondensed-SemiBold.woff2"
+    - "fonts/FiraSansExtraCondensed-Bold.woff2"
+    - "fonts/FiraSansExtraCondensed-ExtraBold.woff2"
+

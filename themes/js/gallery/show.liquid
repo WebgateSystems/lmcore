@@ -1,0 +1,252 @@
+<!-- Album page -->
+<div class="current-page mobile-current-page"><a href="{{ base_path }}/gallery">{{ 'navigation.gallery' | t }}</a></div>
+<div class="section-article-item__btn-back section-article-item__btn-back-mobile">
+  <a href="{{ base_path }}/gallery">
+    <span>
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4.41861 7.5L17.7197 7.5L17.7197 4.5L4.41861 4.5L4.41861 -1.16282e-06L-0.000327539 6L4.41861 12L4.41861 7.5Z" fill="#050032"/>
+      </svg>
+    </span>
+    <span>{{ 'content.back' | t }}</span>
+  </a>
+</div>
+<div class="section-article-item__container">
+  <div class="container-fluid container">
+    <div class="section-article-item__body-container row">
+      <div class="section-article-item__title">
+        {% assign title_parts = album.title | split: '|' %}
+        {% for part in title_parts %}
+        <h2>{{ part }}</h2>
+        {% endfor %}
+      </div>
+
+      <div class="section-article-item__body">
+        <div class="section-article-item__description">
+          <div class="section-article-item__description-inner">
+            <div class="section-article-item__date">
+              <div class="section-dashboard__item-date-rewiews">
+                <p class="article-date">{{ album.published_at | date_format }}</p>
+              </div>
+            </div>
+            <div class="section-article-item__text">
+              {% if album.description %}
+              <div class="section-article-item__paragraph">{{ album.description }}</div>
+              {% endif %}
+              <div class="section-article-item__img-container row" id="lightgallery">
+                {% for photo in album.photos %}
+                <a href="{{ photo.image_url }}"><img class="lazyload" src="{{ photo.image_url }}" alt="{{ photo.alt | default: album.title }}" width="380" height="230"></a>
+                {% endfor %}
+              </div>
+              {% if album.tags.size > 0 %}
+              <div class="section-article-item__tags">
+                {% for tag in album.tags %}
+                <span><a href="{{ base_path }}/tags/{{ tag.slug }}">#{{ tag.name }}</a></span>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="section-article-item__btn-back">
+                <a href="{{ base_path }}/gallery">
+                  <span>
+                    <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.41861 7.5L17.7197 7.5L17.7197 4.5L4.41861 4.5L4.41861 -1.16282e-06L-0.000327539 6L4.41861 12L4.41861 7.5Z" fill="#050032"/>
+                    </svg>
+                  </span>
+                  <span>{{ 'content.back_to_photos' | t }}</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comments section -->
+  <div class="section-article-item__comments row">
+    <div class="section-article-item__comments-top">
+      <div class="section-article-item__comments-title">
+        <div class="section-article-item__comments-title-ico">
+          <a href="">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M27.986 2.8C27.986 1.26 26.74 0 25.2 0H2.8C1.26 0 0 1.26 0 2.8V19.6C0 21.14 1.26 22.4 2.8 22.4H22.4L28 28L27.986 2.8ZM22.4 16.8H5.6V14H22.4V16.8ZM22.4 12.6H5.6V9.8H22.4V12.6ZM22.4 8.4H5.6V5.6H22.4V8.4Z" fill="#050032"/>
+            </svg>
+          </a>
+        </div>
+        <div class="section-article-item__comments-title-text">{{ album.comments_count | default: 0 }} {{ 'comments.title' | t }}</div>
+      </div>
+      {% unless current_user and current_user_blog_banned != true %}
+        <div class="section-article-item__btn-login--mobile">
+          <div class="section-article-item__btn-login--mobile-text">
+            {% if current_user and current_user_blog_banned %}
+              {{ 'comments.banned_from_blog' | t }}
+            {% else %}
+              <a href="{{ login_return_url }}">{{ 'comments.login_to_comment' | t }}</a>
+            {% endif %}
+          </div>
+          <div class="section-article-item__btn-login--mobile-ico">
+            <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.7579 4.5H0.287109V7.5H13.7579V12L18.2332 6L13.7579 0V4.5Z" fill="white"/>
+            </svg>
+          </div>
+        </div>
+      {% endunless %}
+    </div>
+
+    <div class="section-article-item__comments-body-container">
+      <div class="section-article-item__comments-body">
+        <ul class="section-article-item__comments-body-list">
+          {% for comment in comments %}
+          <li class="section-article-item__comments-item-container">
+            <div class="section-article-item__comments-item">
+              <div class="section-article-item__comments-item-user-ico">
+                {% if comment.avatar_url %}
+                  <img src="{{ comment.avatar_url }}" alt="{{ comment.author_name }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                {% else %}
+                  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M48 0C21.504 0 0 21.504 0 48C0 74.496 21.504 96 48 96C74.496 96 96 74.496 96 48C96 21.504 74.496 0 48 0ZM48 14.4C55.968 14.4 62.4 20.832 62.4 28.8C62.4 36.768 55.968 43.2 48 43.2C40.032 43.2 33.6 36.768 33.6 28.8C33.6 20.832 40.032 14.4 48 14.4ZM48 82.56C36 82.56 25.392 76.416 19.2 67.104C19.344 57.552 38.4 52.32 48 52.32C57.552 52.32 76.656 57.552 76.8 67.104C70.608 76.416 60 82.56 48 82.56Z" fill="#959595"/>
+                  </svg>
+                {% endif %}
+              </div>
+              <div class="section-article-item__comments-item-wrapper">
+                <div class="section-article-item__comments-item-info">
+                  <div class="section-article-item__comments-item-user-name">
+                    <span>{{ 'comments.added_by' | t }}</span>
+                    <span class="user-name">{{ comment.author_name }}</span>
+                    <span>,</span>
+                  </div>
+                  <div class="section-article-item__comments-item-date">{{ comment.created_at | date: '%d %B %Y o %H:%M' }}</div>
+                </div>
+                <div class="section-article-item__comments-item-text">{{ comment.content }}</div>
+                {% if current_user and current_user.confirmed and current_user_blog_banned != true %}
+                  <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="javascript:void(0)">{{ 'comments.reply' | t }}</a></div>
+                  <form class="section-article-item__comment-answer-form" method="post" action="{{ base_path }}/gallery/{{ album.slug }}/comments">
+                    <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                    <div class="section-article-item__comment-answer-textarea">
+                      <textarea name="comment[content]" class="comment_area" required placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                    </div>
+                    <div class="section-article-item__comment-answer-btn">
+                      <button type="submit">{{ 'comments.post_reply' | t }}</button>
+                    </div>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+            {% if comment.replies.size > 0 %}
+            <ul class="section-article-item__comments-body-list">
+              {% for reply in comment.replies %}
+              <li class="section-article-item__comments-item-container">
+                <div class="section-article-item__comments-item">
+                  <div class="section-article-item__comments-item-user-ico">
+                    {% if reply.avatar_url %}
+                      <img src="{{ reply.avatar_url }}" alt="{{ reply.author_name }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                      <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48 0C21.504 0 0 21.504 0 48C0 74.496 21.504 96 48 96C74.496 96 96 74.496 96 48C96 21.504 74.496 0 48 0ZM48 14.4C55.968 14.4 62.4 20.832 62.4 28.8C62.4 36.768 55.968 43.2 48 43.2C40.032 43.2 33.6 36.768 33.6 28.8C33.6 20.832 40.032 14.4 48 14.4ZM48 82.56C36 82.56 25.392 76.416 19.2 67.104C19.344 57.552 38.4 52.32 48 52.32C57.552 52.32 76.656 57.552 76.8 67.104C70.608 76.416 60 82.56 48 82.56Z" fill="#959595"/>
+                      </svg>
+                    {% endif %}
+                  </div>
+                  <div class="section-article-item__comments-item-wrapper">
+                    <div class="section-article-item__comments-item-info">
+                      <div class="section-article-item__comments-item-user-name">
+                        <span>{{ 'comments.added_by' | t }}</span>
+                        <span class="user-name">{{ reply.author_name }}</span>
+                        <span>,</span>
+                      </div>
+                      <div class="section-article-item__comments-item-date">{{ reply.created_at | date: '%d %B %Y o %H:%M' }}</div>
+                    </div>
+                    <div class="section-article-item__comments-item-text">{{ reply.content }}</div>
+                    {% if current_user and current_user.confirmed and current_user_blog_banned != true %}
+                      <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="javascript:void(0)">{{ 'comments.reply' | t }}</a></div>
+                      <form class="section-article-item__comment-answer-form" method="post" action="{{ base_path }}/gallery/{{ album.slug }}/comments">
+                        <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="parent_id" value="{{ reply.id }}">
+                        <div class="section-article-item__comment-answer-textarea">
+                          <textarea name="comment[content]" class="comment_area" required placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                        </div>
+                        <div class="section-article-item__comment-answer-btn">
+                          <button type="submit">{{ 'comments.post_reply' | t }}</button>
+                        </div>
+                      </form>
+                    {% endif %}
+                  </div>
+                </div>
+                {% if reply.replies.size > 0 %}
+                <ul class="section-article-item__comments-body-list">
+                  {% for subreply in reply.replies %}
+                  <li class="section-article-item__comments-item-container">
+                    <div class="section-article-item__comments-item">
+                      <div class="section-article-item__comments-item-user-ico">
+                        {% if subreply.avatar_url %}
+                          <img src="{{ subreply.avatar_url }}" alt="{{ subreply.author_name }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                          <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M48 0C21.504 0 0 21.504 0 48C0 74.496 21.504 96 48 96C74.496 96 96 74.496 96 48C96 21.504 74.496 0 48 0ZM48 14.4C55.968 14.4 62.4 20.832 62.4 28.8C62.4 36.768 55.968 43.2 48 43.2C40.032 43.2 33.6 36.768 33.6 28.8C33.6 20.832 40.032 14.4 48 14.4ZM48 82.56C36 82.56 25.392 76.416 19.2 67.104C19.344 57.552 38.4 52.32 48 52.32C57.552 52.32 76.656 57.552 76.8 67.104C70.608 76.416 60 82.56 48 82.56Z" fill="#959595"/>
+                          </svg>
+                        {% endif %}
+                      </div>
+                      <div class="section-article-item__comments-item-wrapper">
+                        <div class="section-article-item__comments-item-info">
+                          <div class="section-article-item__comments-item-user-name">
+                            <span>{{ 'comments.added_by' | t }}</span>
+                            <span class="user-name">{{ subreply.author_name }}</span>
+                            <span>,</span>
+                          </div>
+                          <div class="section-article-item__comments-item-date">{{ subreply.created_at | date: '%d %B %Y o %H:%M' }}</div>
+                        </div>
+                        <div class="section-article-item__comments-item-text">{{ subreply.content }}</div>
+                        {% if current_user and current_user.confirmed and current_user_blog_banned != true %}
+                          <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="javascript:void(0)">{{ 'comments.reply' | t }}</a></div>
+                          <form class="section-article-item__comment-answer-form" method="post" action="{{ base_path }}/gallery/{{ album.slug }}/comments">
+                            <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                            <input type="hidden" name="parent_id" value="{{ subreply.id }}">
+                            <div class="section-article-item__comment-answer-textarea">
+                              <textarea name="comment[content]" class="comment_area" required placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                            </div>
+                            <div class="section-article-item__comment-answer-btn">
+                              <button type="submit">{{ 'comments.post_reply' | t }}</button>
+                            </div>
+                          </form>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    {% if current_user %}
+      {% if current_user_blog_banned %}
+        <div class="section-article-item__comment-cta">
+          {{ 'comments.banned_from_blog' | t }}
+          {% if current_user_blog_ban_reason and current_user_blog_ban_reason != blank %}
+            <br/>{{ current_user_blog_ban_reason }}
+          {% endif %}
+        </div>
+      {% elsif current_user.confirmed %}
+        <form class="section-article-item__comment-form" method="post" action="{{ base_path }}/gallery/{{ album.slug }}/comments">
+          <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+          <div class="section-article-item__comment-answer-textarea">
+            <textarea name="comment[content]" required class="comment_area" placeholder="{{ 'comments.write_here' | t }}"></textarea>
+          </div>
+          <div class="section-article-item__comment-answer-btn">
+            <button type="submit">{{ 'comments.post' | t }}</button>
+          </div>
+        </form>
+      {% else %}
+        <div class="section-article-item__comment-cta">
+          {{ 'comments.confirm_email_required' | t }}
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,370 @@
+<!-- Single post/article page -->
+<div class="main-wrap">
+  <div class="current-page mobile-current-page"><a href="{{ base_path }}/posts">{{ 'navigation.articles' | t }}</a></div>
+  <div class="section-article-item__btn-back section-article-item__btn-back-mobile">
+    <a href="{{ base_path }}/posts">
+      <span>
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4.41861 7.5L17.7197 7.5L17.7197 4.5L4.41861 4.5L4.41861 -1.16282e-06L-0.000327539 6L4.41861 12L4.41861 7.5Z" fill="#050032"/>
+        </svg>
+      </span>
+      <span>BACK</span>
+    </a>
+  </div>
+  <div class="section-article-item__container">
+    <div class="container-fluid container">
+      <div class="section-article-item__body-container row">
+        <!-- Mobile reviews -->
+        <div class="section-article-item__reviews--mobile">
+          <div class="section-dashboard__item-date-rewiews">
+            <p class="article-date">{{ post.published_at | date_format }}</p>
+            <span class="article-source" style="display: block; margin-top: 5px; font-size: 12px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 3px;">
+                <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" fill="#959595"/>
+              </svg>
+              {% if post.source_url and post.source_url != blank and post.source_url != "" %}
+                <a href="{{ post.source_url }}" target="_blank" rel="nofollow noopener noreferrer" style="color: #959595; text-decoration: none;">{{ post.source_name }}</a>
+              {% elsif post.source_name and post.source_name != blank and post.source_name != "" %}
+                <span style="color: #959595;">{{ post.source_name }}</span>
+              {% else %}
+                <a href="{{ base_path }}/posts/{{ post.slug }}" style="color: #959595; text-decoration: none;">{{ 'content.blog_ayder' | t }}</a>
+              {% endif %}
+            </span>
+            <div class="section-dashboard__item-date-rewiews-counter">
+              <div class="section-dashboard__item-comment">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M27.986 2.8C27.986 1.26 26.74 0 25.2 0H2.8C1.26 0 0 1.26 0 2.8V19.6C0 21.14 1.26 22.4 2.8 22.4H22.4L28 28L27.986 2.8ZM22.4 16.8H5.6V14H22.4V16.8ZM22.4 12.6H5.6V9.8H22.4V12.6ZM22.4 8.4H5.6V5.6H22.4V8.4Z" fill="#050032"/>
+                </svg>
+                <span>{{ post.comments_count | default: 0 }}</span>
+              </div>
+              <div class="section-dashboard__item-rewiews">
+                <svg width="30" height="20" viewBox="0 0 30 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15.0007 0C8.33398 0 2.64065 4.14667 0.333984 10C2.64065 15.8533 8.33398 20 15.0007 20C21.6673 20 27.3606 15.8533 29.6673 10C27.3606 4.14667 21.6673 0 15.0007 0ZM15.0007 16.6667C11.3207 16.6667 8.33398 13.68 8.33398 10C8.33398 6.32 11.3207 3.33333 15.0007 3.33333C18.6807 3.33333 21.6673 6.32 21.6673 10C21.6673 13.68 18.6807 16.6667 15.0007 16.6667ZM15.0007 6C12.7873 6 11.0007 7.78667 11.0007 10C11.0007 12.2133 12.7873 14 15.0007 14C17.214 14 19.0007 12.2133 19.0007 10C19.0007 7.78667 17.214 6 15.0007 6Z" fill="#050032"/>
+                </svg>
+                <span>{{ post.views_count | default: 0 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Mobile author -->
+        <div class="section-article-item__author-mobile">
+          <p>{{ site.site_name }}</p>
+        </div>
+        <!-- Title -->
+        <div class="section-article-item__title">
+          <h2>{{ post.title }}</h2>
+        </div>
+        <!-- Body -->
+        <div class="section-article-item__body section-article-item__body-article-page">
+          <!-- Author column -->
+          <div class="section-article-item__author col-3">
+            <div class="section-article-item__author-avatar">
+              <picture>
+                <source class="lazyload" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-srcset="/themes/js/img/image/avatar-circle.webp" type="image/webp">
+                <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="/themes/js/img/image/avatar-circle.png" alt="{{ site.site_name }}" width="380" height="230">
+              </picture>
+            </div>
+            <div class="section-article-item__name">{{ site.site_name }}</div>
+            <div class="section-article-item__info">{{ post.lead }}</div>
+          </div>
+          <!-- Content column -->
+          <div class="section-article-item__description col">
+            <div class="section-article-item__description-inner">
+              {% if post.subtitle %}
+              <div class="section-article-item__subtitle section-article-item__subtitle--red">
+                <h2>{{ post.subtitle }}</h2>
+              </div>
+              {% endif %}
+              <div class="section-article-item__date">
+                <div class="section-dashboard__item-date-rewiews">
+                  <p class="article-date">{{ post.published_at | date_format }}</p>
+                  <span class="article-source">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 4px;">
+                      <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" fill="#959595"/>
+                    </svg>
+                    {% if post.source_url and post.source_url != blank and post.source_url != "" %}
+                      <a href="{{ post.source_url }}" target="_blank" rel="nofollow noopener noreferrer" style="color: #959595; text-decoration: none;">{{ post.source_name }}</a>
+                    {% elsif post.source_name and post.source_name != blank and post.source_name != "" %}
+                      <span style="color: #959595;">{{ post.source_name }}</span>
+                    {% else %}
+                      <a href="{{ base_path }}/posts/{{ post.slug }}" style="color: #959595; text-decoration: none;">{{ 'content.blog_ayder' | t }}</a>
+                    {% endif %}
+                  </span>
+                </div>
+              </div>
+              <div class="section-article-item__text">
+                <div class="section-article__content-text">
+                  {{ post.content }}
+                </div>
+                {% if post.documents and post.documents.size > 0 %}
+                <div class="section-article-item__documents">
+                  <h3 class="section-article-item__documents-title">{{ 'content.attached_documents' | t }}</h3>
+                  <ul class="section-article-item__documents-list">
+                    {% for doc in post.documents %}
+                    <li class="section-article-item__documents-item">
+                      <a href="{{ doc.url }}" target="_blank" rel="noopener noreferrer" download>
+                        <span class="section-article-item__documents-name">{{ doc.title | default: doc.file_name }}</span>
+                        {% if doc.size %}<span class="section-article-item__documents-size">({{ doc.size }})</span>{% endif %}
+                      </a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+                {% if post.related_video %}
+                <p class="section-article-item__related-video">
+                  <a class="post-content-link"
+                     href="{{ base_path }}/videos/{{ post.related_video.slug }}"
+                     title="{{ post.related_video.title | escape }}">{{ 'content.related_video' | t }}.</a>
+                </p>
+                {% endif %}
+                {% if post.tags.size > 0 %}
+                <div class="section-article-item__tags">
+                  {% for tag in post.tags %}
+                  <span><a href="{{ base_path }}/tags/{{ tag.slug }}">#{{ tag.name }}</a></span>
+                  {% endfor %}
+                </div>
+                {% endif %}
+                <div class="section-article-item__social">
+                  <!-- Facebook -->
+                  <div class="section-article-item__social-ico">
+                    <a href="{{ site.facebook_url | default: '#' }}" target="_blank" rel="noopener noreferrer" title="Facebook">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 17.9895 4.3882 22.954 10.125 23.8542V15.4688H7.07812V12H10.125V9.35625C10.125 6.34875 11.9166 4.6875 14.6576 4.6875C15.9701 4.6875 17.3438 4.92188 17.3438 4.92188V7.875H15.8306C14.34 7.875 13.875 8.80008 13.875 9.75V12H17.2031L16.6711 15.4688H13.875V23.8542C19.6118 22.954 24 17.9895 24 12Z" fill="#959595"/></svg>
+                    </a>
+                  </div>
+                  <!-- YouTube -->
+                  <div class="section-article-item__social-ico">
+                    <a href="{{ site.youtube_url | default: '#' }}" target="_blank" rel="noopener noreferrer" title="YouTube">
+                      <svg width="28" height="20" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M27.4169 3.13049C27.1063 1.95366 26.1831 1.02299 25.0168 0.710027C22.8915 0.142578 14.0715 0.142578 14.0715 0.142578C14.0715 0.142578 5.25148 0.142578 3.12613 0.710027C1.95987 1.02303 1.03668 1.95366 0.726055 3.13049C0.164062 5.27281 0.164062 9.74311 0.164062 9.74311C0.164062 9.74311 0.164062 14.2134 0.726055 16.3557C1.03668 17.5326 1.95987 18.4632 3.12613 18.7762C5.25148 19.3436 14.0715 19.3436 14.0715 19.3436C14.0715 19.3436 22.8915 19.3436 25.0168 18.7762C26.1831 18.4632 27.1063 17.5326 27.4169 16.3557C27.9789 14.2134 27.9789 9.74311 27.9789 9.74311C27.9789 9.74311 27.9789 5.27281 27.4169 3.13049ZM11.2483 13.857V5.62922L18.4397 9.74319L11.2483 13.857Z" fill="#959595"/></svg>
+                    </a>
+                  </div>
+                  <!-- Instagram -->
+                  <div class="section-article-item__social-ico">
+                    <a href="{{ site.instagram_url | default: '#' }}" target="_blank" rel="noopener noreferrer" title="Instagram">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163C15.204 2.163 15.584 2.175 16.85 2.233C20.102 2.381 21.621 3.924 21.769 7.152C21.827 8.417 21.838 8.797 21.838 12.001C21.838 15.206 21.826 15.585 21.769 16.85C21.62 20.075 20.105 21.621 16.85 21.769C15.584 21.827 15.206 21.839 12 21.839C8.796 21.839 8.416 21.827 7.151 21.769C3.891 21.62 2.38 20.07 2.232 16.849C2.174 15.584 2.162 15.205 2.162 12C2.162 8.796 2.175 8.417 2.232 7.151C2.381 3.924 3.896 2.38 7.151 2.232C8.417 2.175 8.796 2.163 12 2.163ZM12 0C8.741 0 8.333 0.014 7.053 0.072C2.695 0.272 0.273 2.69 0.073 7.052C0.014 8.333 0 8.741 0 12C0 15.259 0.014 15.668 0.072 16.948C0.272 21.306 2.69 23.728 7.052 23.928C8.333 23.986 8.741 24 12 24C15.259 24 15.668 23.986 16.948 23.928C21.302 23.728 23.73 21.31 23.927 16.948C23.986 15.668 24 15.259 24 12C24 8.741 23.986 8.333 23.928 7.053C23.732 2.699 21.311 0.273 16.949 0.073C15.668 0.014 15.259 0 12 0ZM12 5.838C8.597 5.838 5.838 8.597 5.838 12C5.838 15.403 8.597 18.163 12 18.163C15.403 18.163 18.162 15.404 18.162 12C18.162 8.597 15.403 5.838 12 5.838ZM12 16C9.791 16 8 14.21 8 12C8 9.791 9.791 8 12 8C14.209 8 16 9.791 16 12C16 14.21 14.209 16 12 16ZM18.406 4.155C17.61 4.155 16.965 4.8 16.965 5.595C16.965 6.39 17.61 7.035 18.406 7.035C19.201 7.035 19.845 6.39 19.845 5.595C19.845 4.8 19.201 4.155 18.406 4.155Z" fill="#959595"/></svg>
+                    </a>
+                  </div>
+                  <!-- Threads -->
+                  <div class="section-article-item__social-ico">
+                    <a href="{{ site.threads_url | default: '#' }}" target="_blank" rel="noopener noreferrer" title="Threads">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.863 11.3419C17.7583 11.2949 17.6519 11.2503 17.5439 11.2083C17.3585 8.04055 15.4748 6.00291 12.3196 5.98338C12.3059 5.98332 12.2924 5.98332 12.2788 5.98332C10.4009 5.98332 8.84174 6.77746 7.86096 8.22842L9.63492 9.38912C10.3589 8.32094 11.4538 8.08238 12.2799 8.08238C12.2888 8.08238 12.2978 8.08238 12.3066 8.08244C13.3072 8.08889 14.0574 8.38141 14.5337 8.95369C14.8727 9.36 15.0959 9.91992 15.2017 10.6279C14.3379 10.4766 13.4033 10.4318 12.4063 10.4934C9.59174 10.6693 7.79664 12.2849 7.92182 14.5239C7.98578 15.6703 8.52594 16.6494 9.44342 17.2958C10.2222 17.8454 11.2196 18.1138 12.2611 18.0569C13.637 17.9812 14.7335 17.4688 15.5182 16.5364C16.1198 15.822 16.5018 14.9007 16.6699 13.7597C17.3021 14.1401 17.7787 14.6439 18.0654 15.2618C18.55 16.3063 18.5765 18.0185 17.1352 19.4468C15.8686 20.7021 14.3525 21.2568 12.0541 21.2733C9.48438 21.2547 7.53552 20.4615 6.26074 18.9169C5.06836 17.4718 4.4502 15.4028 4.42822 12.7606C4.4502 10.1184 5.06836 8.04938 6.26074 6.60422C7.53552 5.05963 9.48438 4.26642 12.0541 4.24784C14.6416 4.26654 16.6218 5.06396 17.9395 6.61658C18.5815 7.37268 19.0742 8.32458 19.4023 9.43188L21.4144 8.89746C21.0148 7.52502 20.3953 6.33252 19.5557 5.33032C17.8481 3.29724 15.3488 2.25726 12.0612 2.23438H12.047C8.77466 2.25708 6.30042 3.30108 4.62708 5.33818C3.13452 7.14856 2.36712 9.63396 2.34082 12.753L2.34082 12.768C2.36712 15.8872 3.13452 18.3726 4.62708 20.183C6.30042 22.2202 8.77466 23.2642 12.047 23.2868H12.0612C14.8853 23.2673 16.8531 22.5281 18.4835 20.9124C20.6046 18.8113 20.5363 16.1181 19.8315 14.5817C19.3019 13.4266 18.3328 12.4936 17.0193 11.8414" fill="#959595"/></svg>
+                    </a>
+                  </div>
+                  <!-- Bluesky -->
+                  <div class="section-article-item__social-ico">
+                    <a href="{{ site.bluesky_url | default: '#' }}" target="_blank" rel="noopener noreferrer" title="Bluesky">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.3 4.2C8.5 6.1 10.9 10 12 12C13.1 10 15.5 6.1 17.7 4.2C19.2 2.9 21.7 2 21.7 4.8C21.7 5.4 21.4 10.2 21.2 10.9C20.5 13.5 17.8 14.2 15.4 13.8C19.5 14.5 20.6 16.8 18.4 19.1C14.2 23.4 12.5 18 12 16.5C11.5 18 9.8 23.4 5.6 19.1C3.4 16.8 4.5 14.5 8.6 13.8C6.2 14.2 3.5 13.5 2.8 10.9C2.6 10.2 2.3 5.4 2.3 4.8C2.3 2 4.8 2.9 6.3 4.2Z" fill="#959595"/></svg>
+                    </a>
+                  </div>
+                </div>
+                <div class="section-article-item__btn-back">
+                  <a href="{{ base_path }}/posts">
+                    <span>
+                      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.41861 7.5L17.7197 7.5L17.7197 4.5L4.41861 4.5L4.41861 -1.16282e-06L-0.000327539 6L4.41861 12L4.41861 7.5Z" fill="#050032"/>
+                      </svg>
+                    </span>
+                    <span>{{ 'content.back_to_articles' | t }}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Comments section -->
+      <div class="section-article-item__comments row">
+        <div class="section-article-item__comments-top">
+          <div class="section-article-item__stats-counters">
+            <div class="section-article-item__stat-item">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M27.986 2.8C27.986 1.26 26.74 0 25.2 0H2.8C1.26 0 0 1.26 0 2.8V19.6C0 21.14 1.26 22.4 2.8 22.4H22.4L28 28L27.986 2.8ZM22.4 16.8H5.6V14H22.4V16.8ZM22.4 12.6H5.6V9.8H22.4V12.6ZM22.4 8.4H5.6V5.6H22.4V8.4Z" fill="#050032"/>
+              </svg>
+              <span>{{ post.comments_count | default: 0 }}</span>
+            </div>
+            <div class="section-article-item__stat-item">
+              <svg width="30" height="20" viewBox="0 0 30 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.0007 0C8.33398 0 2.64065 4.14667 0.333984 10C2.64065 15.8533 8.33398 20 15.0007 20C21.6673 20 27.3606 15.8533 29.6673 10C27.3606 4.14667 21.6673 0 15.0007 0ZM15.0007 16.6667C11.3207 16.6667 8.33398 13.68 8.33398 10C8.33398 6.32 11.3207 3.33333 15.0007 3.33333C18.6807 3.33333 21.6673 6.32 21.6673 10C21.6673 13.68 18.6807 16.6667 15.0007 16.6667ZM15.0007 6C12.7873 6 11.0007 7.78667 11.0007 10C11.0007 12.2133 12.7873 14 15.0007 14C17.214 14 19.0007 12.2133 19.0007 10C19.0007 7.78667 17.214 6 15.0007 6Z" fill="#050032"/>
+              </svg>
+              <span>{{ post.views_count | default: 0 }}</span>
+            </div>
+          </div>
+          {% unless current_user and current_user_blog_banned != true %}
+            <div class="section-article-item__btn-login--mobile">
+              <div class="section-article-item__btn-login--mobile-text">
+                {% if current_user and current_user_blog_banned %}
+                  {{ 'comments.banned_from_blog' | t }}
+                {% else %}
+                  <a href="{{ login_return_url }}">{{ 'comments.login_to_comment' | t }}</a>
+                {% endif %}
+              </div>
+              <div class="section-article-item__btn-login--mobile-ico">
+                <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.7579 4.5H0.287109V7.5H13.7579V12L18.2332 6L13.7579 0V4.5Z" fill="white"/>
+                </svg>
+              </div>
+            </div>
+          {% endunless %}
+        </div>
+        <div class="section-article-item__comments-body-container">
+          <div class="section-article-item__comments-body">
+            <ul class="section-article-item__comments-body-list">
+              {% for comment in comments %}
+              <li class="section-article-item__comments-item-container">
+                <div class="section-article-item__comments-item">
+                  <div class="section-article-item__comments-item-user-ico">
+                    {% if comment.avatar_url %}
+                      <img src="{{ comment.avatar_url }}" alt="{{ comment.user_name | default: comment.guest_name }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                      <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48 0C21.504 0 0 21.504 0 48C0 74.496 21.504 96 48 96C74.496 96 96 74.496 96 48C96 21.504 74.496 0 48 0ZM48 14.4C55.968 14.4 62.4 20.832 62.4 28.8C62.4 36.768 55.968 43.2 48 43.2C40.032 43.2 33.6 36.768 33.6 28.8C33.6 20.832 40.032 14.4 48 14.4ZM48 82.56C36 82.56 25.392 76.416 19.2 67.104C19.344 57.552 38.4 52.32 48 52.32C57.552 52.32 76.656 57.552 76.8 67.104C70.608 76.416 60 82.56 48 82.56Z" fill="#959595"/>
+                      </svg>
+                    {% endif %}
+                  </div>
+                  <div class="section-article-item__comments-item-wrapper">
+                    <div class="section-article-item__comments-item-info">
+                      <div class="section-article-item__comments-item-user-name">
+                        <span>{{ 'comments.added_by' | t }}</span>
+                        <span class="user-name">{{ comment.user_name | default: comment.guest_name }}</span>
+                        <span>,</span>
+                      </div>
+                      <div class="section-article-item__comments-item-date">{{ comment.created_at | date_format }} o {{ comment.created_at | date: "%H:%M" }}</div>
+                    </div>
+                    <div class="section-article-item__comments-item-text">{{ comment.content }}</div>
+                    {% if current_user and current_user.confirmed and current_user_blog_banned != true %}
+                      <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="javascript:void(0)">{{ 'comments.reply' | t }}</a></div>
+                      <form class="section-article-item__comment-answer-form" method="post" action="{{ base_path }}/posts/{{ post.slug }}/comments">
+                        <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                        <div class="section-article-item__comment-answer-textarea">
+                          <textarea name="comment[content]" class="comment_area" required placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                        </div>
+                        <div class="section-article-item__comment-answer-btn">
+                          <button type="submit">{{ 'comments.post_reply' | t }}</button>
+                        </div>
+                      </form>
+                    {% endif %}
+                  </div>
+                </div>
+                {% if comment.replies.size > 0 %}
+                <ul class="section-article-item__comments-body-list">
+                  {% for reply in comment.replies %}
+                  <li class="section-article-item__comments-item-container">
+                    <div class="section-article-item__comments-item">
+                      <div class="section-article-item__comments-item-user-ico">
+                        {% if reply.avatar_url %}
+                          <img src="{{ reply.avatar_url }}" alt="{{ reply.user_name | default: reply.guest_name }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                          <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M48 0C21.504 0 0 21.504 0 48C0 74.496 21.504 96 48 96C74.496 96 96 74.496 96 48C96 21.504 74.496 0 48 0ZM48 14.4C55.968 14.4 62.4 20.832 62.4 28.8C62.4 36.768 55.968 43.2 48 43.2C40.032 43.2 33.6 36.768 33.6 28.8C33.6 20.832 40.032 14.4 48 14.4ZM48 82.56C36 82.56 25.392 76.416 19.2 67.104C19.344 57.552 38.4 52.32 48 52.32C57.552 52.32 76.656 57.552 76.8 67.104C70.608 76.416 60 82.56 48 82.56Z" fill="#959595"/>
+                          </svg>
+                        {% endif %}
+                      </div>
+                      <div class="section-article-item__comments-item-wrapper">
+                        <div class="section-article-item__comments-item-info">
+                          <div class="section-article-item__comments-item-user-name">
+                            <span>{{ 'comments.added_by' | t }}</span>
+                            <span class="user-name">{{ reply.user_name | default: reply.guest_name }}</span>
+                            <span>,</span>
+                          </div>
+                          <div class="section-article-item__comments-item-date">{{ reply.created_at | date_format }} o {{ reply.created_at | date: "%H:%M" }}</div>
+                        </div>
+                        <div class="section-article-item__comments-item-text">{{ reply.content }}</div>
+                        {% if current_user and current_user.confirmed and current_user_blog_banned != true %}
+                          <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="javascript:void(0)">{{ 'comments.reply' | t }}</a></div>
+                          <form class="section-article-item__comment-answer-form" method="post" action="{{ base_path }}/posts/{{ post.slug }}/comments">
+                            <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                            <input type="hidden" name="parent_id" value="{{ reply.id }}">
+                            <div class="section-article-item__comment-answer-textarea">
+                              <textarea name="comment[content]" class="comment_area" required placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                            </div>
+                            <div class="section-article-item__comment-answer-btn">
+                              <button type="submit">{{ 'comments.post_reply' | t }}</button>
+                            </div>
+                          </form>
+                        {% endif %}
+                      </div>
+                    </div>
+                    {% if reply.replies.size > 0 %}
+                    <ul class="section-article-item__comments-body-list">
+                      {% for subreply in reply.replies %}
+                      <li class="section-article-item__comments-item-container">
+                        <div class="section-article-item__comments-item">
+                          <div class="section-article-item__comments-item-user-ico">
+                            {% if subreply.avatar_url %}
+                              <img src="{{ subreply.avatar_url }}" alt="{{ subreply.user_name | default: subreply.guest_name }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                            {% else %}
+                              <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M48 0C21.504 0 0 21.504 0 48C0 74.496 21.504 96 48 96C74.496 96 96 74.496 96 48C96 21.504 74.496 0 48 0ZM48 14.4C55.968 14.4 62.4 20.832 62.4 28.8C62.4 36.768 55.968 43.2 48 43.2C40.032 43.2 33.6 36.768 33.6 28.8C33.6 20.832 40.032 14.4 48 14.4ZM48 82.56C36 82.56 25.392 76.416 19.2 67.104C19.344 57.552 38.4 52.32 48 52.32C57.552 52.32 76.656 57.552 76.8 67.104C70.608 76.416 60 82.56 48 82.56Z" fill="#959595"/>
+                              </svg>
+                            {% endif %}
+                          </div>
+                          <div class="section-article-item__comments-item-wrapper">
+                            <div class="section-article-item__comments-item-info">
+                              <div class="section-article-item__comments-item-user-name">
+                                <span>{{ 'comments.added_by' | t }}</span>
+                                <span class="user-name">{{ subreply.user_name | default: subreply.guest_name }}</span>
+                                <span>,</span>
+                              </div>
+                              <div class="section-article-item__comments-item-date">{{ subreply.created_at | date_format }} o {{ subreply.created_at | date: "%H:%M" }}</div>
+                            </div>
+                            <div class="section-article-item__comments-item-text">{{ subreply.content }}</div>
+                            {% if current_user and current_user.confirmed and current_user_blog_banned != true %}
+                              <div class="section-article-item__comments-item-answer-btn js_add_comment"><a href="javascript:void(0)">{{ 'comments.reply' | t }}</a></div>
+                              <form class="section-article-item__comment-answer-form" method="post" action="{{ base_path }}/posts/{{ post.slug }}/comments">
+                                <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                                <input type="hidden" name="parent_id" value="{{ subreply.id }}">
+                                <div class="section-article-item__comment-answer-textarea">
+                                  <textarea name="comment[content]" class="comment_area" required placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                                </div>
+                                <div class="section-article-item__comment-answer-btn">
+                                  <button type="submit">{{ 'comments.post_reply' | t }}</button>
+                                </div>
+                              </form>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    {% endif %}
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        {% if post.comments_enabled %}
+          {% if current_user %}
+            {% if current_user_blog_banned %}
+              <div class="section-article-item__comment-cta">
+                {{ 'comments.banned_from_blog' | t }}
+                {% if current_user_blog_ban_reason and current_user_blog_ban_reason != blank %}
+                  <br/>{{ current_user_blog_ban_reason }}
+                {% endif %}
+              </div>
+            {% elsif current_user.confirmed %}
+                <form class="section-article-item__comment-form" method="post" action="{{ base_path }}/posts/{{ post.slug }}/comments">
+                  <input type="hidden" name="authenticity_token" value="{{ csrf_token }}">
+                  <div class="section-article-item__comment-answer-textarea">
+                    <textarea name="comment[content]" required class="comment_area" placeholder="{{ 'comments.write_here' | t }}"></textarea>
+                  </div>
+                  <div class="section-article-item__comment-answer-btn">
+                    <button type="submit">{{ 'comments.post' | t }}</button>
+                  </div>
+                </form>
+            {% else %}
+              <div class="section-article-item__comment-cta">
+                {{ 'comments.confirm_email_required' | t }}
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

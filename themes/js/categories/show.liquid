@@ -1,0 +1,37 @@
+<!-- Category page -->
+<div class="section-articles">
+  <div class="container-fluid container">
+    <div class="section-articles__title">
+      <h1 class="article-title article-title--black">{{ category.name }}</h1>
+      {% if category.description %}
+      <p class="site-text__medium">{{ category.description }}</p>
+      {% endif %}
+    </div>
+    
+    {% if posts.size > 0 %}
+    <div class="section-articles__content">
+      {% for post in posts %}
+      <article class="section-articles__item">
+        <a class="article-link" href="{{ post.slug | post_url }}"></a>
+        <div class="section-articles__item-date">
+          <p class="article-date">{{ post.published_at | date_format }}</p>
+        </div>
+        <div class="section-articles__item-title">
+          <h2 class="site-text__large">{{ post.title }}</h2>
+        </div>
+        {% if post.lead %}
+        <div class="section-articles__item-description">
+          <p class="site-text__medium">{{ post.lead | excerpt: 200 }}</p>
+        </div>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-results">
+      <p>{{ 'content.no_results' | t }}</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+

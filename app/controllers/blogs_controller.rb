@@ -245,11 +245,7 @@ class BlogsController < ApplicationController
   end
 
   def set_theme_renderer
-    user_theme = @blog_owner.user_themes.active.includes(:theme).first
-    theme = user_theme&.theme
-    theme = nil unless theme&.active? && theme.available_for?(@blog_owner) && theme.template_available?
-    theme_slug = theme&.path || theme&.slug || "default"
-    @renderer = ThemeRenderer.new(theme_slug)
+    @renderer = ThemeRenderer.new(active_theme_slug)
   end
 
   def set_locale_from_blog
@@ -475,10 +471,19 @@ class BlogsController < ApplicationController
   end
 
   def active_theme_slug
+    theme = active_theme
+    theme&.path.presence || theme&.slug || "default"
+  end
+
+  def active_theme
+    return @active_theme if defined?(@active_theme)
+
     user_theme = @blog_owner.user_themes.active.includes(:theme).first
     theme = user_theme&.theme
-    theme = nil unless theme&.active? && theme.available_for?(@blog_owner) && theme.template_available?
-    theme&.slug || "default"
+    @active_theme =
+      if theme&.active? && theme.available_for?(@blog_owner) && theme.template_available?
+        theme
+      end
   end
 
   def blog_posts
