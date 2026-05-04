@@ -890,8 +890,8 @@
       var openModal = new URLSearchParams(window.location.search).get('open_modal');
       if (openModal !== 'contact') return;
 
-      var contactTrigger = document.querySelector('.js__popup_contact_open');
-      if (contactTrigger) contactTrigger.click();
+      var contactPopup = document.querySelector('.popup-contact');
+      if (contactPopup) contactPopup.classList.add('open');
     })();
   </script>
 </body>

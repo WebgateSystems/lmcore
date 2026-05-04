@@ -20,7 +20,7 @@ class CommentsController < ApplicationController
 
   def create
     if @commentable.respond_to?(:comments_enabled) && @commentable.comments_enabled == false
-      flash[:blog_alert] = t("comments.disabled", default: "Comments are disabled for this post.")
+      set_blog_flash(:alert, t("comments.disabled", default: "Comments are disabled for this post."))
       redirect_back fallback_location: commentable_redirect_path and return
     end
 
@@ -41,13 +41,14 @@ class CommentsController < ApplicationController
     comment.user_agent = request.user_agent
 
     if comment.save
-      flash[:blog_notice] = if comment.approved?
-                         t("comments.posted", default: "Thanks for your comment.")
+      message = if comment.approved?
+                  t("comments.posted", default: "Thanks for your comment.")
       else
-                         t("comments.pending_approval", default: "Your comment is awaiting moderation.")
+                  t("comments.pending_approval", default: "Your comment is awaiting moderation.")
       end
+      set_blog_flash(:notice, message)
     else
-      flash[:blog_alert] = comment.errors.full_messages.to_sentence
+      set_blog_flash(:alert, comment.errors.full_messages.to_sentence)
     end
 
     redirect_to commentable_redirect_path
@@ -78,7 +79,7 @@ class CommentsController < ApplicationController
   def ensure_not_banned_for_blog!
     return unless current_user&.banned_from_blog?(@blog_owner)
 
-    flash[:blog_alert] = t("comments.banned_from_blog", default: "You are permanently banned from this blog.")
+    set_blog_flash(:alert, t("comments.banned_from_blog", default: "You are permanently banned from this blog."))
     redirect_to commentable_redirect_path
   end
 

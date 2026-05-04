@@ -52,7 +52,9 @@ RSpec.describe "BlogNewsletterSubscriptions", type: :request do
       end.not_to change(NewsletterSubscription, :count)
 
       expect(response).to redirect_to(blog_path(blog_slug: blog_owner.username))
-      expect(flash[:blog_notice]).to be_present
+      expect(flash[:notice]).to include("text", "token")
+      expect(flash[:notice]["text"]).to eq(I18n.t("themes.am.newsletter.subscribed", default: "Zapisano do newslettera."))
+      expect(flash[:notice]["token"]).to be_present
     end
 
     it "blocks banned users from subscribing" do
@@ -64,7 +66,9 @@ RSpec.describe "BlogNewsletterSubscriptions", type: :request do
       end.not_to change(NewsletterSubscription, :count)
 
       expect(response).to redirect_to(blog_path(blog_slug: blog_owner.username))
-      expect(flash[:blog_alert]).to be_present
+      expect(flash[:alert]).to include("text", "token")
+      expect(flash[:alert]["text"]).to be_present
+      expect(flash[:alert]["token"]).to be_present
     end
   end
 end

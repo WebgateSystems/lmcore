@@ -323,13 +323,11 @@ class BlogsController < ApplicationController
     current_ban = current_blog_ban
     current_path_with_query = vanity_request? ? vanity_return_to_path : request.fullpath
     contact_modal_return_to = append_query_param(current_path_with_query, "open_modal", "contact")
-    flash_payload = flash.to_hash
-    notice_message = normalized_flash_message(flash_payload["blog_notice"] || flash_payload[:blog_notice])
-    alert_message = normalized_flash_message(flash_payload["blog_alert"] || flash_payload[:blog_alert])
-    %i[blog_notice blog_alert].each do |key|
-      flash.discard(key)
-      flash.delete(key)
-    end
+    raw_notice_message, raw_notice_token = unpack_blog_flash(flash[:notice])
+    raw_alert_message, raw_alert_token = unpack_blog_flash(flash[:alert])
+    notice_message = consume_blog_flash_once(:notice, raw_notice_message, raw_notice_token)
+    alert_message = consume_blog_flash_once(:alert, raw_alert_message, raw_alert_token)
+    clear_consumed_standard_flash!(notice_message: notice_message, alert_message: alert_message)
 
     login_path = if vanity_request?
                    central_auth_url(sso_login_path(locale: I18n.locale, target_origin: vanity_origin, return_to: current_path_with_query))
@@ -442,6 +440,65 @@ class BlogsController < ApplicationController
     return "" if message.start_with?("#<")
 
     message
+  end
+
+  def clear_consumed_standard_flash!(notice_message:, alert_message:)
+    consumed_notice = notice_message.present?
+    consumed_alert = alert_message.present?
+    return unless consumed_notice || consumed_alert
+
+    # We consume flash in the Liquid assigns. In this stack, the browser may
+    # not receive a refreshed session cookie on that render, so we clear the
+    # persisted payload explicitly and force a session write once.
+    flash.delete(:notice) if consumed_notice
+    flash.delete("notice") if consumed_notice
+    flash.delete(:alert) if consumed_alert
+    flash.delete("alert") if consumed_alert
+
+    session_flash = session["flash"]
+    if session_flash.is_a?(Hash)
+      if consumed_notice
+        session_flash["flashes"]&.delete("notice")
+        session_flash["flashes"]&.delete(:notice)
+        session_flash[:flashes]&.delete("notice")
+        session_flash[:flashes]&.delete(:notice)
+      end
+      if consumed_alert
+        session_flash["flashes"]&.delete("alert")
+        session_flash["flashes"]&.delete(:alert)
+        session_flash[:flashes]&.delete("alert")
+        session_flash[:flashes]&.delete(:alert)
+      end
+    end
+
+    session[:_blog_flash_commit_nonce] = SecureRandom.hex(6)
+  end
+
+  def consume_blog_flash_once(kind, message, token = nil)
+    value = message.to_s
+    return "" if value.blank?
+
+    marker = token.to_s.presence || Digest::SHA256.hexdigest(value)
+    audience = current_user&.id || "anon:#{request.remote_ip}"
+    cache_key = "blog_flash_seen:v2:#{kind}:#{audience}:#{marker}"
+    if Rails.cache.exist?(cache_key)
+      ""
+    else
+      Rails.cache.write(cache_key, true, expires_in: 30.minutes)
+      value
+    end
+  end
+
+  def unpack_blog_flash(raw)
+    if raw.is_a?(Hash)
+      text = normalized_flash_message(raw["text"] || raw[:text])
+      token = raw["token"] || raw[:token]
+      [ text, token ]
+    else
+      # Only structured blog flash payloads are rendered in themes.
+      # Plain Rails notices (e.g. dashboard/admin redirects) stay hidden.
+      [ "", nil ]
+    end
   end
 
   def current_blog_ban

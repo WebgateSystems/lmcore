@@ -39,6 +39,16 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def set_blog_flash(kind, message)
+    text = message.to_s.strip
+    return if text.blank?
+
+    flash[kind.to_sym] = {
+      "text" => text,
+      "token" => SecureRandom.hex(12)
+    }
+  end
+
   def set_current_attributes
     Current.user = current_user
     Current.request_id = request.request_id

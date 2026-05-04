@@ -16,9 +16,9 @@ class BlogContactMessagesController < ApplicationController
     message.email = current_user.email if message.email.blank?
 
     if message.save
-      flash[:blog_notice] = t("themes.am.contact.sent", default: "Wiadomosc zostala wyslana.")
+      set_blog_flash(:notice, t("themes.am.contact.sent", default: "Wiadomosc zostala wyslana."))
     else
-      flash[:blog_alert] = message.errors.full_messages.to_sentence
+      set_blog_flash(:alert, message.errors.full_messages.to_sentence)
     end
 
     redirect_to return_path
@@ -46,7 +46,7 @@ class BlogContactMessagesController < ApplicationController
   def ensure_not_banned_for_blog!
     return unless current_user&.banned_from_blog?(@blog_owner)
 
-    flash[:blog_alert] = t("themes.am.comments.banned_from_blog", default: "You are permanently banned from this blog.")
+    set_blog_flash(:alert, t("themes.am.comments.banned_from_blog", default: "You are permanently banned from this blog."))
     redirect_to return_path
   end
 end

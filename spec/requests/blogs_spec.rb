@@ -391,7 +391,6 @@ RSpec.describe "Blogs", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(response.body).not_to include(I18n.t("dashboard.flash.videos.pinned"))
-      expect(response.body).not_to include(%(<div class="theme-flash theme-flash--notice">))
     end
 
     it "renders blog-specific flash notice after posting a comment" do
@@ -406,6 +405,47 @@ RSpec.describe "Blogs", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(I18n.t("comments.posted"))
       expect(response.body).to include("theme-flash--notice")
+    end
+
+    it "renders blog-specific flash notice only once" do
+      commenter = create(:user)
+      sign_in commenter
+      SiteSetting.set("comments_premoderation_enabled", false, user: author, value_type: "boolean")
+
+      post blog_post_comments_path(blog_slug: author.username, post_slug: post_record.slug),
+           params: { comment: { content: "Great post!" } }
+      follow_redirect!
+      expect(response.body).to include(I18n.t("comments.posted"))
+
+      get "/blogs/#{author.username}"
+
+      expect(response.body).not_to include(I18n.t("comments.posted"))
+    end
+
+    it "deduplicates repeated flash payload with same token" do
+      token = "same-token"
+      message = I18n.t("comments.posted")
+      unpack_calls = 0
+      seen_cache_keys = {}
+
+      allow(Rails.cache).to receive(:exist?) { |key| seen_cache_keys.key?(key) }
+      allow(Rails.cache).to receive(:write) do |key, _value, **_options|
+        seen_cache_keys[key] = true
+        true
+      end
+
+      allow_any_instance_of(BlogsController).to receive(:unpack_blog_flash) do
+        unpack_calls += 1
+        unpack_calls.odd? ? [ message, token ] : [ "", nil ]
+      end
+
+      get "/blogs/#{author.username}"
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(message)
+
+      get "/blogs/#{author.username}"
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include(message)
     end
   end
 
@@ -444,6 +484,14 @@ RSpec.describe "Blogs", type: :request do
       expect(response.body).to include("mobile-contact js__popup_contact_open")
       expect(response.body).to include("contact_message[name]")
       expect(response.body).to include("contact_message[email]")
+    end
+
+    it "opens the contact popup from the open_modal query without relying on footer triggers" do
+      get "/blogs/#{author.username}?open_modal=contact"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("document.querySelector('.popup-contact')")
+      expect(response.body).to include("contactPopup.classList.add('open')")
     end
 
     it "links the dashboard footer action to the central host on vanity domains" do

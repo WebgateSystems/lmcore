@@ -16,9 +16,9 @@ class BlogNewsletterSubscriptionsController < ApplicationController
     subscription.user = current_user
 
     if subscription.save
-      flash[:blog_notice] = t("themes.am.newsletter.subscribed", default: "Zapisano do newslettera.")
+      set_blog_flash(:notice, t("themes.am.newsletter.subscribed", default: "Zapisano do newslettera."))
     else
-      flash[:blog_alert] = subscription.errors.full_messages.to_sentence
+      set_blog_flash(:alert, subscription.errors.full_messages.to_sentence)
     end
 
     redirect_to return_path
@@ -42,7 +42,7 @@ class BlogNewsletterSubscriptionsController < ApplicationController
   def ensure_not_banned_for_blog!
     return unless current_user&.banned_from_blog?(@blog_owner)
 
-    flash[:blog_alert] = t("themes.am.comments.banned_from_blog", default: "You are permanently banned from this blog.")
+    set_blog_flash(:alert, t("themes.am.comments.banned_from_blog", default: "You are permanently banned from this blog."))
     redirect_to return_path
   end
 end

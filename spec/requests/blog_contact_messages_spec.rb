@@ -48,7 +48,9 @@ RSpec.describe "BlogContactMessages", type: :request do
       end.not_to change(ContactMessage, :count)
 
       expect(response).to redirect_to(blog_path(blog_slug: blog_owner.username))
-      expect(flash[:blog_alert]).to be_present
+      expect(flash[:alert]).to include("text", "token")
+      expect(flash[:alert]["text"]).to be_present
+      expect(flash[:alert]["token"]).to be_present
     end
   end
 end
