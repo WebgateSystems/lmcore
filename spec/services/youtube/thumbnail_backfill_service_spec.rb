@@ -36,11 +36,32 @@ RSpec.describe Youtube::ThumbnailBackfillService, type: :service do
     it "skips videos that already have a thumbnail" do
       video = build_video(youtube_thumbnails: [ { "url" => "https://img.example.com/thumb.jpg" } ])
       allow_any_instance_of(Video).to receive(:thumbnail).and_return(double(present?: true))
+      allow_any_instance_of(Video).to receive(:thumbnail_file_available?).and_return(true)
       service = described_class.new(scope: Video.where(id: video.id))
 
       stats = service.call(return_stats: true)
       expect(stats[:skipped]).to eq(1)
       expect(stats[:updated]).to eq(0)
+    end
+
+    it "backfills videos whose thumbnail column points at a missing file" do
+      video = build_video(youtube_thumbnails: [ { "url" => "https://img.example.com/thumb.jpg" } ])
+      video.update_column(:thumbnail, "missing.jpg")
+      service = described_class.new(scope: Video.where(id: video.id))
+
+      allow(service).to receive(:assign_thumbnail_from_url).and_return(true)
+
+      expect(service.call).to eq(1)
+    end
+
+    it "falls back to deterministic YouTube thumbnail URLs" do
+      video = build_video(youtube_thumbnails: [])
+      service = described_class.new(scope: Video.where(id: video.id))
+
+      expect(service.send(:thumbnail_candidates_for, video)).to include(
+        "https://i.ytimg.com/vi/#{video.video_external_id}/maxresdefault.jpg",
+        "https://i.ytimg.com/vi/#{video.video_external_id}/hqdefault.jpg"
+      )
     end
 
     it "respects stop_requested between iterations" do

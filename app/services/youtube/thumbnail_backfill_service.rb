@@ -70,7 +70,7 @@ module Youtube
     end
 
     def ensure_thumbnail_present(video)
-      return false if video.thumbnail.present?
+      return false if video.thumbnail_file_available?
 
       thumbnail_candidates_for(video).each do |url|
         next if url.blank?
@@ -102,8 +102,20 @@ module Youtube
     def thumbnail_candidates_for(video)
       youtube_data = video.video_data.is_a?(Hash) ? (video.video_data["youtube"] || {}) : {}
       from_list = Array(youtube_data["thumbnails"]).filter_map { |thumb| thumb.is_a?(Hash) ? thumb["url"] : nil }
-      from_primary = [ youtube_data["thumbnail"], video.external_thumbnail_url ]
+      from_primary = [ youtube_data["thumbnail"], *deterministic_youtube_thumbnail_candidates(video), video.external_thumbnail_url ]
       (from_primary + from_list).compact.map(&:to_s).reject(&:blank?).uniq
+    end
+
+    def deterministic_youtube_thumbnail_candidates(video)
+      return [] unless video.video_provider.to_s == "youtube"
+
+      video_id = video.video_external_id.to_s
+      return [] if video_id.blank?
+
+      [
+        "https://i.ytimg.com/vi/#{video_id}/maxresdefault.jpg",
+        "https://i.ytimg.com/vi/#{video_id}/hqdefault.jpg"
+      ]
     end
   end
 end

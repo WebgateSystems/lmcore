@@ -62,7 +62,7 @@ module Dashboard
     end
 
     def active_theme_for(user)
-      theme = user.user_themes.active.includes(:theme).first&.theme
+      theme = user.user_themes.active.includes(:theme).order(updated_at: :desc).first&.theme
       return theme if theme&.active? && theme.available_for?(user) && theme.template_available?
 
       Theme.default_theme
@@ -77,6 +77,7 @@ module Dashboard
       raise ArgumentError, t("dashboard.settings.theme_unavailable", default: "This theme is not available for your blog.") unless theme
 
       user_theme = dashboard_blog_user.user_themes.find_or_initialize_by(theme: theme)
+      dashboard_blog_user.user_themes.where.not(theme_id: theme.id).update_all(active: false, updated_at: Time.current)
       user_theme.active = true
       user_theme.save!
     end

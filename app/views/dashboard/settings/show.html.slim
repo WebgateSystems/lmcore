@@ -129,7 +129,7 @@ section
       .form-select-wrapper
         select#settings_theme_slug.form-select name="settings[theme_slug]"
           - @available_themes.each do |theme|
-            option value=theme.slug selected=(theme.slug == @settings["theme_slug"])
+            option value=theme.slug selected=(theme.id == @active_theme&.id)
               = theme.name
       small.text-body-3.text-muted = t("dashboard.settings.theme_hint")
 

@@ -77,6 +77,15 @@ RSpec.describe Video do
     end
   end
 
+  describe '#thumbnail_file_available?' do
+    it 'returns false when the database points at a missing file' do
+      video = create(:video, :youtube)
+      video.update_column(:thumbnail, 'missing.jpg')
+
+      expect(video.reload.thumbnail_file_available?).to be false
+    end
+  end
+
   it_behaves_like 'sluggable'
   it_behaves_like 'publishable'
   it_behaves_like 'taggable'

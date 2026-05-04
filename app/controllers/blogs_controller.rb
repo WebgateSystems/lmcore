@@ -478,7 +478,7 @@ class BlogsController < ApplicationController
   def active_theme
     return @active_theme if defined?(@active_theme)
 
-    user_theme = @blog_owner.user_themes.active.includes(:theme).first
+    user_theme = @blog_owner.user_themes.active.includes(:theme).order(updated_at: :desc).first
     theme = user_theme&.theme
     @active_theme =
       if theme&.active? && theme.available_for?(@blog_owner) && theme.template_available?
@@ -759,6 +759,8 @@ class BlogsController < ApplicationController
   end
 
   def blog_video_thumbnail_url(video)
+    return "/images/fallback/video_thumbnail.png" unless video.thumbnail_file_available?
+
     local_url = video.thumbnail&.url.to_s
     return local_url if local_url.present?
 

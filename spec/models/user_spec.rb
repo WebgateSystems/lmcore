@@ -52,6 +52,18 @@ RSpec.describe User do
       expect(user.email).to eq('user@example.com')
     end
 
+    it 'normalizes blank vanity domain to nil' do
+      user = build(:user, vanity_domain: '')
+      user.valid?
+      expect(user.vanity_domain).to be_nil
+    end
+
+    it 'normalizes vanity domain casing and whitespace' do
+      user = build(:user, vanity_domain: '  Example.COM  ')
+      user.valid?
+      expect(user.vanity_domain).to eq('example.com')
+    end
+
     it 'sets defaults on create' do
       user = User.new(email: 'test@example.com', password: 'password123')
       user.valid?

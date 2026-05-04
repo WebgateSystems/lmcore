@@ -187,7 +187,8 @@ RSpec.describe ThemeRenderer do
 
     it "loads translations packaged inside the theme folder" do
       FileUtils.mkdir_p(theme_path.join("locales"))
-      File.write(theme_path.join("locales/en.yml"), <<~YAML)
+      locale_path = theme_path.join("locales/en.yml")
+      File.write(locale_path, <<~YAML)
         en:
           themes:
             #{theme_slug}:
@@ -203,6 +204,7 @@ RSpec.describe ThemeRenderer do
       )
 
       expect(out).to eq("Theme-local TOP video")
+      expect(I18n.load_path.map(&:to_s)).not_to include(locale_path.to_s)
     end
   end
 end

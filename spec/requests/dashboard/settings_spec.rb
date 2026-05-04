@@ -35,6 +35,19 @@ RSpec.describe "Dashboard::Settings", type: :request do
       expect(response.body).to include(%(value="default"))
       expect(response.body).to include(%(value="am"))
     end
+
+    it "selects the current active theme instead of default" do
+      sign_in am_author
+      default_user_theme = UserTheme.create!(user: am_author, theme: default_theme, active: false)
+      am_user_theme = UserTheme.create!(user: am_author, theme: am_theme, active: false)
+      default_user_theme.update_columns(active: true, updated_at: 2.days.ago)
+      am_user_theme.update_columns(active: true, updated_at: 1.day.ago)
+
+      get dashboard_settings_path
+
+      selected = Nokogiri::HTML(response.body).at_css("select#settings_theme_slug option[selected]")
+      expect(selected["value"]).to eq("am")
+    end
   end
 
   describe "PATCH /dashboard/settings" do
@@ -73,6 +86,7 @@ RSpec.describe "Dashboard::Settings", type: :request do
 
     it "allows AM theme activation for the am blog owner" do
       sign_in am_author
+      UserTheme.create!(user: am_author, theme: default_theme, active: true)
 
       patch dashboard_settings_path, params: {
         settings: { theme_slug: "am" }
@@ -80,6 +94,7 @@ RSpec.describe "Dashboard::Settings", type: :request do
 
       expect(response).to redirect_to(dashboard_settings_path)
       expect(am_author.user_themes.active.includes(:theme).first.theme).to eq(am_theme)
+      expect(am_author.user_themes.active.count).to eq(1)
     end
 
     it "does not store YouTube cookies without acknowledgement" do

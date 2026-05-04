@@ -36,14 +36,13 @@ class ThemeRenderer
   class << self
     def load_theme_translations!(theme_path)
       files = Dir[theme_path.join(THEME_LOCALE_GLOB)].sort
-      return if files.empty?
-
       signature = files.to_h { |path| [ path, File.mtime(path).to_f ] }
 
       theme_locale_mutex.synchronize do
+        prune_stale_theme_locale_load_paths!
+        return if files.empty?
         return if loaded_theme_locale_signatures[theme_path.to_s] == signature
 
-        I18n.load_path |= files
         I18n.backend.load_translations(*files)
         loaded_theme_locale_signatures[theme_path.to_s] = signature
       end
@@ -57,6 +56,17 @@ class ThemeRenderer
 
     def loaded_theme_locale_signatures
       @loaded_theme_locale_signatures ||= {}
+    end
+
+    def prune_stale_theme_locale_load_paths!
+      themes_root = Rails.root.join("themes").to_s
+      stale_paths = I18n.load_path.select do |path|
+        path = path.to_s
+        path.start_with?(themes_root) && !File.exist?(path)
+      end
+      return if stale_paths.empty?
+
+      I18n.load_path -= stale_paths
     end
   end
 

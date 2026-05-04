@@ -295,7 +295,8 @@ module Youtube
       thumbnail_url = best_thumbnail_url(normalized)
       translation_locale = translation_locale_for_entry(normalized)
       local_thumbnail_path = resolve_local_thumbnail_path(normalized["thumbnail_local_path"])
-      should_attach_local_thumbnail = local_thumbnail_path.present? && File.exist?(local_thumbnail_path) && video.thumbnail.blank?
+      has_thumbnail_file = video.thumbnail_file_available?
+      should_attach_local_thumbnail = local_thumbnail_path.present? && File.exist?(local_thumbnail_path) && !has_thumbnail_file
 
       video.assign_attributes(
         author: user,
@@ -354,7 +355,7 @@ module Youtube
       }
       youtube_payload["source_signature"] = Digest::SHA256.hexdigest(JSON.generate(youtube_payload))
 
-      needs_remote_thumbnail = download_thumbnails && video.thumbnail.blank? && thumbnail_url.present?
+      needs_remote_thumbnail = download_thumbnails && !has_thumbnail_file && thumbnail_url.present?
       if unchanged_video?(video,
         created: created,
         youtube_payload: youtube_payload,
@@ -374,7 +375,7 @@ module Youtube
 
       if should_attach_local_thumbnail
         video.thumbnail = File.open(local_thumbnail_path)
-      elsif download_thumbnails && thumbnail_url.present?
+      elsif needs_remote_thumbnail
         video.remote_thumbnail_url = thumbnail_url
       end
       video.save!
@@ -393,7 +394,6 @@ module Youtube
 
       emit_progress(:phase, name: "backfill_thumbnails")
       scope = Video.where(author: user, video_provider: "youtube", video_external_id: video_ids)
-                   .where(thumbnail: [ nil, "" ])
       updated = Youtube::ThumbnailBackfillService.new(scope: scope, logger: logger).call
       stats[:thumbnail_backfilled] += updated
     end

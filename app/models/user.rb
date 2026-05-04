@@ -106,6 +106,7 @@ class User < ApplicationRecord
 
   # Callbacks
   before_validation :set_defaults, on: :create
+  before_validation :normalize_vanity_domain
   before_save :normalize_email
   after_create :assign_default_plan
 
@@ -356,6 +357,10 @@ class User < ApplicationRecord
 
   def normalize_email
     self.email = email.downcase.strip if email.present?
+  end
+
+  def normalize_vanity_domain
+    self.vanity_domain = vanity_domain.to_s.downcase.strip.presence
   end
 
   def assign_default_plan

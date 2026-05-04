@@ -253,7 +253,11 @@ namespace :libremedia do
     scope = Video.where(video_provider: "youtube")
     scope = scope.where(author_id: args[:user_id]) if args[:user_id].present?
 
-    pending = scope.where(thumbnail: [ nil, "" ])
+    pending_ids = []
+    scope.find_each do |video|
+      pending_ids << video.id unless video.thumbnail_file_available?
+    end
+    pending = Video.where(id: pending_ids)
     total = pending.count
     puts "YouTube thumbnail backfill: scope=#{args[:user_id].present? ? "user=#{args[:user_id]}" : "all users"} pending=#{total}"
     next puts("Nothing to do.") if total.zero?

@@ -111,6 +111,13 @@ class Video < ApplicationRecord
     !self_hosted?
   end
 
+  def thumbnail_file_available?
+    return false if thumbnail.blank?
+
+    thumbnail_path = thumbnail.path.to_s
+    thumbnail_path.present? && File.exist?(thumbnail_path)
+  end
+
   private
 
   def title_presence_for_locale

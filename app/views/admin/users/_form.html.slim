@@ -66,6 +66,14 @@
             .uk-form-controls
               = f.select :status, options_for_select([['Pending', 'pending'], ['Active', 'active'], ['Suspended', 'suspended']], @user.status), {}, class: 'uk-select'
 
+        div(class="uk-width-1-2@m")
+          .uk-margin
+            = f.label :vanity_domain, 'Vanity domain', class: 'uk-form-label'
+            .uk-form-controls
+              = f.text_field :vanity_domain, class: 'uk-input', placeholder: 'example.com', autocomplete: 'off'
+              p.uk-text-small.uk-text-muted.uk-margin-small-top
+                | Lowercase domain only, without protocol or path.
+
   .uk-card.uk-margin-top
     .uk-card-header
       h3.uk-card-title Role & Plan
