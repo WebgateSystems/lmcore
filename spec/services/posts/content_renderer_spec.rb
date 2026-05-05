@@ -36,9 +36,30 @@ RSpec.describe Posts::ContentRenderer do
 
         rendered = post.content_i18n["en"]
         expect(rendered).to include(%(data-attachment-id="#{attachment.id}"))
+        expect(rendered).to include('class="post-figure post-figure--lightbox"')
+        expect(rendered).to include('class="post-figure__lightbox"')
+        expect(rendered).to include("data-src=")
         expect(rendered).to include("<img")
         expect(rendered).to include('alt="An alt"')
         expect(rendered).to include("<figcaption>A caption</figcaption>")
+      end
+
+      it "expands editor img attachment placeholders into lightbox figures" do
+        attachment = create(:media_attachment, user: author, attachable: post,
+                                               attachment_type: "image",
+                                               alt_text_i18n: { "en" => "Editor alt" })
+
+        post.content_format = "html"
+        post.content_source_i18n = {
+          "en" => %(<p>Before</p><img data-attachment-id="#{attachment.id}" src="/editor-placeholder.gif" alt=""><p>After</p>)
+        }
+        post.save!
+
+        rendered = post.content_i18n["en"]
+        expect(rendered).to include(%(data-attachment-id="#{attachment.id}"))
+        expect(rendered).to include('class="post-figure__lightbox"')
+        expect(rendered).to include('alt="Editor alt"')
+        expect(rendered).not_to include("editor-placeholder.gif")
       end
 
       it "removes the placeholder when the attachment does not exist" do
@@ -63,6 +84,7 @@ RSpec.describe Posts::ContentRenderer do
 
         rendered = post.content_i18n["en"]
         expect(rendered).to include('src="https://blogimg.pravda.com/img.jpg"')
+        expect(rendered).to include('href="https://blogimg.pravda.com/img.jpg"')
         expect(rendered).to include('alt="Foto"')
         expect(rendered).to include('referrerpolicy="no-referrer"')
       end
@@ -212,6 +234,19 @@ RSpec.describe Posts::ContentRenderer do
     context "edge cases" do
       it "returns empty string for blank source" do
         expect(described_class.render(post, "en", source: "")).to eq("")
+      end
+
+      it "renders attachment placeholders for page-like records without content_format" do
+        page = create(:page, author: author)
+        attachment = create(:media_attachment, user: author, attachable: page,
+                                               attachment_type: "image",
+                                               alt_text_i18n: { "en" => "Page alt" })
+
+        rendered = described_class.render(page, "en", source: %(<p>Intro</p>[[fig:#{attachment.id}]]))
+
+        expect(rendered).to include(%(data-attachment-id="#{attachment.id}"))
+        expect(rendered).to include('class="post-figure__lightbox"')
+        expect(rendered).to include('alt="Page alt"')
       end
 
       it "is safe for content with HTML entities and quotes in caption" do

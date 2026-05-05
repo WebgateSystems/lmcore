@@ -166,6 +166,16 @@ RSpec.describe Post do
   end
 
   describe '#source_url' do
+    it 'prefers the manually edited source URL' do
+      post = build(:post, source_url: 'https://example.com/source', external_source: 'ukr_pravda_blog', external_id: 'muzhdabaev/69e3cf895b986')
+      expect(post.source_url).to eq('https://example.com/source')
+    end
+
+    it 'allows clearing an imported source URL' do
+      post = build(:post, source_url: '', external_source: 'ukr_pravda_blog', external_id: 'muzhdabaev/69e3cf895b986')
+      expect(post.source_url).to be_nil
+    end
+
     it 'rebuilds the original blogs.pravda.com.ua URL for ukr_pravda_blog imports' do
       post = build(:post, external_source: 'ukr_pravda_blog', external_id: 'muzhdabaev/69e3cf895b986')
       expect(post.source_url).to eq('https://blogs.pravda.com.ua/authors/muzhdabaev/69e3cf895b986/')
@@ -184,6 +194,18 @@ RSpec.describe Post do
     it 'returns nil for unknown external sources' do
       post = build(:post, external_source: 'some_other_feed', external_id: 'a/b')
       expect(post.source_url).to be_nil
+    end
+  end
+
+  describe '#display_source_name' do
+    it 'prefers the manually edited source name' do
+      post = build(:post, source_name: 'Ukrainian Pravda', external_source: 'ukr_pravda_blog')
+      expect(post.display_source_name).to eq('Ukrainian Pravda')
+    end
+
+    it 'falls back to the import source identifier' do
+      post = build(:post, source_name: nil, external_source: 'youtube')
+      expect(post.display_source_name).to eq('youtube')
     end
   end
 

@@ -28,8 +28,8 @@ module Posts
     ].freeze
 
     ALLOWED_ATTRIBUTES = {
-      "a"          => %w[href target rel title],
-      "img"        => %w[src alt loading width height class referrerpolicy],
+      "a"          => %w[href target rel title class data-src data-sub-html],
+      "img"        => %w[src alt loading width height class referrerpolicy data-attachment-id],
       "figure"     => %w[class data-attachment-id data-video-id data-image-url data-image-alt],
       "figcaption" => %w[class],
       "span"       => %w[class],
@@ -66,7 +66,8 @@ module Posts
         text   = (source || post.content_source_i18n[locale]).to_s
         return "" if text.blank?
 
-        format = post.content_format.to_s.presence || "html"
+        format = post.respond_to?(:content_format) ? post.content_format.to_s.presence : nil
+        format ||= "html"
         html   = format == "markdown" ? render_markdown(text) : text
         html   = expand_inline_attachments(html, post, locale)
         html   = expand_inline_video_embeds(html)
@@ -124,6 +125,14 @@ module Posts
               end
             end
           end
+
+          doc.css("img[data-attachment-id]").each do |img|
+            next if img.ancestors("figure[data-attachment-id]").any?
+
+            id = img["data-attachment-id"]
+            attachment = attachments_by_id[id]
+            attachment ? img.replace(Nokogiri::HTML5.fragment(figure_for(attachment, locale))) : img.remove
+          end
         end
 
         if needs_image_url_pass
@@ -158,8 +167,10 @@ module Posts
       def remote_image_figure(url, alt)
         alt_value = alt.to_s
         [
-          %(<figure class="post-figure">),
+          %(<figure class="post-figure post-figure--lightbox">),
+          %(<a class="post-figure__lightbox" href="#{ERB::Util.html_escape(url)}" data-src="#{ERB::Util.html_escape(url)}">),
           %(<img src="#{ERB::Util.html_escape(url)}" alt="#{ERB::Util.html_escape(alt_value)}" loading="lazy" referrerpolicy="no-referrer">),
+          "</a>",
           "</figure>"
         ].join
       end
@@ -252,8 +263,10 @@ module Posts
         cap_html = caption.present? ? %(<figcaption>#{ERB::Util.html_escape(caption)}</figcaption>) : ""
 
         [
-          %(<figure class="post-figure" data-attachment-id="#{attachment.id}">),
+          %(<figure class="post-figure post-figure--lightbox" data-attachment-id="#{attachment.id}">),
+          %(<a class="post-figure__lightbox" href="#{ERB::Util.html_escape(full_attachment_url(attachment))}" data-src="#{ERB::Util.html_escape(full_attachment_url(attachment))}">),
           %(<img src="#{ERB::Util.html_escape(url)}" alt="#{ERB::Util.html_escape(alt_value)}" loading="lazy">),
+          "</a>",
           cap_html,
           "</figure>"
         ].join
@@ -311,6 +324,14 @@ module Posts
           version_url(attachment, :medium) || attachment.file.url.to_s
         else
           ""
+        end
+      end
+
+      def full_attachment_url(attachment)
+        if attachment.respond_to?(:file) && attachment.file.respond_to?(:url)
+          attachment.file.url.to_s
+        else
+          attachment_url(attachment)
         end
       end
 

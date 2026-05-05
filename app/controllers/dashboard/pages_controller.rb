@@ -28,6 +28,7 @@ module Dashboard
       authorize @page, policy_class: Dashboard::PagePolicy
 
       if @page.save
+        attach_pending_attachments(@page)
         redirect_to dashboard_pages_path, notice: t("dashboard.flash.pages.created")
       else
         render :new, status: :unprocessable_entity
@@ -41,6 +42,7 @@ module Dashboard
     def update
       authorize @page, policy_class: Dashboard::PagePolicy
       if @page.update(page_params)
+        attach_pending_attachments(@page)
         redirect_to dashboard_pages_path, notice: t("dashboard.flash.pages.updated")
       else
         render :edit, status: :unprocessable_entity
@@ -115,6 +117,15 @@ module Dashboard
       when Hash then value
       else nil
       end
+    end
+
+    def attach_pending_attachments(page)
+      ids = Array(params[:pending_attachment_ids]).reject(&:blank?)
+      return if ids.empty?
+
+      MediaAttachment
+        .where(id: ids, user_id: current_user.id, attachable_id: nil)
+        .update_all(attachable_type: "Page", attachable_id: page.id)
     end
   end
 end

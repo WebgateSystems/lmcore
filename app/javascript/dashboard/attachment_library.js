@@ -8,6 +8,12 @@ import Sortable from 'sortablejs'
 
 const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content || ''
 
+const escapeHtml = (value) => String(value || '')
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+
 class AttachmentLibrary {
   constructor(root) {
     this.root = root
@@ -70,12 +76,15 @@ class AttachmentLibrary {
     const item = document.createElement('li')
     item.className = 'attachment-library__item'
     item.dataset.attachmentId = attachment.id
+    item.draggable = Boolean(attachment.shortcode)
     item.innerHTML = `
       <span data-handle class="attachment-library__handle bi bi-grip-vertical" aria-hidden="true"></span>
       ${attachment.thumb_url ? `<img class="attachment-library__thumb" src="${attachment.thumb_url}" alt="">` : '<span class="attachment-library__thumb attachment-library__thumb--placeholder bi bi-file-earmark"></span>'}
       <div class="attachment-library__meta">
-        <input type="text" class="form-control form-control-sm attachment-library__alt" placeholder="alt" data-field="alt_text_i18n" />
-        <input type="text" class="form-control form-control-sm attachment-library__caption" placeholder="caption" data-field="caption_i18n" />
+        <input type="text" class="form-control form-control-sm attachment-library__title" placeholder="${attachment.attachment_type === 'document' ? 'display name' : 'title'}" data-field="title_i18n" />
+        ${attachment.attachment_type === 'image' ? '<input type="text" class="form-control form-control-sm attachment-library__alt" placeholder="alt text" data-field="alt_text_i18n" />' : ''}
+        ${attachment.attachment_type === 'image' ? '<input type="text" class="form-control form-control-sm attachment-library__caption" placeholder="caption" data-field="caption_i18n" />' : ''}
+        ${attachment.file_name ? `<small class="attachment-library__filename" title="${escapeHtml(attachment.file_name)}">${escapeHtml(attachment.file_name)}</small>` : ''}
       </div>
       <div class="attachment-library__actions">
         ${attachment.shortcode ? `<button type="button" class="btn btn-sm btn-outline-primary" data-action="insert">${this.root.dataset.insertLabel || 'Insert'}</button>` : ''}
@@ -84,18 +93,34 @@ class AttachmentLibrary {
       </div>
     `
     const locale = this.root.dataset.activeLocale || 'en'
+    const title = item.querySelector('[data-field="title_i18n"]')
     const alt = item.querySelector('[data-field="alt_text_i18n"]')
     const cap = item.querySelector('[data-field="caption_i18n"]')
-    alt.value = attachment.alt_text_i18n?.[locale] || ''
-    cap.value = attachment.caption_i18n?.[locale] || ''
-    alt.addEventListener('change', () => this.persistMeta(attachment, 'alt_text_i18n', locale, alt.value))
-    cap.addEventListener('change', () => this.persistMeta(attachment, 'caption_i18n', locale, cap.value))
+    title.value = attachment.title_i18n?.[locale] || ''
+    title.addEventListener('change', () => this.persistMeta(attachment, 'title_i18n', locale, title.value))
+    if (alt) {
+      alt.value = attachment.alt_text_i18n?.[locale] || ''
+      alt.addEventListener('change', () => this.persistMeta(attachment, 'alt_text_i18n', locale, alt.value))
+    }
+    if (cap) {
+      cap.value = attachment.caption_i18n?.[locale] || ''
+      cap.addEventListener('change', () => this.persistMeta(attachment, 'caption_i18n', locale, cap.value))
+    }
 
     item.querySelector('[data-action="insert"]')?.addEventListener('click', () => {
       if (this.pickResolver) {
         this.pickResolver(attachment)
         this.pickResolver = null
+      } else {
+        this.dispatchInsert(attachment)
       }
+    })
+    item.addEventListener('dragstart', (event) => {
+      if (!attachment.shortcode) return
+      event.dataTransfer.effectAllowed = 'copyMove'
+      event.dataTransfer.setData('application/x-libremedia-attachment', JSON.stringify(attachment))
+      event.dataTransfer.setData('text/plain', attachment.shortcode)
+      event.dataTransfer.setData('text/html', '')
     })
     item.querySelector('[data-action="copy"]')?.addEventListener('click', () => {
       if (attachment.shortcode) navigator.clipboard?.writeText(attachment.shortcode)
@@ -176,6 +201,13 @@ class AttachmentLibrary {
 
   pick(callback) {
     this.pickResolver = callback
+  }
+
+  dispatchInsert(attachment) {
+    this.root.dispatchEvent(new CustomEvent('attachment-library:insert', {
+      bubbles: true,
+      detail: { attachment }
+    }))
   }
 
   openUploadDialog() {

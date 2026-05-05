@@ -538,7 +538,13 @@ window.onload = function () {
 
 	// lightgallery start
 
-	lightGallery(document.getElementById('lightgallery'), {
+	const initLightGallery = (element, options) => {
+		if (!element || typeof lightGallery !== 'function' || element.dataset.lightGalleryReady === 'true') return;
+		lightGallery(element, options);
+		element.dataset.lightGalleryReady = 'true';
+	};
+
+	initLightGallery(document.getElementById('lightgallery'), {
 		plugins: [lgZoom, lgThumbnail, lgShare],
 		speed: 500,
 		showZoomInOutIcons: true,
@@ -546,15 +552,26 @@ window.onload = function () {
 		thumbnail: true,
 	});
 
-	lightGallery(document.getElementById('static-thumbnails'), {
+	initLightGallery(document.getElementById('static-thumbnails'), {
 		animateThumb: false,
 		zoomFromOrigin: false,
 		allowMediaOverlap: true,
 		toggleThumb: true,
 	});
 
-	lightGallery(document.getElementById('gallery-hash-demo'), {
+	initLightGallery(document.getElementById('gallery-hash-demo'), {
 		customSlideName: true,
+	});
+
+	document.querySelectorAll('.section-article__content-text, .section-article-item__paragraph').forEach((container) => {
+		if (!container.querySelector('.post-figure__lightbox')) return;
+		initLightGallery(container, {
+			selector: '.post-figure__lightbox',
+			plugins: [lgZoom, lgShare],
+			speed: 500,
+			showZoomInOutIcons: true,
+			actualSize: false,
+		});
 	});
 
 

@@ -1,6 +1,7 @@
-// Rich text editor for Post#content_source_i18n.
+// Rich text editor for dashboard post/page localized content.
 //
-// Each locale tab has a textarea named like `post[content_source_i18n][<locale>]`.
+// Each locale tab has a textarea named like `post[content_source_i18n][<locale>]`
+// or `page[content_i18n][<locale>]`.
 // Depending on the global #post_content_format value (html|markdown) we
 // initialise either TipTap (HTML, contenteditable WYSIWYG) or EasyMDE
 // (Markdown, source view with toolbar) on top of that textarea.
@@ -11,9 +12,15 @@
 
 import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
+import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import EasyMDE from 'easymde'
+import CodeMirror from 'codemirror'
+import 'codemirror/mode/xml/xml'
+import 'codemirror/mode/javascript/javascript'
+import 'codemirror/mode/css/css'
+import 'codemirror/mode/htmlmixed/htmlmixed'
 import TurndownService from 'turndown'
 // NOTE: Do NOT `import 'easymde/dist/easymde.min.css'` here.
 // esbuild would then emit a sibling `dashboard.css` containing only the
@@ -29,6 +36,32 @@ const turndown = new TurndownService({
 })
 turndown.keep(['figure', 'figcaption'])
 
+const inlineImagePlaceholder = (id = '') => {
+  const label = `Inline image ${id}`.trim()
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360">
+      <rect width="720" height="360" fill="#f8f9fa"/>
+      <rect x="24" y="24" width="672" height="312" fill="none" stroke="#0d6efd" stroke-width="4" stroke-dasharray="16 12"/>
+      <text x="360" y="178" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#0d6efd">${escapeHtml(label)}</text>
+      <text x="360" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#6c757d">Saved as [[fig:...]] attachment</text>
+    </svg>
+  `)}`
+}
+const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'])
+
+const InlineAttachmentImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      attachmentId: {
+        default: null,
+        parseHTML: (element) => element.getAttribute('data-attachment-id'),
+        renderHTML: (attributes) => attributes.attachmentId ? { 'data-attachment-id': attributes.attachmentId } : {}
+      }
+    }
+  }
+})
+
 class LocaleEditor {
   constructor(panel, format, library) {
     this.panel = panel
@@ -42,6 +75,7 @@ class LocaleEditor {
     this.toolbarControls = []
     this.sourceViewEnabled = false
     this.sourceTextarea = null
+    this.sourceCodeMirror = null
     this.tiptapElement = null
     this.mount()
   }
@@ -59,6 +93,10 @@ class LocaleEditor {
     }
     this.sourceViewEnabled = false
     this.sourceTextarea = null
+    if (this.sourceCodeMirror) {
+      this.sourceCodeMirror.toTextArea()
+      this.sourceCodeMirror = null
+    }
     this.tiptapElement = null
     this.host.innerHTML = ''
   }
@@ -85,14 +123,17 @@ class LocaleEditor {
         element: editorEl,
         extensions: [
           StarterKit.configure({ heading: { levels: [2, 3, 4] } }),
+          InlineAttachmentImage.configure({ HTMLAttributes: { class: 'post-editor__inline-image' } }),
           Link.configure({ openOnClick: false, HTMLAttributes: { rel: 'nofollow noopener', target: '_blank' } }),
           Placeholder.configure({ placeholder: this.host.dataset.placeholder || '' })
         ],
-        content: this.textarea.value || '',
+        content: this.editorHtml(this.textarea.value || ''),
         onUpdate: () => this.syncToTextarea(),
         onSelectionUpdate: () => this.refreshToolbarState(),
         onTransaction: () => this.refreshToolbarState()
       })
+      editorEl.addEventListener('dragover', (event) => this.handleAttachmentDragOver(event), true)
+      editorEl.addEventListener('drop', (event) => this.handleAttachmentDrop(event, 'html'), true)
     } catch (error) {
       console.error('[post-editor] TipTap init failed, falling back to plain textarea', error)
       this.tiptap = null
@@ -141,6 +182,8 @@ class LocaleEditor {
         ]
       })
       this.easymde.codemirror.on('change', () => this.syncToTextarea())
+      this.easymde.codemirror.on('dragover', (cm, event) => this.handleAttachmentDragOver(event))
+      this.easymde.codemirror.on('drop', (cm, event) => this.handleAttachmentDrop(event, 'markdown'))
     } catch (error) {
       console.error('[post-editor] EasyMDE init failed, falling back to plain textarea', error)
       this.easymde = null
@@ -310,8 +353,12 @@ class LocaleEditor {
   toggleSourceView() {
     if (!this.tiptap || !this.tiptapElement) return
     if (this.sourceViewEnabled) {
-      const html = this.sourceTextarea ? this.sourceTextarea.value : this.textarea.value
-      this.tiptap.commands.setContent(html || '', false)
+      const html = this.sourceCodeMirror ? this.sourceCodeMirror.getValue() : (this.sourceTextarea ? this.sourceTextarea.value : this.textarea.value)
+      if (this.sourceCodeMirror) {
+        this.sourceCodeMirror.toTextArea()
+        this.sourceCodeMirror = null
+      }
+      this.tiptap.commands.setContent(this.editorHtml(html || ''), false)
       this.textarea.value = html || ''
       this.host.innerHTML = ''
       this.host.appendChild(this.tiptapElement)
@@ -325,16 +372,30 @@ class LocaleEditor {
     const source = document.createElement('textarea')
     source.className = 'post-editor__source-view form-control'
     source.rows = 16
-    source.value = this.textarea.value || ''
+    source.value = formatHtmlSource(this.textarea.value || '')
     source.addEventListener('input', () => {
       const value = source.value || ''
       this.textarea.value = value
-      this.tiptap.commands.setContent(value, false)
     })
 
     this.host.innerHTML = ''
     this.host.appendChild(source)
     this.sourceTextarea = source
+    this.sourceCodeMirror = CodeMirror.fromTextArea(source, {
+      mode: 'htmlmixed',
+      lineNumbers: true,
+      lineWrapping: true,
+      tabSize: 2,
+      indentUnit: 2,
+      viewportMargin: Infinity
+    })
+    this.sourceCodeMirror.getWrapperElement().classList.add('post-editor__source-code')
+    this.sourceCodeMirror.on('change', (cm) => {
+      this.textarea.value = cm.getValue()
+    })
+    this.sourceCodeMirror.on('dragover', (cm, event) => this.handleAttachmentDragOver(event))
+    this.sourceCodeMirror.on('drop', (cm, event) => this.handleAttachmentDrop(event, 'source'))
+    window.setTimeout(() => this.sourceCodeMirror?.refresh(), 0)
     this.sourceViewEnabled = true
     this.refreshToolbarState()
   }
@@ -359,15 +420,79 @@ class LocaleEditor {
   }
 
   insertAttachment(attachment, format) {
+    if (!attachment?.id) return
     if (format === 'markdown') {
       const placeholder = `\n\n[[fig:${attachment.id}]]\n\n`
       const cm = this.easymde.codemirror
       cm.replaceSelection(placeholder)
+    } else if (format === 'source') {
+      const html = this.attachmentHtml(attachment)
+      if (this.sourceCodeMirror) {
+        this.sourceCodeMirror.replaceSelection(`\n${html}\n`)
+        this.textarea.value = this.sourceCodeMirror.getValue()
+      } else if (this.sourceTextarea) {
+        insertIntoTextarea(this.sourceTextarea, `\n${html}\n`)
+        this.textarea.value = this.sourceTextarea.value
+      }
+      return
     } else {
-      const html = `<figure data-attachment-id="${attachment.id}"><img src="${attachment.medium_url || attachment.file_url}" alt="${attachment.alt_text_i18n?.[this.locale] || ''}"></figure>`
-      this.tiptap.chain().focus().insertContent(html).run()
+      this.tiptap.chain().focus().setImage({
+        src: attachment.medium_url || attachment.file_url || inlineImagePlaceholder(attachment.id),
+        alt: attachment.alt_text_i18n?.[this.locale] || '',
+        attachmentId: attachment.id
+      }).run()
     }
     this.syncToTextarea()
+  }
+
+  insertAttachmentAtDrop(attachment, format, event) {
+    if (format === 'html' && this.tiptap) {
+      const result = this.tiptap.view.posAtCoords({ left: event.clientX, top: event.clientY })
+      const chain = this.tiptap.chain().focus()
+      if (result) chain.setTextSelection(result.pos)
+      chain.setImage({
+        src: attachment.medium_url || attachment.file_url || inlineImagePlaceholder(attachment.id),
+        alt: attachment.alt_text_i18n?.[this.locale] || '',
+        attachmentId: attachment.id
+      }).run()
+      this.syncToTextarea()
+      return
+    }
+
+    if (format === 'markdown' && this.easymde) {
+      const coords = this.easymde.codemirror.coordsChar({ left: event.clientX, top: event.clientY })
+      this.easymde.codemirror.setCursor(coords)
+      this.insertAttachment(attachment, 'markdown')
+      return
+    }
+
+    if (format === 'source') {
+      if (this.sourceCodeMirror) {
+        const coords = this.sourceCodeMirror.coordsChar({ left: event.clientX, top: event.clientY })
+        this.sourceCodeMirror.setCursor(coords)
+      }
+      this.insertAttachment(attachment, 'source')
+    }
+  }
+
+  handleAttachmentDragOver(event) {
+    if (!attachmentFromDataTransfer(event.dataTransfer)) return
+    event.preventDefault()
+    event.dataTransfer.dropEffect = 'copy'
+  }
+
+  handleAttachmentDrop(event, format) {
+    const attachment = attachmentFromDataTransfer(event.dataTransfer)
+    if (!attachment) return
+    event.preventDefault()
+    event.stopPropagation()
+    this.insertAttachmentAtDrop(attachment, format, event)
+  }
+
+  attachmentHtml(attachment) {
+    const src = attachment.medium_url || attachment.file_url || inlineImagePlaceholder(attachment.id)
+    const alt = attachment.alt_text_i18n?.[this.locale] || ''
+    return `<img class="post-editor__inline-image" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" data-attachment-id="${escapeHtml(attachment.id)}">`
   }
 
   syncToTextarea() {
@@ -386,8 +511,17 @@ class LocaleEditor {
 
   setValue(value) {
     this.textarea.value = value || ''
-    if (this.tiptap) this.tiptap.commands.setContent(value || '', false)
+    if (this.tiptap) this.tiptap.commands.setContent(this.editorHtml(value || ''), false)
     if (this.easymde) this.easymde.value(value || '')
+  }
+
+  editorHtml(value) {
+    return String(value || '').replace(/\[\[fig:([0-9a-f-]{8,36})\]\]/gi, (_match, id) => {
+      const attachment = this.library?.attachments?.find((item) => item.id === id)
+      const src = attachment?.medium_url || attachment?.file_url || inlineImagePlaceholder(id)
+      const alt = attachment?.alt_text_i18n?.[this.locale] || `Inline image ${id}`
+      return `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" data-attachment-id="${escapeHtml(id)}">`
+    })
   }
 }
 
@@ -401,6 +535,7 @@ class PostEditorController {
     this.bootstrap()
     this.bindFormatSwitch()
     this.bindTabs()
+    this.bindAttachmentLibrary()
   }
 
   attachLibrary() {
@@ -432,6 +567,21 @@ class PostEditorController {
     })
     this.root.querySelectorAll('[data-locale-panel]').forEach((panel) => {
       panel.classList.toggle('d-none', panel.dataset.localePanel !== locale)
+    })
+  }
+
+  activeEditor() {
+    const activePanel = this.root.querySelector('[data-locale-panel]:not(.d-none)')
+    return this.editors.find((editor) => editor.panel === activePanel) || this.editors[0]
+  }
+
+  bindAttachmentLibrary() {
+    if (!this.library?.root) return
+    this.library.root.addEventListener('attachment-library:insert', (event) => {
+      const editor = this.activeEditor()
+      if (!editor) return
+      const format = editor.sourceViewEnabled ? 'source' : editor.format
+      editor.insertAttachment(event.detail?.attachment, format)
     })
   }
 
@@ -468,6 +618,65 @@ function convertContent(value, fromFormat, toFormat) {
   // source in place so the user does not get a half-converted block. EasyMDE
   // edits the markdown source in place.
   return value
+}
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+function attachmentFromDataTransfer(dataTransfer) {
+  if (!dataTransfer) return null
+  const raw = dataTransfer.getData('application/x-libremedia-attachment')
+  if (!raw) return null
+  try {
+    return JSON.parse(raw)
+  } catch (_error) {
+    return null
+  }
+}
+
+function insertIntoTextarea(textarea, text) {
+  const start = textarea.selectionStart ?? textarea.value.length
+  const end = textarea.selectionEnd ?? start
+  textarea.value = `${textarea.value.slice(0, start)}${text}${textarea.value.slice(end)}`
+  textarea.selectionStart = textarea.selectionEnd = start + text.length
+  textarea.dispatchEvent(new Event('input', { bubbles: true }))
+}
+
+function formatHtmlSource(value) {
+  const source = String(value || '').trim()
+  if (!source) return ''
+
+  try {
+    const doc = new DOMParser().parseFromString(`<div>${source}</div>`, 'text/html')
+    const root = doc.body.firstElementChild
+    return Array.from(root.childNodes).map((node) => formatNode(node, 0)).filter(Boolean).join('\n')
+  } catch (_error) {
+    return source
+  }
+}
+
+function formatNode(node, depth) {
+  const indent = '  '.repeat(depth)
+  if (node.nodeType === Node.TEXT_NODE) {
+    const text = node.textContent.trim()
+    return text ? `${indent}${text}` : ''
+  }
+  if (node.nodeType !== Node.ELEMENT_NODE) return ''
+
+  const tag = node.tagName.toLowerCase()
+  const attrs = Array.from(node.attributes).map((attr) => ` ${attr.name}="${escapeHtml(attr.value)}"`).join('')
+  const children = Array.from(node.childNodes).map((child) => formatNode(child, depth + 1)).filter(Boolean)
+  if (VOID_TAGS.has(tag)) return `${indent}<${tag}${attrs}>`
+  if (children.length === 0) return `${indent}<${tag}${attrs}></${tag}>`
+  if (children.length === 1 && !children[0].includes('\n') && children[0].trim() === node.textContent.trim()) {
+    return `${indent}<${tag}${attrs}>${node.textContent.trim()}</${tag}>`
+  }
+  return [`${indent}<${tag}${attrs}>`, ...children, `${indent}</${tag}>`].join('\n')
 }
 
 function init() {

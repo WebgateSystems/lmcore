@@ -4,13 +4,12 @@ module Api
   module V1
     # Manages MediaAttachment uploads for the rich text editor (inline images,
     # documents). Uploads can be orphaned (no `attachable_id` yet) when the
-    # post hasn't been saved; CleanupOrphanMediaAttachmentsWorker eventually
-    # removes the unused ones, and Dashboard::PostsController#attach_pending
-    # links them on Post create/update.
+    # post/page hasn't been saved; CleanupOrphanMediaAttachmentsWorker eventually
+    # removes the unused ones, and dashboard controllers link them on create/update.
     class MediaAttachmentsController < BaseController
       before_action :load_attachment, only: %i[show update destroy]
 
-      ALLOWED_ATTACHABLE_TYPES = %w[Post].freeze
+      ALLOWED_ATTACHABLE_TYPES = %w[Post Page].freeze
 
       def index
         scope = policy_scope(MediaAttachment)
@@ -95,8 +94,7 @@ module Api
 
       def ensure_attachable_authorized!(record)
         case record
-        when Post
-          # Owner or admin can attach to a post.
+        when Post, Page
           unless record.author_id == current_user.id || current_user.admin?
             raise Pundit::NotAuthorizedError, "Cannot attach to this resource"
           end

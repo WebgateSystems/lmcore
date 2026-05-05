@@ -40,7 +40,7 @@
 
         .mb-3
           = label_tag "page_content_i18n_#{loc}", t("dashboard.pages.form.content"), class: "form-label form-label--translatable"
-          .post-editor__toolbar data-post-editor-toolbar="" data-bold-label=t("dashboard.common.editor.bold", default: "B") data-italic-label=t("dashboard.common.editor.italic", default: "I") data-h2-label=t("dashboard.common.editor.h2", default: "H2") data-h3-label=t("dashboard.common.editor.h3", default: "H3") data-bullet-list-label=t("dashboard.common.editor.bullet_list", default: "List") data-ordered-list-label=t("dashboard.common.editor.ordered_list", default: "1.") data-quote-label=t("dashboard.common.editor.quote", default: "Quote") data-link-label=t("dashboard.common.editor.link", default: "Link") data-unlink-label=t("dashboard.common.editor.unlink", default: "Unlink") data-link-prompt=t("dashboard.common.editor.link_prompt", default: "Paste URL") data-undo-label=t("dashboard.common.editor.undo", default: "Undo") data-redo-label=t("dashboard.common.editor.redo", default: "Redo") data-source-label=t("dashboard.common.editor.source", default: "Source")
+          .post-editor__toolbar data-post-editor-toolbar="" data-insert-image-label=t("dashboard.posts.form.insert_image", default: "Insert image") data-bold-label=t("dashboard.common.editor.bold", default: "B") data-italic-label=t("dashboard.common.editor.italic", default: "I") data-h2-label=t("dashboard.common.editor.h2", default: "H2") data-h3-label=t("dashboard.common.editor.h3", default: "H3") data-bullet-list-label=t("dashboard.common.editor.bullet_list", default: "List") data-ordered-list-label=t("dashboard.common.editor.ordered_list", default: "1.") data-quote-label=t("dashboard.common.editor.quote", default: "Quote") data-link-label=t("dashboard.common.editor.link", default: "Link") data-unlink-label=t("dashboard.common.editor.unlink", default: "Unlink") data-link-prompt=t("dashboard.common.editor.link_prompt", default: "Paste URL") data-undo-label=t("dashboard.common.editor.undo", default: "Undo") data-redo-label=t("dashboard.common.editor.redo", default: "Redo") data-source-label=t("dashboard.common.editor.source", default: "Source")
           .post-editor__host data-post-editor-host="" data-placeholder=t("dashboard.pages.form.content_placeholder")
           = text_area_tag "page[content_i18n][#{loc}]", page.content_i18n&.dig(loc), class: "form-control", rows: 15, data: { post_editor_source: true }
 
@@ -62,6 +62,18 @@
       .mb-2
         = image_tag("/themes/am/img/image/about/about-1.png", class: "img-fluid rounded opacity-50", style: "max-height: 180px;", alt: page.title.to_s)
     = f.file_field :featured_image, class: "form-control", accept: "image/*"
+
+  .card.mb-3 data-attachment-library="" data-attachment-type="image" data-active-locale=active_locale data-attachable-type=("Page") data-attachable-id=(page.persisted? ? page.id : nil)
+    .card-header.attachment-library__header
+      span = t("dashboard.posts.form.inline_images", default: "Inline images")
+      button.btn.btn-sm.btn-outline-primary type="button" data-library-upload-button=""
+        = t("dashboard.posts.form.upload_image", default: "Upload")
+    .card-body
+      input.d-none type="file" multiple="multiple" accept="image/*" data-library-upload-input=""
+      ul.attachment-library__list data-library-list=""
+      p.form-text.small = t("dashboard.posts.form.inline_images_hint", default: "Drag to reorder. Click 'Insert' to put a placeholder into the editor.")
+
+  div data-pending-attachment-ids=""
 
   .row
     .col-md-6.mb-3

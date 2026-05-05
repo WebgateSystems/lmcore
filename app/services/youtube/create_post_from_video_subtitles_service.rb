@@ -159,6 +159,9 @@ module Youtube
         video: video,
         external_source: "youtube",
         external_id: video.video_external_id,
+        source_name: "YouTube",
+        source_url: youtube_url,
+        related_video_url: youtube_url,
         published_at: nil
       )
       post.title_i18n = { language => title }

@@ -102,7 +102,7 @@
                   <ul class="section-article-item__documents-list">
                     {% for doc in post.documents %}
                     <li class="section-article-item__documents-item">
-                      <a href="{{ doc.url }}" target="_blank" rel="noopener noreferrer" download>
+                      <a href="{{ doc.url }}" target="_blank" rel="noopener noreferrer" download="{{ doc.download_name | escape }}" title="{{ doc.file_name | escape }}">
                         <span class="section-article-item__documents-name">{{ doc.title | default: doc.file_name }}</span>
                         {% if doc.size %}<span class="section-article-item__documents-size">({{ doc.size }})</span>{% endif %}
                       </a>
@@ -111,7 +111,15 @@
                   </ul>
                 </div>
                 {% endif %}
-                {% if post.related_video %}
+                {% if post.related_video_url and post.related_video_url != blank and post.related_video_url != "" %}
+                <p class="section-article-item__related-video">
+                  <a class="post-content-link"
+                     href="{{ post.related_video_url }}"
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     title="{{ post.related_video_url | escape }}">{{ 'content.related_video' | t }}.</a>
+                </p>
+                {% elsif post.related_video %}
                 <p class="section-article-item__related-video">
                   <a class="post-content-link"
                      href="{{ base_path }}/videos/{{ post.related_video.slug }}"

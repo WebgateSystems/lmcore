@@ -97,6 +97,37 @@
     font-family: var(--bs-font-monospace, monospace);
   }
 
+  &__source-code {
+    min-height: 420px;
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-radius: 0.375rem;
+    font-family: var(--bs-font-monospace, monospace);
+    font-size: 0.875rem;
+    line-height: 1.5;
+
+    .CodeMirror-scroll {
+      min-height: 420px;
+    }
+
+    .CodeMirror-gutters {
+      border-right: 1px solid var(--bs-border-color, #dee2e6);
+      background: var(--bs-tertiary-bg, #f8f9fa);
+    }
+
+    .CodeMirror-linenumber { color: var(--bs-secondary-color, #6c757d); }
+    .cm-tag { color: #0d6efd; }
+    .cm-attribute { color: #6f42c1; }
+    .cm-string { color: #198754; }
+    .cm-comment { color: #6c757d; font-style: italic; }
+    .cm-keyword { color: #d63384; }
+    .cm-def,
+    .cm-variable { color: #fd7e14; }
+    .cm-error {
+      color: #dc3545;
+      background: rgba(220, 53, 69, 0.08);
+    }
+  }
+
   &__tiptap {
     min-height: 320px;
     border: 1px solid var(--bs-border-color, #dee2e6);
@@ -108,6 +139,23 @@
 
     .ProseMirror { min-height: 280px; outline: none; }
     .ProseMirror p { margin-bottom: 0.75rem; }
+
+    .post-editor__inline-image {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 1rem 0;
+      border: 1px solid var(--bs-border-color, #dee2e6);
+      border-radius: 0.375rem;
+      background:
+        linear-gradient(45deg, rgba(13, 110, 253, 0.08) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(13, 110, 253, 0.08) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(13, 110, 253, 0.08) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(13, 110, 253, 0.08) 75%);
+      background-color: var(--bs-tertiary-bg, #f8f9fa);
+      background-size: 18px 18px;
+      background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+    }
 
     figure[data-attachment-id] {
       margin: 1rem 0;
@@ -148,6 +196,10 @@
     border: 1px solid var(--bs-border-color, #dee2e6);
     border-radius: 0.375rem;
     background: var(--bs-tertiary-bg, #f8f9fa);
+
+    &[draggable="true"] {
+      cursor: grab;
+    }
   }
 
   &__handle { cursor: grab; color: var(--bs-secondary-color, #6c757d); }

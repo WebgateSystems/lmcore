@@ -116,7 +116,15 @@ class Post < ApplicationRecord
   #   * `ukr_pravda_blog` — `external_id` is stored as `"<author_slug>/<hash>"`
   #     by `Pravda::AuthorBlogImportService`, so we can rebuild the public
   #     blogs.pravda.com.ua URL deterministically.
+  def display_source_name
+    return self[:source_name].to_s.strip.presence unless self[:source_name].nil?
+
+    external_source.presence
+  end
+
   def source_url
+    return self[:source_url].to_s.strip.presence unless self[:source_url].nil?
+
     return nil if external_source.blank? || external_id.blank?
 
     case external_source

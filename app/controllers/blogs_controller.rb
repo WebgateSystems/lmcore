@@ -766,12 +766,13 @@ class BlogsController < ApplicationController
       "category" => post.category ? serialize_category(post.category) : nil,
       "tags" => post.tags.map { |t| { "name" => t.name, "slug" => t.slug } },
       "author" => serialize_blog_owner,
-      "source_name" => post.external_source,
+      "source_name" => post.display_source_name,
       "source_url" => post.try(:source_url)
     }
     if full
       data["content"] = post.content_i18n[locale] || post.content_i18n.values.compact.first
       data["comments_enabled"] = post.comments_enabled?
+      data["related_video_url"] = post.related_video_url
       data["related_video"] = serialize_video(post.video, full: false) if post.video.present?
       data["documents"] = post.documents.map { |d| serialize_document(d) }
     end
@@ -779,11 +780,13 @@ class BlogsController < ApplicationController
   end
 
   def serialize_document(doc)
+    display_name = doc.title.presence || doc.file_name
     {
       "id" => doc.id,
       "url" => doc.file&.url,
       "file_name" => doc.file_name,
-      "title" => doc.title,
+      "title" => display_name,
+      "download_name" => doc.download_name,
       "size" => doc.human_file_size,
       "content_type" => doc.content_type
     }
@@ -876,10 +879,11 @@ class BlogsController < ApplicationController
 
   def serialize_page(pg)
     featured_image_url = pg.featured_image_identifier.present? ? pg.featured_image&.url : nil
+    content = localized_i18n_value(pg.content_i18n)
     {
       "slug" => pg.slug,
       "title" => localized_i18n_value(pg.title_i18n),
-      "content" => localized_i18n_value(pg.content_i18n),
+      "content" => Posts::ContentRenderer.render(pg, I18n.locale, source: content),
       "featured_image_url" => featured_image_url,
       "page_type" => pg.page_type,
       "show_in_menu" => pg.show_in_menu?

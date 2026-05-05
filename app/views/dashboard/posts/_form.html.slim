@@ -78,6 +78,26 @@
 
       .card.mb-3
         .card-header
+          = t("dashboard.posts.form.source", default: "Source")
+        .card-body
+          .mb-3
+            = f.label :source_name, t("dashboard.posts.form.source_name", default: "Source name"), class: "form-label"
+            = f.text_field :source_name, class: "form-control", placeholder: t("dashboard.posts.form.source_name_placeholder", default: "e.g. YouTube, Vimeo, Ukrainian Pravda")
+          .mb-0
+            = f.label :source_url, t("dashboard.posts.form.source_url", default: "Source URL"), class: "form-label"
+            = f.url_field :source_url, class: "form-control", placeholder: "https://..."
+            p.form-text.small.mt-2 = t("dashboard.posts.form.source_hint", default: "Shown at the top of the public article. Leave URL blank to show the source as plain text.")
+
+      .card.mb-3
+        .card-header
+          = t("dashboard.posts.form.related_video", default: "Related video")
+        .card-body
+          = f.label :related_video_url, t("dashboard.posts.form.related_video_url", default: "Related video URL"), class: "form-label"
+          = f.url_field :related_video_url, value: (post.related_video_url.presence || post.video&.watch_url), class: "form-control", placeholder: "https://..."
+          p.form-text.small.mt-2 = t("dashboard.posts.form.related_video_hint", default: "Used for transcript posts and the public 'Related video' link. It can point to YouTube, Vimeo, a self-hosted file, or a video outside this blog.")
+
+      .card.mb-3
+        .card-header
           = t("dashboard.posts.form.content_format", default: "Content format")
         .card-body
           = f.label :content_format, class: "form-label"

@@ -76,6 +76,19 @@ RSpec.describe "Api::V1::MediaAttachments", type: :request do
       expect(json["attachable_id"]).to eq(post_record.id)
     end
 
+    it "attaches to a Page owned by the current user" do
+      page = create(:page, author: user)
+      params = { attachable_type: "Page", attachable_id: page.id,
+                 media_attachment: { file: upload, attachment_type: "image" } }
+
+      post "/api/v1/media_attachments", params: params, headers: headers
+
+      expect(response).to have_http_status(:created)
+      json = JSON.parse(response.body)["attachment"]
+      expect(json["attachable_type"]).to eq("Page")
+      expect(json["attachable_id"]).to eq(page.id)
+    end
+
     it "rejects attaching to a Post owned by someone else" do
       post_record = create(:post, author: other_user)
       params = { attachable_type: "Post", attachable_id: post_record.id,

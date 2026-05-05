@@ -33,6 +33,29 @@
       object-position: bottom right;
     }
 
+    .post-figure {
+      margin: 32px 0;
+      text-align: center;
+    }
+
+    .post-figure__lightbox {
+      display: inline-block;
+      cursor: zoom-in;
+    }
+
+    .post-figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .post-figure figcaption {
+      margin-top: 8px;
+      color: #6f6f6f;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
     /* Hero layout: text first, image below on mobile (original uses column-reverse) */
     @media (max-width: 680px) {
       .section-name__content {

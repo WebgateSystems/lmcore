@@ -64,13 +64,34 @@ class MediaAttachment < ApplicationRecord
     format("%.2f %s", size.to_f / (1024**exp), units[exp])
   end
 
+  def download_name
+    base_name = title.to_s.strip.presence || file_name.to_s
+    sanitized = sanitize_download_name(base_name)
+    ext = File.extname(file_name.to_s)
+    return sanitized if ext.blank? || File.extname(sanitized).present?
+
+    "#{sanitized}#{ext}"
+  end
+
   private
+
+  def sanitize_download_name(name)
+    name.to_s
+        .tr("\\/", "-")
+        .delete("\u0000")
+        .squish
+        .presence || file_name.to_s
+  end
 
   def set_file_metadata
     return unless file.present? && file.file.present?
 
+    original_name = file.file.try(:original_filename).to_s.presence
     self.content_type = file.file.content_type
     self.file_size_bytes = file.file.size
+    if document? && original_name.present? && title_i18n.blank?
+      self.title_i18n = { I18n.locale.to_s => original_name }
+    end
 
     if image?
       image = MiniMagick::Image.open(file.path)

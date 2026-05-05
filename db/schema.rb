@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_29_000100) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_05_193000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -528,8 +528,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_000100) do
     t.datetime "published_at"
     t.uuid "published_by_id"
     t.integer "reactions_count", default: 0, null: false
+    t.string "related_video_url"
     t.datetime "scheduled_at"
     t.string "slug", null: false
+    t.string "source_name"
+    t.string "source_url"
     t.string "status", default: "draft", null: false
     t.jsonb "subtitle_i18n", default: {}
     t.jsonb "title_i18n", default: {}, null: false

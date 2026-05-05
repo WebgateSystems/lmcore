@@ -21,7 +21,7 @@ module Dashboard
     def new
       @post = Post.new
       authorize @post, policy_class: Dashboard::PostPolicy
-      @categories = scoped_categories
+      load_form_collections
     end
 
     def create
@@ -33,14 +33,14 @@ module Dashboard
         attach_pending_attachments(@post)
         redirect_to edit_dashboard_post_path(@post), notice: t("dashboard.flash.posts.created")
       else
-        @categories = scoped_categories
+        load_form_collections
         render :new, status: :unprocessable_entity
       end
     end
 
     def edit
       authorize @post, policy_class: Dashboard::PostPolicy
-      @categories = scoped_categories
+      load_form_collections
     end
 
     def update
@@ -49,7 +49,7 @@ module Dashboard
         attach_pending_attachments(@post)
         redirect_to edit_dashboard_post_path(@post), notice: t("dashboard.flash.posts.updated")
       else
-        @categories = scoped_categories
+        load_form_collections
         render :edit, status: :unprocessable_entity
       end
     end
@@ -85,9 +85,9 @@ module Dashboard
     end
 
     def post_params
-      params.require(:post).permit(
+      permitted = params.require(:post).permit(
         :slug, :status, :category_id, :featured_image, :published_at, :featured,
-        :content_format, :comments_enabled,
+        :content_format, :comments_enabled, :video_id, :source_name, :source_url, :related_video_url,
         title_i18n: {},
         subtitle_i18n: {},
         lead_i18n: {},
@@ -97,6 +97,12 @@ module Dashboard
         keywords_i18n: {},
         tag_ids: []
       )
+      permitted[:video_id] = nil if permitted.key?(:related_video_url)
+      permitted
+    end
+
+    def load_form_collections
+      @categories = scoped_categories
     end
 
     # Links MediaAttachments uploaded as orphans (no attachable_id) by the
