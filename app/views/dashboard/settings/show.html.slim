@@ -28,22 +28,45 @@ section
     hr.my-4
 
     h3.mb-4 = t("dashboard.settings.social_links")
-
-    .row
-      .col-md-6.mb-3
-        label.form-label for="settings_social_facebook" = t("dashboard.settings.facebook")
-        input.form-control type="url" name="settings[social_facebook]" id="settings_social_facebook" value=@settings["social_facebook"] placeholder="https://facebook.com/..."
-      .col-md-6.mb-3
-        label.form-label for="settings_social_twitter" = t("dashboard.settings.twitter")
-        input.form-control type="url" name="settings[social_twitter]" id="settings_social_twitter" value=@settings["social_twitter"] placeholder="https://x.com/..."
-
-    .row
-      .col-md-6.mb-3
-        label.form-label for="settings_social_instagram" = t("dashboard.settings.instagram")
-        input.form-control type="url" name="settings[social_instagram]" id="settings_social_instagram" value=@settings["social_instagram"] placeholder="https://instagram.com/..."
-      .col-md-6.mb-3
-        label.form-label for="settings_social_youtube" = t("dashboard.settings.youtube")
-        input.form-control type="url" name="settings[social_youtube]" id="settings_social_youtube" value=@settings["social_youtube"] placeholder="https://youtube.com/..."
+    - social_platforms = SiteSetting::SOCIAL_LINK_PLATFORMS
+    - social_links = Array(@settings["social_links"])
+    .social-links-builder.mb-4 data-social-links-builder=""
+      p.form-hint.mb-3 = t("dashboard.settings.social_links_hint", default: "Add only the social profiles you want to show publicly. Drag to reorder them.")
+      input type="hidden" name="settings[social_links][][platform]" value=""
+      input type="hidden" name="settings[social_links][][url]" value=""
+      .social-links-builder__list data-social-links-list=""
+        - social_links.each do |link|
+          .social-links-builder__row.row.g-2.align-items-center.mb-2 data-social-links-row=""
+            .col-auto
+              span.btn.btn-sm.btn-outline-secondary.social-links-builder__handle data-social-links-handle="" aria-hidden="true"
+                i.bi.bi-grip-vertical
+            .col-md-4
+              select.form-select name="settings[social_links][][platform]" aria-label=t("dashboard.settings.social_platform", default: "Social network")
+                - social_platforms.each do |platform|
+                  option value=platform["key"] selected=(platform["key"] == link["platform"])
+                    = platform["label"]
+            .col
+              input.form-control type="url" name="settings[social_links][][url]" value=link["url"] placeholder="https://..."
+            .col-auto
+              button.btn.btn-sm.btn-outline-danger type="button" data-social-links-remove=""
+                = t("dashboard.settings.social_remove", default: "Remove")
+      template data-social-links-template=""
+        .social-links-builder__row.row.g-2.align-items-center.mb-2 data-social-links-row=""
+          .col-auto
+            span.btn.btn-sm.btn-outline-secondary.social-links-builder__handle data-social-links-handle="" aria-hidden="true"
+              i.bi.bi-grip-vertical
+          .col-md-4
+            select.form-select name="settings[social_links][][platform]" aria-label=t("dashboard.settings.social_platform", default: "Social network")
+              - social_platforms.each do |platform|
+                option value=platform["key"]
+                  = platform["label"]
+          .col
+            input.form-control type="url" name="settings[social_links][][url]" placeholder="https://..."
+          .col-auto
+            button.btn.btn-sm.btn-outline-danger type="button" data-social-links-remove=""
+              = t("dashboard.settings.social_remove", default: "Remove")
+      button.btn-dashboard-secondary type="button" data-social-links-add=""
+        = t("dashboard.settings.social_add", default: "Add social link")
 
     .mb-3
       label.form-label for="settings_youtube_url" = t("dashboard.settings.youtube_channel_url")

@@ -73,6 +73,54 @@ RSpec.describe SiteSetting, type: :model do
     end
   end
 
+  describe ".normalize_social_links" do
+    it "keeps allowed platforms in submitted order and drops blanks" do
+      links = described_class.normalize_social_links([
+        { "platform" => "github", "url" => "https://github.com/libremedia" },
+        { "platform" => "unknown", "url" => "https://example.com" },
+        { "platform" => "linkedin", "url" => "" }
+      ])
+
+      expect(links).to eq([
+        { "platform" => "github", "label" => "GitHub", "url" => "https://github.com/libremedia" }
+      ])
+    end
+  end
+
+  describe ".social_links_from_settings_hash" do
+    it "prefers the dynamic social_links setting" do
+      links = described_class.social_links_from_settings_hash(
+        "social_links" => [ { "platform" => "linkedin", "url" => "https://linkedin.com/in/author" } ],
+        "social_facebook" => "https://facebook.com/legacy"
+      )
+
+      expect(links).to eq([
+        { "platform" => "linkedin", "label" => "LinkedIn", "url" => "https://linkedin.com/in/author" }
+      ])
+    end
+
+    it "builds a compatibility list from legacy fixed social settings" do
+      links = described_class.social_links_from_settings_hash(
+        "social_facebook" => "https://facebook.com/author",
+        "youtube_url" => "https://youtube.com/@author"
+      )
+
+      expect(links).to eq([
+        { "platform" => "facebook", "label" => "Facebook", "url" => "https://facebook.com/author" },
+        { "platform" => "youtube", "label" => "YouTube", "url" => "https://youtube.com/@author" }
+      ])
+    end
+
+    it "does not fall back to legacy links after social_links is explicitly cleared" do
+      links = described_class.social_links_from_settings_hash(
+        "social_links" => [],
+        "social_facebook" => "https://facebook.com/legacy"
+      )
+
+      expect(links).to eq([])
+    end
+  end
+
   describe "#global? / #user_specific?" do
     it "reports global settings correctly" do
       setting = described_class.create!(key: "x", value: { "data" => "y" }, value_type: "string")

@@ -4,6 +4,7 @@ import * as bootstrap from "bootstrap/dist/js/bootstrap.bundle"
 // Rich text editor (Posts dashboard form)
 import "./dashboard/attachment_library"
 import "./dashboard/post_editor"
+import "./dashboard/social_links"
 
 // Theme switcher (light/dark)
 const THEME_STORAGE_KEY = 'dashboard-theme'

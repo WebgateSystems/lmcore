@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 class SiteSetting < ApplicationRecord
+  SOCIAL_LINK_PLATFORMS = [
+    { "key" => "facebook", "label" => "Facebook" },
+    { "key" => "twitter", "label" => "X / Twitter" },
+    { "key" => "instagram", "label" => "Instagram" },
+    { "key" => "youtube", "label" => "YouTube" },
+    { "key" => "threads", "label" => "Threads" },
+    { "key" => "bluesky", "label" => "Bluesky" },
+    { "key" => "linkedin", "label" => "LinkedIn" },
+    { "key" => "github", "label" => "GitHub" }
+  ].freeze
+
+  LEGACY_SOCIAL_LINK_KEYS = {
+    "facebook" => "social_facebook",
+    "twitter" => "social_twitter",
+    "instagram" => "social_instagram",
+    "youtube" => "social_youtube"
+  }.freeze
+
   # Associations
   belongs_to :user, optional: true
 
@@ -38,6 +56,40 @@ class SiteSetting < ApplicationRecord
     # If unset or empty, defaults to %w[en] only — never the full platform list.
     def blog_available_locale_codes_for(user)
       parse_blog_available_locales(get("available_locales", user: user, default: nil))
+    end
+
+    def normalize_social_links(raw)
+      rows = case raw
+      when Array then raw
+      when Hash then raw.values
+      else []
+      end
+      allowed = SOCIAL_LINK_PLATFORMS.to_h { |platform| [ platform["key"], platform["label"] ] }
+
+      rows.filter_map do |row|
+        attrs = row.respond_to?(:to_h) ? row.to_h : {}
+        platform = attrs["platform"].to_s.presence || attrs[:platform].to_s
+        url = attrs["url"].to_s.presence || attrs[:url].to_s
+        platform = platform.strip.downcase
+        url = url.strip
+        next if platform.blank? || url.blank? || !allowed.key?(platform)
+
+        { "platform" => platform, "label" => allowed[platform], "url" => url }
+      end
+    end
+
+    def social_links_from_settings_hash(settings_hash)
+      configured = normalize_social_links(settings_hash["social_links"])
+      return configured if configured.any? || settings_hash.key?("social_links")
+
+      legacy_rows = LEGACY_SOCIAL_LINK_KEYS.filter_map do |platform, setting_key|
+        url = settings_hash[setting_key].to_s.strip
+        url = settings_hash["youtube_url"].to_s.strip if platform == "youtube" && url.blank?
+        next if url.blank?
+
+        { "platform" => platform, "url" => url }
+      end
+      normalize_social_links(legacy_rows)
     end
 
     # Public helper: turn anything (Array, comma string, JSON-array string) into a

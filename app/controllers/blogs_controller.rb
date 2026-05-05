@@ -722,7 +722,7 @@ class BlogsController < ApplicationController
 
   def site_settings_hash
     locale = I18n.locale.to_s
-    settings = SiteSetting.where(user: @blog_owner).or(SiteSetting.where(user_id: nil))
+    settings = SiteSetting.global.to_a + SiteSetting.where(user: @blog_owner).to_a
     settings.each_with_object({}) do |s, hash|
       val = s.typed_value
       hash[s.key] = if val.is_a?(Hash) && val.key?(locale)
@@ -732,6 +732,8 @@ class BlogsController < ApplicationController
       else
                       val
       end
+    end.tap do |hash|
+      hash["social_links"] = SiteSetting.social_links_from_settings_hash(hash)
     end
   end
 

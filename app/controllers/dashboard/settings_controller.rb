@@ -4,7 +4,7 @@ module Dashboard
   class SettingsController < BaseController
     EDITABLE_KEYS = %w[
       site_name site_tagline site_description
-      social_facebook social_twitter social_instagram social_youtube youtube_url
+      social_links social_facebook social_twitter social_instagram social_youtube youtube_url
       available_locales default_locale
       comments_premoderation_enabled
     ].freeze
@@ -48,6 +48,12 @@ module Dashboard
                       localized_value(raw_value, current_locale)
         elsif key == "available_locales"
                       normalize_available_locales(raw_value)
+        elsif key == "social_links"
+                      if setting
+                        SiteSetting.normalize_social_links(raw_value)
+                      else
+                        SiteSetting.social_links_from_settings_hash(legacy_settings_hash(user_settings, global_settings))
+                      end
         elsif BOOLEAN_KEYS.include?(key)
                       normalize_boolean_value(key, raw_value)
         else
@@ -100,6 +106,9 @@ module Dashboard
           # the database before this fix.
           setting.value = { "data" => Array(value) }
           setting.value_type = "json"
+        elsif key == "social_links"
+          setting.value = { "data" => SiteSetting.normalize_social_links(value) }
+          setting.value_type = "json"
         elsif BOOLEAN_KEYS.include?(key)
           setting.value = { "data" => normalize_setting_value(key, value) }
           setting.value_type = "boolean"
@@ -136,7 +145,13 @@ module Dashboard
     end
 
     def settings_params
-      permitted = EDITABLE_KEYS.map { |k| k == "available_locales" ? { available_locales: [] } : k }
+      permitted = EDITABLE_KEYS.map do |key|
+        case key
+        when "available_locales" then { available_locales: [] }
+        when "social_links" then { social_links: %i[platform url] }
+        else key
+        end
+      end
       params.require(:settings).permit(*permitted)
     end
 
@@ -152,6 +167,10 @@ module Dashboard
 
       if result.key?("available_locales")
         result["available_locales"] = sanitize_locale_list(result["available_locales"])
+      end
+
+      if result.key?("social_links")
+        result["social_links"] = SiteSetting.normalize_social_links(result["social_links"])
       end
 
       if result.key?("default_locale")
@@ -205,6 +224,13 @@ module Dashboard
     # JSON-encoded Array via Array#to_s).
     def normalize_available_locales(value)
       SiteSetting.parse_blog_available_locales(value)
+    end
+
+    def legacy_settings_hash(user_settings, global_settings)
+      (user_settings.keys | global_settings.keys).each_with_object({}) do |key, hash|
+        setting = user_settings[key] || global_settings[key]
+        hash[key] = setting&.typed_value
+      end
     end
 
     def normalize_setting_value(key, value)

@@ -134,6 +134,9 @@
                 </div>
                 {% endif %}
                 <div class="section-article-item__social">
+                  {% assign social_item_class = 'section-article-item__social-ico' %}
+                  {% include 'social_icons' %}
+                  {% comment %}
                   <!-- Facebook -->
                   <div class="section-article-item__social-ico">
                     <a href="{{ site.facebook_url | default: '#' }}" target="_blank" rel="noopener noreferrer" title="Facebook">
@@ -164,6 +167,7 @@
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.3 4.2C8.5 6.1 10.9 10 12 12C13.1 10 15.5 6.1 17.7 4.2C19.2 2.9 21.7 2 21.7 4.8C21.7 5.4 21.4 10.2 21.2 10.9C20.5 13.5 17.8 14.2 15.4 13.8C19.5 14.5 20.6 16.8 18.4 19.1C14.2 23.4 12.5 18 12 16.5C11.5 18 9.8 23.4 5.6 19.1C3.4 16.8 4.5 14.5 8.6 13.8C6.2 14.2 3.5 13.5 2.8 10.9C2.6 10.2 2.3 5.4 2.3 4.8C2.3 2 4.8 2.9 6.3 4.2Z" fill="#959595"/></svg>
                     </a>
                   </div>
+                  {% endcomment %}
                 </div>
                 <div class="section-article-item__btn-back">
                   <a href="{{ base_path }}/posts">
