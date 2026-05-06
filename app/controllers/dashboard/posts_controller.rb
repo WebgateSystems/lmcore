@@ -103,6 +103,7 @@ module Dashboard
 
     def load_form_collections
       @categories = scoped_categories
+      @available_tags = policy_scope(Tag, policy_scope_class: Dashboard::TagPolicy::Scope).alphabetical
     end
 
     # Links MediaAttachments uploaded as orphans (no attachable_id) by the

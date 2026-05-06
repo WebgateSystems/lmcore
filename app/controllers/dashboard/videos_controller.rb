@@ -26,7 +26,7 @@ module Dashboard
     def new
       @video = Video.new
       authorize @video, policy_class: Dashboard::VideoPolicy
-      @categories = scoped_categories
+      load_form_collections
     end
 
     def create
@@ -37,14 +37,14 @@ module Dashboard
       if @video.save
         redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.created")
       else
-        @categories = scoped_categories
+        load_form_collections
         render :new, status: :unprocessable_entity
       end
     end
 
     def edit
       authorize @video, policy_class: Dashboard::VideoPolicy
-      @categories = scoped_categories
+      load_form_collections
     end
 
     def update
@@ -52,7 +52,7 @@ module Dashboard
       if @video.update(video_params)
         redirect_to dashboard_videos_path, notice: t("dashboard.flash.videos.updated")
       else
-        @categories = scoped_categories
+        load_form_collections
         render :edit, status: :unprocessable_entity
       end
     end
@@ -177,6 +177,11 @@ module Dashboard
         started_at: run.started_at,
         finished_at: run.finished_at
       }
+    end
+
+    def load_form_collections
+      @categories = scoped_categories
+      @available_tags = policy_scope(Tag, policy_scope_class: Dashboard::TagPolicy::Scope).alphabetical
     end
 
     def selected_sync_locale

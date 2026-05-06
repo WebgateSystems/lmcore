@@ -22,6 +22,15 @@ en:
       profile: "Profile"
       admin_panel: "Admin panel"
       sign_out: "Sign out"
+    tags:
+      picker:
+        label: "Tags"
+        hint: "Type to search. Press Enter to add an existing tag or create a new one."
+        placeholder: "Add tag..."
+        empty_name: "Enter a tag name."
+        create_failed: "Could not create tag."
+        create_label: "Create"
+        remove_label: "Remove"
     team:
       heading: "Team & permissions"
       intro: "Invite collaborators by email. Existing accounts are added immediately; new emails receive an invitation and gain the assigned role automatically when they register."
@@ -365,6 +374,15 @@ pl:
       profile: "Profil"
       admin_panel: "Panel admina"
       sign_out: "Wyloguj się"
+    tags:
+      picker:
+        label: "Tagi"
+        hint: "Zacznij pisać, żeby wyszukać. Enter dodaje istniejący tag albo tworzy nowy."
+        placeholder: "Dodaj tag..."
+        empty_name: "Wpisz nazwę taga."
+        create_failed: "Nie udało się utworzyć taga."
+        create_label: "Utwórz"
+        remove_label: "Usuń"
     team:
       heading: "Zespół i uprawnienia"
       intro: "Zaproś współpracowników przez e-mail. Konta już istniejące w platformie zostaną dodane od razu; nowe adresy otrzymają zaproszenie i nabędą wybraną rolę automatycznie po zarejestrowaniu się."
@@ -707,6 +725,15 @@ uk:
       profile: "Профіль"
       admin_panel: "Адмін-панель"
       sign_out: "Вийти"
+    tags:
+      picker:
+        label: "Теги"
+        hint: "Почніть вводити для пошуку. Enter додає наявний тег або створює новий."
+        placeholder: "Додати тег..."
+        empty_name: "Введіть назву тегу."
+        create_failed: "Не вдалося створити тег."
+        create_label: "Створити"
+        remove_label: "Видалити"
     team:
       heading: "Команда та права"
       intro: "Запросіть співавторів електронною поштою. Існуючі облікові записи додаються одразу; нові отримують запрошення та обрану роль після реєстрації."
@@ -1006,6 +1033,15 @@ ru:
       profile: "Профиль"
       admin_panel: "Админ-панель"
       sign_out: "Выйти"
+    tags:
+      picker:
+        label: "Теги"
+        hint: "Начните вводить для поиска. Enter добавляет существующий тег или создает новый."
+        placeholder: "Добавить тег..."
+        empty_name: "Введите название тега."
+        create_failed: "Не удалось создать тег."
+        create_label: "Создать"
+        remove_label: "Удалить"
     team:
       heading: "Команда и права"
       intro: "Пригласите соавторов по электронной почте. Существующие аккаунты добавляются сразу; новые получают приглашение и заданную роль автоматически после регистрации."

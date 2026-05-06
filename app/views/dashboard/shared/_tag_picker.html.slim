@@ -1,0 +1,17 @@
+- selected_tag_ids = record.tags.map { |tag| tag.id.to_s }
+- tags = Array(available_tags)
+- tags = (tags + record.tags).uniq(&:id).sort_by(&:name)
+
+.dashboard-tag-picker data-dashboard-tag-picker="" data-create-url=dashboard_tags_path(format: :json) data-empty-name=t("dashboard.tags.picker.empty_name", default: "Enter a tag name.") data-create-failed=t("dashboard.tags.picker.create_failed", default: "Could not create tag.") data-create-label=t("dashboard.tags.picker.create_label", default: "Create") data-remove-label=t("dashboard.tags.picker.remove_label", default: "Remove")
+  = label_tag "#{form.object_name}_tag_ids", t("dashboard.tags.picker.label", default: "Tags"), class: "form-label"
+  p.form-text.mb-2 = t("dashboard.tags.picker.hint", default: "Type to search. Press Enter to add an existing tag or create a new one.")
+  input type="hidden" name="#{form.object_name}[tag_ids][]" value=""
+  select.d-none id="#{form.object_name}_tag_ids" name="#{form.object_name}[tag_ids][]" multiple="multiple" data-dashboard-tag-picker-select=""
+    - tags.each do |tag|
+      option value=tag.id selected=selected_tag_ids.include?(tag.id.to_s) data-name=tag.name
+        = tag.name
+  .dashboard-tag-picker__control
+    .dashboard-tag-picker__tokens data-dashboard-tag-picker-tokens=""
+    input.dashboard-tag-picker__input type="text" autocomplete="off" placeholder=t("dashboard.tags.picker.placeholder", default: "Add tag...") data-dashboard-tag-picker-input=""
+  .dashboard-tag-picker__suggestions.d-none data-dashboard-tag-picker-suggestions=""
+  .text-body-3.text-danger.mt-1.d-none data-dashboard-tag-picker-error=""

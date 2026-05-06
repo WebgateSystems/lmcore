@@ -76,6 +76,9 @@
     = f.label :published_at, t("dashboard.videos.form.published_at"), class: "form-label"
     = f.datetime_local_field :published_at, class: "form-control"
 
+  .mb-3
+    = render "dashboard/shared/tag_picker", form: f, record: video, available_tags: @available_tags
+
   .dashboard-actions
     = f.submit video.persisted? ? t("dashboard.videos.form.update") : t("dashboard.videos.form.create"), class: "btn-dashboard-primary"
     = link_to t("dashboard.common.cancel"), dashboard_videos_path, class: "btn-dashboard-secondary"

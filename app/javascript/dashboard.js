@@ -5,6 +5,7 @@ import * as bootstrap from "bootstrap/dist/js/bootstrap.bundle"
 import "./dashboard/attachment_library"
 import "./dashboard/post_editor"
 import "./dashboard/social_links"
+import "./dashboard/tag_picker"
 
 // Theme switcher (light/dark)
 const THEME_STORAGE_KEY = 'dashboard-theme'
@@ -187,91 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
         activate(tab.dataset.localeTab)
       })
     })
-  })
-
-  // Album tags: multi-select + quick create.
-  document.querySelectorAll('[data-album-tags]').forEach((wrapper) => {
-    if (wrapper.dataset.albumTagsInitialized === 'true') return
-    wrapper.dataset.albumTagsInitialized = 'true'
-
-    const select = wrapper.querySelector('[data-album-tags-select]')
-    const input = wrapper.querySelector('[data-album-tags-new-name]')
-    const createBtn = wrapper.querySelector('[data-album-tags-create-button]')
-    const error = wrapper.querySelector('[data-album-tags-error]')
-    const createUrl = wrapper.dataset.albumTagsCreateUrl
-    const emptyNameLabel = wrapper.dataset.albumTagsEmptyName || 'Enter a tag name.'
-    const createFailedLabel = wrapper.dataset.albumTagsCreateFailed || 'Could not create tag.'
-    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
-    if (!select || !input || !createBtn || !createUrl) return
-
-    const showError = (message) => {
-      if (!error) return
-      error.textContent = message
-      error.classList.remove('d-none')
-    }
-
-    const clearError = () => {
-      if (!error) return
-      error.textContent = ''
-      error.classList.add('d-none')
-    }
-
-    const upsertTagOption = (tag) => {
-      if (!tag?.id) return
-      const tagId = String(tag.id)
-      let option = Array.from(select.options).find((entry) => entry.value === tagId)
-      if (!option) {
-        option = document.createElement('option')
-        option.value = tagId
-        option.textContent = tag.name || tag.slug || tagId
-        select.appendChild(option)
-      }
-      option.selected = true
-    }
-
-    const createTag = async () => {
-      const name = (input.value || '').trim()
-      if (!name) {
-        showError(emptyNameLabel)
-        input.focus()
-        return
-      }
-
-      clearError()
-      createBtn.disabled = true
-      try {
-        const response = await fetch(createUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRF-Token': token || ''
-          },
-          body: JSON.stringify({ tag: { name } })
-        })
-
-        const payload = await response.json().catch(() => ({}))
-        if (!response.ok) {
-          const firstError = Array.isArray(payload.errors) ? payload.errors[0] : null
-          throw new Error(firstError || createFailedLabel)
-        }
-
-        upsertTagOption(payload)
-        input.value = ''
-      } catch (err) {
-        showError(err.message || createFailedLabel)
-      } finally {
-        createBtn.disabled = false
-      }
-    }
-
-    createBtn.addEventListener('click', createTag)
-    input.addEventListener('keydown', (event) => {
-      if (event.key !== 'Enter') return
-      event.preventDefault()
-      createTag()
-    })
-    input.addEventListener('input', clearError)
   })
 
   // Gallery bulk upload with progress bar.

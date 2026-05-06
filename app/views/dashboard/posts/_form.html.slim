@@ -69,6 +69,8 @@
           .mb-3
             = f.label :published_at, t("dashboard.posts.form.published_at"), class: "form-label"
             = f.datetime_local_field :published_at, class: "form-control"
+          .mb-3
+            = render "dashboard/shared/tag_picker", form: f, record: post, available_tags: @available_tags
           .form-check.mb-2
             = f.check_box :featured, class: "form-check-input"
             = f.label :featured, t("dashboard.posts.form.featured", default: "Featured"), class: "form-check-label"

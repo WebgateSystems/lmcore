@@ -50,16 +50,8 @@
     = f.label :published_at, t("dashboard.gallery.form.published_at"), class: "form-label"
     = f.date_field :published_at, class: "form-control", value: (album.published_at&.to_date || Date.current)
 
-  .mb-3 data-album-tags="true" data-album-tags-create-url=dashboard_tags_path(format: :json) data-album-tags-empty-name=t("dashboard.gallery.form.tags.empty_name") data-album-tags-create-failed=t("dashboard.gallery.form.tags.create_failed")
-    = f.label :tag_ids, t("dashboard.gallery.form.tags.label"), class: "form-label"
-    = f.collection_select :tag_ids, @available_tags, :id, :name, {}, class: "form-select", multiple: true, data: { album_tags_select: "true" }
-    p.form-text = t("dashboard.gallery.form.tags.hint")
-
-    .input-group.mt-2
-      = text_field_tag :new_album_tag_name, nil, class: "form-control", placeholder: t("dashboard.gallery.form.tags.placeholder"), data: { album_tags_new_name: "true" }
-      button.btn.btn-outline-secondary type="button" data-album-tags-create-button="true"
-        = t("dashboard.gallery.form.tags.create_button")
-    .text-body-3.text-danger.mt-1.d-none data-album-tags-error="true"
+  .mb-3
+    = render "dashboard/shared/tag_picker", form: f, record: album, available_tags: @available_tags
 
   .dashboard-actions
     = f.submit album.persisted? ? t("dashboard.gallery.form.update") : t("dashboard.gallery.form.create"), class: "btn-dashboard-primary"
