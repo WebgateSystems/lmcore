@@ -840,6 +840,7 @@ class BlogsController < ApplicationController
       "title" => album.title_i18n[locale] || album.title_i18n.values.compact.first,
       "description" => album.description_i18n[locale] || album.description_i18n.values.compact.first,
       "cover_image_url" => cover&.image&.url,
+      "cover_medium_url" => cover&.image&.medium&.url || cover&.image&.url,
       "cover_thumb_url" => cover&.image&.thumb&.url || cover&.image&.url,
       "featured" => album.featured?,
       "published_at" => album.published_at,
@@ -850,14 +851,22 @@ class BlogsController < ApplicationController
     }
     if full
       data["photos"] = album.photos.map do |photo|
+        title = photo.title_i18n[locale] || photo.title_i18n.values.compact.first
+        description = photo.description_i18n[locale] || photo.description_i18n.values.compact.first
+        alt = photo.alt_text_i18n[locale] || photo.alt_text_i18n.values.compact.first
         {
           "id" => photo.id,
           "slug" => photo.slug,
-          "title" => photo.title_i18n[locale] || photo.title_i18n.values.compact.first,
-          "description" => photo.description_i18n[locale] || photo.description_i18n.values.compact.first,
-          "alt" => photo.alt_text_i18n[locale] || photo.alt_text_i18n.values.compact.first,
+          "title" => title,
+          "description" => description,
+          "alt" => alt.presence || title,
           "image_url" => photo.image&.url,
-          "thumb_url" => photo.image&.thumb&.url || photo.image&.url
+          "large_url" => photo.image&.large&.url || photo.image&.url,
+          "medium_url" => photo.image&.medium&.url || photo.image&.url,
+          "thumb_url" => photo.image&.thumb&.url || photo.image&.url,
+          "width" => photo.dimensions&.dig(:width),
+          "height" => photo.dimensions&.dig(:height),
+          "orientation" => photo.portrait? ? "portrait" : "landscape"
         }
       end
     end

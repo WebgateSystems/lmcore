@@ -32,9 +32,16 @@
               {% if album.description %}
               <div class="section-article-item__paragraph">{{ album.description }}</div>
               {% endif %}
-              <div class="section-article-item__img-container row" id="lightgallery">
+              <div class="section-article-item__img-container gallery-photo-grid row" id="lightgallery">
                 {% for photo in album.photos %}
-                <a href="{{ photo.image_url }}"><img class="lazyload" src="{{ photo.image_url }}" alt="{{ photo.alt | default: album.title }}" width="380" height="230"></a>
+                <figure class="gallery-photo gallery-photo--{{ photo.orientation | default: 'landscape' }}">
+                  <a href="{{ photo.large_url | default: photo.image_url }}" data-src="{{ photo.large_url | default: photo.image_url }}" data-sub-html="{{ photo.title | escape }}">
+                    <img class="lazyload" src="{{ photo.medium_url | default: photo.image_url }}" alt="{{ photo.alt | default: photo.title | default: album.title }}" loading="lazy">
+                  </a>
+                  {% if photo.title and photo.title != blank %}
+                  <figcaption>{{ photo.title }}</figcaption>
+                  {% endif %}
+                </figure>
                 {% endfor %}
               </div>
               {% if album.tags.size > 0 %}

@@ -237,7 +237,7 @@
               <a class="video-link" href="{{ base_path }}/gallery/{{ album.slug }}"></a>
               <div class="section-dashboard__item-image">
                 <picture>
-                  <img class="lazyload" src="{{ album.cover_thumb_url | default: album.cover_image_url }}" alt="{{ album.title }}" width="380" height="230">
+                  <img class="lazyload gallery-cover-image" src="{{ album.cover_medium_url | default: album.cover_image_url }}" alt="{{ album.title }}">
                 </picture>
               </div>
               <div class="section-dashboard__item-date-rewiews">

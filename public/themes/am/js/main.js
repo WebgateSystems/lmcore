@@ -545,6 +545,7 @@ window.onload = function () {
 	};
 
 	initLightGallery(document.getElementById('lightgallery'), {
+		selector: 'a',
 		plugins: [lgZoom, lgThumbnail, lgShare],
 		speed: 500,
 		showZoomInOutIcons: true,

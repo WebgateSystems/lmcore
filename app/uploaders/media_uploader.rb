@@ -4,6 +4,7 @@ class MediaUploader < BaseUploader
   include CarrierWave::MiniMagick
 
   # Process images as they are uploaded
+  process :auto_orient, if: :image?
   process :process_image, if: :image?
 
   # Create versions for images only
@@ -31,6 +32,15 @@ class MediaUploader < BaseUploader
   end
 
   protected
+
+  def auto_orient
+    manipulate! do |img|
+      img.auto_orient
+      img
+    end
+  rescue MiniMagick::Error => e
+    Rails.logger.warn("[MediaUploader] auto-orient skipped: #{e.message}")
+  end
 
   def image?(file)
     file.content_type&.start_with?("image/")

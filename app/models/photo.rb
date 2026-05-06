@@ -49,6 +49,7 @@ class Photo < ApplicationRecord
   # Title is optional in the form; if the user didn't type anything we derive
   # it from the uploaded filename so Sluggable has something to slugify.
   before_validation :assign_default_title_if_blank
+  before_save :store_image_dimensions, if: :will_save_change_to_image?
   after_save :extract_exif_data, if: :saved_change_to_image?
 
   # Instance methods
@@ -125,6 +126,19 @@ class Photo < ApplicationRecord
     return nil if raw.blank?
 
     File.basename(raw.to_s, ".*").to_s
+  end
+
+  def store_image_dimensions
+    return unless image.present? && image.path.present? && File.exist?(image.path)
+
+    img = MiniMagick::Image.open(image.path)
+    self.image_data = (image_data || {}).merge(
+      "width" => img.width,
+      "height" => img.height,
+      "orientation" => img.width.to_i >= img.height.to_i ? "landscape" : "portrait"
+    )
+  rescue StandardError => e
+    Rails.logger.warn("[Photo] failed to store image dimensions: #{e.message}")
   end
 
   def extract_exif_data

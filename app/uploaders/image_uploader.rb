@@ -5,6 +5,7 @@ class ImageUploader < BaseUploader
   # Convert to JPEG up front so that all subsequent processing (resize,
   # versions, optimize) and the stored file are browser-friendly.
   process :convert_heic_to_jpeg
+  process :auto_orient
   process :optimize
   process resize_to_limit: [ 2000, 2000 ]
 
@@ -47,6 +48,17 @@ class ImageUploader < BaseUploader
 
   def content_type_allowlist
     [ %r{image/}, "image/heic", "image/heif", "image/heic-sequence", "image/heif-sequence" ]
+  end
+
+  def auto_orient
+    return unless file.content_type.to_s.start_with?("image/")
+
+    manipulate! do |img|
+      img.auto_orient
+      img
+    end
+  rescue MiniMagick::Error => e
+    Rails.logger.warn("[ImageUploader] auto-orient skipped: #{e.message}")
   end
 
   # Optimize images
