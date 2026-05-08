@@ -96,6 +96,11 @@ en:
         documents: "Documents"
         upload_document: "Upload"
         insert_image: "Insert image"
+        translate_missing: "Fill empty translations"
+        translation_loading: "Translating..."
+        translation_done: "Translations filled:"
+        translation_nothing: "There are no empty language versions to fill."
+        translation_missing_source: "The active language has no content to translate."
     videos:
       index:
         new: "New video"
@@ -351,6 +356,11 @@ pl:
         documents: "Dokumenty"
         upload_document: "Wgraj"
         insert_image: "Wstaw obraz"
+        translate_missing: "Uzupełnij puste tłumaczenia"
+        translation_loading: "Tłumaczę..."
+        translation_done: "Uzupełniono tłumaczenia:"
+        translation_nothing: "Nie ma pustych wersji językowych do uzupełnienia."
+        translation_missing_source: "Aktywny język nie ma treści do przetłumaczenia."
     videos:
       index:
         new: "Nowe wideo"
@@ -606,6 +616,11 @@ uk:
         documents: "Документи"
         upload_document: "Завантажити"
         insert_image: "Вставити зображення"
+        translate_missing: "Заповнити порожні переклади"
+        translation_loading: "Перекладаю..."
+        translation_done: "Переклади заповнено:"
+        translation_nothing: "Немає порожніх мовних версій для заповнення."
+        translation_missing_source: "Активна мова не має контенту для перекладу."
     videos:
       index:
         new: "Нове відео"
@@ -864,6 +879,11 @@ ru:
         documents: "Документы"
         upload_document: "Загрузить"
         insert_image: "Вставить изображение"
+        translate_missing: "Заполнить пустые переводы"
+        translation_loading: "Перевожу..."
+        translation_done: "Переводы заполнены:"
+        translation_nothing: "Нет пустых языковых версий для заполнения."
+        translation_missing_source: "В активном языке нет контента для перевода."
     videos:
       index:
         new: "Новое видео"

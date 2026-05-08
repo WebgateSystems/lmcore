@@ -14,3 +14,6 @@ services:
     client_id: 'test_id'
     client_secret: 'test_secret'
     refresh_token: 'test_token'
+  assistant:
+    endpoint: "http://assistant.test"
+    token: "assistant-test-token"

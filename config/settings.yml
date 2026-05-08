@@ -62,6 +62,10 @@ services:
     refresh_token: <%= ENV['YOUTUBE_REFRESH_TOKEN'] || 'youtube_refresh_token' %>
     # YouTube API: "public" | "unlisted" | "private"
     privacy_status: <%= ENV['YOUTUBE_PRIVACY_STATUS'] || 'public' %>
+  assistant:
+    endpoint: <%= ENV.fetch('LM_ASSISTANT_ENDPOINT', 'https://assistant.libremedia.org') %>
+    token: <%= ENV.fetch('LM_ASSISTANT_TOKEN', 'examplece0f6628548823b3ed626039b99686bf07c022ffb46a44bf1acde314f') %>
+    read_timeout: <%= ENV.fetch('LM_ASSISTANT_READ_TIMEOUT', 300) %>
   # Analytics (Umami Cloud - free Hobby tier)
   analytics:
     # Only enabled in production (or when UMAMI_ENABLED=true explicitly set)

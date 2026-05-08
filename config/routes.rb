@@ -91,6 +91,8 @@ Rails.application.routes.draw do
     resources :posts do
       member do
         post :pin
+        post :translate_missing
+        get "translation_status/:run_id", action: :translation_status, as: :translation_status
       end
     end
     resources :videos do

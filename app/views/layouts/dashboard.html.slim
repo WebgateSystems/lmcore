@@ -9,8 +9,9 @@ html lang="en" data-theme="auto"
     link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Rubik:wght@500;600;700&display=swap" rel="stylesheet"
     = csrf_meta_tags
     = csp_meta_tag
-    = stylesheet_link_tag "dashboard", "data-turbo-track": "reload"
-    = javascript_include_tag "dashboard", type: "module"
+    - unless Rails.env.test?
+      = stylesheet_link_tag "dashboard", "data-turbo-track": "reload"
+      = javascript_include_tag "dashboard", type: "module"
   body
     .dashboard-app data-dashboard-app=""
       aside.dashboard-sidebar

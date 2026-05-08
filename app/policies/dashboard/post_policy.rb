@@ -47,5 +47,9 @@ module Dashboard
     def pin?
       can_manage_dashboard_content?
     end
+
+    def translate_missing?
+      update?
+    end
   end
 end

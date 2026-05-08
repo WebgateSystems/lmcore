@@ -212,4 +212,99 @@ RSpec.describe "Dashboard::Posts", type: :request do
       expect(response).to have_http_status(:not_found)
     end
   end
+
+  describe "POST /dashboard/posts/:id/translate_missing" do
+    before { sign_in author }
+    before { SiteSetting.set("available_locales", %w[pl uk ru en], user: author, value_type: "json") }
+
+    before do
+      allow(TranslatePostMissingFieldsWorker).to receive(:perform_async)
+    end
+
+    it "creates a translation run and enqueues the worker" do
+      post translate_missing_dashboard_post_path(post_record), params: {
+        translation: {
+          source_locale: "pl",
+          target_locales: %w[uk ru en],
+          content_format: "markdown",
+          content: {
+            title: "Polski tytuł",
+            content_source: "Polski tekst"
+          }
+        }
+      }
+
+      expect(response).to have_http_status(:accepted)
+      run = DashboardJobRun.last
+      expect(run.job_type).to eq("post_translation")
+      expect(run.post_id).to eq(post_record.id)
+      expect(run.payload.dig("request", "target_locales")).to eq(%w[uk ru en])
+      expect(run.payload.dig("request", "content", "title")).to eq("Polski tytuł")
+      expect(response.parsed_body.dig("data", "status_url")).to eq(translation_status_dashboard_post_path(post_record, run))
+      expect(TranslatePostMissingFieldsWorker).to have_received(:perform_async).with(author.id, post_record.id, run.id)
+    end
+
+    it "rejects target locales outside the blog language list" do
+      post translate_missing_dashboard_post_path(post_record), params: {
+        translation: {
+          source_locale: "pl",
+          target_locales: %w[xx],
+          content: { title: "Polski tytuł" }
+        }
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(TranslatePostMissingFieldsWorker).not_to have_received(:perform_async)
+    end
+
+    it "returns 404 when the post belongs to another author" do
+      foreign = create(:post, author: other_author)
+
+      post translate_missing_dashboard_post_path(foreign), params: {
+        translation: {
+          source_locale: "pl",
+          target_locales: %w[en],
+          content: { title: "Polski tytuł" }
+        }
+      }
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "GET /dashboard/posts/:id/translation_status/:run_id" do
+    before { sign_in author }
+
+    it "returns completed translation run payload" do
+      run = create(:dashboard_job_run,
+        user: author,
+        post: post_record,
+        job_type: "post_translation",
+        status: "completed",
+        stage: "finished",
+        payload: {
+          "result" => {
+            "translations" => {
+              "en" => { "title" => "EN", "content_source" => "EN body" }
+            },
+            "warnings" => []
+          }
+        })
+
+      get translation_status_dashboard_post_path(post_record, run)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.dig("data", "status")).to eq("completed")
+      expect(response.parsed_body.dig("data", "translations", "en", "title")).to eq("EN")
+    end
+
+    it "does not expose another author's translation run" do
+      foreign = create(:post, author: other_author)
+      run = create(:dashboard_job_run, user: other_author, post: foreign, job_type: "post_translation")
+
+      get translation_status_dashboard_post_path(foreign, run)
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

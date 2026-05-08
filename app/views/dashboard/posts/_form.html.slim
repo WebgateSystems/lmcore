@@ -13,13 +13,20 @@
 
   .row
     .col-lg-8
-      .post-editor data-post-editor="" data-format-input-id="post_content_format"
-        .post-editor__tabs role="tablist"
-          - locales.each do |loc|
-            button.post-editor__tab type="button" data-locale-tab=loc class=(loc == active_locale ? "active" : "")
-              = locale_native_name(loc)
-              span.text-muted.ms-1.small
-                = "(#{locale_ui_tag(loc)})"
+      .post-editor data-post-editor="" data-post-translation=(post.persisted? ? "" : nil) data-format-input-id="post_content_format" data-active-locale=active_locale data-translation-url=(post.persisted? ? translate_missing_dashboard_post_path(post) : nil) data-translation-loading-label=t("dashboard.posts.form.translation_loading") data-translation-done-label=t("dashboard.posts.form.translation_done") data-translation-nothing-label=t("dashboard.posts.form.translation_nothing") data-translation-missing-source-label=t("dashboard.posts.form.translation_missing_source")
+        .post-editor__header
+          .post-editor__tabs role="tablist"
+            - locales.each do |loc|
+              button.post-editor__tab type="button" data-locale-tab=loc class=(loc == active_locale ? "active" : "")
+                = locale_native_name(loc)
+                span.text-muted.ms-1.small
+                  = "(#{locale_ui_tag(loc)})"
+          - if post.persisted?
+            .post-editor__translation-actions
+              .post-editor__translation-buttons
+                button.btn.btn-sm.btn-outline-primary type="button" data-post-translation-button=""
+                  = t("dashboard.posts.form.translate_missing")
+              span.post-editor__translation-status.small.text-muted data-post-translation-status=""
 
         - locales.each do |loc|
           - panel_classes = ["post-editor__panel"]

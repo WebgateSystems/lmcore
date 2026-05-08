@@ -2,7 +2,7 @@
 
 module Dashboard
   class PostsController < BaseController
-    before_action :set_post, only: %i[show edit update destroy pin]
+    before_action :set_post, only: %i[show edit update destroy pin translate_missing translation_status]
 
     def index
       authorize Post, policy_class: Dashboard::PostPolicy
@@ -78,6 +78,47 @@ module Dashboard
       redirect_back fallback_location: dashboard_posts_path, notice: t(flash_key)
     end
 
+    def translate_missing
+      authorize @post, policy_class: Dashboard::PostPolicy
+
+      payload = translation_payload
+      job_run = dashboard_blog_user.dashboard_job_runs.create!(
+        job_type: "post_translation",
+        post: @post,
+        status: "queued",
+        stage: "queued",
+        progress_total: payload[:target_locales].size,
+        payload: {
+          request: payload.merge(
+            requested_by_id: current_user.id,
+            blog_user_id: dashboard_blog_user.id,
+            post_id: @post.id
+          )
+        }
+      )
+
+      TranslatePostMissingFieldsWorker.perform_async(dashboard_blog_user.id, @post.id, job_run.id)
+
+      render json: {
+        data: serialize_translation_run(job_run).merge(
+          status_url: translation_status_dashboard_post_path(@post, job_run)
+        )
+      }, status: :accepted
+    rescue Assistant::PostTranslationClient::Error, ActionController::ParameterMissing => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
+
+    def translation_status
+      authorize @post, :translate_missing?, policy_class: Dashboard::PostPolicy
+
+      run = dashboard_blog_user.dashboard_job_runs
+                               .post_translation
+                               .where(post: @post)
+                               .find(params[:run_id])
+
+      render json: { data: serialize_translation_run(run) }
+    end
+
     private
 
     def set_post
@@ -101,9 +142,54 @@ module Dashboard
       permitted
     end
 
+    def translation_payload
+      permitted = params.require(:translation).permit(
+        :source_locale,
+        :content_format,
+        target_locales: [],
+        content: {}
+      )
+      source_locale = canonical_dashboard_locale(permitted[:source_locale])
+      allowed_locales = dashboard_available_locales.map { |locale| canonical_dashboard_locale(locale) }
+      target_locales = Array(permitted[:target_locales])
+                       .map { |locale| canonical_dashboard_locale(locale) }
+                       .select { |locale| allowed_locales.include?(locale) && locale != source_locale }
+                       .uniq
+      content = permitted.fetch(:content, {}).to_h.transform_values(&:to_s)
+
+      raise ActionController::ParameterMissing, "source_locale" unless allowed_locales.include?(source_locale)
+      raise ActionController::ParameterMissing, "target_locales" if target_locales.empty?
+      raise ActionController::ParameterMissing, "content" if content.values.all?(&:blank?)
+
+      {
+        source_locale: source_locale,
+        target_locales: target_locales,
+        content: content,
+        content_format: permitted[:content_format].presence || "html"
+      }
+    end
+
+    def canonical_dashboard_locale(locale)
+      locale.to_s.strip.downcase == "ua" ? "uk" : locale.to_s.strip.downcase
+    end
+
     def load_form_collections
       @categories = scoped_categories
       @available_tags = policy_scope(Tag, policy_scope_class: Dashboard::TagPolicy::Scope).alphabetical
+    end
+
+    def serialize_translation_run(run)
+      {
+        id: run.id,
+        status: run.status,
+        stage: run.stage,
+        progress_current: run.progress_current,
+        progress_total: run.progress_total,
+        error_message: run.error_message,
+        translations: run.payload.dig("result", "translations") || {},
+        warnings: run.payload.dig("result", "warnings") || [],
+        finished_at: run.finished_at
+      }
     end
 
     # Links MediaAttachments uploaded as orphans (no attachable_id) by the

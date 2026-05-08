@@ -7,3 +7,8 @@ elasticsearch:
 sidekiq:
   user: <%= ENV.fetch('SIDEKIQ_USER', 'admin') %>
   password: <%= ENV.fetch('SIDEKIQ_PASSWORD') { raise 'SIDEKIQ_PASSWORD must be set in production' } %>
+
+services:
+  assistant:
+    endpoint: <%= ENV.fetch('LM_ASSISTANT_ENDPOINT', 'https://assistant.libremedia.org') %>
+    token: <%= ENV.fetch('LM_ASSISTANT_TOKEN') { raise 'LM_ASSISTANT_TOKEN must be set in production' } %>

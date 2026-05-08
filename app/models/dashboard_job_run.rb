@@ -12,6 +12,7 @@ class DashboardJobRun < ApplicationRecord
   scope :for_user, ->(user) { where(user:) }
   scope :youtube_sync, -> { where(job_type: "youtube_sync") }
   scope :video_to_post, -> { where(job_type: "video_to_post") }
+  scope :post_translation, -> { where(job_type: "post_translation") }
 
   def mark_running!(stage: nil, payload: nil)
     update!(
