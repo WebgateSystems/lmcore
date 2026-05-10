@@ -41,7 +41,7 @@ gem "rswag-ui"
 
 # Background Jobs
 gem "redis", ">= 4.0.1"
-gem "sidekiq", "~> 7.0"
+gem "sidekiq", "~> 8.0"
 gem "connection_pool", "< 3.0"
 
 # File Uploads
